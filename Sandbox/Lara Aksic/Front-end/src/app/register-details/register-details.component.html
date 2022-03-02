@@ -1,0 +1,35 @@
+<div class="jumbotron py-3">
+    <h1 class="display-4 text-center">Register to subject</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <app-register-detail-form></app-register-detail-form>
+    </div>
+    <div class="col-md-6">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th>Index Number</th>
+                    <th>Year Number</th>
+                    <th>Full Name</th>
+                    <th>Subject Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let rd of service.list">
+                    <td (click)="populateForm(rd)">{{rd.indexNumber}}</td>
+                    <td (click)="populateForm(rd)">{{rd.yearNumber}}</td>
+                    <td (click)="populateForm(rd)">{{rd.fullName}}</td>
+                    <td (click)="populateForm(rd)">{{rd.subjectName}}</td>
+                    <td>
+                        <i class="far fa-trash-alt fa-lg text-danger" (click)="onDelete(rd.RegisterId)"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
