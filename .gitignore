@@ -1,4 +1,4 @@
-*/node_modules
-*/.vscode
-*/bin
-*/obj
+/node_modules
+/.vscode
+/bin
+/obj
