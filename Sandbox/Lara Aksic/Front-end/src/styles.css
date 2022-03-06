@@ -1,0 +1,29 @@
+.form-group label{
+    color:black;
+}
+.form-group input{
+    font-weight: 500;
+}
+.form-group input::placeholder{
+    color:dimgray;
+    font-weight: 300;
+}
+thead th{
+    font-weight: 400;
+}
+table tbody tr:hover{
+    background-color: #fffbf2;
+    cursor:pointer;
+}
+body {
+    background-color: dodgerblue;
+    display: flex;
+     justify-content: center;
+}
+h1{
+      background-color: deepskyblue;
+      color:black;
+}
+input.invalid{
+    border-color: red;
+}

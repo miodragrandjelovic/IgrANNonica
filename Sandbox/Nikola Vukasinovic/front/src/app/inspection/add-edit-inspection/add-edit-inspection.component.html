@@ -1,0 +1,25 @@
+<form>
+    <div class="mb-3">
+        <label for="imePredmetaId" class="form-label">Ime predmeta</label>
+       <input type="text" class="form-control" name="imePredmetaId" [(ngModel)] = "imePredmetaId" *ngIf="predmet.id!=0" disabled>
+        <select class="form-control" name="imePredmetaId" id="imePredmetaId" [(ngModel)] = "imePredmetaId" *ngIf="predmet.id==0">
+            <option *ngFor="let type of ImePredmetasList$|async" [value]="type.id">{{type.iPredmet}}</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select class="form-control" name="status" id="status" [(ngModel)]="status">
+            <option *ngFor="let status of statusList$|async" [value]="status.statusOpcija">{{status.statusOpcija}}</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="komentar" class="form-label">Komentar</label>
+        <input type="text" class="form-control" [(ngModel)]="komentar" name="komentar">
+    </div>
+    <button (click)="addPredmet()" *ngIf="predmet.id==0" class="btn btn-primary">
+        Dodaj
+    </button>
+    <button (click)="updatePredmet()" *ngIf="predmet.id!=0" class="btn btn-primary">
+        Azuriraj
+    </button>
+</form>
