@@ -1,4 +1,6 @@
-﻿namespace Backend
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Backend
 {
     public class User
     {
