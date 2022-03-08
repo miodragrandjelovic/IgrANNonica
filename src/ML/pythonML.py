@@ -42,6 +42,29 @@ test_labels = test_wd.pop('quality')
 normed_train_data = normalize(train_wd)
 normed_test_data = normalize(test_wd)
 
+# making function for sequential model for training
+# model with 5 layers and relu activation function
+# number of neurons : 64, 128, 32, 16, 1
+def build_model():
+    model = Sequential([
+        layers.Dense(64,activation="relu",input_shape=[len(train_wd.keys())]),
+        layers.Dense(128,activation="relu",name="layer2"),
+        layers.Dense(32,activation="relu",name="layer3"),
+        layers.Dense(16,activation="relu",name="layer4"),
+        layers.Dense(1,name="layer5"),
+    ])
+
+    # optimizing the model
+    model.compile(loss='mse', optimizer='adam', metrics=['mae', 'mse'])
+    return model
+
+
+
+# building the optimized model
+model = build_model()
+
+################################################################################
+# training the dataset using our built model
 
 
 print("done")
