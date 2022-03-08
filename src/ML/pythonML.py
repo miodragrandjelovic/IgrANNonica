@@ -1,4 +1,5 @@
 import pandas as pd
+import pathlib
 import numpy as np
 import seaborn as sns
 import tensorflow as tf
@@ -13,6 +14,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import normalize
 
 from keras import Sequential
+from keras import models
+
+#import tensorflow_docs as tfdocs
+#import tensorflow_docs.plots
+#import tensorflow_docs.modeling
+
 
 
 
@@ -47,11 +54,11 @@ normed_test_data = normalize(test_wd)
 # number of neurons : 64, 128, 32, 16, 1
 def build_model():
     model = Sequential([
-        layers.Dense(64,activation="relu",input_shape=[len(train_wd.keys())]),
+        layers.Dense(64,activation="relu",input_shape=[len(train_wd.keys())], name="layer1"),
         layers.Dense(128,activation="relu",name="layer2"),
         layers.Dense(32,activation="relu",name="layer3"),
         layers.Dense(16,activation="relu",name="layer4"),
-        layers.Dense(1,name="layer5"),
+        layers.Dense(1,name="layer5"), # this layer has to have only one neuron
     ])
 
     # optimizing the model
@@ -60,11 +67,20 @@ def build_model():
 
 
 
+"""
 # building the optimized model
 model = build_model()
 
 ################################################################################
 # training the dataset using our built model
 
+# defining training with 1000 epochs
+EPOCHS = 1000
+
+history = model.fit(
+    normed_train_data, train_labels,
+    epochs=EPOCHS, validation_split=0.2, verbose = 0
+)
+"""
 
 print("done")
