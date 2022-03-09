@@ -1,15 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Backend.Migrations
 {
-    public partial class registerUser : Migration
+    public partial class registrovaniUseri : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "RegisteredUsers",
+                name: "RegistrovaniUseri",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "INTEGER", nullable: false)
@@ -17,18 +18,19 @@ namespace Backend.Migrations
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
                     Username = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false)
+                    PasswordHash = table.Column<byte[]>(type: "BLOB", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "BLOB", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RegisteredUsers", x => x.UserId);
+                    table.PrimaryKey("PK_RegistrovaniUseri", x => x.UserId);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "RegisteredUsers");
+                name: "RegistrovaniUseri");
         }
     }
 }

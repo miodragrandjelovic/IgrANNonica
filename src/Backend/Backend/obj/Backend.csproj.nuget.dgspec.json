@@ -1,24 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Radoje\\Desktop\\Vezba\\3.Godina\\SI\\revolutionn\\src\\Backend\\Backend\\Backend.csproj": {}
+    "C:\\Users\\laraa\\Desktop\\revolutionn\\src\\Backend\\Backend\\Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Radoje\\Desktop\\Vezba\\3.Godina\\SI\\revolutionn\\src\\Backend\\Backend\\Backend.csproj": {
+    "C:\\Users\\laraa\\Desktop\\revolutionn\\src\\Backend\\Backend\\Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Radoje\\Desktop\\Vezba\\3.Godina\\SI\\revolutionn\\src\\Backend\\Backend\\Backend.csproj",
+        "projectUniqueName": "C:\\Users\\laraa\\Desktop\\revolutionn\\src\\Backend\\Backend\\Backend.csproj",
         "projectName": "Backend",
-        "projectPath": "C:\\Users\\Radoje\\Desktop\\Vezba\\3.Godina\\SI\\revolutionn\\src\\Backend\\Backend\\Backend.csproj",
-        "packagesPath": "C:\\Users\\Radoje\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Radoje\\Desktop\\Vezba\\3.Godina\\SI\\revolutionn\\src\\Backend\\Backend\\obj\\",
+        "projectPath": "C:\\Users\\laraa\\Desktop\\revolutionn\\src\\Backend\\Backend\\Backend.csproj",
+        "packagesPath": "C:\\Users\\laraa\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\laraa\\Desktop\\revolutionn\\src\\Backend\\Backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\Radoje\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\laraa\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -47,6 +46,10 @@
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
               "version": "[6.0.2, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.3, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

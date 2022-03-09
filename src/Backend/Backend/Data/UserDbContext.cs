@@ -18,6 +18,6 @@ namespace Backend.Models
         {
             options.UseSqlite(Configuration.GetConnectionString("ConnectionStr"));
         }*/
-        public DbSet<UserDto> RegisteredUsers { get; set; }
+        public DbSet<User> RegistrovaniUseri { get; set; }
     }
 }
