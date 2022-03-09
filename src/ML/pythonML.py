@@ -1,3 +1,4 @@
+from sklearn import metrics
 import tensorflow as tf
 from tensorflow import keras
 from keras import Sequential
@@ -16,7 +17,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import VarianceThreshold
 
 # dataset
-data = pd.read_csv("./src/ML/train.csv")
+data = pd.read_csv("train.csv")
 data.head()
 data.info
 
@@ -127,7 +128,37 @@ model.add(Dense(1, activation='sigmoid'))
 
 model.summary()
 
-model.compile(optimizer = 'adam', loss='binary_crossentropy', metrics=['accuracy'] )
+model.compile(optimizer = 'adam', loss='binary_crossentropy', metrics=['accuracy','AUC'] )
 history = model.fit(X_train, y_train, epochs=10, validation_data = (X_test, y_test), verbose=1)
 
-history.history
+
+
+def plot_learning_curve(history, epoch):
+    #plot training and validation accuracy values
+    epoch_range = range(1, epoch+1)
+    plt.plot(epoch_range, history.history['accuracy'])
+    plt.plot(epoch_range, history.history['val_accuracy'])
+    plt.title("Model accuracy")
+    plt.ylabel("Accuracy")
+    plt.xlabel("Epoch")
+    plt.legend(['Train', 'Val'], loc='upper left')
+    plt.show()
+
+    #plot training and validation loss values
+    plt.plot(epoch_range, history.history['loss'])
+    plt.plot(epoch_range, history.history['val_loss'])
+    plt.title("Model loss")
+    plt.ylabel("Loss")
+    plt.xlabel("Epoch")
+    plt.legend(['Train', 'Val'], loc='upper left')
+    plt.show()
+
+    plt.plot(epoch_range, history.history['auc'])
+    plt.plot(epoch_range, history.history['val_auc'])
+    plt.title("Model AUC")
+    plt.ylabel("AUC")
+    plt.xlabel("Epoch")
+    plt.legend(['Train', 'Val'], loc='upper left')
+    plt.show()
+
+plot_learning_curve(history, 10)
