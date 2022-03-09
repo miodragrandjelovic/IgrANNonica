@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src",
+    "\\src\\Backend"
   ],
-  "SelectedNode": "\\C:\\Users\\laraa\\Desktop\\projekat",
+  "SelectedNode": "\\src\\Backend",
   "PreviewInSolutionExplorer": false
 }

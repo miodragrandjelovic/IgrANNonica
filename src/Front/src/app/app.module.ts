@@ -7,6 +7,8 @@ import { FooterComponent } from './footer/footer.component';
 import { RegistracijaComponent } from './registracija/registracija.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { PrijavaComponent } from './prijava/prijava.component';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
@@ -19,12 +21,14 @@ import { HomeComponent } from './home/home.component';
     RegistracijaComponent,
     NavigationComponent,
     PrijavaComponent,
-    HomeComponent
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
