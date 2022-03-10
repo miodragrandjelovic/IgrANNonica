@@ -142,9 +142,13 @@ namespace Backend.Controllers
         {
             var user = await _context.RegistrovaniUseri.SingleOrDefaultAsync(x => x.Username == request.Username);
 
-            if (user.Username != request.Username)
+            if(user == null)
             {
                 return BadRequest("Korisnik nije pronadjen!");
+            }
+            if (user.Username != request.Username)
+            {
+                return BadRequest("Pogresan username!");
             }
             if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             {
