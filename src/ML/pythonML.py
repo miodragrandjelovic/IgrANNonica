@@ -17,7 +17,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import VarianceThreshold
 
 # dataset
-data = pd.read_csv("train.csv")
+data = pd.read_csv("./src/ML/train.csv")
 data.head()
 data.info
 
