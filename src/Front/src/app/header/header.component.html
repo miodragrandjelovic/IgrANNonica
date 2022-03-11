@@ -1,3 +1,4 @@
+
 <div class="row">
   <div class="col-12">
     <nav class="navbar navbar-expand navbar-dark bg-dark">
@@ -16,14 +17,52 @@
           <a class="nav-link" [routerLink]="['/prijava']">LOG IN</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link"[routerLink]="['/registracija']">SIGN UP</a>
+          <button class="btn btn-md btn-outline-primary" (click)="open(content)">SIGN UP</button>
         </li>
       </ul>
     </nav>
   </div>
 </div>
 
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Welcone to Igrannonica</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="col-lg-7">
+      <form class="was-validated">
+        <div class="form-group col-md-10">
+          <label>First name</label>
+          <input type="text" class="form-control form-control-lg" required>
+          <div class="valid-feedback">Valid.</div>
+          <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        <div class="form-group col-md-10">
+          <label>Last name</label>
+          <input type="text" class="form-control form-control-lg" required>
+          <div class="valid-feedback">Valid.</div>
+          <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        <div class="form-group col-md-10">
+          <label>Username</label>
+          <input type="text" class="form-control form-control-lg" required>
+          <div class="valid-feedback">Valid.</div>
+          <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        <div class="form-group col-md-10">
+          <label>Password</label>
+          <input type="password" class="form-control form-control-lg" required>
+          <div class="valid-feedback">Valid.</div>
+          <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
 
-
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn1" (click)="modal.close('Save click')">Create Account</button>
+  </div>
+</ng-template>
 
 
