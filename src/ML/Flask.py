@@ -1,13 +1,16 @@
-from flask import Flask, jsonify
-import json
-from json import JSONEncoder
 
-app = Flask(name)
+from flask import Flask
+from flask import jsonify
 
-@app.route("/students", methods=['GET'])
-def  getAllStudents():
+app = Flask(__name__)
 
-    return jsonify([{"Ime": "lazar", "Indeks": "456"}, {"Ime": "lazar", "Indeks": "456"}, {"Ime": "lazar", "Indeks": "456"},])
+@app.route("/users", methods=['GET'])
+def  getAllUsers():
 
-if(name=="main"):
-    app.run(port = 3000)
+    return jsonify([{"FirstName": "petar", "LastName": "peric","Username": "pera", "Password": "sifra123"},
+    {"FirstName": "mika", "LastName": "mikic","Username": "mika", "Password": "sifra123"},
+    {"FirstName": "milan", "LastName": "milanic","Username": "milan", "Password": "sifra123"}])
+
+#if(__name__=="main"):
+app.run(port = 3000)
+
