@@ -101,7 +101,10 @@ namespace Backend.Controllers
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
            
-            _context.RegistrovaniUseri.Add(user);
+            //_context.RegistrovaniUseri.Add(user);
+            //otklanja gresku i kreira novog usera ali mu ne menja id pa ga ni ne ubacuje u bazu jer user sa tim id-jem vec postoji
+            _context.ChangeTracker.TrackGraph(user, node =>
+                node.Entry.State = !node.Entry.IsKeySet ? EntityState.Added : EntityState.Unchanged);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
@@ -112,6 +115,14 @@ namespace Backend.Controllers
             {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+        }
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using (var hmac = new HMACSHA512(passwordSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return computedHash.SequenceEqual(passwordHash);
             }
         }
 
@@ -179,14 +190,5 @@ namespace Backend.Controllers
             return jwt;
         }
 
-
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
-            }
-        }
     }
 }
