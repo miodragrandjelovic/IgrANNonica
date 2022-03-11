@@ -2,6 +2,7 @@
 <div class="row">
   <div class="col-12">
     <nav class="navbar navbar-expand navbar-dark bg-dark">
+      <span style="color: red;">LOGO</span>
       <ul class="navbar-nav-ml-auto">
 
         <li class="nav-item">
@@ -14,17 +15,17 @@
           <a class="nav-link" [routerLink]="['/home']">INFORMATION</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/prijava']">LOG IN</a>
+          <button class="btn btn-md btn-outline-primary" (click)="openLogin(contentLogin)">LOG IN</button>
         </li>
         <li class="nav-item">
-          <button class="btn btn-md btn-outline-primary" (click)="open(content)">SIGN UP</button>
+          <button class="btn btn-md btn-outline-primary" (click)="openRegister(contentRegister)">SIGN UP</button>
         </li>
       </ul>
     </nav>
   </div>
 </div>
 
-<ng-template #content let-modal>
+<ng-template #contentRegister let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Welcone to Igrannonica</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
@@ -65,4 +66,33 @@
   </div>
 </ng-template>
 
+
+<ng-template #contentLogin let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Welcome back</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="col-lg-7">
+      <form class="was-validated">
+        <div class="form-group col-md-10">
+          <label>Username</label>
+          <input type="text" class="form-control form-control-lg" required>
+          <div class="valid-feedback">Valid.</div>
+          <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        <div class="form-group col-md-10">
+          <label>Password</label>
+          <input type="password" class="form-control form-control-lg" required>
+          <div class="valid-feedback">Valid.</div>
+          <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn1" (click)="modal.close('Save click')">Log in</button>
+  </div>
+</ng-template>
 

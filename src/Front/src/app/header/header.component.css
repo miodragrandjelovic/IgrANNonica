@@ -1,10 +1,8 @@
 
-
 ul{
   float: right;
   list-style-type: none;
   margin: auto;
-
 }
 
 ul li{
@@ -22,8 +20,6 @@ li a{
 .modal-body{
   margin-left: 100px;
 }
-
-
 ::ng-deep .btn1{
   border: none;
   outline: none;
@@ -39,7 +35,6 @@ li a{
   border: 1px solid;
   color: black;
 }
-
 ::ng-deep .form-control{
   width: 300px;
 }
