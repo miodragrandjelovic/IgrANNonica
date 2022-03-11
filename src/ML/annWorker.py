@@ -1,6 +1,6 @@
 #hiperparametri koje treba da prosledi bek
 
-import linear as lin
+import linear
 
 
 url = './src/ML/train.csv'
@@ -20,7 +20,7 @@ hidden_layers_n = 4
 hidden_layer_neurons = [50,50,50,50]
 
 # this ration can go from 10 to 90 percent
-training_test_ratio = 0.1
+training_test_ratio = 0.8
 
 # noise can go from 0 to 50
 noise = 0
@@ -39,8 +39,7 @@ label = 'TARGET'
 # mean absolute error
 # hinge loss
 
-
-lin.complete_process(url , label , epochs, training_test_ratio , activation_function, input_layer_neurons, hidden_layers_n, hidden_layer_neurons)
+linear.complete_process(url , label , epochs, training_test_ratio , activation_function, input_layer_neurons, hidden_layers_n, hidden_layer_neurons)
 
 
 
