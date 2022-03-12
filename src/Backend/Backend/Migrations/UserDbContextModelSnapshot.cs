@@ -21,7 +21,7 @@ namespace Backend.Migrations
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER");                 
 
                     b.Property<string>("FirstName")
                         .IsRequired()

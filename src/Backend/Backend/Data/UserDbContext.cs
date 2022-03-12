@@ -4,10 +4,7 @@ namespace Backend.Models
 {
     public class UserDbContext : DbContext
     {      
-        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
-        {
-
-        }
+        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options){ }
         /*
         protected readonly IConfiguration Configuration;
         public UserDbContext(IConfiguration configuration)
