@@ -97,17 +97,23 @@ namespace Backend.Controllers
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
+            user.Email = request.Email;
             user.Username = request.Username;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
            
             //_context.RegistrovaniUseri.Add(user);
+            
             //otklanja gresku i kreira novog usera ali mu ne menja id pa ga ni ne ubacuje u bazu jer user sa tim id-jem vec postoji
             _context.ChangeTracker.TrackGraph(user, node =>
                 node.Entry.State = !node.Entry.IsKeySet ? EntityState.Added : EntityState.Unchanged);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+        }
+        private bool User_postoji(string username)
+        {
+            return _context.RegistrovaniUseri.Any(e => e.Username == username);
         }
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
