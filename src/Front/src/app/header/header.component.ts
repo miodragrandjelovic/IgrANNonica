@@ -11,6 +11,24 @@ import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 export class HeaderComponent implements OnInit {
   closeResult: string | undefined;
 
+  navItems=[
+    {
+      path:'/home',
+      name:'Home'
+    },
+    {
+      path:'/about',
+      name:'About'
+    },
+    {
+      path:'/informations',
+      name:'Informations'
+    },
+    {
+      path:'/profile',
+      name:'Profile'
+    }
+  ]
  
   constructor(
     private httpClient: HttpClient,

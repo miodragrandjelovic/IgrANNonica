@@ -1,29 +1,42 @@
 
-<div class="row">
-  <div class="col-12">
-    <nav class="navbar navbar-expand navbar-dark bg-dark">
-      <span style="color: red;">LOGO</span>
-      <ul class="navbar-nav-ml-auto">
+<!--///////////////////NAVBAR////////////////-->
 
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">LOGO</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/home']">HOME</a>
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/home']">ABOUT</a>
+          <a class="nav-link active" aria-current="page" href="#">About</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/home']">INFORMATION</a>
+          <a class="nav-link active" aria-current="page" href="#">Informations</a>
         </li>
-        <li class="nav-item">
-          <button class="btn btn-md btn-outline-primary" (click)="openLogin(contentLogin)">LOG IN</button>
-        </li>
-        <li class="nav-item">
-          <button class="btn btn-md btn-outline-primary" (click)="openRegister(contentRegister)">SIGN UP</button>
+
+        <li ngbDropdown class="nav-item dropdown">
+          <a ngbDropdownToggle class="nav-link dropdown-toggle"  data-bs-toggle="dropdown" aria-current="page" href="#">Profile</a>
+          <div ngbDropdownMenu class="dropdown-menu" >
+            <li class="nav-item">
+              <a ngbDropdownItem class="nav-link" aria-current="page" role="button" (click)="openLogin(contentLogin)">Login</a>
+            </li>
+              <li class="nav-item">
+              <a ngbDropdownItem class="nav-link" role="button" (click)="openRegister(contentRegister)">Sign up</a>
+             </li>
+          </div>
         </li>
       </ul>
-    </nav>
+    </div>
   </div>
-</div>
+</nav>
+
+
+<!--///////////////////REGISTRACIJA I LOGIN////////////////-->
 
 <ng-template #contentRegister let-modal>
   <div class="modal-header">
@@ -35,25 +48,25 @@
       <form class="was-validated">
         <div class="form-group col-md-10">
           <label>First name</label>
-          <input type="text" class="form-control form-control-lg" required>
+          <input type="text"  id="firstname" ngModel name="firstname" class="form-control form-control-lg" required>
           <div class="valid-feedback">Valid.</div>
           <div class="invalid-feedback">Please fill out this field.</div>
         </div>
         <div class="form-group col-md-10">
           <label>Last name</label>
-          <input type="text" class="form-control form-control-lg" required>
+          <input type="text" id="lastname" ngModel name="lastname" class="form-control form-control-lg" required>
           <div class="valid-feedback">Valid.</div>
           <div class="invalid-feedback">Please fill out this field.</div>
         </div>
         <div class="form-group col-md-10">
           <label>Username</label>
-          <input type="text" class="form-control form-control-lg" required>
+          <input type="text" id="username" ngModel name="username" class="form-control form-control-lg" required>
           <div class="valid-feedback">Valid.</div>
           <div class="invalid-feedback">Please fill out this field.</div>
         </div>
         <div class="form-group col-md-10">
           <label>Password</label>
-          <input type="password" class="form-control form-control-lg" required>
+          <input type="password"  id="password" ngModel name="password" class="form-control form-control-lg" required>
           <div class="valid-feedback">Valid.</div>
           <div class="invalid-feedback">Please fill out this field.</div>
         </div>
@@ -62,14 +75,14 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn1" (click)="modal.close('Save click')">Create Account</button>
+    <button type="submit" class="btn1" (click)="modal.close('Save click')">Create Account</button>
   </div>
 </ng-template>
 
 
 <ng-template #contentLogin let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Welcome back</h4>
+    <h4 class="modal-title" id="modal-basic-title1">Welcome back</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
@@ -77,13 +90,13 @@
       <form class="was-validated">
         <div class="form-group col-md-10">
           <label>Username</label>
-          <input type="text" class="form-control form-control-lg" required>
+          <input type="text" id="username" ngModel name="username" class="form-control form-control-lg" required>
           <div class="valid-feedback">Valid.</div>
           <div class="invalid-feedback">Please fill out this field.</div>
         </div>
         <div class="form-group col-md-10">
           <label>Password</label>
-          <input type="password" class="form-control form-control-lg" required>
+          <input type="password"  id="password" ngModel name="password"  class="form-control form-control-lg" required>
           <div class="valid-feedback">Valid.</div>
           <div class="invalid-feedback">Please fill out this field.</div>
         </div>
@@ -92,7 +105,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn1" (click)="modal.close('Save click')">Log in</button>
+    <button type="submit" class="btn1" (click)="modal.close('Save click')">Log in</button>
   </div>
 </ng-template>
+
+
 
