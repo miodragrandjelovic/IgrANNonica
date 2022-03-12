@@ -88,7 +88,7 @@ namespace Backend.Controllers
             return NoContent();
         }
       
-      //  public static User user = new User();
+        //  public static User user = new User();
         // POST: api/RegistracijaUsera
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost] //-------------------------------------------------------------------------------------------------------------
@@ -112,25 +112,15 @@ namespace Backend.Controllers
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt
                 });
-            //_context.SaveChanges();
             //Console.WriteLine(_context.ChangeTracker.DebugView.LongView);
-
-            //otklanja gresku i kreira novog usera ali mu ne menja id pa samo menja usera koji je registrovan pre njega jer imaju isti id
-            //_context.ChangeTracker.TrackGraph(user, node =>
-            //    node.Entry.State = !node.Entry.IsKeySet ? EntityState.Added : EntityState.Modified);
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+            var entries = _context.ChangeTracker.Entries().Where(e => e.State == EntityState.Added).Select(e => new { e.State, e }).ToList();
+            return CreatedAtAction("GetUser", new { id = user.UserId}, user);
         }
         private bool User_postoji(string username)
         {
             return _context.RegistrovaniUseri.Any(e => e.Username == username);
         }
-        /*private int Vrati_id(string username2)
-        {
-            u = new User;
-            return _context.RegistrovaniUseri.Any(user2 => user2.Username == username2);
-        }*/
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512())
