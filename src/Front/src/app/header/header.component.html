@@ -10,23 +10,23 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link active" style="color: rgb(175, 38, 38);" aria-current="page"  [routerLink]="['/home']">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">About</a>
+          <a class="nav-link active" aria-current="page"  [routerLink]="['/about']">About</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Informations</a>
+          <a class="nav-link active" aria-current="page" [routerLink]="['/informations']">Informations</a>
         </li>
 
         <li ngbDropdown class="nav-item dropdown">
           <a ngbDropdownToggle class="nav-link dropdown-toggle"  data-bs-toggle="dropdown" aria-current="page" href="#">Profile</a>
           <div ngbDropdownMenu class="dropdown-menu" >
             <li class="nav-item">
-              <a ngbDropdownItem class="nav-link" aria-current="page" role="button" (click)="openLogin(contentLogin)">Login</a>
+              <a ngbDropdownItem class="nav-link" style="background-color: black;" aria-current="page" role="button" (click)="openLogin(contentLogin)">Login</a>
             </li>
               <li class="nav-item">
-              <a ngbDropdownItem class="nav-link" role="button" (click)="openRegister(contentRegister)">Sign up</a>
+              <a ngbDropdownItem class="nav-link" style="background-color: black;" role="button" (click)="openRegister(contentRegister)">Sign up</a>
              </li>
           </div>
         </li>

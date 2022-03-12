@@ -1,15 +1,5 @@
-div{
-  text-align: center;
-}
-
-.footer{
-  text-align: center;
-  padding: 10px;
-  background-color: black;
-}
-
-ul  li{
-  text-decoration: none;
-  display: inline-block;
-  padding: 10px;
+#footer_wraper{
+    background-color: black;
+    color: rgb(175, 38, 38);
+    height: 150px;
 }
