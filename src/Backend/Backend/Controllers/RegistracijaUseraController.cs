@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using Newtonsoft.Json;
 
 namespace Backend.Controllers
 {
@@ -159,7 +160,6 @@ namespace Backend.Controllers
             return _context.RegistrovaniUseri.Any(e => e.UserId == id);
         }
 
-
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(UserDto request)
         {
@@ -178,8 +178,12 @@ namespace Backend.Controllers
                 return BadRequest("Pogresna sifra!");
             }
 
-            string token = CreateToken(user);
-            return Ok(token);
+            string token1 = CreateToken(user);
+            var jtoken = new
+            {
+                Token = token1
+            };
+            return Ok(jtoken);
         }
         private string CreateToken(User user)
         {
