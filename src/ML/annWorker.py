@@ -1,14 +1,17 @@
+# ANN WORKER SENDS ALL THE PARAMETARS FOR NEURAL NETWORK TO PY FILE
+
 #hiperparametri koje treba da prosledi bek
 
-import linear
+import py
 
-
-url = './src/ML/train.csv'
-activation_function = 'relu'
+type='regression' # or classification
+train = './src/ML/train.csv'
+test = './src/ML/test.csv'
+activation_function = 'sigmoid'
 learning_rate = '0.03'
 regularization = 'None'
 regularization_rate = '0'
-type = 'regression'
+encode_type = 'regression'
 epochs = 10
 
 
@@ -39,8 +42,8 @@ label = 'TARGET'
 # mean absolute error
 # hinge loss
 
-linear.complete_process(url , label , epochs, training_test_ratio , activation_function, input_layer_neurons, hidden_layers_n, hidden_layer_neurons)
 
+(history, test_data) = py.create_model(type, train, test, label, epochs, training_test_ratio, activation_function, input_layer_neurons, hidden_layers_n, hidden_layer_neurons, encode_type)
 
 
 
