@@ -1,11 +1,12 @@
 from flask import Flask
 from flask import jsonify,request
 
+
 app = Flask(__name__)
 
-users=[{"FirstName": "petar", "LastName": "peric","Username": "pera", "Password": "sifra123"},
-    {"FirstName": "mika", "LastName": "mikic","Username": "mika", "Password": "sifra123"},
-    {"FirstName": "milan", "LastName": "milanic","Username": "milan", "Password": "sifra123"}]
+users=[{"FirstName": "petar", "LastName": "peric","Email": "e@gmail.com","Username": "pera", "Password": "sifra123"},
+    {"FirstName": "mika", "LastName": "mikic","Email": "e@gmail.com","Username": "mika", "Password": "sifra123"},
+    {"FirstName": "milan", "LastName": "milanic","Email": "e@gmail.com","Username": "milan", "Password": "sifra123"}]
 
 
 #@app.route("/users",methods=['POST'])
