@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text;
+
 namespace Backend.Controllers
 {
     [Route("api/[controller]")]
@@ -19,28 +21,17 @@ namespace Backend.Controllers
 
             return Ok(users);
         }
-        /*
+
         [HttpPost]
-        public async Task<ActionResult<UserDto>> Post()
+        public async Task<IActionResult> Post(UserDto user)
         {
-
-            HttpResponseMessage httpResponse = await http.PostAsync("http://127.0.0.1:3000/users");
-            var users = JsonSerializer.Deserialize<List<UserDto>>(await httpResponse.Content.ReadAsStringAsync());
-
-            UserDto user1=new UserDto();
-            user1.FirstName = "pera";
-            user1.LastName = "perci";
-            user1.Username = "pera";
-            user1.Password = "sifra123";
-            /*UserDto user2=new UserDto();
-            user2.FirstName = "mika";
-            user2.LastName = "mikic";
-            user2.Username = "mika";
-            user2.Password = "sifra123";
-            return user1;
-            
-    }
-*/
+            var studentJson = JsonSerializer.Serialize(user);
+            var data = new StringContent(studentJson, System.Text.Encoding.UTF8, "application/json");
+            var url = "http://127.0.0.1:3000/users";
+            var response = await http.PostAsync(url, data);
+            var studenti = JsonSerializer.Deserialize<UserDto>(await response.Content.ReadAsStringAsync());
+            return Ok(studenti);
+        }
 
     }
 }
