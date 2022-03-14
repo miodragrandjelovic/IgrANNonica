@@ -1,5 +1,5 @@
 <div id="center"> 
-    <!--<img [src]="myimage" alt=""class="img-fluid">
+   <!--<img [src]="myimage" alt=""class="img-fluid">
    <span class="animated zoomInRight infinite" style="animation-delay:2s">Welcome to RevolutionN<br>Begin your journey with neural network now </span>-->
    <div id="top-controls">
     <div class="container l--page">
@@ -72,6 +72,36 @@
     </div>
   </div>
 
-  
-
+    
+  <div id="main-part">
+    <div class="ui-percTrainData">
+      <label for="percTrainData">Ratio of training to test data:<span class="value"></span></label>
+      <p class="slider">
+        <input type="range" min="10" max="90" step="10" oninput="this.nextElementSibling.value = this.value">
+        <output>10</output>
+      </p>
+    </div>
+    <div class="ui-noise">
+      <label for="noise">Noise:<span class="value"></span></label>
+      <p class="slider">
+        <input type="range"  min="0" max="50" step="5" oninput="this.nextElementSibling.value = this.value">
+        <output>0</output>
+      </p>
+    </div>
+    <div class="ui-batchSize">
+      <label for="batchSize">Batch size:<span class="value"></span></label>
+      <p class="slider">
+        <input type="range" min="1" max="30" step="1" oninput="this.nextElementSibling.value = this.value">
+        <output>1</output>
+      </p>
+    </div>
+    
+      <button class="basic-button" id="data-regen-button" title="Regenerate data">
+        Regenerate
+      </button>
   </div>
+
+  <app-registracija></app-registracija>
+   
+</div>
+  

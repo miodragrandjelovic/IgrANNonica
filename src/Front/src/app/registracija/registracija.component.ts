@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { RegistracijaService } from './registracija.service';
 
+
 @Component({
   selector: 'app-registracija',
   templateUrl: './registracija.component.html',

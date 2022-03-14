@@ -11,7 +11,8 @@ export class SredinaComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  myimage:string="assets/images/naPocetnoj.jpg";
 
- 
+  /**myimage:string="assets/images/naPocetnoj.jpg";*/
+
+
 }
