@@ -13,19 +13,24 @@
 
 import linear as ln
 
-def create_model(type,train,test,label,epochs ,ratio, activation_function,input_layer_neurons, hidden_layers_n, hidden_layer_neurons_list, encode_type):
+def create_model(type,train,label,epochs ,ratio, activation_function,input_layer_neurons, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size):
     # load data in suitable forms 
-    (X_train, X_test, y_train, y_test, test_data) = ln.load_split_data(train, test, label, ratio)
+    (X_train, X_test, y_train, y_test) = ln.load_split_data(train, label, ratio, randomize, encode_type)
     
     # after loading data, we need to transform it 
-    (X_train, X_test, y_train, y_test) = ln.clear_data(X_train, X_test, y_train,y_test, encode_type)
+    (X_train, X_test, y_train, y_test) = ln.clear_data(X_train, X_test, y_train,y_test)
 
     # making and training the model
-    (history, model) = ln.make_model(epochs, X_train, X_test, y_train, y_test, input_layer_neurons, hidden_layers_n, hidden_layer_neurons_list, activation_function)
+    (history, model) = ln.make_model(epochs, X_train, X_test, y_train, y_test, input_layer_neurons, hidden_layers_n, hidden_layer_neurons_list, activation_function, batch_size)
+
 
     # evaluating the model
+    #(test_loss, test_acc) = model.evaluate(X_test, y_test)
+    #print("THE MODEL WE'VE TRAINED:")
+    #print("LOSS: ",test_loss," ACCURACY: ",test_acc)
+    
     ln.plot_result(history, epochs)
 
     # return history to worker
-    return history, test_data
+    return history
 

@@ -27,7 +27,7 @@ def feature_and_label(data, label):
     y = data.pop(label)
     return data,y
 
-def split_data(X, y, ratio):
+def split_data(X, y, ratio, randomize):
     (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=0)
     return (X_train, X_test, y_train, y_test)
 
@@ -67,9 +67,24 @@ def filter_data(X_train, X_test):
 
     return X_train, X_test
 
-def encode_categorical(X_train, X_test, encoding):
-    
-    return (X_train, X_test)
+def one_hot_encoder(dataframe, categorical_cols, drop_first=True):
+    dataframe = pd.get_dummies(dataframe, columns=categorical_cols, drop_first=drop_first)
+    return dataframe
+
+def encode_categorical(df, encoding):
+    # data can be encoded in three ways
+    # in order which one we chose, we have different approaches
+    # switch to case
+    if (encoding == 'onehot'):
+        print("ENCODING ONE HOT ENCODER")
+        ohe_cols = df.select_dtypes(include=['object','category']).columns.tolist()
+
+        df = one_hot_encoder(df, ohe_cols)
+    elif (encoding == 'integer'):
+        pass
+    elif (encoding == 'learned'):
+        pass
+    return (df)
 
 def scale_data(X_train, X_test, y_train, y_test):
     # print("Before scaling: ", X_train.shape)
@@ -95,7 +110,7 @@ def regression(X_train, input_layer_neurons, hidden_layers_n, hidden_layer_neuro
 
     # input layer
     # should have same shape as number of input features (columns)
-    model.add(Input(shape=(X_train.shape[1],)))
+    model.add(Flatten(input_shape=(X_train.shape[1],)))
     
     # hidden layers
     for i in range(hidden_layers_n):
@@ -112,42 +127,18 @@ def regression(X_train, input_layer_neurons, hidden_layers_n, hidden_layer_neuro
     model.summary()
     return model
 
-def regression_2(X_train, input_layer_neurons, hidden_layers_n, hidden_layer_neurons_list, activation_function):
-    model = Sequential()
-    model.add(Conv1D(32, 3, activation='relu', input_shape=(X_train.shape[1],1)))
-    model.add(BatchNormalization())
-    model.add(MaxPool1D(2))
-    model.add(Dropout(0.3))
-
-    model.add(Conv1D(64, 3, activation='relu'))
-    model.add(BatchNormalization())
-    model.add(MaxPool1D(2))
-    model.add(Dropout(0.5))
-
-    model.add(Conv1D(128, 3, activation='relu'))
-    model.add(BatchNormalization())
-    model.add(MaxPool1D(2))
-    model.add(Dropout(0.5))
-
-    model.add(Flatten())
-    model.add(Dense(X_train.shape[1], activation='relu'))
-    model.add(Dropout(0.5))
-
-    model.add(Dense(1, activation='sigmoid'))
-
-
-    return model
-
-
 
 def compile_model(model):
     # these are the best options for linear regression!!
     model.compile(optimizer='sgd', loss=MeanSquaredError(), metrics=['accuracy','mse','mae','AUC'])
     return model 
 
-def train_model(model, X_train, y_train, epochs, X_test, y_test):
-    return model.fit(X_train, y_train, epochs=epochs, validation_data = (X_test, y_test))
+def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
+    #print(X_train.shape)
+    #print(X_train)
+    return model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_test, y_test)) # VALIDATION DATA=(X_VAL, Y_VAL) 
 
-def evaluate_model(model, X_test, y_test):
-    return model.evaluate(X_test, verbose=1, validation_data=(X_test, y_test))
-   
+def missing_data(data):
+    # find missing values, and replace with ideal or drop
+    data = data.fillna(0)
+    return data

@@ -4,28 +4,28 @@
 import functions as fn
 import matplotlib.pyplot as plt
 
-def load_split_data(train_file,test_file, label , ratio):
-    
+def load_split_data(train_file, label , ratio,randomize, encode_type):
+    # load all data
     data = fn.load_data(train_file)
+
+    # deal with missing data
+    data = fn.missing_data(data)
+
+    # encoding categorical data
+    data =  fn.encode_categorical(data, encode_type)
+
     # split x and y (features and label)
     X, y = fn.feature_and_label(data, label)
-    # split test and train
-    (X_train, X_test, y_train, y_test) = fn.split_data(X, y, ratio)
 
-    test_data = False
-    if (test_file):
-        #that means user has no test file, and we need to load it too
-        test_data = fn.load_data(test_file)
-     
+    # split test and train
+    (X_train, X_test, y_train, y_test) = fn.split_data(X, y, ratio, randomize)
+    
     # return the split data in the end
-    return (X_train, X_test, y_train, y_test, test_data)
+    return (X_train, X_test, y_train, y_test)
         
-def clear_data(X_train, X_test, y_train,y_test, encode_type):
+def clear_data(X_train, X_test, y_train,y_test):
     # first take out the values that do not impact the model
     (X_train, X_test) = fn.filter_data(X_train, X_test)
-
-    # now, encode the data
-    (X_train, X_test) = fn.encode_categorical(X_train, X_test, encode_type)
 
     # now, shape all data
     (X_train, X_test, y_train, y_test) = fn.scale_data(X_train, X_test, y_train, y_test)
@@ -33,7 +33,7 @@ def clear_data(X_train, X_test, y_train,y_test, encode_type):
     # return data
     return (X_train, X_test, y_train, y_test)
 
-def make_model(epochs, X_train,X_test,y_train,y_test,input_layer_neurons,hidden_layers_n,hidden_layer_neurons_list, activation_function):
+def make_model(epochs, X_train,X_test,y_train,y_test,input_layer_neurons,hidden_layers_n,hidden_layer_neurons_list, activation_function, batch_size):
     # make model
     model = fn.regression(X_train, input_layer_neurons,hidden_layers_n,hidden_layer_neurons_list,activation_function)
 
@@ -41,7 +41,7 @@ def make_model(epochs, X_train,X_test,y_train,y_test,input_layer_neurons,hidden_
     model = fn.compile_model(model)
 
     # train our model
-    history = fn.train_model(model, X_train, y_train, epochs, X_test, y_test)
+    history = fn.train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test)
 
     return history, model
 
