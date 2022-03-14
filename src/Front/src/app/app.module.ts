@@ -14,6 +14,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
+import { envelope,telephone } from 'ngx-bootstrap-icons';
+import { SredinaComponent } from './sredina/sredina.component';
+
+const icons = {
+  envelope,
+  telephone
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,6 +32,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NavigationComponent,
     PrijavaComponent,
     HomeComponent,
+    SredinaComponent,
  
   ],
   imports: [
@@ -32,6 +42,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     HttpClientModule,
     NgbModule,
+
+    NgxBootstrapIconsModule.pick(icons)
   ],
   providers: [],
   bootstrap: [AppComponent]

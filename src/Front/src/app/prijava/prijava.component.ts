@@ -8,15 +8,10 @@ import { PrijavaService } from './prijava.service';
   styleUrls: ['./prijava.component.css']
 })
 export class PrijavaComponent implements OnInit {
-
-
-  constructor(private PrijavaService: PrijavaService) {
-
-  }
+  constructor(private PrijavaService: PrijavaService){}
 
   ngOnInit(): void {
   }
-
 
   onSubmit(form: NgForm) {
     if (!form.valid) {
