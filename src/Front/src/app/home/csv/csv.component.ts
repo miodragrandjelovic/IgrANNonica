@@ -1,3 +1,4 @@
+import { HttpClient } from "@angular/common/http";
 import { Component } from "@angular/core";
 
 @Component({
@@ -5,6 +6,12 @@ import { Component } from "@angular/core";
     templateUrl: 'csv.component.html'
 })
 export class CsvComponent {
+
+    constructor(private http: HttpClient) {
+
+    }
+
+    dataObject:any = [];
 
     headingLines: any = [];
     rowLines: any = [];
@@ -22,7 +29,7 @@ export class CsvComponent {
                 let allTextLines = [];
                 allTextLines = csv.split('\n');
                 
-                let headers = allTextLines[0].split(/;|,/);
+                let headers = allTextLines[0].split(/;|,/).map((x:string) => x.trim());
                 let data = headers;
                 let headersArray = [];
 
@@ -35,16 +42,22 @@ export class CsvComponent {
 
                 let length = allTextLines.length - 1;
                 
-                let rows = [];
+                let rows:any = [];
                 for (let i = 1; i < length; i++) {
-                    rows.push(allTextLines[i].split(/;|,/));
+                    rows.push(allTextLines[i].split(/;|,/).map((x:string) => x.trim()));
+                    const obj:any = {};
+                    headersArray.forEach((header:any, j:any) => {
+                        obj[header] = rows[i - 1][j];
+                    })
+                    this.dataObject.push(obj);
                 }
                 length = rows.length;
                 for (let j = 0; j < length; j++) {
                     rowsArray.push(rows[j]);
                 }
                 this.rowLines.push(rowsArray);
-                console.log(this.rowLines);
+
+                return this.http.post<any>('https://localhost:7167/api/LoadData/csv', this.dataObject);
             }
         }
     }
