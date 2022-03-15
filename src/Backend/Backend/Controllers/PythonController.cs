@@ -27,10 +27,10 @@ namespace Backend.Controllers
         public async Task<ActionResult<DataLoad>> GetCsv()
         {
             HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/csv");
-            var data = JsonSerializer.Deserialize<List<DataLoad>>(await httpResponse.Content.ReadAsStringAsync());
-
+            var data = JsonSerializer.Deserialize<DataLoad>(await httpResponse.Content.ReadAsStringAsync());
             return Ok(data);
         }
+
 
         [HttpPost] //Slanje HP na pajton
         public async Task<IActionResult> Post(Hiperparametri hiper)

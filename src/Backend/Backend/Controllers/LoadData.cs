@@ -46,20 +46,20 @@ namespace Backend.Controllers
             var url = "http://127.0.0.1:3000/hp";
             var response = await http.PostAsync(url, data);
             //var hiperparametars = JsonSerializer.Deserialize<Hiperparametri>(await response.Content.ReadAsStringAsync());
-            return Ok(hiper);
-        }/*
+            return Ok(hiperjson);
+        }
         [HttpPost("csv")] //Slanje CSV na pajton
-        public async Task<ActionResult<DataLoad>> PostCsv(DataLoad csve)
+        public async Task<ActionResult<string>> PostCsv(string csve)
         {
-            var csvjson = JsonSerializer.Serialize(csve);
-            var data = new StringContent(csvjson, System.Text.Encoding.UTF8, "application/json");
+            //var csvjson = JsonSerializer.Serialize(csve);
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
             var url = "http://127.0.0.1:3000/csv";
             var response = await http.PostAsync(url, data);
             //var hiperparametars = JsonSerializer.Deserialize<Hiperparametri>(await response.Content.ReadAsStringAsync());
-            return Ok(csve);
-        }*/
+            return Ok(response);
+        }/*
         [HttpPost("csv")] //Slanje CSV na pajton
-        public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad csve)
+        public async Task<ActionResult<string>> PostCsv([FromBody] DataLoad csve)
         {
             var csvjson = JsonSerializer.Serialize(csve);
             var data = new StringContent(csvjson, System.Text.Encoding.UTF8, "application/json");
@@ -68,6 +68,15 @@ namespace Backend.Controllers
             //var hiperparametars = JsonSerializer.Deserialize<Hiperparametri>(await response.Content.ReadAsStringAsync());
             return Ok(csve);
         }
+        /* public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad csve)
+         {
+             var csvjson = JsonSerializer.Serialize(csve);
+             var data = new StringContent(csvjson, System.Text.Encoding.UTF8, "application/json");
+             var url = "http://127.0.0.1:3000/csv";
+             var response = await http.PostAsync(url, data);
+             //var hiperparametars = JsonSerializer.Deserialize<Hiperparametri>(await response.Content.ReadAsStringAsync());
+             return Ok(csve);
+         }*/
         /*[HttpPost("csvae")]
         public async Task<JsonObject> postujjson(JsonContent json)
         {
