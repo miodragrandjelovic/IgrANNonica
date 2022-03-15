@@ -11,5 +11,11 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
   }
+    currentVal=0;
+    getVal(val:any){
+    console.warn(val)
+    this.currentVal=val;
+  }
 
-}
+  }
+ 

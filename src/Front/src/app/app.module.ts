@@ -15,19 +15,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
 import { envelope,telephone } from 'ngx-bootstrap-icons';
-import { SredinaComponent } from './sredina/sredina.component';
-
-import{MatSidenavModule} from '@angular/material/sidenav';
-import{MatToolbarModule} from '@angular/material/toolbar';
-import{MatMenuModule} from '@angular/material/menu';
-import{MatIconModule} from '@angular/material/icon';
-import{MatDividerModule} from '@angular/material/divider';
-import{MatListModule} from '@angular/material/list';
-
-import{MatSliderModule} from '@angular/material/slider';
-
-import { NgxSliderModule } from '@angular-slider/ngx-slider';
-import { HiperparametriComponent } from './hiperparametri/hiperparametri.component';
 
 const icons = {
   envelope,
@@ -41,9 +28,7 @@ const icons = {
     FooterComponent,
     RegistracijaComponent,
     PrijavaComponent,
-    HomeComponent,
-    SredinaComponent,
-    HiperparametriComponent
+    HomeComponent
  
   ],
   imports: [
@@ -55,14 +40,7 @@ const icons = {
     NgbModule,
 
     NgxBootstrapIconsModule.pick(icons),
-    MatSidenavModule,
-    MatToolbarModule,
-    MatMenuModule,
-    MatIconModule,
-    MatDividerModule,
-    MatListModule,
-    MatSliderModule,
-    NgxSliderModule
+   
   ],
   providers: [],
   bootstrap: [AppComponent]

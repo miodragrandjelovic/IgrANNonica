@@ -22,8 +22,4 @@ export class RegistracijaService {
             password: password
         });
     }
-
-
-
-
 }

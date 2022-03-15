@@ -1,0 +1,14 @@
+
+  #tekstPocetna{
+    color: white;
+    position: absolute;
+    top: 220px;
+    left: 50px;
+    font-size: 40px;
+    font-family: 'Century Gothic';
+
+  }
+  #slikaPocetna img{
+    width: 100%;
+    position: relative;
+  }

@@ -1,84 +1,88 @@
 #center{
-    background-color:white;
-    height: 800px;
-    margin: auto;
-    width: 1250px;
+  background-color:white;
+  height: 800px;
+  margin: auto;
+  width: 1250px;
 }
-  /**.animated{
-    color: white;
-    position: absolute;
-    top: 100px;
-    right: 200px;
-    font-size: 30px;
-    font-family: 'Century Gothic';
-  }
-  #center img{
-    width: 100%;
-    position: relative;
-  }**/
+/**.animated{
+  color: white;
+  position: absolute;
+  top: 100px;
+  right: 200px;
+  font-size: 30px;
+  font-family: 'Century Gothic';
+}
+#center img{
+  width: 100%;
+  position: relative;
+}**/
 
 #top-controls {
-  border-bottom: 1px solid #ddd;
-  padding: 18px 0;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  background: white;
+border-bottom: 1px solid #ddd;
+padding: 18px 0;
+box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+background: white;
 }
 
 #top-controls .container {
-  display: flex;
-  justify-content: space-between;
+display: flex;
+justify-content: space-between;
 }
 
 #top-controls .timeline-controls {
-  display: flex;
-  align-items: center;
-  margin-right: 20px;
-  width: 140px;
+display: flex;
+align-items: center;
+margin-right: 20px;
+width: 140px;
 }
 #top-controls .control {
-  flex-grow: 1;
-  max-width: 180px;
-  min-width: 110px;
-  margin-left: 30px;
-  margin-top: 6px;
+flex-grow: 1;
+max-width: 180px;
+min-width: 110px;
+margin-left: 30px;
+margin-top: 6px;
 }
 #top-controls .control .label,
 #top-controls .control label {
-  color: rgb(175, 38, 38);
-  font-size: 13px;
-  margin-bottom: 6px;
-  font-weight: 300;
+color: rgb(175, 38, 38);
+font-size: 13px;
+margin-bottom: 6px;
+font-weight: 300;
 }
 #top-controls .control .value {
-  font-size: 24px;
-  margin: 0;
-  font-weight: 300;
+font-size: 24px;
+margin: 0;
+font-weight: 300;
 }
 #top-controls .control .select {
-  position: relative;
+position: relative;
 }
 #top-controls .control select {
-  
-  border-radius: 15px;
-  padding: 6px 0;
-  width: 100%;
-  font-size: 14px;
-  border: solid 1px rgb(175, 38, 38);
-  color: #333;
-  outline:rgb(175, 38, 38);
+
+border-radius: 15px;
+padding: 6px 0;
+width: 100%;
+font-size: 14px;
+border: solid 1px rgb(175, 38, 38);
+color: #333;
+outline:rgb(175, 38, 38);
 }
 
 #main-part{
-  background: whitesmoke;
-  margin-top: 30px;
-  padding-top: 2px;
-  position: relative;
+background: whitesmoke;
+margin-top: 30px;
+padding-top: 2px;
+
 }
 #main-part p,label {
-  font-weight: 300;
-  line-height: 1.38em;
-  margin: 0;
-  color: rgb(175, 38, 38);
-  font-size: 13px;
+font-weight: 300;
+line-height: 1.38em;
+margin: 0;
+color: rgb(175, 38, 38);
+font-size: 13px;
 }
-
+.blok{
+display: inline;
+margin-left: 150px;
+background: red;
+}

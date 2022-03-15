@@ -5,15 +5,12 @@ import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { PrijavaComponent } from './prijava/prijava.component';
 import { RegistracijaComponent } from './registracija/registracija.component';
-import { SredinaComponent } from './sredina/sredina.component';
-import { HiperparametriComponent } from './hiperparametri/hiperparametri.component';
+import { NavigationComponent } from './navigation/navigation.component';
 
 const routes: Routes = [
+  {path:'', component:NavigationComponent},
   {path:'home', component:HomeComponent},
-  {path: 'registracija', component:RegistracijaComponent},
-  {path:'prijava',component:PrijavaComponent},
-  {path:'sredina',component:SredinaComponent},
-  {path:'hiperparametri',component:HiperparametriComponent},
+
 ];
 
 @NgModule({
