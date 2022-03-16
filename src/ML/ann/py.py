@@ -13,7 +13,7 @@
 
 import linear as ln
 
-def create_model(type,train,label,epochs ,ratio, activation_function,input_layer_neurons, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size):
+def create_model(type,train,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate):
     # load data in suitable forms 
     (X_train, X_test, y_train, y_test) = ln.load_split_data(train, label, ratio, randomize, encode_type)
     
@@ -21,7 +21,7 @@ def create_model(type,train,label,epochs ,ratio, activation_function,input_layer
     #(X_train, X_test, y_train, y_test) = ln.clear_data(X_train, X_test, y_train,y_test)
 
     # making and training the model
-    (history, model) = ln.make_model(epochs, X_train, X_test, y_train, y_test, input_layer_neurons, hidden_layers_n, hidden_layer_neurons_list, activation_function, batch_size)
+    (history, model) = ln.make_model(epochs, X_train, X_test, y_train, y_test, hidden_layers_n, hidden_layer_neurons_list, activation_function, batch_size, learning_rate)
 
 
     # evaluating the model

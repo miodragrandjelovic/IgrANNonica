@@ -2,6 +2,7 @@ from tkinter.ttk import Label
 import pandas as pd
 import numpy as np
 from sklearn.feature_selection import VarianceThreshold
+from sklearn.linear_model import SGDClassifier, SGDRegressor
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder, StandardScaler, scale
 
 import tensorflow as tf
@@ -18,6 +19,7 @@ from keras.models import Sequential
 from keras import Input
 from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D
 from keras.losses import MeanSquaredError
+from keras.optimizer_v2 import adam
 
 
 def load_data(url):
@@ -133,7 +135,7 @@ def scale_data(X_train, X_test, y_train, y_test):
    
     return (X_train, X_test, y_train, y_test)
 
-def regression(X_train, input_layer_neurons, hidden_layers_n, hidden_layer_neurons_list, activation_function):
+def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_function):
     # here, we are making our model
     
     #print("SHAPE OF X TRAIN DATASET ", X_train.shape[0], " and ", X_train.shape[1])
@@ -159,7 +161,7 @@ def regression(X_train, input_layer_neurons, hidden_layers_n, hidden_layer_neuro
     return model
 
 
-def compile_model(model):
+def compile_model(model, learning_rate):
     # these are the best options for linear regression!!
     model.compile(optimizer='sgd', loss=MeanSquaredError(), metrics=['accuracy','mse','mae','AUC'])
     return model 

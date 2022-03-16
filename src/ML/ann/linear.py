@@ -41,12 +41,12 @@ def clear_data(X_train, X_test, y_train,y_test):
     # return data
     return (X_train, X_test, y_train, y_test)
 
-def make_model(epochs, X_train,X_test,y_train,y_test,input_layer_neurons,hidden_layers_n,hidden_layer_neurons_list, activation_function, batch_size):
+def make_model(epochs, X_train,X_test,y_train,y_test,hidden_layers_n,hidden_layer_neurons_list, activation_function, batch_size, learning_rate):
     # make model
-    model = fn.regression(X_train, input_layer_neurons,hidden_layers_n,hidden_layer_neurons_list,activation_function)
+    model = fn.regression(X_train,hidden_layers_n,hidden_layer_neurons_list,activation_function)
 
     #compile the model
-    model = fn.compile_model(model)
+    model = fn.compile_model(model, learning_rate)
 
     # train our model
     history = fn.train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test)

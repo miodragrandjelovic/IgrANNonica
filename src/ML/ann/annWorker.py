@@ -6,17 +6,15 @@ import py
 
 type='regression' # or classification
 train = './src/ML/ann/train.csv'
-activation_function = 'sigmoid'
-learning_rate = '0.03'
-regularization = 'None'
-regularization_rate = '0'
+activation_function = 'sigmoid' # relu, tahn, sigmoid, linear
+learning_rate = '0.03' # 0.00001, 0.0001, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10
+regularization = 'none' # none, L1, L2
+regularization_rate = '0' # 0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10
 encode_type = 'label'
 epochs = 12
 randomize = True
 
 
-# number of layers in input layer of neural network
-input_layer_neurons = 32
 # number of hidden layers in ann
 hidden_layers_n = 5
 # number of neurons inside each of hidden layers
@@ -43,4 +41,4 @@ label = 'TARGET'
 # hinge loss
 
 
-history = py.create_model(type, train, label, epochs, training_test_ratio, activation_function, input_layer_neurons, hidden_layers_n, hidden_layer_neurons, encode_type, randomize, batch_size)
+history = py.create_model(type, train, label, epochs, training_test_ratio, activation_function, hidden_layers_n, hidden_layer_neurons, encode_type, randomize, batch_size, learning_rate)
