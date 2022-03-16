@@ -29,7 +29,7 @@ def feature_and_label(data, label):
     return data,y
 
 def split_data(X, y, ratio, randomize):
-    (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=0)
+    (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=1)
     return (X_train, X_test, y_train, y_test)
 
 def filter_data(X_train, X_test):
@@ -68,21 +68,25 @@ def filter_data(X_train, X_test):
 
     return X_train, X_test
 
-def one_hot_encoder(dataframe, categorical_feature_mask):
+def one_hot_encoder(dataframe, categorical_cols):
     # instantiate OneHotEncoder
-    ohe = OneHotEncoder(categories=categorical_feature_mask, sparse=False) 
+    ohe = OneHotEncoder(sparse=False) 
     # categorical_features = boolean mask for categorical columns
     # sparse = False output an array not sparse matrix
 
-    # apply OneHotEncoder on categorical feature columns
-    X_ohe = ohe.fit_transform(dataframe) # It returns an numpy array
+    oh_frame = ohe.fit_transform(dataframe[categorical_cols])
+    #print(oh_frame)
+
+    data_ohe = pd.DataFrame(oh_frame, index = dataframe.index)
+    dataframe_noncategorical = dataframe.drop(columns=categorical_cols)
+    dataframe = pd.concat([dataframe_noncategorical, data_ohe], axis=1)
     return dataframe
 
 def label_encoding(dataframe, categorical_cols):
     le = LabelEncoder()
     # apply le on categorical feature columns
     dataframe[categorical_cols] = dataframe[categorical_cols].apply(lambda col: le.fit_transform(col))
-    dataframe[categorical_cols].head(10)
+    #dataframe[categorical_cols].head(10)
     return dataframe
 
 def learned_embedding(dataframe, categorical_cols):
@@ -98,10 +102,13 @@ def encode_data(df, encoding):
     # filter categorical columns using mask and turn it into a list
     categorical_cols = df.columns[categorical_feature_mask].tolist()
     
+    #print("categorical columns are")
+    #print(categorical_cols)
+
     if (encoding == 'onehot'):
         print("ENCODING ONE HOT ENCODER")
         df = one_hot_encoder(df, categorical_cols)
-    elif (encoding == 'integer'):
+    elif (encoding == 'label'):
         print("ENCODING LABEL ENCODER")
         df = label_encoding(df, categorical_cols)
     elif (encoding == 'learned'):
@@ -148,7 +155,7 @@ def regression(X_train, input_layer_neurons, hidden_layers_n, hidden_layer_neuro
     # if it's 2, the customer is not satisfied
     model.add(Dense(1, activation=activation_function))
 
-    model.summary()
+    #model.summary()
     return model
 
 

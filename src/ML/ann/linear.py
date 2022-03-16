@@ -8,16 +8,16 @@ def load_split_data(train_file, label , ratio,randomize, encode_type):
     # load all data
     data = fn.load_data(train_file)
 
-    print("before encoding")
-    print(data.head())
-    print(data.info)
-    print(data.dtypes)
+    #print("before encoding")
+    #print(data.head())
+    #print(data.info)
+    #print(data.dtypes)
 
     # encode data
     data = fn.encode_data(data, encode_type)
     
-    print("after encoding")
-    print(data.head())
+    #print("after encoding")
+    #print(data.head())
 
     # deal with missing data
     data = fn.missing_data(data)
