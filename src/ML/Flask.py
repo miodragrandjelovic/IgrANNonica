@@ -43,7 +43,6 @@ def  getAllHps():
 @app.route("/csv", methods=["POST"]) #Primanje CSV sa beka
 def post_csv():
     cs = request.get_json()
-    #csve.append(cs)
     global csvdata
     csvdata = cs
     return csvdata

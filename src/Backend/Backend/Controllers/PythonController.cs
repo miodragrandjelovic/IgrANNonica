@@ -27,7 +27,7 @@ namespace Backend.Controllers
         {
             HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/csv");
             var data = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
-            //var data = await httpResponse.Content.ReadAsStringAsync(); //forma striga
+            //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
             return Ok(data);
         }
 
