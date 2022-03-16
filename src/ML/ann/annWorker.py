@@ -10,7 +10,7 @@ activation_function = 'sigmoid' # relu, tahn, sigmoid, linear
 learning_rate = '0.03' # 0.00001, 0.0001, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10
 regularization = 'none' # none, L1, L2
 regularization_rate = '0' # 0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10
-encode_type = 'label'
+encode_type = 'ordinal' # onehot, label, ordinal
 epochs = 12
 randomize = True
 

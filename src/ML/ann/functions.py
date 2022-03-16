@@ -91,8 +91,10 @@ def label_encoding(dataframe, categorical_cols):
     #dataframe[categorical_cols].head(10)
     return dataframe
 
-def learned_embedding(dataframe, categorical_cols):
-    pass
+def ordinal_encoding(dataframe, categorical_cols):
+    oe = OrdinalEncoder()
+    dataframe[categorical_cols] = dataframe[categorical_cols].apply(lambda col: oe.fit_transform(col))
+    return dataframe
 
 def encode_data(df, encoding):
     # data can be encoded in three ways
@@ -108,14 +110,14 @@ def encode_data(df, encoding):
     #print(categorical_cols)
 
     if (encoding == 'onehot'):
-        print("ENCODING ONE HOT ENCODER")
+        #print("ENCODING ONE HOT ENCODER")
         df = one_hot_encoder(df, categorical_cols)
     elif (encoding == 'label'):
-        print("ENCODING LABEL ENCODER")
+        #print("ENCODING LABEL ENCODER")
         df = label_encoding(df, categorical_cols)
-    elif (encoding == 'learned'):
-        print("ENCODING LEARNED EMBEDDING")
-        df = learned_embedding(df, categorical_cols)
+    elif (encoding == 'ordinal'):
+        #print("ENCODING ORDINAL ENCODER")
+        df = ordinal_encoding(df, categorical_cols)
     return (df)
 
 
