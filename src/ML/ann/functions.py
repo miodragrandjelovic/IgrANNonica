@@ -1,7 +1,9 @@
+from tkinter.ttk import Label
 import pandas as pd
 import numpy as np
 from sklearn.feature_selection import VarianceThreshold
-from sklearn.preprocessing import StandardScaler, scale
+from sklearn.linear_model import SGDClassifier, SGDRegressor
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder, StandardScaler, scale
 
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -17,6 +19,7 @@ from keras.models import Sequential
 from keras import Input
 from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D
 from keras.losses import MeanSquaredError
+from keras.optimizer_v2 import adam
 
 
 def load_data(url):
@@ -27,8 +30,8 @@ def feature_and_label(data, label):
     y = data.pop(label)
     return data,y
 
-def split_data(X, y, ratio):
-    (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=0)
+def split_data(X, y, ratio, randomize):
+    (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=1)
     return (X_train, X_test, y_train, y_test)
 
 def filter_data(X_train, X_test):
@@ -67,9 +70,56 @@ def filter_data(X_train, X_test):
 
     return X_train, X_test
 
-def encode_categorical(X_train, X_test, encoding):
+def one_hot_encoder(dataframe, categorical_cols):
+    # instantiate OneHotEncoder
+    ohe = OneHotEncoder(sparse=False) 
+    # categorical_features = boolean mask for categorical columns
+    # sparse = False output an array not sparse matrix
+
+    oh_frame = ohe.fit_transform(dataframe[categorical_cols])
+    #print(oh_frame)
+
+    data_ohe = pd.DataFrame(oh_frame, index = dataframe.index)
+    dataframe_noncategorical = dataframe.drop(columns=categorical_cols)
+    dataframe = pd.concat([dataframe_noncategorical, data_ohe], axis=1)
+    return dataframe
+
+def label_encoding(dataframe, categorical_cols):
+    le = LabelEncoder()
+    # apply le on categorical feature columns
+    dataframe[categorical_cols] = dataframe[categorical_cols].apply(lambda col: le.fit_transform(col))
+    #dataframe[categorical_cols].head(10)
+    return dataframe
+
+def ordinal_encoding(dataframe, categorical_cols):
+    oe = OrdinalEncoder()
+    dataframe[categorical_cols] = dataframe[categorical_cols].apply(lambda col: oe.fit_transform(col))
+    return dataframe
+
+def encode_data(df, encoding):
+    # data can be encoded in three ways
+    # in order which one we chose, we have different approaches
+    # switch to case
     
-    return (X_train, X_test)
+    # Categorical boolean mask
+    categorical_feature_mask = df.dtypes==object
+    # filter categorical columns using mask and turn it into a list
+    categorical_cols = df.columns[categorical_feature_mask].tolist()
+    
+    #print("categorical columns are")
+    #print(categorical_cols)
+
+    if (encoding == 'onehot'):
+        #print("ENCODING ONE HOT ENCODER")
+        df = one_hot_encoder(df, categorical_cols)
+    elif (encoding == 'label'):
+        #print("ENCODING LABEL ENCODER")
+        df = label_encoding(df, categorical_cols)
+    elif (encoding == 'ordinal'):
+        #print("ENCODING ORDINAL ENCODER")
+        df = ordinal_encoding(df, categorical_cols)
+    return (df)
+
 
 def scale_data(X_train, X_test, y_train, y_test):
     # print("Before scaling: ", X_train.shape)
@@ -87,7 +137,7 @@ def scale_data(X_train, X_test, y_train, y_test):
    
     return (X_train, X_test, y_train, y_test)
 
-def regression(X_train, input_layer_neurons, hidden_layers_n, hidden_layer_neurons_list, activation_function):
+def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_function):
     # here, we are making our model
     
     #print("SHAPE OF X TRAIN DATASET ", X_train.shape[0], " and ", X_train.shape[1])
@@ -95,7 +145,7 @@ def regression(X_train, input_layer_neurons, hidden_layers_n, hidden_layer_neuro
 
     # input layer
     # should have same shape as number of input features (columns)
-    model.add(Input(shape=(X_train.shape[1],)))
+    model.add(Flatten(input_shape=(X_train.shape[1],)))
     
     # hidden layers
     for i in range(hidden_layers_n):
@@ -109,45 +159,21 @@ def regression(X_train, input_layer_neurons, hidden_layers_n, hidden_layer_neuro
     # if it's 2, the customer is not satisfied
     model.add(Dense(1, activation=activation_function))
 
-    model.summary()
-    return model
-
-def regression_2(X_train, input_layer_neurons, hidden_layers_n, hidden_layer_neurons_list, activation_function):
-    model = Sequential()
-    model.add(Conv1D(32, 3, activation='relu', input_shape=(X_train.shape[1],1)))
-    model.add(BatchNormalization())
-    model.add(MaxPool1D(2))
-    model.add(Dropout(0.3))
-
-    model.add(Conv1D(64, 3, activation='relu'))
-    model.add(BatchNormalization())
-    model.add(MaxPool1D(2))
-    model.add(Dropout(0.5))
-
-    model.add(Conv1D(128, 3, activation='relu'))
-    model.add(BatchNormalization())
-    model.add(MaxPool1D(2))
-    model.add(Dropout(0.5))
-
-    model.add(Flatten())
-    model.add(Dense(X_train.shape[1], activation='relu'))
-    model.add(Dropout(0.5))
-
-    model.add(Dense(1, activation='sigmoid'))
-
-
+    #model.summary()
     return model
 
 
-
-def compile_model(model):
+def compile_model(model, learning_rate):
     # these are the best options for linear regression!!
     model.compile(optimizer='sgd', loss=MeanSquaredError(), metrics=['accuracy','mse','mae','AUC'])
     return model 
 
-def train_model(model, X_train, y_train, epochs, X_test, y_test):
-    return model.fit(X_train, y_train, epochs=epochs, validation_data = (X_test, y_test))
+def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
+    #print(X_train.shape)
+    #print(X_train)
+    return model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_test, y_test)) # VALIDATION DATA=(X_VAL, Y_VAL) 
 
-def evaluate_model(model, X_test, y_test):
-    return model.evaluate(X_test, verbose=1, validation_data=(X_test, y_test))
-   
+def missing_data(data):
+    # find missing values, and replace with ideal or drop
+    data = data.fillna(0)
+    return data
