@@ -8,18 +8,26 @@ def load_split_data(train_file, label , ratio,randomize, encode_type):
     # load all data
     data = fn.load_data(train_file)
 
+    print("before encoding")
+    print(data.head())
+    print(data.info)
+    print(data.dtypes)
+
+    # encode data
+    data = fn.encode_data(data, encode_type)
+    
+    print("after encoding")
+    print(data.head())
+
     # deal with missing data
     data = fn.missing_data(data)
-
-    # encoding categorical data
-    data =  fn.encode_categorical(data, encode_type)
 
     # split x and y (features and label)
     X, y = fn.feature_and_label(data, label)
 
     # split test and train
     (X_train, X_test, y_train, y_test) = fn.split_data(X, y, ratio, randomize)
-    
+        
     # return the split data in the end
     return (X_train, X_test, y_train, y_test)
         

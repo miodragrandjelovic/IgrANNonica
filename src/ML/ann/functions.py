@@ -1,7 +1,8 @@
+from tkinter.ttk import Label
 import pandas as pd
 import numpy as np
 from sklearn.feature_selection import VarianceThreshold
-from sklearn.preprocessing import StandardScaler, scale
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder, StandardScaler, scale
 
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -67,24 +68,47 @@ def filter_data(X_train, X_test):
 
     return X_train, X_test
 
-def one_hot_encoder(dataframe, categorical_cols, drop_first=True):
-    dataframe = pd.get_dummies(dataframe, columns=categorical_cols, drop_first=drop_first)
+def one_hot_encoder(dataframe, categorical_feature_mask):
+    # instantiate OneHotEncoder
+    ohe = OneHotEncoder(categories=categorical_feature_mask, sparse=False) 
+    # categorical_features = boolean mask for categorical columns
+    # sparse = False output an array not sparse matrix
+
+    # apply OneHotEncoder on categorical feature columns
+    X_ohe = ohe.fit_transform(dataframe) # It returns an numpy array
     return dataframe
 
-def encode_categorical(df, encoding):
+def label_encoding(dataframe, categorical_cols):
+    le = LabelEncoder()
+    # apply le on categorical feature columns
+    dataframe[categorical_cols] = dataframe[categorical_cols].apply(lambda col: le.fit_transform(col))
+    dataframe[categorical_cols].head(10)
+    return dataframe
+
+def learned_embedding(dataframe, categorical_cols):
+    pass
+
+def encode_data(df, encoding):
     # data can be encoded in three ways
     # in order which one we chose, we have different approaches
     # switch to case
+    
+    # Categorical boolean mask
+    categorical_feature_mask = df.dtypes==object
+    # filter categorical columns using mask and turn it into a list
+    categorical_cols = df.columns[categorical_feature_mask].tolist()
+    
     if (encoding == 'onehot'):
         print("ENCODING ONE HOT ENCODER")
-        ohe_cols = df.select_dtypes(include=['object','category']).columns.tolist()
-
-        df = one_hot_encoder(df, ohe_cols)
+        df = one_hot_encoder(df, categorical_cols)
     elif (encoding == 'integer'):
-        pass
+        print("ENCODING LABEL ENCODER")
+        df = label_encoding(df, categorical_cols)
     elif (encoding == 'learned'):
-        pass
+        print("ENCODING LEARNED EMBEDDING")
+        df = learned_embedding(df, categorical_cols)
     return (df)
+
 
 def scale_data(X_train, X_test, y_train, y_test):
     # print("Before scaling: ", X_train.shape)

@@ -5,12 +5,12 @@
 import py
 
 type='regression' # or classification
-train = './src/ML/ann/train.csv'
+train = './src/ML/ann/titanic.csv'
 activation_function = 'sigmoid'
 learning_rate = '0.03'
 regularization = 'None'
 regularization_rate = '0'
-encode_type = 'onehot'
+encode_type = 'integer'
 epochs = 12
 randomize = True
 
@@ -35,7 +35,7 @@ batch_size = 10
 features = ''
 
 # output is the column that the user wants to predict with this model
-label = 'TARGET'
+label = 'Survived'
 
 # we need to provide some loss/cost functions such as
 # mean squared error
