@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { RegistracijaComponent } from './registracija/registracija.component';
-import { NavigationComponent } from './navigation/navigation.component';
 import { PrijavaComponent } from './prijava/prijava.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -13,6 +12,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { CsvComponent } from './home/csv/csv.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
+import { envelope,telephone } from 'ngx-bootstrap-icons';
+
+const icons = {
+  envelope,
+  telephone
+};
 
 @NgModule({
   declarations: [
@@ -20,7 +28,6 @@ import { CsvComponent } from './home/csv/csv.component';
     HeaderComponent,
     FooterComponent,
     RegistracijaComponent,
-    NavigationComponent,
     PrijavaComponent,
     HomeComponent,
     CsvComponent
@@ -30,7 +37,11 @@ import { CsvComponent } from './home/csv/csv.component';
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule,
+
+    NgxBootstrapIconsModule.pick(icons),
+   
   ],
   providers: [],
   bootstrap: [AppComponent]
