@@ -57,7 +57,7 @@ export class CsvComponent {
                 }
                 this.rowLines.push(rowsArray);
 
-                return this.http.post<any>('https://localhost:7167/api/LoadData/csv', this.dataObject);
+                return this.http.post<any>('https://localhost:7167/api/LoadData/csv', this.dataObject).subscribe();
             }
         }
     }
