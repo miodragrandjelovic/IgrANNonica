@@ -1,6 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Component } from "@angular/core";
+import { HttpHeaders } from "@angular/common/http";
 
+//const headers = new HttpHeaders().set('content-type','plain/text');
 @Component({
     selector: 'app-csv',
     templateUrl: 'csv.component.html'
@@ -10,6 +12,8 @@ export class CsvComponent {
     constructor(private http: HttpClient) {
 
     }
+
+    
 
     dataObject:any = [];
 
@@ -56,8 +60,9 @@ export class CsvComponent {
                     rowsArray.push(rows[j]);
                 }
                 this.rowLines.push(rowsArray);
-
-                return this.http.post<any>('https://localhost:7167/api/LoadData/csv', this.dataObject);
+                //JSON.stringify(this.dataObject);
+                let dataString = JSON.stringify(this.dataObject)
+                return this.http.post<any>('https://localhost:7167/api/LoadData/csv', this.dataObject/*, {headers:headers}*/).subscribe();
             }
         }
     }

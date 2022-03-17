@@ -4,6 +4,7 @@ using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text;
+using Backend.Models;
 
 namespace Backend.Controllers
 {
@@ -13,24 +14,33 @@ namespace Backend.Controllers
     {
         private readonly HttpClient http = new HttpClient();
 
-        [HttpGet]
-        public async Task<ActionResult<UserDto>> Get()
+        [HttpGet("hp")] //Primanje HP iz pajtona 
+        public async Task<ActionResult<Hiperparametri>> GetHp()
         {
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/users");
-            var users = JsonSerializer.Deserialize<List<UserDto>>(await httpResponse.Content.ReadAsStringAsync());
-
-            return Ok(users);
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/hp");
+            var hp = JsonSerializer.Deserialize<List<Hiperparametri>>(await httpResponse.Content.ReadAsStringAsync());
+            return Ok(hp);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post(UserDto user)
+        [HttpGet("csv")] //Primanje CSV iz pajtona 
+        public async Task<ActionResult<JsonDocument>> GetCsv()
         {
-            var studentJson = JsonSerializer.Serialize(user);
-            var data = new StringContent(studentJson, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/users";
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/csv");
+            var data = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
+            //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
+            return Ok(data);
+        }
+
+
+        [HttpPost] //Slanje HP na pajton
+        public async Task<IActionResult> Post(Hiperparametri hiper)
+        {
+            var hiperjson = JsonSerializer.Serialize(hiper);
+            var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
+            var url = "http://127.0.0.1:3000/hp";
             var response = await http.PostAsync(url, data);
-            var studenti = JsonSerializer.Deserialize<UserDto>(await response.Content.ReadAsStringAsync());
-            return Ok(studenti);
+            //var studenti = JsonSerializer.Deserialize<UserDto>(await response.Content.ReadAsStringAsync());
+            return Ok(hiper);
         }
 
     }
