@@ -39,9 +39,7 @@ const icons = {
     FormsModule,
     HttpClientModule,
     NgbModule,
-
     NgxBootstrapIconsModule.pick(icons),
-   
   ],
   providers: [],
   bootstrap: [AppComponent]
