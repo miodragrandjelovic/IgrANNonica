@@ -1,6 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
+interface AuthResponseData {
+    token: string;
+}
 
 @Injectable({providedIn: 'root'})
 export class PrijavaService {

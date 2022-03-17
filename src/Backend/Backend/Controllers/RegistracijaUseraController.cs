@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using Newtonsoft.Json;
 
 namespace Backend.Controllers
 {
@@ -88,23 +89,38 @@ namespace Backend.Controllers
             return NoContent();
         }
       
-      //  public static User user = new User();
+        //  public static User user = new User();
         // POST: api/RegistracijaUsera
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost] //-------------------------------------------------------------------------------------------------------------
         public async Task<ActionResult<User>> PostUser(UserDto request)
         {
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
+          //  user.Email = request.Email;
             user.Username = request.Username;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-           
-            _context.RegistrovaniUseri.Add(user);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+            _context.RegistrovaniUseri.Add(
+                new User
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                //    Email = user.Email,
+                    Username = user.Username,
+                    PasswordHash = passwordHash,
+                    PasswordSalt = passwordSalt
+                });
+            //Console.WriteLine(_context.ChangeTracker.DebugView.LongView);
+            await _context.SaveChangesAsync();
+            var entries = _context.ChangeTracker.Entries().Where(e => e.State == EntityState.Added).Select(e => new { e.State, e }).ToList();
+            return CreatedAtAction("GetUser", new { id = user.UserId}, user);
+        }
+        private bool User_postoji(string username)
+        {
+            return _context.RegistrovaniUseri.Any(e => e.Username == username);
         }
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
@@ -112,6 +128,14 @@ namespace Backend.Controllers
             {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+        }
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using (var hmac = new HMACSHA512(passwordSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return computedHash.SequenceEqual(passwordHash);
             }
         }
 
@@ -136,7 +160,6 @@ namespace Backend.Controllers
             return _context.RegistrovaniUseri.Any(e => e.UserId == id);
         }
 
-
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(UserDto request)
         {
@@ -155,8 +178,12 @@ namespace Backend.Controllers
                 return BadRequest("Pogresna sifra!");
             }
 
-            string token = CreateToken(user);
-            return Ok(token);
+            string token1 = CreateToken(user);
+            var jtoken = new
+            {
+                Token = token1
+            };
+            return Ok(jtoken);
         }
         private string CreateToken(User user)
         {
@@ -179,14 +206,5 @@ namespace Backend.Controllers
             return jwt;
         }
 
-
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
-            }
-        }
     }
 }

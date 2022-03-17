@@ -1,0 +1,17 @@
+
+<div class="container" style="color: white;">
+    <input class="form-control mb-5" type="file" class="upload" (change)="fileUpload($event)">
+ 
+    <table class="table table-dark table-striped">
+      <thead>
+        <tr>
+          <th *ngFor="let item of headingLines[0]; let i = index" style="color: rgb(175, 38, 38);">{{item}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of rowLines[0]; let i = index">
+          <td *ngFor="let itemm of headingLines[0]; let j = index" style="color: white;">{{item[j]}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

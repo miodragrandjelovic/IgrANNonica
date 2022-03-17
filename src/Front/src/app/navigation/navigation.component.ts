@@ -11,5 +11,5 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  myimage:string="assets/images/naPocetnoj.jpg";
 }

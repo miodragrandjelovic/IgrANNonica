@@ -21,7 +21,7 @@ namespace Backend.Migrations
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER");                 
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -42,6 +42,11 @@ namespace Backend.Migrations
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                 //   b.Property<string>("Email")
+                  //      .IsRequired()
+                  //      .HasColumnType("TEXT");
+
 
                     b.HasKey("UserId");
 
