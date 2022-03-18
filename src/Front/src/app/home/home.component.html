@@ -1,7 +1,7 @@
 
 <div id="sredina">
 <div id="sredinaCentar"> 
-    <div id="top-controls" style="background: rgb(22, 23, 31);">
+    <div id="top-controls" style="background: white;">
 
 
      <div class="container l--page"  style="margin-top: 15px;">
@@ -75,7 +75,7 @@
    </div>
   
      
-   <div id="main-part" style="background: rgb(22, 23, 31);">
+   <div id="main-part" style="background: white">
      <div class="blok" >
          <div class="percTrainData" >
          <label for="percTrainData">Ratio of training to test data:<span class="value"></span></label>
@@ -96,22 +96,8 @@
       </div>
 
         <div class="blok" >
-          <div class="hidden-layers">
-            <label for="hiddenLayers">Hidden layers:</label><br>
-            <input type="number" (click)="getVal($any($event.target).value)" /><br>
-          
-          </div>
-         </div>
-
-         <div class="blok" >
-          <div class="neurons">
-            <label for="neurons">Neurons:</label><br>
-            <input type="text" name="neurons" style="width: 40px;">
-            
-          </div>
-         </div>
-
-        
+          <app-slojevi-neuroni></app-slojevi-neuroni>
+        </div>
      </div>
 
      <div id="tabelaCentar">

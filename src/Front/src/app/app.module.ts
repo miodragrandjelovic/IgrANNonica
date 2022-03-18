@@ -16,6 +16,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
 import { envelope,telephone } from 'ngx-bootstrap-icons';
+import { SlojeviNeuroniComponent } from './home/slojevi-neuroni/slojevi-neuroni.component';
 
 const icons = {
   envelope,
@@ -30,7 +31,8 @@ const icons = {
     RegistracijaComponent,
     PrijavaComponent,
     HomeComponent,
-    CsvComponent
+    CsvComponent,
+    SlojeviNeuroniComponent
   ],
   imports: [
     BrowserModule,
