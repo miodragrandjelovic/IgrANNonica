@@ -175,5 +175,20 @@ def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
 
 def missing_data(data):
     # find missing values, and replace with ideal or drop
-    data = data.fillna(0)
+    #print("MISSING DATA")
+    #print(data.isna().sum())
+
+    missing_value_columns = data.columns[data.isna().any()].tolist()
+    
+    #print("MISSING VALUE COLUMNS")
+    #print(missing_value_columns)
+
+    for mvc in missing_value_columns:
+        # for every column with missing values, calculate mean value and replace it
+        col_mean = data[mvc].mean(skipna=True)
+        data[mvc].fillna(value=col_mean, inplace=True)
+
+    #print("MISSING DATA")
+    #print(data.isna().sum())
+
     return data
