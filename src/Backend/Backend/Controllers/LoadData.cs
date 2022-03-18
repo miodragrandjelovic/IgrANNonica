@@ -50,7 +50,7 @@ namespace Backend.Controllers
         }
         
         [HttpPost("csv")] //Slanje CSV na pajton
-        public async Task<ActionResult<string>> PostCsv(string csve)
+        public async Task<ActionResult<string>> PostCsv([FromBody]string csve)
         {
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
             var url = "http://127.0.0.1:3000/csv";
