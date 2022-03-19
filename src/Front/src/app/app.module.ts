@@ -14,13 +14,17 @@ import { HomeComponent } from './home/home.component';
 import { CsvComponent } from './home/csv/csv.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
-import { envelope,telephone } from 'ngx-bootstrap-icons';
+import { fileMinus, filePlus, NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
+import { envelope,telephone} from 'ngx-bootstrap-icons';
 import { SlojeviNeuroniComponent } from './home/slojevi-neuroni/slojevi-neuroni.component';
+import { MatSliderModule } from '@angular/material/slider'; 
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 const icons = {
   envelope,
-  telephone
+  telephone,
+  fileMinus,
+  filePlus
 };
 
 @NgModule({
@@ -42,6 +46,8 @@ const icons = {
     HttpClientModule,
     NgbModule,
     NgxBootstrapIconsModule.pick(icons),
+    MatSliderModule,
+    NgxSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]
