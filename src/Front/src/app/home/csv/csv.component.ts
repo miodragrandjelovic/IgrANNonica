@@ -62,7 +62,7 @@ export class CsvComponent {
                 this.rowLines.push(rowsArray);
                 //JSON.stringify(this.dataObject);
                 let dataString = JSON.stringify(this.dataObject)
-                return this.http.post<any>('https://localhost:7167/api/LoadData/csv', this.dataObject/*, {headers:headers}*/).subscribe();
+               return this.http.post<any>('https://localhost:7167/api/LoadData/csv', this.dataObject/*, {headers:headers}*/).subscribe();
             }
         }
     }
