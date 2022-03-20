@@ -23,12 +23,6 @@ namespace Backend.Controllers
 
         public static User user = new User();
         private readonly IConfiguration _configuration;
-        /*
-        public RegistracijaUseraController(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }*/
-
         private readonly UserDbContext _context;
 
         public RegistracijaUseraController(UserDbContext context, IConfiguration configuration)
@@ -59,7 +53,6 @@ namespace Backend.Controllers
         }
 
         // PUT: api/RegistracijaUsera/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
@@ -89,9 +82,7 @@ namespace Backend.Controllers
             return NoContent();
         }
       
-        //  public static User user = new User();
         // POST: api/RegistracijaUsera
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost] //-------------------------------------------------------------------------------------------------------------
         public async Task<ActionResult<User>> PostUser(UserDto request)
         {
@@ -113,7 +104,6 @@ namespace Backend.Controllers
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt
                 });
-            //Console.WriteLine(_context.ChangeTracker.DebugView.LongView);
             await _context.SaveChangesAsync();
             var entries = _context.ChangeTracker.Entries().Where(e => e.State == EntityState.Added).Select(e => new { e.State, e }).ToList();
             return CreatedAtAction("GetUser", new { id = user.UserId}, user);
