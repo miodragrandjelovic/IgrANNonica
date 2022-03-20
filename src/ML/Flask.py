@@ -46,12 +46,15 @@ def post_csv():
 def  getCsv():
     return jsonify(csvdata)
 
-@app.route("/stat", methods=["POST"]) #Primanje stata sa beka
+@app.route("/stat", methods=["POST"]) #Primanje Stats sa beka
 def post_stat():
     stat = request.get_json()
     stats.append(stat)
     return stats
 
+@app.route("/stat", methods=['GET']) #Slanje Stats na bek
+def  getStat():
+    return jsonify(stats)
 
 #if(__name__=="main"):
 app.run(port = 3000)
