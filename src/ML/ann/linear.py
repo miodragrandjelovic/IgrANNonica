@@ -1,7 +1,7 @@
 # LINEAR CONTAINS STEPS FROM CONSTRUCTING A NEURAL NETWORK
 # ALL THE FUNCTIONS ARE CALLED FROM FUNCTIONS FILE
 
-import functions as fn
+import ann.functions as fn
 import matplotlib.pyplot as plt
 
 def load_split_data(train_file, label , ratio,randomize, encode_type):

@@ -1,10 +1,14 @@
+from calendar import c
 import csv
+from pickle import TRUE
 from flask import Flask
 from flask import jsonify,request
 import json
 import pandas as pd
 from pandas import json_normalize
 
+#from ann.py import *
+#from ann.linear import *
 
 app = Flask(__name__)
 
@@ -58,10 +62,27 @@ def  getCsv():
     return jsonify(csvdata)
 
 
+@app.route("/statistika",methods=['GET']) #statistika
+def statistika():
+    df = pd.DataFrame.from_records(csvdata)
+    #statistika=df.describe()
+    #return statistika.to_json()
+
+    for (columnName, columnData) in df.iteritems():
+        if(df[columnName].str.isnumeric()==TRUE):
+            df[columnName]=df[columnName].astype(float)
+    return df.to_json()
+
+
+
 @app.route("/csv1",methods=['GET']) #Parsovanje u df
 def treniraj():
     df = pd.DataFrame.from_records(csvdata)
-    return df.to_string()
+    history=create_model(type='regression',train=df,label="TARGET",epochs=10,ratio=0.9,activation_function='sigmoid',hidden_layers_n=5,hidden_layer_neurons_list=[50,50,50,50,50],
+        encode_type='ordinal',randomize=TRUE,batch_size=10,learning_rate='0.03')
+    return jsonify(history)
+
+
 
 
 #if(__name__=="main"):
