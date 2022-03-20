@@ -13,14 +13,14 @@ def load_split_data(train_file, label , ratio,randomize, encode_type):
     #print(data.info)
     #print(data.dtypes)
 
+    # deal with missing data
+    data = fn.missing_data(data)
+    
     # encode data
     data = fn.encode_data(data, encode_type)
     
     #print("after encoding")
     #print(data.head())
-
-    # deal with missing data
-    data = fn.missing_data(data)
 
     # split x and y (features and label)
     X, y = fn.feature_and_label(data, label)

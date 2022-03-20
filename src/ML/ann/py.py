@@ -18,7 +18,7 @@ def create_model(type,train,label,epochs ,ratio, activation_function, hidden_lay
     (X_train, X_test, y_train, y_test) = ln.load_split_data(train, label, ratio, randomize, encode_type)
     
     # after loading data, we need to transform it 
-    #(X_train, X_test, y_train, y_test) = ln.clear_data(X_train, X_test, y_train,y_test)
+    (X_train, X_test, y_train, y_test) = ln.clear_data(X_train, X_test, y_train,y_test)
 
     # making and training the model
     (history, model) = ln.make_model(epochs, X_train, X_test, y_train, y_test, hidden_layers_n, hidden_layer_neurons_list, activation_function, batch_size, learning_rate)
