@@ -1,0 +1,139 @@
+<div class="container1">
+    <div class="row ">
+      <div class="col-sm-4 ">
+        <div id="list-example" class="list-group">
+          <a class="list-group-item list-group-item-action" href="about#list-item1"><strong>What are neural networks?</strong></a>
+          <a class="list-group-item list-group-item-action" href="about#list-item2"><strong>How do neural network work?</strong> </a>
+          <a class="list-group-item list-group-item-action" href="about#list-item3"><strong>Types of neural network?</strong></a>
+          <a class="list-group-item list-group-item-action" href="about#list-item4"><strong>Neural network vs. deep learning</strong></a>
+          <a class="list-group-item list-group-item-action" href="about#list-item5"><strong>History of neural network</strong></a>
+        </div>
+      </div>
+      
+      <div id="glavno" class="col-sm-8 ">
+        <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+          <div>
+            <h1 class="display-1 font-weight-bold text-center">Neural networks</h1>
+            <p class=" h4 font-weight-bold">
+              Neural networks reflect the behavior of the human brain, allowing computer programs 
+              to recognize patterns and solve common problems in the fields of AI, machine learning,
+              and deep learning.
+            </p>
+          </div>
+          <hr>
+          <h3 id="list-item1"class="display-5 text-center">What are neural networks?</h3>
+          <p class="text-justify font-weight-normal">
+            Neural networks, also known as artificial neural networks (ANNs) or simulated neural networks (SNNs), are a subset of machine learning and are at the heart of deep learning algorithms. Their name and structure are inspired by the human brain, mimicking the way that biological neurons signal to one another.
+          </p>
+          <p class="text-justify font-weight-normal">
+            Artificial neural networks (ANNs) are comprised of a node layers, containing an input layer, one or more hidden layers, and an output layer. Each node, or artificial neuron, connects to another and has an associated weight and threshold. If the output of any individual node is above the specified threshold value, that node is activated, sending data to the next layer of the network. Otherwise, no data is passed along to the next layer of the network.
+            Visual diagram of an input layer, hidden layers, and an output layer of a feedforward neural network.
+          </p>
+          <img class="round mx-auto d-block" src="assets/images/slika2.jpeg">
+          
+          <p class="text-justify font-weight-normal">
+            Neural networkss rely on training data to learn and improve their accuracy over time. However, once these learning algorithms are fine-tuned for accuracy, they are powerful tools in computer science and artificial intelligence, allowing us to classify and cluster data at a high velocity. Tasks in speech recognition or image recognition can take minutes versus hours when compared to the manual identification by human experts. One of the most well-known neural networks is Google’s search algorithm.
+          </p>
+          <hr>
+  
+          <h3 id="list-item2"class="display-5 text-center">How do neural network work?</h3>
+          <p class="text-justify font-weight-normal">
+            Think of each individual node as its own linear regression model, composed of input data, weights, a bias (or threshold), and an output. The formula would look something like this:
+          </p>
+          <img class="round mx-auto d-block" src="assets/images/slika3.JPG">
+          <p class="text-justify font-weight-normal">
+            ∑wixi + bias = w1x1 + w2x2 + w3x3 + bias
+          </p>
+          <img class="round mx-auto d-block" src="assets/images/slika4.JPG">
+          <p class="text-justify font-weight-normal">
+            output = f(x) = 1 if ∑w1x1 + b>= 0; 0 if ∑w1x1 + b < 0
+          </p>
+          <p class="text-justify font-weight-normal">
+            Once an input layer is determined, weights are assigned. These weights help determine the importance of any given variable, with larger ones contributing more significantly to the output compared to other inputs. All inputs are then multiplied by their respective weights and then summed. Afterward, the output is passed through an activation function, which determines the output. If that output exceeds a given threshold, it “fires” (or activates) the node, passing data to the next layer in the network. This results in the output of one node becoming in the input of the next node. This process of passing data from one layer to the next layer defines this neural network as a feedforward network.
+          </p>
+          <p class="text-justify font-weight-normal">
+            Let’s break down what one single node might look like using binary values. We can apply this concept to a more tangible example, like whether you should go surfing (Yes: 1, No: 0). The decision to go or not to go is our predicted outcome, or y-hat. Let’s assume that there are three factors influencing your decision-making:
+          </p>
+            <ul>
+              <li >Are the waves good? (Yes: 1, No: 0)</li>
+              <li >Is the line-up empty? (Yes: 1, No: 0)</li>
+              <li >Has there been a recent shark attack? (Yes: 0, No: 1)</li>
+            </ul>
+          <p class="text-justify font-weight-normal">
+            Then, let’s assume the following, giving us the following inputs:
+          </p>
+          <ul>
+            <li>X1 = 1, since the waves are pumping</li>
+            <li>X2 = 0, since the crowds are out</li>
+            <li>X3 = 1, since there hasn’t been a recent shark attack</li>
+          </ul>
+          <p class="text-justify font-weight-normal">
+            Now, we need to assign some weights to determine importance. Larger weights signify that particular variables are of greater importance to the decision or outcome.
+          </p>
+          <ul>
+            <li>W1 = 5, since large swells don’t come around often</li>
+            <li>W2 = 2, since you’re used to the crowds</li>
+            <li>W3 = 4, since you have a fear of sharks</li>
+          </ul>
+          <p class="text-justify font-weight-normal">
+            Finally, we’ll also assume a threshold value of 3, which would translate to a bias value of –3. With all the various inputs, we can start to plug in values into the formula to get the desired output.
+          </p>
+          <p class="text-justify font-weight-normal">
+            Y-hat = (1*5) + (0*2) + (1*4) – 3 = 6
+          </p>
+          <hr>
+          
+  
+          <h3 id="list-item3"class="display-5 text-center">Types of neural network?</h3>
+          <p class="text-justify font-weight-normal">
+            Neural networks can be classified into different types, which are used for different purposes. While this isn’t a comprehensive list of types, the below would be representative of the most common types of neural networks that you’ll come across for its common use cases:
+          </p>
+          <p class="text-justify font-weight-normal">
+            The perceptron is the oldest neural network, created by Frank Rosenblatt in 1958. It has a single neuron and is the simplest form of a neural network:
+          </p>
+          <img class="round mx-auto d-block" src="assets/images/slika5.JPG">
+          <p class="text-justify font-weight-normal">
+            Feedforward neural networks, or multi-layer perceptrons (MLPs), are what we’ve primarily been focusing on within this article. They are comprised of an input layer, a hidden layer or layers, and an output layer. While these neural networks are also commonly referred to as MLPs, it’s important to note that they are actually comprised of sigmoid neurons, not perceptrons, as most real-world problems are nonlinear. Data usually is fed into these models to train them, and they are the foundation for computer vision, natural language processing, and other neural networks.
+          </p>
+          <p class="text-justify font-weight-normal">
+            Convolutional neural networks (CNNs) are similar to feedforward networks, but they’re usually utilized for image recognition, pattern recognition, and/or computer vision. These networks harness principles from linear algebra, particularly matrix multiplication, to identify patterns within an image.
+          </p>
+          <p class="text-justify font-weight-normal">
+            Recurrent neural networks (RNNs) are identified by their feedback loops. These learning algorithms are primarily leveraged when using time-series data to make predictions about future outcomes, such as stock market predictions or sales forecasting.
+          </p>
+          <hr>
+  
+          <h3 id="list-item4"class="display-5 text-center">Neural network vs. deep learning</h3>
+          <p class="text-justify font-weight-normal">
+            Deep Learning and neural networks tend to be used interchangeably in conversation, which can be confusing. As a result, it’s worth noting that the “deep” in deep learning is just referring to the depth of layers in a neural network. A neural network that consists of more than three layers—which would be inclusive of the inputs and the output—can be considered a deep learning algorithm. A neural network that only has two or three layers is just a basic neural network.
+          </p>
+          <p class="text-justify font-weight-normal">
+            To learn more about the differences between neural networks and other forms of artificial intelligence,  like machine learning, please read the blog post “AI vs. Machine Learning vs. Deep Learning vs. Neural Networks: What’s the Difference?”
+          </p>
+          <hr>
+  
+          <h3  id="list-item5"class="display-5 text-center">History of neural network</h3>
+          <p class="text-justify font-weight-normal">
+            The history of neural networks is longer than most people think. While the idea of “a machine that thinks” can be traced to the Ancient Greeks, we’ll focus on the key events that led to the evolution of thinking around neural networks, which has ebbed and flowed in popularity over the years:
+          </p>
+          <p class="text-justify font-weight-normal">
+            <strong class="text-decoration-underline">1943:</strong> Warren S. McCulloch and Walter Pitts published “A logical calculus of the ideas immanent in nervous activity (PDF, 1 MB) (link resides outside IBM)” This research sought to understand how the human brain could produce complex patterns through connected brain cells, or neurons. One of the main ideas that came out of this work was the comparison of neurons with a binary threshold to Boolean logic (i.e., 0/1 or true/false statements).   
+          </p>
+          <p class="text-justify font-weight-normal">
+           <strong class="text-decoration-underline"> 1958:</strong> Frank Rosenblatt is credited with the development of the perceptron, documented in his research, “The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain” (PDF, 1.6 MB) (link resides outside IBM). He takes McCulloch and Pitt’s work a step further by introducing weights to the equation. Leveraging an IBM 704, Rosenblatt was able to get a computer to learn how to distinguish cards marked on the left vs. cards marked on the right.
+          </p>
+          <p class="text-justify font-weight-normal">
+            <strong class="text-decoration-underline">1974:</strong> While numerous researchers contributed to the idea of backpropagation, Paul Werbos was the first person in the US to note its application within neural networks within his PhD thesis (PDF, 8.1 MB) (link resides outside IBM).
+          </p>
+          <p class="text-justify font-weight-normal">
+            <strong class="text-decoration-underline">1989:</strong> LeCun published a paper (PDF, 5.7 MB) (link resides outside IBM) illustrating how the use of constraints in backpropagation and its integration into the neural network architecture can be used to train algorithms. This research successfully leveraged a neural network to recognize hand-written zip code digits provided by the U.S. Postal Service.
+          </p>
+          <hr>
+          <iframe width="100%" height="315" src="https://www.youtube.com/embed/aircAruvnKk"
+           title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
