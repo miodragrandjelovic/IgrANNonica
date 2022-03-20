@@ -22,8 +22,17 @@ from keras.losses import MeanSquaredError
 from keras.optimizer_v2 import adam
 
 
-def load_data(url):
+def load_data(features, label,url):
     data = pd.read_csv(url)
+    features.append(label)
+    
+    #print("FEATURES TO KEEP")
+    #print(features)
+
+    data = data[features]
+    #print("DATA IS")
+    #print(data)
+
     return data
 
 def feature_and_label(data, label):

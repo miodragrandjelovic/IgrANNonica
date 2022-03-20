@@ -23,6 +23,7 @@ hidden_layer_neurons = [50,30,5,3,6]
 # this ration can go from 10 to 90 percent
 training_test_ratio = 0.9
 
+# do we need it?
 # noise can go from 0 to 50
 noise = 0
 
@@ -30,7 +31,9 @@ noise = 0
 batch_size = 10
 
 # features are columns that user wants to include in this ann!!
-features = ''
+#features = ['Pclass', 'Name', 'Sex', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin', 'Embarked']
+features = ['Name', 'Sex', 'Age', 'Ticket', 'Cabin']
+
 
 # output is the column that the user wants to predict with this model
 label = 'Survived'
@@ -41,4 +44,4 @@ label = 'Survived'
 # hinge loss
 
 
-history = py.create_model(type, train, label, epochs, training_test_ratio, activation_function, hidden_layers_n, hidden_layer_neurons, encode_type, randomize, batch_size, learning_rate)
+history = py.create_model(type, train, features, label, epochs, training_test_ratio, activation_function, hidden_layers_n, hidden_layer_neurons, encode_type, randomize, batch_size, learning_rate)
