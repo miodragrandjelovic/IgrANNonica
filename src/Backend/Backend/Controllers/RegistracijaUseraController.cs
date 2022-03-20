@@ -23,11 +23,7 @@ namespace Backend.Controllers
 
         public static User user = new User();
         private readonly IConfiguration _configuration;
-        /*
-        public RegistracijaUseraController(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }*/
+
 
         private readonly UserDbContext _context;
 
@@ -59,7 +55,6 @@ namespace Backend.Controllers
         }
 
         // PUT: api/RegistracijaUsera/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
@@ -89,7 +84,6 @@ namespace Backend.Controllers
             return NoContent();
         }
       
-        //  public static User user = new User();
         // POST: api/RegistracijaUsera
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost] //-------------------------------------------------------------------------------------------------------------
