@@ -18,7 +18,7 @@ randomize = True
 # number of hidden layers in ann
 hidden_layers_n = 5
 # number of neurons inside each of hidden layers
-hidden_layer_neurons = [50,50,50,50,50]
+hidden_layer_neurons = [50,30,5,3,6]
 
 # this ration can go from 10 to 90 percent
 training_test_ratio = 0.9

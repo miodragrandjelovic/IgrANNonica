@@ -165,30 +165,59 @@ def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_f
 
 def compile_model(model, learning_rate):
     # these are the best options for linear regression!!
+    # common loss functions for 
+    # binary classification: binary_crossentropy
+    # multi class: sparse_categorical_crossentropy
+    # regression: mse(Mean squared error)
+
+    # also, there are multiple metrics that user can choose from
     model.compile(optimizer='sgd', loss=MeanSquaredError(), metrics=['accuracy','mse','mae','AUC'])
     return model 
 
 def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
     #print(X_train.shape)
     #print(X_train)
-    return model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_test, y_test)) # VALIDATION DATA=(X_VAL, Y_VAL) 
+
+    # during the training of a model , we need to monitor the process, and send the data to front, so the user can have an overview
+    # for this, we need to use callbacks argument
+
+    return model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_test, y_test), verbose=1) # VALIDATION DATA=(X_VAL, Y_VAL) 
 
 def missing_data(data):
     # find missing values, and replace with ideal or drop
     #print("MISSING DATA")
     #print(data.isna().sum())
 
-    missing_value_columns = data.columns[data.isna().any()].tolist()
-    
-    #print("MISSING VALUE COLUMNS")
-    #print(missing_value_columns)
+    columns_numerical = data.select_dtypes(exclude=['category','object'])
+    columns_categorical = data.select_dtypes(include=['category', 'object'])
 
-    for mvc in missing_value_columns:
-        # for every column with missing values, calculate mean value and replace it
+    #print("COLUMNS THAT ARE NUMERICAL")
+    #print(columns_numerical)
+
+    #print("COLUMNS THAT ARE CATEGORICAL")
+    #print(columns_categorical)
+
+    missing_value_columns_numerical = columns_numerical.columns[columns_numerical.isna().any()].tolist()
+
+    missing_value_columns_categorical = columns_categorical.columns[columns_categorical.isna().any()].tolist()
+
+    #print("NUMERICKE KOLONE")
+    #print(missing_value_columns_numerical)
+    #print("KATEGORICKE KOLONE")
+    #print(missing_value_columns_categorical)
+    
+    
+    for mvc in missing_value_columns_numerical:
+        # for every numerical column with missing values, calculate mean value and replace it
         col_mean = data[mvc].mean(skipna=True)
         data[mvc].fillna(value=col_mean, inplace=True)
+    
+    for mvc in missing_value_columns_categorical:
+        # for every categorical column with missing values, calculate mode, or the value that appears most often
+        col_mode = data[mvc].mode()[0]
+        data[mvc].fillna(value=col_mode, inplace=True)
 
     #print("MISSING DATA")
     #print(data.isna().sum())
-
+    
     return data
