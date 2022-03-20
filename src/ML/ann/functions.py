@@ -83,20 +83,42 @@ def filter_data(X_train, X_test):
 def drop_numerical_outliers(df, z_thresh=3):
     # Constrains will contain `True` or `False` depending on if it is a value below the threshold.
 
-    df_numerical = df.select_dtypes(exclude=['category','object'])
+    """
+    df_numerical = df.select_dtypes(exclude=['category','object']).columns()
+    print("NUMERICAL CATEGORIES")
+    print(df_numerical)
 
-    print("SUMMARY OF NUMERICAL DATA BEFORE OUTLIERS ")
-    print(df_numerical.describe())
 
     z_scores = stats.zscore(df_numerical)
     abs_z_scores = np.abs(z_scores)
     filtered_entries = (abs_z_scores < z_thresh).all(axis=1)
     new_df = df_numerical[filtered_entries]
 
+    """
 
-    print("SUMMARY OF NUMERICAL DATA AFTER OUTLIERS ")
-    print(new_df.describe())
-    return new_df
+    #print("SUMMARY OF NUMERICAL DATA BEFORE OUTLIERS ")
+    #print(df.describe())
+
+    #sns.boxplot(x=df['Age'])
+    #plt.show()
+
+    # these are numerical columns
+    numerical_feature_mask = df.dtypes==np.number
+    numerical_cols = df.columns[numerical_feature_mask].tolist()
+
+    Q1 = df[numerical_cols].quantile(0.25)
+    Q3 = df[numerical_cols].quantile(0.75)
+    IQR = Q3 - Q1
+
+    df = df[~((df[numerical_cols] < (Q1 - 1.5 * IQR)) | (df[numerical_cols] > (Q3 + 1.5 * IQR))).any(axis=1)]
+
+    #print("SUMMARY OF NUMERICAL DATA AFTER OUTLIERS ")
+    #print(df.describe())
+
+    #sns.boxplot(x=df['Age'])
+    #plt.show()
+
+    return df
 
 def one_hot_encoder(dataframe, categorical_cols):
     # instantiate OneHotEncoder
