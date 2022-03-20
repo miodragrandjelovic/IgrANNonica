@@ -15,14 +15,14 @@ import linear as ln
 
 
 
-def create_model(type,train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate):
+def create_model(type,train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
     if (type=='regression'):
-       create_linear_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate)
+       create_linear_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate)
     elif (type=='classification'):
-        create_categorical_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate)
+        create_categorical_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate)
 
 
-def create_linear_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate):
+def create_linear_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
      # load data in suitable forms 
     (X_train, X_test, y_train, y_test) = ln.load_split_data(train, features,label, ratio, randomize, encode_type)
     
@@ -43,6 +43,6 @@ def create_linear_model(train,features,label,epochs ,ratio, activation_function,
     # return history to worker
     return history
 
-def create_categorical_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate):
+def create_categorical_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
     pass
 
