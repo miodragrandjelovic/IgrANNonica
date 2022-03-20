@@ -23,8 +23,6 @@ namespace Backend.Controllers
 
         public static User user = new User();
         private readonly IConfiguration _configuration;
-
-
         private readonly UserDbContext _context;
 
         public RegistracijaUseraController(UserDbContext context, IConfiguration configuration)
@@ -85,7 +83,6 @@ namespace Backend.Controllers
         }
       
         // POST: api/RegistracijaUsera
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost] //-------------------------------------------------------------------------------------------------------------
         public async Task<ActionResult<User>> PostUser(UserDto request)
         {
@@ -107,7 +104,6 @@ namespace Backend.Controllers
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt
                 });
-            //Console.WriteLine(_context.ChangeTracker.DebugView.LongView);
             await _context.SaveChangesAsync();
             var entries = _context.ChangeTracker.Entries().Where(e => e.State == EntityState.Added).Select(e => new { e.State, e }).ToList();
             return CreatedAtAction("GetUser", new { id = user.UserId}, user);
