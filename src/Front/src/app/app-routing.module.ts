@@ -6,11 +6,12 @@ import { HomeComponent } from './home/home.component';
 import { PrijavaComponent } from './prijava/prijava.component';
 import { RegistracijaComponent } from './registracija/registracija.component';
 import { NavigationComponent } from './navigation/navigation.component';
+import { AboutComponent } from './about/about.component';
 
 const routes: Routes = [
   {path:'', component:NavigationComponent},
   {path:'home', component:HomeComponent},
-
+  {path:'about',component:AboutComponent}
 ];
 
 @NgModule({

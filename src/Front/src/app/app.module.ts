@@ -19,6 +19,7 @@ import { envelope,telephone} from 'ngx-bootstrap-icons';
 import { SlojeviNeuroniComponent } from './home/slojevi-neuroni/slojevi-neuroni.component';
 import { MatSliderModule } from '@angular/material/slider'; 
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { AboutComponent } from './about/about.component';
 
 const icons = {
   envelope,
@@ -36,7 +37,8 @@ const icons = {
     PrijavaComponent,
     HomeComponent,
     CsvComponent,
-    SlojeviNeuroniComponent
+    SlojeviNeuroniComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,
