@@ -59,11 +59,11 @@ namespace Backend.Controllers
         }
 
         [HttpPost("stat")] //Slanje Stats na pajton
-        public async Task<ActionResult<DataLoad>> PostStat(Statistika stat)
+        public async Task<ActionResult<Statistika>> PostStat(Statistika stat)
         {
             var statjson = JsonSerializer.Serialize(stat);
             var data = new StringContent(statjson, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/hp";
+            var url = "http://127.0.0.1:3000/stat";
             var response = await http.PostAsync(url, data);
             return Ok(statjson);
         }

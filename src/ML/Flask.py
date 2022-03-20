@@ -13,7 +13,8 @@ hiperparametri=[{"EncodingType": "HotEncoding", "LearningRate": 0.03, "Activatio
 
 csve = [{"PassengerId":1,"Survived":0,"Pclass":3,"Name":"Braund, Mr. Owen Harris","Sex":"male","Age":22,"SibSp":1,"Parch":0,"Ticket":"A/5 21171","Fare":7.25,"Cabin":"","Embarked":"S"},{"PassengerId":2,"Survived":1,"Pclass":1,"Name":"Cumings, Mrs. John Bradley (Florence Briggs Thayer)","Sex":"female","Age":38,"SibSp":1,"Parch":0,"Ticket":"PC 17599","Fare":71.2833,"Cabin":"C85","Embarked":"C"}]
 
-stats = [{"Count":3, "Unique":3, "Top":"f", "Freq":1, "Mean":2.0, "Std":1.0, "Min":1.0, "Q1":1.5, "Q2":2.0, "Q3":2.5, "Max":3.0}]
+stats = [{"Count":3, "Unique":3, "Top":"f", "Freq":1, "Mean":2.0, "Std":1.0, "Min":1.0, "Q1":1.5, "Q2":2.0, "Q3":2.5, "Max":3.0},
+         {"Count":2, "Unique":2, "Top":"a", "Freq":1, "Mean":2.0, "Std":1.0, "Min":1.3, "Q1":1.6, "Q2":2.2, "Q3":2.7, "Max":3.3}]
 
 @app.route("/users", methods=["POST"]) #Primanje sa beka
 def post_student():
