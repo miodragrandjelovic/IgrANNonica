@@ -1,12 +1,6 @@
-from calendar import c
-import csv
-from lib2to3.pgen2.pgen import DFAState
-from pickle import TRUE
 from flask import Flask
 from flask import jsonify,request
-import json
 import pandas as pd
-from pandas import json_normalize
 
 #from ann.py import *
 #from ann.linear import *
@@ -62,7 +56,7 @@ def post_hp():
 def  getAllHps():
     return jsonify(hiperparametri)
 
-@app.route("/csv", methods=["POST"]) #Primanje CSV sa beka
+@app.route("/csv", methods=["POST"]) #Primanje CSV sa beka i njegovo sredjivanje 
 def post_csv():
     cs = request.get_json()
     data = pd.DataFrame.from_records(cs)
@@ -91,10 +85,13 @@ def statistika():
     return statistika.to_json()
 
 
+@app.route("/kor",methods=["GET"]) #slanje kor matrice na bek
+def kor_matrica():
+    return df.corr().to_json()
+
 
 @app.route("/csv1",methods=['GET']) #Parsovanje u df
 def treniraj():
-    df = pd.DataFrame.from_records(csvdata)
     history=create_model(type='regression',train=df,label="TARGET",epochs=10,ratio=0.9,activation_function='sigmoid',hidden_layers_n=5,hidden_layer_neurons_list=[50,50,50,50,50],
         encode_type='ordinal',randomize=TRUE,batch_size=10,learning_rate='0.03')
     return jsonify(history)
