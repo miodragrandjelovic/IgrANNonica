@@ -28,6 +28,7 @@ hiperparametri=[{"EncodingType": "HotEncoding", "LearningRate": 0.03, "Activatio
 #def postAllUsers():
  #   users=request.get_json() 
 #n = ""
+
 """
 @app.route("/users", methods=["POST"]) #Primanje sa beka
 def post_student():

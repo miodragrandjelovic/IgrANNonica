@@ -11,8 +11,9 @@
 # prvo, aktivacionu funkciju za hidden layers
 # zatim, aktivacionu funkciju za output layer
 
-import ann.linear as ln
+#import ann.linear as ln
 
+import linear as ln
 
 
 def create_model(type,train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
@@ -29,9 +30,9 @@ def create_linear_model(train,features,label,epochs ,ratio, activation_function,
     # after loading data, we need to transform it 
     (X_train, X_test, y_train, y_test) = ln.clear_data(X_train, X_test, y_train,y_test)
 
+    
     # making and training the model
     (history, model) = ln.make_model(epochs, X_train, X_test, y_train, y_test, hidden_layers_n, hidden_layer_neurons_list, activation_function, batch_size, learning_rate)
-
 
     # evaluating the model
     #(test_loss, test_acc) = model.evaluate(X_test, y_test)

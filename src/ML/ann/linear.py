@@ -1,7 +1,9 @@
 # LINEAR CONTAINS STEPS FROM CONSTRUCTING A NEURAL NETWORK
 # ALL THE FUNCTIONS ARE CALLED FROM FUNCTIONS FILE
 
-import ann.functions as fn
+#import ann.functions as fn
+import functions as fn
+
 import matplotlib.pyplot as plt
 
 def load_split_data(train_file, features, label , ratio,randomize, encode_type):
@@ -14,6 +16,8 @@ def load_split_data(train_file, features, label , ratio,randomize, encode_type):
     #print(data.dtypes)
 
     # deal with missing data
+    # for numerical values fill with mean
+    # for categorical values fill with mode 
     data = fn.missing_data(data)
     
     # drop the outliers from numerical columns
@@ -28,7 +32,7 @@ def load_split_data(train_file, features, label , ratio,randomize, encode_type):
     # split x and y (features and label)
     X, y = fn.feature_and_label(data, label)
 
-    # split test and train
+    # split test and train data 
     (X_train, X_test, y_train, y_test) = fn.split_data(X, y, ratio, randomize)
         
     # return the split data in the end
@@ -39,12 +43,15 @@ def clear_data(X_train, X_test, y_train,y_test):
     (X_train, X_test) = fn.filter_data(X_train, X_test)
 
     # now, shape all data
-    (X_train, X_test, y_train, y_test) = fn.scale_data(X_train, X_test, y_train, y_test)
+    #(X_train, X_test, y_train, y_test) = fn.scale_data(X_train, X_test, y_train, y_test)
 
     # return data
     return (X_train, X_test, y_train, y_test)
 
 def make_model(epochs, X_train,X_test,y_train,y_test,hidden_layers_n,hidden_layer_neurons_list, activation_function, batch_size, learning_rate):
+    # lets see the data before making the model
+    #fn.showdata(X_train, X_test, y_train,y_test)
+
     # make model
     model = fn.regression(X_train,hidden_layers_n,hidden_layer_neurons_list,activation_function)
 

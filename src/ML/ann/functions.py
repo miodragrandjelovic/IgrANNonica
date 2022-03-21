@@ -4,6 +4,8 @@ import numpy as np
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.linear_model import SGDClassifier, SGDRegressor
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder, StandardScaler, scale
+from sklearn.utils import shuffle
+
 
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -18,26 +20,42 @@ from sklearn.feature_selection import VarianceThreshold
 import keras 
 from keras.models import Sequential
 from keras import Input
-from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D, Activation
+from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D, Activation, Normalization
 from keras.losses import MeanSquaredError
 from keras.optimizer_v2 import adam
 
 
 def load_data(features, label,url):
+    # moze da se prosledi i kao json string
+    # data = pd.read_json(url)
     data = pd.read_csv(url)
     features.append(label)
     
     #print("FEATURES TO KEEP")
     #print(features)
 
+    
     data = data[features]
+    data.columns = features
+
     #print("DATA IS")
-    #print(data)
+    #print(data.head())
 
     return data
 
 def feature_and_label(data, label):
+    #print("DATA BEFORE LABEL POP")
+    #print(data.head())
+
     y = data.pop(label)
+    y.columns = label
+
+    #print("DATA X ISSS")
+    #print(data.head())
+
+    #print("DATA y ISSS")
+    #print(y.head())
+
     return data,y
 
 def split_data(X, y, ratio, randomize):
@@ -45,14 +63,17 @@ def split_data(X, y, ratio, randomize):
     return (X_train, X_test, y_train, y_test)
 
 def filter_data(X_train, X_test):
+    print("BEFORE FILTERING")
+    print(X_train.head())
+
+    # check for duplicate rows
+    X_train.drop_duplicates(inplace=True, keep='first')
+
     # first, removing data with constant value
-
-    #print("BEFORE FILTERING")
-    #print(X_train.head())
-
     constant_filter = VarianceThreshold(threshold=0)
     constant_filter.fit(X_train)
-    constant_list = [not temp for temp in constant_filter.get_support()]
+    constant_list = [column for column in X_train.columns if column not in X_train.columns[constant_filter.get_support()]]
+    #print("COLUMS THAT ARE CONSTANT ARE ", constant_list)
     X_train_filter = constant_filter.transform(X_train)
     X_test_filter = constant_filter.transform(X_test)
     # print("After first removal: ", X_train.shape)
@@ -60,23 +81,25 @@ def filter_data(X_train, X_test):
     # now, removing Quasi constants, which are not big influence on data
     quasi_constant_filter = VarianceThreshold(threshold=0.01)
     quasi_constant_filter.fit(X_train_filter)
+    quasi_constant_list = [column for column in X_train.columns if column not in X_train.columns[constant_filter.get_support()]]
+    #print("COLUMS THAT ARE QUASI CONSTANT ARE ", quasi_constant_list)
     X_train_quasi_filter = quasi_constant_filter.transform(X_train_filter)
     X_test_quasi_filter = quasi_constant_filter.transform(X_test_filter)
     # print("After second removal: ", X_train.shape)
 
-    #remove duplicates
+    """
+    # remove duplicates in terms of columns
     X_train_T = X_train_quasi_filter.T
     X_test_T = X_test_quasi_filter.T
-    X_train_T = pd.DataFrame(X_train_T)
-    X_test_T = pd.DataFrame(X_test_T)
-    duplicated_features = X_train_T.duplicated()
-    features_to_keep = [not index for index in duplicated_features]
-    X_train = X_train_T[features_to_keep].T
-    X_test = X_test_T[features_to_keep].T
+    print("Type of data is ", X_train_T.type)
+    X_train = X_train_T.drop_duplicates(keep='first').T
+    X_test = X_test_T.drop_duplicates(keep='first').T
+  
     # print("After third removal: ", X_train.shape)
+    """
 
-    #print("AFTER FILTERING")
-    #print(X_train.head())
+    print("AFTER FILTERING")
+    print(X_train.head())
 
     return X_train, X_test
 
@@ -117,6 +140,7 @@ def drop_numerical_outliers(df, z_thresh=3):
 
     #sns.boxplot(x=df['Age'])
     #plt.show()
+
 
     return df
 
@@ -168,6 +192,7 @@ def encode_data(df, encoding):
     elif (encoding == 'ordinal'):
         #print("ENCODING ORDINAL ENCODER")
         df = ordinal_encoding(df, categorical_cols)
+
     return (df)
 
 
@@ -187,6 +212,18 @@ def scale_data(X_train, X_test, y_train, y_test):
    
     return (X_train, X_test, y_train, y_test)
 
+def showdata(X_train, X_test, y_train,y_test):
+    print("X TRAIN DATA ")
+   
+    print(X_train.shape)
+    print(X_train.describe())
+    print(X_train.head())
+    #print(X_train)
+
+    print("Thats it")
+    print()
+    print()
+
 def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_function):
     # here, we are making our model
     
@@ -196,8 +233,11 @@ def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_f
     # input layer
     # should have same shape as number of input features (columns)
     #model.add(Flatten(input_shape=(X_train.shape[1],)))
-    model.add(Activation(activation=activation_function,input_shape=(X_train.shape[1],)))
-    
+    #model.add(Activation(activation=activation_function,input_shape=(X_train.shape[1],)))
+    normalizer = Normalization(axis=-1)
+    normalizer.adapt(X_train)
+    model.add(normalizer)
+
     # hidden layers
     for i in range(hidden_layers_n):
         model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function))
@@ -250,6 +290,11 @@ def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
     return model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_test, y_test), verbose=1) # VALIDATION DATA=(X_VAL, Y_VAL) 
 
 def missing_data(data):
+    # if user decides to drop data containing nan values
+    # question is should we drop rows or columns?
+    # axis = 1 is for dropping columns
+    # data.dropna(inplace=True)
+
     # find missing values, and replace with ideal or drop
     #print("MISSING DATA")
     #print(data.isna().sum())
