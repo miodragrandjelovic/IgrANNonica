@@ -8,7 +8,6 @@ using Backend.Models;
 using System.Text.Json.Nodes;
 using System.Net.Http.Json;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Backend.Controllers
 {
@@ -48,51 +47,25 @@ namespace Backend.Controllers
             //var hiperparametars = JsonSerializer.Deserialize<Hiperparametri>(await response.Content.ReadAsStringAsync());
             return Ok(hiperjson);
         }
-        
+
         [HttpPost("csv")] //Slanje CSV na pajton
-        public async Task<ActionResult<string>> PostCsv(string csve)
+        public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad cs)
         {
+            string csve = cs.CsvData;
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
             var url = "http://127.0.0.1:3000/csv";
             var response = await http.PostAsync(url, data);
             return Ok(csve);
         }
-        /*
-        [HttpPost("csv")] //Slanje CSV na pajton
-        public async Task<ActionResult<string>> PostCsv([FromBody] DataLoad csve)
+
+        [HttpPost("stat")] //Slanje Stats na pajton
+        public async Task<ActionResult<Statistika>> PostStat(Statistika stat)
         {
-            var csvjson = JsonSerializer.Serialize(csve);
-            var data = new StringContent(csvjson, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/csv";
+            var statjson = JsonSerializer.Serialize(stat);
+            var data = new StringContent(statjson, System.Text.Encoding.UTF8, "application/json");
+            var url = "http://127.0.0.1:3000/stat";
             var response = await http.PostAsync(url, data);
-            //var hiperparametars = JsonSerializer.Deserialize<Hiperparametri>(await response.Content.ReadAsStringAsync());
-            return Ok(csve);
+            return Ok(statjson);
         }
-        /* public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad csve)
-         {
-             var csvjson = JsonSerializer.Serialize(csve);
-             var data = new StringContent(csvjson, System.Text.Encoding.UTF8, "application/json");
-             var url = "http://127.0.0.1:3000/csv";
-             var response = await http.PostAsync(url, data);
-             //var hiperparametars = JsonSerializer.Deserialize<Hiperparametri>(await response.Content.ReadAsStringAsync());
-             return Ok(csve);
-         }*/
-        /*[HttpPost("csvae")]
-        public async Task<JsonObject> postujjson(JsonContent json)
-        {
-            var httpClient = new HttpClient();
-            var content = await httpClient.GetStringAsync(json);
-            return (JsonObject)await Task.Run(() => JsonObject.Parse(content));
-        }*/
-        //konekcija sa ML?
-        /*public async Task<ActionResult<string>> Post([FromBody] DataLoad content)
-        {
-            string csvdata;
-            csvdata = content.csvdata;
-            //text = csvvalidacija.Validate(csvdata);
-            //Task.Run((Func<Task>)() => KonekcijaSaMl.posaljihttp()));
-            //return text;
-            return csvdata;
-        }*/
     }
 }

@@ -5,12 +5,12 @@
 import py
 
 type='regression' # or classification
-train = './src/ML/ann/train.csv'
-activation_function = 'sigmoid' # relu, tahn, sigmoid, linear
+train = './src/ML/ann/titanic.csv'
+activation_function = 'sigmoid' # relu, tanh, sigmoid, linear
 learning_rate = '0.03' # 0.00001, 0.0001, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10
 regularization = 'none' # none, L1, L2
 regularization_rate = '0' # 0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10
-encode_type = 'ordinal' # onehot, label, ordinal
+encode_type = 'label' # onehot, label, ordinal
 epochs = 12
 randomize = True
 
@@ -18,7 +18,7 @@ randomize = True
 # number of hidden layers in ann
 hidden_layers_n = 5
 # number of neurons inside each of hidden layers
-hidden_layer_neurons = [50,50,50,50,50]
+hidden_layer_neurons = [50,30,5,3,6]
 
 # this ration can go from 10 to 90 percent
 training_test_ratio = 0.9
@@ -33,7 +33,7 @@ batch_size = 10
 features = ''
 
 # output is the column that the user wants to predict with this model
-label = 'TARGET'
+label = 'Survived'
 
 # we need to provide some loss/cost functions such as
 # mean squared error

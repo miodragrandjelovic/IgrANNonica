@@ -4,8 +4,7 @@ namespace Backend
 {
     public class UserDto // user data transfer object
     {
-     //   [Key]
-       
+
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         //public string Email { get; set; } = string.Empty;

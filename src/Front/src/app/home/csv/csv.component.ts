@@ -2,25 +2,29 @@ import { HttpClient } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { HttpHeaders } from "@angular/common/http";
 
-//const headers = new HttpHeaders().set('content-type','plain/text');
+const headers = new HttpHeaders().set('content-type','application/x-www-form-urlencoded');
 @Component({
     selector: 'app-csv',
     templateUrl: 'csv.component.html'
 })
 export class CsvComponent {
 
+
+    dataObject:any = [];
+    headingLines: any = [];
+    rowLines: any = [];
+
     constructor(private http: HttpClient) {
 
     }
 
-    
-
-    dataObject:any = [];
-
-    headingLines: any = [];
-    rowLines: any = [];
 
     fileUpload(files: any) {
+
+        this.dataObject = [];
+        this.headingLines = [];
+        this.rowLines = [];
+
         let fileList = (<HTMLInputElement>files.target).files;
         if (fileList && fileList.length > 0) {
             let file : File = fileList[0];
@@ -60,9 +64,10 @@ export class CsvComponent {
                     rowsArray.push(rows[j]);
                 }
                 this.rowLines.push(rowsArray);
-                //JSON.stringify(this.dataObject);
-                let dataString = JSON.stringify(this.dataObject)
-                return this.http.post<any>('https://localhost:7167/api/LoadData/csv', this.dataObject/*, {headers:headers}*/).subscribe();
+
+                return this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
+                    csvData: JSON.stringify(this.dataObject)
+                }).subscribe();
             }
         }
     }
