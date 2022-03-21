@@ -1,21 +1,34 @@
+from calendar import c
+import csv
+from pickle import TRUE
 from flask import Flask
 from flask import jsonify,request
+import json
+import pandas as pd
+from pandas import json_normalize
 
+#from ann.py import *
+#from ann.linear import *
 
 app = Flask(__name__)
 
-users=[{"FirstName": "petar", "LastName": "peric","Email": "e@gmail.com","Username": "pera", "Password": "sifra123"},
-    {"FirstName": "mika", "LastName": "mikic","Email": "e@gmail.com","Username": "mika", "Password": "sifra123"},
-    {"FirstName": "milan", "LastName": "milanic","Email": "e@gmail.com","Username": "milan", "Password": "sifra123"}]
+#users=[{"FirstName": "petar", "LastName": "peric","Email": "e@gmail.com","Username": "pera", "Password": "sifra123"},
+ #   {"FirstName": "mika", "LastName": "mikic","Email": "e@gmail.com","Username": "mika", "Password": "sifra123"},
+  #  {"FirstName": "milan", "LastName": "milanic","Email": "e@gmail.com","Username": "milan", "Password": "sifra123"}]
 
 hiperparametri=[{"EncodingType": "HotEncoding", "LearningRate": 0.03, "Activation": "Tanh", "Epoch": 3, "Layers": 1, "NeuronsLvl1": 1, "NeuronsLvl2": 1, "NeuronsLvl3": 1, "NeuronsLvl4": 1, "NeuronsLvl5": 1, "Ratio": 50, "BatchSize": 10, "Randomize": 1},
                 {"EncodingType": "ColdEncoding", "LearningRate": 0.01, "Activation": "Tanko", "Epoch": 2, "Layers": 0, "NeuronsLvl1": 0, "NeuronsLvl2": 1, "NeuronsLvl3": 1, "NeuronsLvl4": 1, "NeuronsLvl5": 1,"Ratio": 30, "BatchSize": 9, "Randomize": 1}]
 
-csve = [{"PassengerId":1,"Survived":0,"Pclass":3,"Name":"Braund, Mr. Owen Harris","Sex":"male","Age":22,"SibSp":1,"Parch":0,"Ticket":"A/5 21171","Fare":7.25,"Cabin":"","Embarked":"S"},{"PassengerId":2,"Survived":1,"Pclass":1,"Name":"Cumings, Mrs. John Bradley (Florence Briggs Thayer)","Sex":"female","Age":38,"SibSp":1,"Parch":0,"Ticket":"PC 17599","Fare":71.2833,"Cabin":"C85","Embarked":"C"}]
-
-stats = [{"Count":3, "Unique":3, "Top":"f", "Freq":1, "Mean":2.0, "Std":1.0, "Min":1.0, "Q1":1.5, "Q2":2.0, "Q3":2.5, "Max":3.0},
-         {"Count":2, "Unique":2, "Top":"a", "Freq":1, "Mean":2.0, "Std":1.0, "Min":1.3, "Q1":1.6, "Q2":2.2, "Q3":2.7, "Max":3.3}]
-
+#json ne moze da procita jer su jednostruki navodnici, a ako se stave dvostruki kako da stavimo string izmedju jer string mora sa dvostrukim da krece i da se zavrsava?!
+#csve = {"CsvData": "[{'PassengerId':1,'Survived':0,'Pclass':3,'Name':'Braund, Mr. Owen Harris','Sex':'male','Age':22,'SibSp':1,'Parch':0,'Ticket':'A/5 21171','Fare':7.25,'Cabin':'','Embarked':'S'},{'PassengerId':2,'Survived':1,'Pclass':1,'Name':'Cumings, Mrs. John Bradley (Florence Briggs Thayer)','Sex':'female','Age':38,'SibSp':1,'Parch':0,'Ticket':'PC 17599','Fare':71.2833,'Cabin':'C85','Embarked':C'}]"}
+#csve = [{ "CsvData" : """[{"PassengerId":1,"Survived":0,"Pclass":3,"Name":"Braund, Mr. Owen Harris","Sex":"male","Age":22,"SibSp":1,"Parch":0,"Ticket":"A/5 21171","Fare":7.25,"Cabin":"","Embarked":"S"},{"PassengerId":2,"Survived":1,"Pclass":1,"Name":"Cumings, Mrs. John Bradley (Florence Briggs Thayer)","Sex":"female","Age":38,"SibSp":1,"Parch":0,"Ticket":"PC 17599","Fare":71.2833,"Cabin":"C85","Embarked":"C"}]"""}]
+#csve = [{"EncodingType": "HotEncoding", "LearningRate": 0.03, "Activation": "Tanh", "Epoch": 3, "Layers": 1, "NeuronsLvl1": 1, "NeuronsLvl2": 1, "NeuronsLvl3": 1, "NeuronsLvl4": 1, "NeuronsLvl5": 1, "Ratio": 50, "BatchSize": 10, "Randomize": 1}]
+#csve = [{"PassengerId":1,"Survived":0,"Pclass":3,"Name":"Braund, Mr. Owen Harris","Sex":"male","Age":22,"SibSp":1,"Parch":0,"Ticket":"A/5 21171","Fare":7.25,"Cabin":"","Embarked":"S"},{"PassengerId":2,"Survived":1,"Pclass":1,"Name":"Cumings, Mrs. John Bradley (Florence Briggs Thayer)","Sex":"female","Age":38,"SibSp":1,"Parch":0,"Ticket":"PC 17599","Fare":71.2833,"Cabin":"C85","Embarked":"C"}]
+#@app.route("/users",methods=['POST'])
+#def postAllUsers():
+ #   users=request.get_json() 
+#n = ""
+"""
 @app.route("/users", methods=["POST"]) #Primanje sa beka
 def post_student():
     user = request.get_json()
@@ -25,6 +38,7 @@ def post_student():
 @app.route("/users", methods=['GET']) #Slanje na bek
 def  getAllUsers():
     return jsonify(users)
+"""
 
 @app.route("/hp", methods=["POST"]) #Primanje HP sa beka
 def post_hp():
@@ -56,6 +70,32 @@ def post_stat():
 @app.route("/stat", methods=['GET']) #Slanje Stats na bek
 def  getStat():
     return jsonify(stats)
+
+@app.route("/statistika",methods=['GET']) #statistika
+def statistika():
+    df = pd.DataFrame.from_records(csvdata)
+    #statistika=df.describe()
+    #return statistika.to_json()
+    for (columnName,columnData) in df.iteritems():
+        if(df[str(columnName)][0].isnumeric()):
+            #print(df[str(columnName)][0].isnumeric())
+            df[str(columnName)]=df[str(columnName)].astype(float)
+    
+    statistika=df.describe(include='all')
+    statistika.rename(index={"25%":"Q1","50%":"Q2","75%":"Q3"},inplace=True)
+    return statistika.to_json()
+
+
+
+@app.route("/csv1",methods=['GET']) #Parsovanje u df
+def treniraj():
+    df = pd.DataFrame.from_records(csvdata)
+    history=create_model(type='regression',train=df,label="TARGET",epochs=10,ratio=0.9,activation_function='sigmoid',hidden_layers_n=5,hidden_layer_neurons_list=[50,50,50,50,50],
+        encode_type='ordinal',randomize=TRUE,batch_size=10,learning_rate='0.03')
+    return jsonify(history)
+
+
+
 
 #if(__name__=="main"):
 app.run(port = 3000)
