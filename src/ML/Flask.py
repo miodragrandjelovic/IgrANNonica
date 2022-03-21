@@ -1,11 +1,6 @@
-from calendar import c
-import csv
-from pickle import TRUE
 from flask import Flask
 from flask import jsonify,request
-import json
 import pandas as pd
-from pandas import json_normalize
 
 #from ann.py import *
 #from ann.linear import *
@@ -38,6 +33,17 @@ def post_student():
 @app.route("/users", methods=['GET']) #Slanje na bek
 def  getAllUsers():
     return jsonify(users)
+
+@app.route("/stat", methods=["POST"]) #Primanje Stats sa beka
+def post_stat():
+    stat = request.get_json()
+    stats.append(stat)
+    return stats
+
+@app.route("/stat", methods=['GET']) #Slanje Stats na bek
+def  getStat():
+    return jsonify(stats)
+
 """
 
 @app.route("/hp", methods=["POST"]) #Primanje HP sa beka
@@ -50,9 +56,19 @@ def post_hp():
 def  getAllHps():
     return jsonify(hiperparametri)
 
-@app.route("/csv", methods=["POST"]) #Primanje CSV sa beka
+@app.route("/csv", methods=["POST"]) #Primanje CSV sa beka i njegovo sredjivanje 
 def post_csv():
     cs = request.get_json()
+    data = pd.DataFrame.from_records(cs)
+    #statistika=df.describe()
+    #return statistika.to_json()
+    for (columnName,columnData) in data.iteritems():
+        if(data[str(columnName)][0].isnumeric()):
+            #print(df[str(columnName)][0].isnumeric())
+            data[str(columnName)]=data[str(columnName)].astype(float)
+
+    global df
+    df=data
     global csvdata
     csvdata = cs
     return csvdata
@@ -61,35 +77,21 @@ def post_csv():
 def  getCsv():
     return jsonify(csvdata)
 
-@app.route("/stat", methods=["POST"]) #Primanje Stats sa beka
-def post_stat():
-    stat = request.get_json()
-    stats.append(stat)
-    return stats
-
-@app.route("/stat", methods=['GET']) #Slanje Stats na bek
-def  getStat():
-    return jsonify(stats)
-
 @app.route("/statistika",methods=['GET']) #statistika
 def statistika():
-    df = pd.DataFrame.from_records(csvdata)
-    #statistika=df.describe()
-    #return statistika.to_json()
-    for (columnName,columnData) in df.iteritems():
-        if(df[str(columnName)][0].isnumeric()):
-            #print(df[str(columnName)][0].isnumeric())
-            df[str(columnName)]=df[str(columnName)].astype(float)
     
     statistika=df.describe(include='all')
     statistika.rename(index={"25%":"Q1","50%":"Q2","75%":"Q3"},inplace=True)
     return statistika.to_json()
 
 
+@app.route("/kor",methods=["GET"]) #slanje kor matrice na bek
+def kor_matrica():
+    return df.corr().to_json()
+
 
 @app.route("/csv1",methods=['GET']) #Parsovanje u df
 def treniraj():
-    df = pd.DataFrame.from_records(csvdata)
     history=create_model(type='regression',train=df,label="TARGET",epochs=10,ratio=0.9,activation_function='sigmoid',hidden_layers_n=5,hidden_layer_neurons_list=[50,50,50,50,50],
         encode_type='ordinal',randomize=TRUE,batch_size=10,learning_rate='0.03')
     return jsonify(history)
