@@ -1,5 +1,6 @@
 from calendar import c
 import csv
+from lib2to3.pgen2.pgen import DFAState
 from pickle import TRUE
 from flask import Flask
 from flask import jsonify,request
@@ -38,6 +39,17 @@ def post_student():
 @app.route("/users", methods=['GET']) #Slanje na bek
 def  getAllUsers():
     return jsonify(users)
+
+@app.route("/stat", methods=["POST"]) #Primanje Stats sa beka
+def post_stat():
+    stat = request.get_json()
+    stats.append(stat)
+    return stats
+
+@app.route("/stat", methods=['GET']) #Slanje Stats na bek
+def  getStat():
+    return jsonify(stats)
+
 """
 
 @app.route("/hp", methods=["POST"]) #Primanje HP sa beka
@@ -53,6 +65,16 @@ def  getAllHps():
 @app.route("/csv", methods=["POST"]) #Primanje CSV sa beka
 def post_csv():
     cs = request.get_json()
+    data = pd.DataFrame.from_records(cs)
+    #statistika=df.describe()
+    #return statistika.to_json()
+    for (columnName,columnData) in data.iteritems():
+        if(data[str(columnName)][0].isnumeric()):
+            #print(df[str(columnName)][0].isnumeric())
+            data[str(columnName)]=data[str(columnName)].astype(float)
+
+    global df
+    df=data
     global csvdata
     csvdata = cs
     return csvdata
@@ -61,25 +83,8 @@ def post_csv():
 def  getCsv():
     return jsonify(csvdata)
 
-@app.route("/stat", methods=["POST"]) #Primanje Stats sa beka
-def post_stat():
-    stat = request.get_json()
-    stats.append(stat)
-    return stats
-
-@app.route("/stat", methods=['GET']) #Slanje Stats na bek
-def  getStat():
-    return jsonify(stats)
-
 @app.route("/statistika",methods=['GET']) #statistika
 def statistika():
-    df = pd.DataFrame.from_records(csvdata)
-    #statistika=df.describe()
-    #return statistika.to_json()
-    for (columnName,columnData) in df.iteritems():
-        if(df[str(columnName)][0].isnumeric()):
-            #print(df[str(columnName)][0].isnumeric())
-            df[str(columnName)]=df[str(columnName)].astype(float)
     
     statistika=df.describe(include='all')
     statistika.rename(index={"25%":"Q1","50%":"Q2","75%":"Q3"},inplace=True)
