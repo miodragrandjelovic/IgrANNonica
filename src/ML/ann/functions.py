@@ -8,6 +8,7 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder, S
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy import stats
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -17,13 +18,22 @@ from sklearn.feature_selection import VarianceThreshold
 import keras 
 from keras.models import Sequential
 from keras import Input
-from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D
+from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D, Activation
 from keras.losses import MeanSquaredError
 from keras.optimizer_v2 import adam
 
 
-def load_data(url):
+def load_data(features, label,url):
     data = pd.read_csv(url)
+    features.append(label)
+    
+    #print("FEATURES TO KEEP")
+    #print(features)
+
+    data = data[features]
+    #print("DATA IS")
+    #print(data)
+
     return data
 
 def feature_and_label(data, label):
@@ -31,7 +41,7 @@ def feature_and_label(data, label):
     return data,y
 
 def split_data(X, y, ratio, randomize):
-    (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=1)
+    (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
     return (X_train, X_test, y_train, y_test)
 
 def filter_data(X_train, X_test):
@@ -69,6 +79,46 @@ def filter_data(X_train, X_test):
     #print(X_train.head())
 
     return X_train, X_test
+
+def drop_numerical_outliers(df, z_thresh=3):
+    # Constrains will contain `True` or `False` depending on if it is a value below the threshold.
+
+    """
+    df_numerical = df.select_dtypes(exclude=['category','object']).columns()
+    print("NUMERICAL CATEGORIES")
+    print(df_numerical)
+
+
+    z_scores = stats.zscore(df_numerical)
+    abs_z_scores = np.abs(z_scores)
+    filtered_entries = (abs_z_scores < z_thresh).all(axis=1)
+    new_df = df_numerical[filtered_entries]
+
+    """
+
+    #print("SUMMARY OF NUMERICAL DATA BEFORE OUTLIERS ")
+    #print(df.describe())
+
+    #sns.boxplot(x=df['Age'])
+    #plt.show()
+
+    # these are numerical columns
+    numerical_feature_mask = df.dtypes==np.number
+    numerical_cols = df.columns[numerical_feature_mask].tolist()
+
+    Q1 = df[numerical_cols].quantile(0.25)
+    Q3 = df[numerical_cols].quantile(0.75)
+    IQR = Q3 - Q1
+
+    df = df[~((df[numerical_cols] < (Q1 - 1.5 * IQR)) | (df[numerical_cols] > (Q3 + 1.5 * IQR))).any(axis=1)]
+
+    #print("SUMMARY OF NUMERICAL DATA AFTER OUTLIERS ")
+    #print(df.describe())
+
+    #sns.boxplot(x=df['Age'])
+    #plt.show()
+
+    return df
 
 def one_hot_encoder(dataframe, categorical_cols):
     # instantiate OneHotEncoder
@@ -122,15 +172,15 @@ def encode_data(df, encoding):
 
 
 def scale_data(X_train, X_test, y_train, y_test):
-    # print("Before scaling: ", X_train.shape)
+    print("Before scaling: ", X_train.shape)
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    # print("Before reshaping: ", X_train.shape)
+    print("Before reshaping: ", X_train.shape)
     X_train.reshape(X_train.shape[0],X_train.shape[1],1)
     X_test.reshape(X_test.shape[0],X_test.shape[1],1)
-    #print("After reshaping: ", X_train.shape)
+    print("After reshaping: ", X_train.shape)
     
     y_train = y_train.to_numpy()
     y_test = y_test.to_numpy()
@@ -145,7 +195,8 @@ def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_f
 
     # input layer
     # should have same shape as number of input features (columns)
-    model.add(Flatten(input_shape=(X_train.shape[1],)))
+    #model.add(Flatten(input_shape=(X_train.shape[1],)))
+    model.add(Activation(activation=activation_function,input_shape=(X_train.shape[1],)))
     
     # hidden layers
     for i in range(hidden_layers_n):
@@ -180,6 +231,21 @@ def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
 
     # during the training of a model , we need to monitor the process, and send the data to front, so the user can have an overview
     # for this, we need to use callbacks argument
+    # ovde se javlja greska kod svih aktivacionih funkcija sem sigmoid!!
+    
+    """
+    print("X TRAIN")
+    print(pd.DataFrame(X_train).describe())
+
+    print("Y TRAIN")
+    print(pd.DataFrame(y_train).describe())
+
+    print("X TEST")
+    print(pd.DataFrame(X_test).describe())
+
+    print("Y TEST")
+    print(pd.DataFrame(y_test).describe())
+    """
 
     return model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_test, y_test), verbose=1) # VALIDATION DATA=(X_VAL, Y_VAL) 
 

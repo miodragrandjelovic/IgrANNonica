@@ -4,9 +4,9 @@
 import ann.functions as fn
 import matplotlib.pyplot as plt
 
-def load_split_data(train_file, label , ratio,randomize, encode_type):
+def load_split_data(train_file, features, label , ratio,randomize, encode_type):
     # load all data
-    data = fn.load_data(train_file)
+    data = fn.load_data(features, label,train_file)
 
     #print("before encoding")
     #print(data.head())
@@ -16,6 +16,9 @@ def load_split_data(train_file, label , ratio,randomize, encode_type):
     # deal with missing data
     data = fn.missing_data(data)
     
+    # drop the outliers from numerical columns
+    data = fn.drop_numerical_outliers(data)
+
     # encode data
     data = fn.encode_data(data, encode_type)
     
