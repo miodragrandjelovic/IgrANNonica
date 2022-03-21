@@ -17,25 +17,7 @@ namespace Backend.Controllers
     {
         private readonly HttpClient http = new HttpClient();
         public static Hiperparametri hp = new Hiperparametri();
-        // POST api/<HiperparametriController>
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        /*public ActionResult<Hiperparametri> PostHiperparametri(Hiperparametri request)
-        {
-            hp.EncodingType= request.EncodingType;
-            hp.LearningRate = request.LearningRate;
-            hp.Activation = request.Activation;
-            hp.Epoch = request.Epoch;
-            hp.Layers = request.Layers;
-            hp.Neurons = request.Neurons;
-            hp.Ratio = request.Ratio;
-            hp.BatchSize = request.BatchSize;
-            /*
-            var data = new StringContent(hp, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/hp";
-            var response = http.PostAsync(url, data);
-            return hp;
-        }*/
+
 
         [HttpPost("hp")] //Slanje HP na pajton
         public async Task<ActionResult<Hiperparametri>> Post(Hiperparametri hiper)
@@ -55,7 +37,11 @@ namespace Backend.Controllers
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
             var url = "http://127.0.0.1:3000/csv";
             var response = await http.PostAsync(url, data);
-            return Ok(csve);
+
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
+            var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
+            return Ok(stat);
+            //return Ok(csve);
         }
 
         [HttpPost("stats")] //Slanje Stats na pajton
@@ -67,5 +53,25 @@ namespace Backend.Controllers
             var response = await http.PostAsync(url, data);
             return Ok(statjson);
         }
+
+        // POST api/<HiperparametriController>
+        //[HttpPost]
+        //public void Post([FromBody] string value)
+        /*public ActionResult<Hiperparametri> PostHiperparametri(Hiperparametri request)
+        {
+            hp.EncodingType= request.EncodingType;
+            hp.LearningRate = request.LearningRate;
+            hp.Activation = request.Activation;
+            hp.Epoch = request.Epoch;
+            hp.Layers = request.Layers;
+            hp.Neurons = request.Neurons;
+            hp.Ratio = request.Ratio;
+            hp.BatchSize = request.BatchSize;
+            /*
+            var data = new StringContent(hp, System.Text.Encoding.UTF8, "application/json");
+            var url = "http://127.0.0.1:3000/hp";
+            var response = http.PostAsync(url, data);
+            return hp;
+        }*/
     }
 }

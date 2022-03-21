@@ -40,7 +40,7 @@ namespace Backend.Controllers
             return Ok(data);
         }
 
-
+        /*
         [HttpPost] //Slanje HP na pajton
         public async Task<IActionResult> Post(Hiperparametri hiper)
         {
@@ -51,6 +51,6 @@ namespace Backend.Controllers
             //var studenti = JsonSerializer.Deserialize<UserDto>(await response.Content.ReadAsStringAsync());
             return Ok(hiper);
         }
-
+        */
     }
 }
