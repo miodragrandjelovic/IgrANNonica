@@ -9,6 +9,7 @@ const headers = new HttpHeaders().set('content-type','application/x-www-form-url
 })
 export class CsvComponent {
 
+    showMe:boolean=false;
 
     dataObject:any = [];
     headingLines: any = [];
@@ -20,6 +21,8 @@ export class CsvComponent {
 
 
     fileUpload(files: any) {
+
+        this.showMe=!this.showMe;
 
         this.dataObject = [];
         this.headingLines = [];
