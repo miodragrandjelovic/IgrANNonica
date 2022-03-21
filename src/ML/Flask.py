@@ -78,11 +78,11 @@ def post_csv():
 def  getCsv():
     return jsonify(csvdata)
 
-@app.route("/statistika",methods=['GET']) #statistika
-def statistika():
-    
+@app.route("/stats",methods=['GET']) #statistika
+def statistika(): 
     statistika=df.describe(include='all')
     statistika.rename(index={"25%":"Q1","50%":"Q2","75%":"Q3"},inplace=True)
+    #return jsonify(statistika)
     return statistika.to_json()
 
 

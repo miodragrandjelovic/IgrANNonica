@@ -14,11 +14,12 @@ namespace Backend.Controllers
     {
         private readonly HttpClient http = new HttpClient();
 
-        [HttpGet("stat")] //Primanje statistickih parametara iz pajtona 
-        public async Task<ActionResult<Statistika>> GetStat()
+
+        [HttpGet("stats")] //Primanje statistickih parametara iz pajtona 
+        public async Task<ActionResult<JsonDocument>> GetStat()
         {
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stat");
-            var stat = JsonSerializer.Deserialize<List<Statistika>>(await httpResponse.Content.ReadAsStringAsync());
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
+            var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
             return Ok(stat);
         }
 
@@ -39,7 +40,7 @@ namespace Backend.Controllers
             return Ok(data);
         }
 
-
+        /*
         [HttpPost] //Slanje HP na pajton
         public async Task<IActionResult> Post(Hiperparametri hiper)
         {
@@ -50,6 +51,6 @@ namespace Backend.Controllers
             //var studenti = JsonSerializer.Deserialize<UserDto>(await response.Content.ReadAsStringAsync());
             return Ok(hiper);
         }
-
+        */
     }
 }
