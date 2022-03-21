@@ -2,7 +2,11 @@
 
 #hiperparametri koje treba da prosledi bek
 
+import pandas as pd
 import py
+
+#import ML.ann.py as pw
+import py as pw
 
 type='regression' # or classification
 train = './src/ML/ann/titanic.csv'
@@ -43,5 +47,12 @@ label = 'Survived'
 # mean absolute error
 # hinge loss
 
+df = pd.read_csv('./src/ML/ann/titanic.csv')
 
-history = py.create_model(type, train, features, label, epochs, training_test_ratio, activation_function, hidden_layers_n, hidden_layer_neurons, encode_type, randomize, batch_size, learning_rate, regularization, regularization_rate)
+features = ['Pclass', 'Name', 'Sex', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin', 'Embarked']
+stats = pw.Statistics('regression')
+stats.createModel(train=df,features=features, label='Survived', epochs=20, ratio=0.8, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5], encode_type='label', randomize=True,
+    batch_size=20, learning_rate=0.003, regularization='none' ,regularization_rate=0)
+
+print("The statistics are")
+print(stats.stats)
