@@ -13,15 +13,18 @@
 
 #import ann.linear as ln
 
-import linear as ln
-
+from matplotlib.pyplot import hist
+import ann.linear as ln
+import pandas as pd
 
 def create_model(type,train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
     if (type=='regression'):
-       create_linear_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate)
-    elif (type=='classification'):
-        create_categorical_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate)
+        history = create_linear_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate)
 
+    elif (type=='classification'):
+        history = create_categorical_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate)
+
+    return history
 
 def create_linear_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
      # load data in suitable forms 
@@ -39,10 +42,20 @@ def create_linear_model(train,features,label,epochs ,ratio, activation_function,
     #print("THE MODEL WE'VE TRAINED:")
     #print("LOSS: ",test_loss," ACCURACY: ",test_acc)
     
-    ln.plot_result(history, epochs)
+    #ln.plot_result(history, epochs)
 
-    # return history to worker
-    return history
+    print("HISTORY OF TRAINING")
+    print(history)
+
+    hl = dict()
+    
+    hl['Accuracy'] = history.history['accuracy']
+    hl['MAE'] = history.history['mae']
+    hl['MSE'] = history.history['mse']
+    hl['AUC'] = history.history['auc']
+    hl['Loss'] = history.history['loss']
+
+    return hl
 
 def create_categorical_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
     pass

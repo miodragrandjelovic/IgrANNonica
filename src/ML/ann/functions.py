@@ -25,10 +25,10 @@ from keras.losses import MeanSquaredError
 from keras.optimizer_v2 import adam
 
 
-def load_data(features, label,url):
+def load_data(features, label, data ):
     # moze da se prosledi i kao json string
     # data = pd.read_json(url)
-    data = pd.read_csv(url)
+    #data = pd.read_csv(url)
     features.append(label)
     
     #print("FEATURES TO KEEP")
@@ -63,9 +63,6 @@ def split_data(X, y, ratio, randomize):
     return (X_train, X_test, y_train, y_test)
 
 def filter_data(X_train, X_test):
-    print("BEFORE FILTERING")
-    print(X_train.head())
-
     # check for duplicate rows
     X_train.drop_duplicates(inplace=True, keep='first')
 
@@ -97,9 +94,6 @@ def filter_data(X_train, X_test):
   
     # print("After third removal: ", X_train.shape)
     """
-
-    print("AFTER FILTERING")
-    print(X_train.head())
 
     return X_train, X_test
 
