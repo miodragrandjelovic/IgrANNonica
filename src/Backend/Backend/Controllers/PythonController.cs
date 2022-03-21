@@ -14,6 +14,14 @@ namespace Backend.Controllers
     {
         private readonly HttpClient http = new HttpClient();
 
+        [HttpGet("stat")] //Primanje statistickih parametara iz pajtona 
+        public async Task<ActionResult<Statistika>> GetStat()
+        {
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stat");
+            var stat = JsonSerializer.Deserialize<List<Statistika>>(await httpResponse.Content.ReadAsStringAsync());
+            return Ok(stat);
+        }
+
         [HttpGet("hp")] //Primanje HP iz pajtona 
         public async Task<ActionResult<Hiperparametri>> GetHp()
         {
