@@ -67,11 +67,14 @@ def statistika():
     df = pd.DataFrame.from_records(csvdata)
     #statistika=df.describe()
     #return statistika.to_json()
-
-    for (columnName, columnData) in df.iteritems():
-        if(df[columnName].str.isnumeric()==TRUE):
-            df[columnName]=df[columnName].astype(float)
-    return df.to_json()
+    for (columnName,columnData) in df.iteritems():
+        if(df[str(columnName)][0].isnumeric()):
+            #print(df[str(columnName)][0].isnumeric())
+            df[str(columnName)]=df[str(columnName)].astype(float)
+    
+    statistika=df.describe(include='all')
+    statistika.rename(index={"25%":"Q1","50%":"Q2","75%":"Q3"},inplace=True)
+    return statistika.to_json()
 
 
 
