@@ -10,7 +10,7 @@ import py as pw
 
 type='regression' # or classification
 train = './src/ML/ann/titanic.csv'
-activation_function = 'relu' # relu, tanh, sigmoid, linear - currenty only working for sigmoid!!
+activation_function = 'linear' # relu, tanh, sigmoid, linear - currenty only working for sigmoid!!
 learning_rate = '0.03' # 0.00001, 0.0001, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10
 regularization = 'none' # none, L1, L2
 regularization_rate = '0' # 0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10

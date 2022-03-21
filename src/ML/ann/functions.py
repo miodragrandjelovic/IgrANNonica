@@ -119,9 +119,25 @@ def drop_numerical_outliers(df, z_thresh=3):
     #sns.boxplot(x=df['Age'])
     #plt.show()
 
+    #print("SHAPE BEFORE")
+    #print(df.shape)
+
     # these are numerical columns
     numerical_feature_mask = df.dtypes==np.number
     numerical_cols = df.columns[numerical_feature_mask].tolist()
+
+    
+    for col in numerical_cols:
+        df['zscore'] = (df[col] - df[col].mean()) / df[col].std()
+        df = df[(df.zscore>-3) & (df.zscore<3)]
+        df.drop('zscore',axis=1,inplace=True)  
+
+    #print("SHAPE AFTER")
+    #print(df.shape)
+
+    """
+    
+
 
     Q1 = df[numerical_cols].quantile(0.25)
     Q3 = df[numerical_cols].quantile(0.75)
@@ -135,6 +151,7 @@ def drop_numerical_outliers(df, z_thresh=3):
     #sns.boxplot(x=df['Age'])
     #plt.show()
 
+    """
 
     return df
 
