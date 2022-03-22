@@ -40,7 +40,7 @@ namespace Backend.Controllers
             return Ok(data);
         }
 
-        [HttpGet("csv")] //Primanje kor_mat iz pajtona 
+        [HttpGet("kor")] //Primanje kor_mat iz pajtona 
         public async Task<ActionResult<JsonDocument>> GetKor()
         {
             HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/kor");
