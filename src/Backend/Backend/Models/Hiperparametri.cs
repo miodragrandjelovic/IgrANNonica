@@ -20,7 +20,7 @@ namespace Backend.Models
         public int Ratio { get; set; }
         public int BatchSize { get; set; }
 
-        public int Randomize { get; set; }
+        public Boolean Randomize { get; set; }
 
     }
 }
