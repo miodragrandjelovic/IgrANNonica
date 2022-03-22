@@ -40,6 +40,14 @@ namespace Backend.Controllers
             return Ok(data);
         }
 
+        [HttpGet("csv")] //Primanje kor_mat iz pajtona 
+        public async Task<ActionResult<JsonDocument>> GetKor()
+        {
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/kor");
+            var data = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
+            //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
+            return Ok(data);
+        }
         /*
         [HttpPost] //Slanje HP na pajton
         public async Task<IActionResult> Post(Hiperparametri hiper)
