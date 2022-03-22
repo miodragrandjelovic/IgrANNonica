@@ -15,7 +15,7 @@
 
 from matplotlib.pyplot import hist
 #import ann.linear as ln
-import linear as ln
+import ann.linear as ln
 import pandas as pd
 
 class Statistics():
@@ -33,7 +33,7 @@ class Statistics():
         model.makeModel(activation_function, hidden_layers_n, hidden_layer_neurons_list)
         model.compileModel(learning_rate)
         model.trainModel(epochs,batch_size)
-        model.plotResults(epochs)
+  #      model.plotResults(epochs)
         model.defMetrics()
 
         self.stats = model.hist

@@ -1,7 +1,7 @@
 # LINEAR CONTAINS STEPS FROM CONSTRUCTING A NEURAL NETWORK
 # ALL THE FUNCTIONS ARE CALLED FROM FUNCTIONS FILE
 
-import functions as fn
+import ann.functions as fn
 #import ann.functions as fn
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -37,7 +37,7 @@ class Data():
         (self.X_train, self.X_test, self.y_train, self.y_test) = fn.split_data(X, y, ratio, randomize)
 
         # first take out the values that do not impact the model
-        fn.filter_data(self.X_train, self.X_test)
+       # fn.filter_data(self.X_train, self.X_test)
 
         # now, shape all data
         #fn.scale_data(self.X_train, self.X_test, self.y_train, self.y_test)
