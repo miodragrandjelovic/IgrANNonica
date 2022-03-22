@@ -10,7 +10,14 @@ const headers = new HttpHeaders().set('content-type','application/x-www-form-url
 export class CsvComponent {
 
     showMe:boolean=false;
+    showMe2:boolean=false;
+    selectedValue:any="";
 
+    selectChange(event:any){
+        this.showMe2=true;
+        this.selectedValue=event.target.value;
+    }
+    
     dataObject:any = [];
     headingLines: any = [];
     rowLines: any = [];

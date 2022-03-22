@@ -20,6 +20,7 @@ import { SlojeviNeuroniComponent } from './home/slojevi-neuroni/slojevi-neuroni.
 import { MatSliderModule } from '@angular/material/slider'; 
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { AboutComponent } from './about/about.component';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 const icons = {
   envelope,
@@ -49,7 +50,8 @@ const icons = {
     NgbModule,
     NgxBootstrapIconsModule.pick(icons),
     MatSliderModule,
-    NgxSliderModule
+    NgxSliderModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

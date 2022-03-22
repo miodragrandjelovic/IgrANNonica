@@ -30,15 +30,18 @@
 
     <div class="col col-lg-2" *ngIf="showMe" style="text-align: center;">
       <div ngbDropdown class="btn-group" style="padding-top: 15px;">
-        <button ngbDropdownToggle type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button ngbDropdownToggle type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Output
         </button>
         <div ngbDropdownMenu class="dropdown-menu">
-          <a ngbDropdownItem class="dropdown-item" *ngFor="let item of headingLines[0]" style="cursor: pointer;">{{item}}</a>
+          <option ngbDropdownItem  (click)="selectChange($event)" class="dropdown-item" [value]="item" *ngFor="let item of headingLines[0]"  style="cursor: pointer;" >{{item}}</option>
         </div>
+      </div><br>
+      <div>
+        <p *ngIf="showMe2" style="color:black">Selected: {{selectedValue}}</p>
       </div>
-    </div>
 
+    </div>
   </div>
 </div>
 
