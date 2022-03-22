@@ -48,17 +48,5 @@ namespace Backend.Controllers
             //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
             return Ok(data);
         }
-        /*
-        [HttpPost] //Slanje HP na pajton
-        public async Task<IActionResult> Post(Hiperparametri hiper)
-        {
-            var hiperjson = JsonSerializer.Serialize(hiper);
-            var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/hp";
-            var response = await http.PostAsync(url, data);
-            //var studenti = JsonSerializer.Deserialize<UserDto>(await response.Content.ReadAsStringAsync());
-            return Ok(hiper);
-        }
-        */
     }
 }
