@@ -44,10 +44,11 @@ export class HeaderComponent implements OnInit {
     }
     const firstname = form.value.firstname;
     const lastname = form.value.lastname;
+    const email = form.value.email;
     const username = form.value.username;
     const password = form.value.password;
 
-    this.registracijaService.signUp(firstname, lastname, username, password).subscribe(resData => {
+    this.registracijaService.signUp(firstname, lastname, email, username, password).subscribe(resData => {
       console.log(resData);
     }, error => {
       console.log(error);

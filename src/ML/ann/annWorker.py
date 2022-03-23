@@ -3,10 +3,10 @@
 #hiperparametri koje treba da prosledi bek
 
 import pandas as pd
-import py
+import ann.py
 
 #import ML.ann.py as pw
-import py as pw
+import ann.py as pw
 
 type='regression' # or classification
 train = './src/ML/ann/titanic.csv'
