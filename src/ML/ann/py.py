@@ -15,7 +15,7 @@
 
 from matplotlib.pyplot import hist
 #import ann.linear as ln
-import linear as ln
+import ann.linear as ln
 import pandas as pd
 
 class Statistics():

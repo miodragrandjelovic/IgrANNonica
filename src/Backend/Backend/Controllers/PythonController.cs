@@ -40,17 +40,13 @@ namespace Backend.Controllers
             return Ok(data);
         }
 
-        /*
-        [HttpPost] //Slanje HP na pajton
-        public async Task<IActionResult> Post(Hiperparametri hiper)
+        [HttpGet("kor")] //Primanje kor_mat iz pajtona 
+        public async Task<ActionResult<JsonDocument>> GetKor()
         {
-            var hiperjson = JsonSerializer.Serialize(hiper);
-            var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/hp";
-            var response = await http.PostAsync(url, data);
-            //var studenti = JsonSerializer.Deserialize<UserDto>(await response.Content.ReadAsStringAsync());
-            return Ok(hiper);
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/kor");
+            var data = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
+            //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
+            return Ok(data);
         }
-        */
     }
 }
