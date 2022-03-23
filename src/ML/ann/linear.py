@@ -2,7 +2,7 @@
 # ALL THE FUNCTIONS ARE CALLED FROM FUNCTIONS FILE
 
 import ann.functions as fn
-#import ann.functions as fn
+#import functions as fn
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -29,6 +29,9 @@ class Data():
         # encode data
         fn.encode_data(self.data, encode_type)
 
+        # first take out the values that do not impact the model
+        fn.filter_data(self.data)
+
     def splitData(self, label, ratio, randomize):
         # split x and y (features and label)
         X, y = fn.feature_and_label(self.data, label)
@@ -36,11 +39,8 @@ class Data():
         # split test and train data 
         (self.X_train, self.X_test, self.y_train, self.y_test) = fn.split_data(X, y, ratio, randomize)
 
-        # first take out the values that do not impact the model
-       # fn.filter_data(self.X_train, self.X_test)
-
         # now, shape all data
-        #fn.scale_data(self.X_train, self.X_test, self.y_train, self.y_test)
+        fn.scale_data(self.X_train, self.X_test, self.y_train, self.y_test)
 
 
 class Model():

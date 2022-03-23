@@ -29,17 +29,14 @@ def load_data(features, label, data ):
     # moze da se prosledi i kao json string
     # data = pd.read_json(url)
     #data = pd.read_csv(url)
+    
     features.append(label)
     
     #print("FEATURES TO KEEP")
     #print(features)
 
-    
     data = data[features]
     data.columns = features
-
-    #print("DATA IS")
-    #print(data.head())
 
     return data
 
@@ -62,28 +59,27 @@ def split_data(X, y, ratio, randomize):
     (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
     return (X_train, X_test, y_train, y_test)
 
-def filter_data(X_train, X_test):
+def filter_data(data):
     # check for duplicate rows
-    X_train.drop_duplicates(inplace=True, keep='first')
-
+    #data.drop_duplicates(inplace=True, keep='first')
+    
     # first, removing data with constant value
     constant_filter = VarianceThreshold(threshold=0)
-    constant_filter.fit(X_train)
-    constant_list = [column for column in X_train.columns if column not in X_train.columns[constant_filter.get_support()]]
+    constant_filter.fit(data)
+    #constant_list = [column for column in data.columns if column not in data.columns[constant_filter.get_support()]]
     #print("COLUMS THAT ARE CONSTANT ARE ", constant_list)
-    X_train_filter = constant_filter.transform(X_train)
-    X_test_filter = constant_filter.transform(X_test)
-    # print("After first removal: ", X_train.shape)
+    data_filter = constant_filter.transform(data)
+    # print("After first removal: ", data.shape)
 
     # now, removing Quasi constants, which are not big influence on data
     quasi_constant_filter = VarianceThreshold(threshold=0.01)
-    quasi_constant_filter.fit(X_train_filter)
-    quasi_constant_list = [column for column in X_train.columns if column not in X_train.columns[constant_filter.get_support()]]
+    quasi_constant_filter.fit(data_filter)
+    #quasi_constant_list = [column for column in data_filter.columns if column not in data_filter.columns[constant_filter.get_support()]]
     #print("COLUMS THAT ARE QUASI CONSTANT ARE ", quasi_constant_list)
-    X_train_quasi_filter = quasi_constant_filter.transform(X_train_filter)
-    X_test_quasi_filter = quasi_constant_filter.transform(X_test_filter)
-    # print("After second removal: ", X_train.shape)
+    data_quasi_filter = quasi_constant_filter.transform(data_filter)
+    # print("After second removal: ", data_quasi_filter.shape)
 
+    
     """
     # remove duplicates in terms of columns
     X_train_T = X_train_quasi_filter.T
@@ -94,8 +90,10 @@ def filter_data(X_train, X_test):
   
     # print("After third removal: ", X_train.shape)
     """
-
-    return X_train, X_test
+    
+    data = data_quasi_filter
+    
+    return data
 
 def drop_numerical_outliers(df, z_thresh=3):
     # Constrains will contain `True` or `False` depending on if it is a value below the threshold.
@@ -208,19 +206,28 @@ def encode_data(df, encoding):
 
 
 def scale_data(X_train, X_test, y_train, y_test):
-    print("Before scaling: ", X_train.shape)
+    #print("Before scaling: ")
+    #print(X_train.shape)
+    #print(X_train)
+    #print(y_train.shape)
+    #print(y_train)
+
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    print("Before reshaping: ", X_train.shape)
     X_train.reshape(X_train.shape[0],X_train.shape[1],1)
     X_test.reshape(X_test.shape[0],X_test.shape[1],1)
-    print("After reshaping: ", X_train.shape)
     
     y_train = y_train.to_numpy()
     y_test = y_test.to_numpy()
-   
+    
+    #print("After scaling: ")
+    #print(X_train.shape)
+    #print(X_train)
+    #print(y_train.shape)
+    #print(y_train)
+
     return (X_train, X_test, y_train, y_test)
 
 def showdata(X_train, X_test, y_train,y_test):

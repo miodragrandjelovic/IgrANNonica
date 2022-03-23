@@ -96,15 +96,28 @@ def kor_matrica():
 @app.route("/csv1",methods=['GET']) #Parsovanje u df
 def treniraj():
     # potrebne su i vrednosti tj kolone koje korisnik zeli da ukljuci iz dataseta
-    features = ['carat', 'cut', 'color', 'clarity', 'depth', 'x', 'y','z']
+    
+  # fish.csv
+    features = ['Species','Length1','Length2','Length3','Height','Width']
+    label = 'Weight'
+  
+  #  insurance.csv
+  #  features = ['age','sex','bmi','children','smoker','region']
+  #  label = 'charges'
+
+  #  realestate
+  #  features = ['transaction_date','house_age','distance_MRT','convenience_stores','latitude','longitude']
+  #  label = 'unit_price'
+    
     # izmenjen nacin kreiranja i treniranja modela
     stats = Statistics(type='regression')
-    stats.createModel(train=df,features=features, label='price', epochs=22, ratio=0.8, activation_function='relu',hidden_layers_n=5, hidden_layer_neurons_list=[18,26,42,4,5], encode_type='label', randomize=True,
-    batch_size=30, learning_rate=0.009, regularization='none' ,regularization_rate=0)
-    #history = create_model(type='regression',train=df,features=features, label="Survived",epochs=10, ratio=0.8, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5],
-    #    encode_type='label',randomize=True, batch_size=20, learning_rate=0.003, regularization=None, regularization_rate=0)
+
+    stats.createModel(train=df,features=features, label=label, epochs=20, ratio=0.8, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5], encode_type='label', randomize=True,
+    batch_size=20, learning_rate=0.003, regularization='none' ,regularization_rate=0)
+
     # u objektu stats, u promenljivoj stats se nalaze statisticki podaci kroz epohe, u vidu dictionary-ja
     # npr. "Accuracy":[...]
+    
     return jsonify(stats.stats)
     
 
