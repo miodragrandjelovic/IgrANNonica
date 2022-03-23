@@ -21,6 +21,9 @@ import { MatSliderModule } from '@angular/material/slider';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { AboutComponent } from './about/about.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { ProfileComponent } from './header/profile/profile.component';
+import{BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import{ToastrModule} from 'ngx-toastr';
 
 const icons = {
   envelope,
@@ -39,7 +42,8 @@ const icons = {
     HomeComponent,
     CsvComponent,
     SlojeviNeuroniComponent,
-    AboutComponent
+    AboutComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +55,9 @@ const icons = {
     NgxBootstrapIconsModule.pick(icons),
     MatSliderModule,
     NgxSliderModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

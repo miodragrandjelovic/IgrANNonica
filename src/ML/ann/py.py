@@ -13,8 +13,8 @@
 
 
 from matplotlib.pyplot import hist
-import linear as ln
 #import ann.linear as ln
+import ann.linear as ln
 import pandas as pd
 
 class Statistics():
