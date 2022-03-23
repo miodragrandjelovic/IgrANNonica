@@ -3,6 +3,7 @@
 
 import ann.functions as fn
 #import functions as fn
+#import ann.functions as fn
 import pandas as pd
 import matplotlib.pyplot as plt
 

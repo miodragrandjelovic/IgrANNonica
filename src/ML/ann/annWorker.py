@@ -3,10 +3,10 @@
 #hiperparametri koje treba da prosledi bek
 
 import pandas as pd
-import py
+import ann.py
 
 #import ML.ann.py as pw
-import py as pw
+import ann.py as pw
 
 type='regression' # or classification
 activation_function = 'linear' # relu, tanh, sigmoid, linear - currenty only working for sigmoid!!
