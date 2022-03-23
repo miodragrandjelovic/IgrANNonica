@@ -9,7 +9,7 @@ namespace Backend.Models
         public string Activation { get; set; } = string.Empty;
         public int Epoch { get; set; }
         public string Regularization { get; set; } = string.Empty; 
-        public int RegularizationRate { get; set; }
+        public float RegularizationRate { get; set; }
         public string ProblemType { get; set; } = string.Empty;
         public int Layers { get; set; }
         public int NeuronsLvl1 { get; set; }
@@ -20,7 +20,7 @@ namespace Backend.Models
         public int Ratio { get; set; }
         public int BatchSize { get; set; }
 
-        public int Randomize { get; set; }
+        public bool Randomize { get; set; }
 
     }
 }

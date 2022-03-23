@@ -1,7 +1,8 @@
 # LINEAR CONTAINS STEPS FROM CONSTRUCTING A NEURAL NETWORK
 # ALL THE FUNCTIONS ARE CALLED FROM FUNCTIONS FILE
 
-import functions as fn
+import ann.functions as fn
+#import functions as fn
 #import ann.functions as fn
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -15,7 +16,7 @@ class Data():
         self.y_test=None
         
     def load_data(self, label, features):
-        data = fn.load_data(features, label, self.data)
+        self.data = fn.load_data(features, label, self.data)
     
     def clearupData(self, encode_type):
         # deal with missing data
@@ -24,23 +25,26 @@ class Data():
         fn.missing_data(self.data)
         
         # drop the outliers from numerical columns
-        fn.drop_numerical_outliers(self.data)
+        #fn.drop_numerical_outliers(self.data)
 
         # encode data
         fn.encode_data(self.data, encode_type)
 
-    def splitData(self, label, ratio, randomize):
+        # first take out the values that do not impact the model
+        fn.filter_data(self.data)
+
+    def splitData(self, label, ratio, randomize, activation_function):
         # split x and y (features and label)
         X, y = fn.feature_and_label(self.data, label)
+
+        # according to activation function, normalize y set
+        y = fn.normalize(y, activation_function)
 
         # split test and train data 
         (self.X_train, self.X_test, self.y_train, self.y_test) = fn.split_data(X, y, ratio, randomize)
 
-        # first take out the values that do not impact the model
-        fn.filter_data(self.X_train, self.X_test)
-
         # now, shape all data
-        #fn.scale_data(self.X_train, self.X_test, self.y_train, self.y_test)
+        fn.scale_data(self.X_train, self.X_test, self.y_train, self.y_test)
 
 
 class Model():
@@ -69,7 +73,7 @@ class Model():
         #print(history)
 
         self.hist = dict()
-        
+            
         self.hist['Accuracy'] = self.history.history['accuracy']
         self.hist['MAE'] = self.history.history['mae']
         self.hist['MSE'] = self.history.history['mse']

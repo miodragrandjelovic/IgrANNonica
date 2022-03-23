@@ -1,12 +1,13 @@
-from pstats import Stats
 from flask import Flask
 from flask import jsonify,request
-from itsdangerous import json
+
 import pandas as pd
 
 from ann.py import *
 
 #from ann.linear import *
+
+
 
 app = Flask(__name__)
 
@@ -14,8 +15,8 @@ app = Flask(__name__)
  #   {"FirstName": "mika", "LastName": "mikic","Email": "e@gmail.com","Username": "mika", "Password": "sifra123"},
   #  {"FirstName": "milan", "LastName": "milanic","Email": "e@gmail.com","Username": "milan", "Password": "sifra123"}]
 
-hiperparametri=[{"EncodingType": "HotEncoding", "LearningRate": 0.03, "Activation": "Tanh", "Epoch": 3, "Regularization":"None", "RegularizationRate":1, "ProblemType":"Classification", "Layers": 1, "NeuronsLvl1": 1, "NeuronsLvl2": 1, "NeuronsLvl3": 1, "NeuronsLvl4": 1, "NeuronsLvl5": 1, "Ratio": 50, "BatchSize": 10, "Randomize": 1},
-                {"EncodingType": "ColdEncoding", "LearningRate": 0.01, "Activation": "Tanko", "Epoch": 2,"Regularization":"None", "RegularizationRate":3, "ProblemType":"Classification","Layers": 0, "NeuronsLvl1": 0, "NeuronsLvl2": 1, "NeuronsLvl3": 1, "NeuronsLvl4": 1, "NeuronsLvl5": 1,"Ratio": 30, "BatchSize": 9, "Randomize": 1}]
+hiperparametri=[{"EncodingType": "HotEncoding", "LearningRate": 0.03, "Activation": "Tanh", "Epoch": 3, "Regularization":"None", "RegularizationRate":1, "ProblemType":"Classification", "Layers": 1, "NeuronsLvl1": 1, "NeuronsLvl2": 1, "NeuronsLvl3": 1, "NeuronsLvl4": 1, "NeuronsLvl5": 1, "Ratio": 50, "BatchSize": 10, "Randomize": True},
+                {"EncodingType": "ColdEncoding", "LearningRate": 0.01, "Activation": "Tanko", "Epoch": 2,"Regularization":"None", "RegularizationRate":3, "ProblemType":"Classification","Layers": 0, "NeuronsLvl1": 0, "NeuronsLvl2": 1, "NeuronsLvl3": 1, "NeuronsLvl4": 1, "NeuronsLvl5": 1,"Ratio": 30, "BatchSize": 9, "Randomize": False}]
 
 #json ne moze da procita jer su jednostruki navodnici, a ako se stave dvostruki kako da stavimo string izmedju jer string mora sa dvostrukim da krece i da se zavrsava?!
 #csve = {"CsvData": "[{'PassengerId':1,'Survived':0,'Pclass':3,'Name':'Braund, Mr. Owen Harris','Sex':'male','Age':22,'SibSp':1,'Parch':0,'Ticket':'A/5 21171','Fare':7.25,'Cabin':'','Embarked':'S'},{'PassengerId':2,'Survived':1,'Pclass':1,'Name':'Cumings, Mrs. John Bradley (Florence Briggs Thayer)','Sex':'female','Age':38,'SibSp':1,'Parch':0,'Ticket':'PC 17599','Fare':71.2833,'Cabin':'C85','Embarked':C'}]"}
@@ -93,19 +94,35 @@ def statistika():
 def kor_matrica():
     return df.corr().to_json()
 
-
 @app.route("/csv1",methods=['GET']) #Parsovanje u df
 def treniraj():
     # potrebne su i vrednosti tj kolone koje korisnik zeli da ukljuci iz dataseta
-    features = ['Pclass', 'Name', 'Sex', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin', 'Embarked']
+    
+  # titanic.csv 
+    features = ['Age', 'Sex', 'Ticket']
+    label = 'Survived'
+    
+  # fish.csv
+  #  features = ['Species','Length1','Length2','Length3','Height','Width']
+  #  label = 'Weight'
+    
+  #  insurance.csv
+  #  features = ['age','sex','bmi','children','smoker','region']
+  #  label = 'charges'
+
+  #  realestate
+  #  features = ['transaction_date','house_age','distance_MRT','convenience_stores','latitude','longitude']
+  #  label = 'unit_price'
+    
     # izmenjen nacin kreiranja i treniranja modela
     stats = Statistics(type='regression')
-    stats.createModel(train=df,features=features, label='Survived', epochs=20, ratio=0.8, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5], encode_type='label', randomize=True,
+
+    stats.createModel(train=df,features=features, label=label, epochs=20, ratio=0.8, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5], encode_type='label', randomize=True,
     batch_size=20, learning_rate=0.003, regularization='none' ,regularization_rate=0)
-    #history = create_model(type='regression',train=df,features=features, label="Survived",epochs=10, ratio=0.8, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5],
-    #    encode_type='label',randomize=True, batch_size=20, learning_rate=0.003, regularization=None, regularization_rate=0)
+
     # u objektu stats, u promenljivoj stats se nalaze statisticki podaci kroz epohe, u vidu dictionary-ja
     # npr. "Accuracy":[...]
+    
     return jsonify(stats.stats)
     
 

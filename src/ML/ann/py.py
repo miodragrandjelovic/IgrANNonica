@@ -11,11 +11,11 @@
 # prvo, aktivacionu funkciju za hidden layers
 # zatim, aktivacionu funkciju za output layer
 
-#import ann.linear as ln
 
 from matplotlib.pyplot import hist
+#import linear as ln
 #import ann.linear as ln
-import linear as ln
+import ann.linear as ln
 import pandas as pd
 
 class Statistics():
@@ -27,7 +27,7 @@ class Statistics():
         data = ln.Data(train)
         data.load_data(label, features)
         data.clearupData(encode_type)
-        data.splitData(label, ratio, randomize)
+        data.splitData(label, ratio, randomize, activation_function)
 
         model = ln.Model(data,regularization, regularization_rate)
         model.makeModel(activation_function, hidden_layers_n, hidden_layer_neurons_list)

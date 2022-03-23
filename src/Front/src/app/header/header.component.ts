@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormControl, FormGroup, NgForm,Validators } from '@angular/forms';
 import { PrijavaService } from '../prijava/./prijava.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { RegistracijaService } from '../registracija/./registracija.service';
@@ -21,7 +21,15 @@ export class HeaderComponent implements OnInit {
     private registracijaService: RegistracijaService
     ) { }
 
+    registerForm:any;
+
   ngOnInit(): void {
+    this.registerForm=new FormGroup({
+      "firstname":new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z]*')]),
+      "lastname":new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z]*')]),
+      "username":new FormControl(null,[Validators.required]),
+      "password":new FormControl(null,[Validators.required])
+    });
   }
 
   showMe:boolean=false;
@@ -44,22 +52,28 @@ export class HeaderComponent implements OnInit {
     form.reset()
   }
 
-  onSubmitReg(form: NgForm) {
-    if (!form.valid) {
+  onSubmitReg() {
+    if (!this.registerForm.valid) {
       return;
     }
-    const firstname = form.value.firstname;
-    const lastname = form.value.lastname;
-    const username = form.value.username;
-    const password = form.value.password;
+    const firstname = this.registerForm.value.firstname;
+    const lastname = this.registerForm.value.lastname;
+    const email = this.registerForm.value.email;
+    const username = this.registerForm.value.username;
+    const password = this.registerForm.value.password;
 
-    this.registracijaService.signUp(firstname, lastname, username, password).subscribe(resData => {
+    this.registracijaService.signUp(firstname, lastname, email, username,password).subscribe(resData => {
       console.log(resData);
     }, error => {
       console.log(error);
     });
-    form.reset();
+    this.registerForm.reset();
   }
+
+  get firstname(){return this.registerForm.get('firstname');}
+  get lastname(){return this.registerForm.get('lastname');}
+  get username(){return this.registerForm.get('username');}
+  get password(){return this.registerForm.get('password');}
 
 
   openRegister(contentRegister: any) {

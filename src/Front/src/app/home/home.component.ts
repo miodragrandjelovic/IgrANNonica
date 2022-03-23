@@ -106,9 +106,7 @@ export class HomeComponent implements OnInit {
 
     console.log(myreq);
 
-    this.http.post('https://localhost:7167/api/LoadData/hp', {
-      myreq
-    }).subscribe(result => {
+    this.http.post('https://localhost:7167/api/LoadData/hp', myreq).subscribe(result => {
       console.log(result);
     });
 
