@@ -2,10 +2,10 @@ from flask import Flask
 from flask import jsonify,request
 import pandas as pd
 
-
 from ann.py import *
 
-from ann.linear import *
+#from ann.linear import *
+
 
 
 app = Flask(__name__)
