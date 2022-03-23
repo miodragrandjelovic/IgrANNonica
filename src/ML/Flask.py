@@ -1,7 +1,7 @@
 from pstats import Stats
 from flask import Flask
 from flask import jsonify,request
-from itsdangerous import json
+
 import pandas as pd
 
 from ann.py import *
