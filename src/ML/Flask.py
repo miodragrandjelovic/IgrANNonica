@@ -97,10 +97,14 @@ def kor_matrica():
 def treniraj():
     # potrebne su i vrednosti tj kolone koje korisnik zeli da ukljuci iz dataseta
     
+  # titanic.csv 
+    features = ['Age', 'Sex', 'Ticket']
+    label = 'Survived'
+    
   # fish.csv
-    features = ['Species','Length1','Length2','Length3','Height','Width']
-    label = 'Weight'
-  
+  #  features = ['Species','Length1','Length2','Length3','Height','Width']
+  #  label = 'Weight'
+    
   #  insurance.csv
   #  features = ['age','sex','bmi','children','smoker','region']
   #  label = 'charges'

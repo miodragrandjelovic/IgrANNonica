@@ -17,11 +17,18 @@ encode_type = 'label' # onehot, label, ordinal
 epochs = 12
 randomize = True
 
-
+"""
 # fish.csv
 df = pd.read_csv('./src/ML/ann/data/reg/fish.csv')
-features = ['Species','Length1','Length2','Length3','Height','Width']
+
+#features = ['Species','Length1','Length2','Length3','Height','Width']
+features = ['Length1']
 label = 'Weight'
+"""
+
+df = pd.read_csv('./src/ML/ann/data/class/titanic.csv')
+features = ['Age', 'Sex', 'Ticket']
+label = 'Survived'
 
 
 """
@@ -30,6 +37,7 @@ df = pd.read_csv('./src/ML/ann/data/reg/insurance.csv')
 features = ['age','sex','bmi','children','smoker','region']
 label = 'charges'
 """
+
 
 """
 # realestate
@@ -44,7 +52,7 @@ label = 'unit_price'
 # hinge loss
 
 stats = pw.Statistics('regression')
-stats.createModel(train=df,features=features, label=label, epochs=20, ratio=0.8, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5], encode_type='label', randomize=True,
+stats.createModel(train=df,features=features, label=label, epochs=15, ratio=0.8, activation_function='relu',hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5], encode_type='label', randomize=True,
     batch_size=20, learning_rate=0.003, regularization='none' ,regularization_rate=0)
 
 print("The statistics are")

@@ -1,8 +1,10 @@
+from multiprocessing.dummy import active_children
 from tkinter.ttk import Label
 import pandas as pd
 import numpy as np
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.linear_model import SGDClassifier, SGDRegressor
+from sklearn.metrics import mean_absolute_error
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder, StandardScaler, scale
 from sklearn.utils import shuffle
 
@@ -23,7 +25,6 @@ from keras import Input
 from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D, Activation, Normalization
 from keras.losses import MeanSquaredError
 from keras.optimizer_v2 import adam
-
 
 def load_data(features, label, data ):
     # moze da se prosledi i kao json string
@@ -54,6 +55,29 @@ def feature_and_label(data, label):
     #print(y.head())
 
     return data,y
+
+def normalize(y, activation_function):
+    if (activation_function == 'relu'):
+        pass
+    elif (activation_function == 'tanh'):
+        pass
+    elif(activation_function == 'linear'):
+        # normalize data between 0 and 1
+        min = y.describe()['min']
+        max = y.describe()['max']
+        print("min je ", min)
+        print("max je ",max)
+        
+        k = (y - min) / (max - min)
+
+        print("K looks like")
+        print(k)
+
+        y = k
+    
+    return y
+
+    
 
 def split_data(X, y, ratio, randomize):
     (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
@@ -248,6 +272,9 @@ def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_f
     #print("SHAPE OF X TRAIN DATASET ", X_train.shape[0], " and ", X_train.shape[1])
     model = Sequential()
 
+    print("DATA LOOKS LIKE THIS")
+    print(X_train)
+
     # input layer
     # should have same shape as number of input features (columns)
     #model.add(Flatten(input_shape=(X_train.shape[1],)))
@@ -259,7 +286,9 @@ def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_f
     # hidden layers
     for i in range(hidden_layers_n):
         model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function))
-
+        #model.add(Dropout(0.5))
+        #model.add(Flatten())
+        #model.add(BatchNormalization())
     # the output layer has one output number
     # it should have same shape as deisred prediction
     # usually, for categorical model, we have number of neurons equal to number of classification
@@ -280,7 +309,7 @@ def compile_model(model, learning_rate):
     # regression: mse(Mean squared error)
 
     # also, there are multiple metrics that user can choose from
-    model.compile(optimizer='sgd', loss=MeanSquaredError(), metrics=['accuracy','mse','mae','AUC'])
+    model.compile(optimizer='sgd', loss=MeanSquaredError(), metrics=['accuracy','mae','mse','AUC'])
     return model 
 
 def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
@@ -291,19 +320,19 @@ def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
     # for this, we need to use callbacks argument
     # ovde se javlja greska kod svih aktivacionih funkcija sem sigmoid!!
     
-    """
+    
     print("X TRAIN")
-    print(pd.DataFrame(X_train).describe())
+    print(pd.DataFrame(X_train).head())
 
     print("Y TRAIN")
-    print(pd.DataFrame(y_train).describe())
+    print(pd.DataFrame(y_train).head())
 
     print("X TEST")
-    print(pd.DataFrame(X_test).describe())
+    print(pd.DataFrame(X_test).head())
 
     print("Y TEST")
-    print(pd.DataFrame(y_test).describe())
-    """
+    print(pd.DataFrame(y_test).head())
+    
 
     return model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_test, y_test), verbose=1) # VALIDATION DATA=(X_VAL, Y_VAL) 
 
@@ -327,7 +356,6 @@ def missing_data(data):
     #print(columns_categorical)
 
     missing_value_columns_numerical = columns_numerical.columns[columns_numerical.isna().any()].tolist()
-
     missing_value_columns_categorical = columns_categorical.columns[columns_categorical.isna().any()].tolist()
 
     #print("NUMERICKE KOLONE")
