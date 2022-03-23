@@ -25,10 +25,10 @@ from keras.losses import MeanSquaredError
 from keras.optimizer_v2 import adam
 
 
-def load_data(features, label,url):
+def load_data(features, label, data ):
     # moze da se prosledi i kao json string
     # data = pd.read_json(url)
-    data = pd.read_csv(url)
+    #data = pd.read_csv(url)
     features.append(label)
     
     #print("FEATURES TO KEEP")
@@ -63,9 +63,6 @@ def split_data(X, y, ratio, randomize):
     return (X_train, X_test, y_train, y_test)
 
 def filter_data(X_train, X_test):
-    print("BEFORE FILTERING")
-    print(X_train.head())
-
     # check for duplicate rows
     X_train.drop_duplicates(inplace=True, keep='first')
 
@@ -98,9 +95,6 @@ def filter_data(X_train, X_test):
     # print("After third removal: ", X_train.shape)
     """
 
-    print("AFTER FILTERING")
-    print(X_train.head())
-
     return X_train, X_test
 
 def drop_numerical_outliers(df, z_thresh=3):
@@ -125,9 +119,25 @@ def drop_numerical_outliers(df, z_thresh=3):
     #sns.boxplot(x=df['Age'])
     #plt.show()
 
+    #print("SHAPE BEFORE")
+    #print(df.shape)
+
     # these are numerical columns
     numerical_feature_mask = df.dtypes==np.number
     numerical_cols = df.columns[numerical_feature_mask].tolist()
+
+    
+    for col in numerical_cols:
+        df['zscore'] = (df[col] - df[col].mean()) / df[col].std()
+        df = df[(df.zscore>-3) & (df.zscore<3)]
+        df.drop('zscore',axis=1,inplace=True)  
+
+    #print("SHAPE AFTER")
+    #print(df.shape)
+
+    """
+    
+
 
     Q1 = df[numerical_cols].quantile(0.25)
     Q3 = df[numerical_cols].quantile(0.75)
@@ -141,6 +151,7 @@ def drop_numerical_outliers(df, z_thresh=3):
     #sns.boxplot(x=df['Age'])
     #plt.show()
 
+    """
 
     return df
 

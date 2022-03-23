@@ -13,37 +13,38 @@
 
 #import ann.linear as ln
 
+from matplotlib.pyplot import hist
+#import ann.linear as ln
 import linear as ln
+import pandas as pd
 
+class Statistics():
+    def __init__(self,type):
+        self.type = type
+        self.stats = None
 
-def create_model(type,train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
-    if (type=='regression'):
-       create_linear_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate)
-    elif (type=='classification'):
-        create_categorical_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate)
+    def createLinear(self,train, features, label, epochs, ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
+        data = ln.Data(train)
+        data.load_data(label, features)
+        data.clearupData(encode_type)
+        data.splitData(label, ratio, randomize)
 
+        model = ln.Model(data,regularization, regularization_rate)
+        model.makeModel(activation_function, hidden_layers_n, hidden_layer_neurons_list)
+        model.compileModel(learning_rate)
+        model.trainModel(epochs,batch_size)
+        model.plotResults(epochs)
+        model.defMetrics()
 
-def create_linear_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
-     # load data in suitable forms 
-    (X_train, X_test, y_train, y_test) = ln.load_split_data(train, features,label, ratio, randomize, encode_type)
-    
-    # after loading data, we need to transform it 
-    (X_train, X_test, y_train, y_test) = ln.clear_data(X_train, X_test, y_train,y_test)
+        self.stats = model.hist
+        
 
-    
-    # making and training the model
-    (history, model) = ln.make_model(epochs, X_train, X_test, y_train, y_test, hidden_layers_n, hidden_layer_neurons_list, activation_function, batch_size, learning_rate)
+    def createCategorical(self,train, features, label, epochs, ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
+        pass
 
-    # evaluating the model
-    #(test_loss, test_acc) = model.evaluate(X_test, y_test)
-    #print("THE MODEL WE'VE TRAINED:")
-    #print("LOSS: ",test_loss," ACCURACY: ",test_acc)
-    
-    ln.plot_result(history, epochs)
-
-    # return history to worker
-    return history
-
-def create_categorical_model(train,features,label,epochs ,ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
-    pass
+    def createModel(self,train, features, label, epochs, ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
+        if (self.type == 'regression'):
+            self.createLinear(train, features, label, epochs, ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate)
+        elif (self.type == 'classification'):
+            self.createCategorical(train, features, label, epochs, ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate)
 

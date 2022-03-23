@@ -1,8 +1,11 @@
+from pstats import Stats
 from flask import Flask
 from flask import jsonify,request
+from itsdangerous import json
 import pandas as pd
 
-#from ann.py import *
+from ann.py import *
+
 #from ann.linear import *
 
 app = Flask(__name__)
@@ -93,9 +96,18 @@ def kor_matrica():
 
 @app.route("/csv1",methods=['GET']) #Parsovanje u df
 def treniraj():
-    history=create_model(type='regression',train=df,label="TARGET",epochs=10,ratio=0.9,activation_function='sigmoid',hidden_layers_n=5,hidden_layer_neurons_list=[50,50,50,50,50],
-        encode_type='ordinal',randomize=TRUE,batch_size=10,learning_rate='0.03')
-    return jsonify(history)
+    # potrebne su i vrednosti tj kolone koje korisnik zeli da ukljuci iz dataseta
+    features = ['Pclass', 'Name', 'Sex', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin', 'Embarked']
+    # izmenjen nacin kreiranja i treniranja modela
+    stats = Statistics(type='regression')
+    stats.createModel(train=df,features=features, label='Survived', epochs=20, ratio=0.8, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5], encode_type='label', randomize=True,
+    batch_size=20, learning_rate=0.003, regularization='none' ,regularization_rate=0)
+    #history = create_model(type='regression',train=df,features=features, label="Survived",epochs=10, ratio=0.8, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5],
+    #    encode_type='label',randomize=True, batch_size=20, learning_rate=0.003, regularization=None, regularization_rate=0)
+    # u objektu stats, u promenljivoj stats se nalaze statisticki podaci kroz epohe, u vidu dictionary-ja
+    # npr. "Accuracy":[...]
+    return jsonify(stats.stats)
+    
 
 
 
