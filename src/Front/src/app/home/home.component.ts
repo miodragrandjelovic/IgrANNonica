@@ -1,6 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
 import { Form, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+
+
+interface RequestHyperparameters{
+  encodingType: string,
+  learningRate: number,
+  activation: string,
+  epoch: number,
+  regularization: string,
+  regularizationRate: number,
+  problemType: string,
+  layers: number,
+  neuronsLvl1: number,
+  neuronsLvl2: number,
+  neuronsLvl3: number,
+  neuronsLvl4: number,
+  neuronsLvl5: number,
+  ratio: number,
+  batchSize: number,
+  randomize: boolean
+}
+
 
 @Component({
   selector: 'app-home',
@@ -23,7 +45,7 @@ export class HomeComponent implements OnInit {
   hyperparametersForm!: FormGroup;
 
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   get neuronControls() {
    return (<FormArray>this.hyperparametersForm.get('neurons')).controls;
@@ -41,13 +63,57 @@ export class HomeComponent implements OnInit {
       'ratio': new FormControl(0),
       'batchSize': new FormControl(0),
       'randomize': new FormControl(0),
-      'neurons': new FormArray([]),
+      'neurons': new FormArray([])
     });
   }
 
   onSubmitHyperparameters() {
     console.log(this.hyperparametersForm)
+    const layers = (<FormArray>this.hyperparametersForm.get('neurons')).controls.length;
+    const neurons = (<FormArray>this.hyperparametersForm.get('neurons')).controls;
+    let neuron1 = 0, neuron2 = 0, neuron3 = 0, neuron4 = 0, neuron5 = 0;
+    for (let i = 0; i < layers; i++)  {
+      if (i == 0)
+        neuron1 = neurons[i].value;
+      else if (i == 1)
+        neuron2 = neurons[i].value;
+      else if (i == 2)
+        neuron3 = neurons[i].value;
+      else if (i == 3)
+        neuron4 = neurons[i].value;
+      else
+        neuron5 = neurons[i].value;
+    }
+
+    const myreq: RequestHyperparameters = {
+      encodingType : this.hyperparametersForm.get('encodingType')?.value,
+      learningRate : Number(this.hyperparametersForm.get('learningRate')?.value),
+      activation : this.hyperparametersForm.get('activation')?.value,
+      epoch: this.hyperparametersForm.get('epoch')?.value,
+      regularization: this.hyperparametersForm.get('regularization')?.value,
+      regularizationRate: Number(this.hyperparametersForm.get('regularizationRate')?.value),
+      problemType: this.hyperparametersForm.get('problemType')?.value,
+      layers: layers,
+      neuronsLvl1: Number(neuron1),
+      neuronsLvl2: Number(neuron2),
+      neuronsLvl3: Number(neuron3),
+      neuronsLvl4: Number(neuron4),
+      neuronsLvl5: Number(neuron5),
+      ratio: this.hyperparametersForm.get('ratio')?.value,
+      batchSize: this.hyperparametersForm.get('batchSize')?.value,
+      randomize: this.hyperparametersForm.get('randomize')?.value,
+    }
+
+    console.log(myreq);
+
+    this.http.post('https://localhost:7167/api/LoadData/hp', {
+      myreq
+    }).subscribe(result => {
+      console.log(result);
+    });
+
   }
+
 
   onAddLayer() {
     const control = new FormControl(0);
@@ -65,4 +131,3 @@ export class HomeComponent implements OnInit {
   }
 
   }
- 
