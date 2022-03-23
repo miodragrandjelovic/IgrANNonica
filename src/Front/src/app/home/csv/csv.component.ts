@@ -21,6 +21,10 @@ export class CsvComponent {
     dataObject:any = [];
     headingLines: any = [];
     rowLines: any = [];
+    allData: any = [];
+    itemsPerPage: number = 10;
+    itemPosition: number = 0;
+    currentPage: number = 1;
 
     constructor(private http: HttpClient) {
 
@@ -73,12 +77,19 @@ export class CsvComponent {
                 for (let j = 0; j < length; j++) {
                     rowsArray.push(rows[j]);
                 }
-                this.rowLines.push(rowsArray);
+                this.rowLines = rowsArray.slice(0, this.itemsPerPage);
+                this.allData = rowsArray;
 
+                // this.numberOfPages = Math.ceil(this.rowLines.length / this.numberOfPages);
+                console.log(this.dataObject);
                 return this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
                     csvData: JSON.stringify(this.dataObject)
                 }).subscribe();
             }
         }
+    }
+
+    changePage() {
+        this.rowLines = this.allData.slice(this.itemsPerPage * (this.currentPage - 1),this.itemsPerPage * (this.currentPage - 1) + this.itemsPerPage)
     }
 }

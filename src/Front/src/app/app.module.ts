@@ -12,7 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { CsvComponent } from './home/csv/csv.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { fileMinus, filePlus, NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
 import { envelope,telephone} from 'ngx-bootstrap-icons';
@@ -57,7 +57,9 @@ const icons = {
     NgxSliderModule,
     MatPaginatorModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    NgbPaginationModule,
+    NgbAlertModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
