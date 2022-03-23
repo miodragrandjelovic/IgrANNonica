@@ -24,7 +24,13 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  showMe:boolean=false;
+  showMe2:boolean=true;
+
   onSubmit(form: NgForm) {
+    this.showMe=true;
+    this.showMe2=false;
+    
     if (!form.valid) {
       return;
     }

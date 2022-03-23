@@ -1,0 +1,49 @@
+.container-fluid{
+    background-color: #34495E;
+    height: 100vh;
+}
+.container .sredina{
+    height:  100vh;
+    margin: 0 90px 0 90px;
+}
+.container .opcije{
+    background-color: #34495E;
+    height:  100vh;
+    padding-top: 12px;
+}
+.container .profil{
+    background-color: #34495E;
+    margin-top: 30px;
+}
+.container .opcije .izaberi{
+    margin-top: 30px;
+    background: white;
+    box-shadow: #212F3C 10px 10px 10px -1px;
+    border-radius: 4px;
+    padding: 15px;
+}
+.container .profil .podaci{
+    margin-top: 10px;
+    margin-bottom: 30px;
+    background: white;
+    box-shadow: #212F3C 10px 10px 10px -1px;
+    border-radius: 4px;
+}
+.container .profil .update{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background: white;
+    box-shadow: #212F3C 10px 10px 10px -1px;
+    border-radius: 4px;
+}
+.dugmeUpdate{
+    width: 100%;
+}
+.personImg{
+    width: 90px;
+    height: 90px;
+    margin: 25px;
+}
+.form-control{
+    width: 100%;
+}
