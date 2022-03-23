@@ -27,6 +27,7 @@ export class HeaderComponent implements OnInit {
     this.registerForm=new FormGroup({
       "firstname":new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z]*')]),
       "lastname":new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z]*')]),
+      "email":new FormControl(null),
       "username":new FormControl(null,[Validators.required]),
       "password":new FormControl(null,[Validators.required])
     });
@@ -72,6 +73,7 @@ export class HeaderComponent implements OnInit {
 
   get firstname(){return this.registerForm.get('firstname');}
   get lastname(){return this.registerForm.get('lastname');}
+  get email(){return this.registerForm.get('email');}
   get username(){return this.registerForm.get('username');}
   get password(){return this.registerForm.get('password');}
 
