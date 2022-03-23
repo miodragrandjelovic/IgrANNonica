@@ -20,7 +20,7 @@ namespace Backend.Controllers
 
 
         [HttpPost("hp")] //Slanje HP na pajton
-        public async Task<ActionResult<Hiperparametri>> Post(Hiperparametri hiper)
+        public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper)
         {
             var hiperjson = JsonSerializer.Serialize(hiper);
             var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
