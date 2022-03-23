@@ -48,39 +48,44 @@
     <h4 class="modal-title" id="modal-basic-title">Welcone to Igrannonica</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
+
   <div class="modal-body">
     <div class="col-lg-7">
-      <form class="was-validated" #authForm="ngForm" (ngSubmit)="onSubmitReg(authForm)">
+      <form  [formGroup]="registerForm" (ngSubmit)="onSubmitReg()">
         <div class="form-group col-md-10">
-          <label>First name</label>
-          <input type="text"  id="firstname" ngModel name="firstname" class="form-control form-control-lg" required>
-          <div class="valid-feedback">Valid.</div>
-          <div class="invalid-feedback">Please fill out this field.</div>
+          <input type="text"  id="firstname"  formControlName="firstname" ngModel name="firstname" placeholder="First Name" class="form-control form-control-lg" required>
+          <div *ngIf="firstname.invalid && (firstname.touched || firstname.dirty)">
+            <span class="error" *ngIf="firstname.errors?.required">*Firts name is required.</span>
+            <span class="error" *ngIf="firstname.errors?.pattern">*Enter only characters.</span>
+          </div>
         </div>
         <div class="form-group col-md-10">
-          <label>Last name</label>
-          <input type="text" id="lastname" ngModel name="lastname" class="form-control form-control-lg" required>
-          <div class="valid-feedback">Valid.</div>
-          <div class="invalid-feedback">Please fill out this field.</div>
-        </div>
+          <input type="text" id="lastname"  formControlName="lastname" ngModel name="lastname" placeholder="Last Name" class="form-control form-control-lg" required>
+          <div *ngIf="lastname.invalid && (lastname.touched || lastname.dirty)">
+            <span class="error" *ngIf="lastname.errors?.required">*Last name is required.</span>
+            <span class="error" *ngIf="lastname.errors?.pattern">*Enter only characters.</span>
+          </div>
+        </div> 
         <div class="form-group col-md-10" >
-          <label>Username</label>
-          <input type="text" id="username" ngModel name="username" class="form-control form-control-lg" required>
-          <div class="valid-feedback">Valid.</div>
-          <div class="invalid-feedback">Please fill out this field.</div>
+          <input type="text" id="username"  formControlName="username" ngModel name="username" placeholder="Username" class="form-control form-control-lg" required>
+          <div *ngIf="username.invalid && (username.touched || username.dirty)">
+            <span class="error" *ngIf="username.errors?.required">*Username is required.</span>
+          </div>
         </div>
+        
         <div class="form-group col-md-10">
-          <label>Password</label>
-          <input type="password"  id="password" ngModel name="password" class="form-control form-control-lg" required>
-          <div class="valid-feedback">Valid.</div>
-          <div class="invalid-feedback">Please fill out this field.</div>
+          <input type="password"  id="password"  formControlName="password"  ngModel name="password" placeholder="Password" class="form-control form-control-lg" required>
+          <div *ngIf="password.invalid && (password.touched || password.dirty)">
+            <span class="error" *ngIf="password.errors?.required">*Password is required.</span>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn1" (click)="modal.close('Save click')">Create Account</button>
+          <button type="submit" [disabled]="registerForm.invalid" class="btn1" (click)="modal.close('Save click')">Create Account</button>
         </div>
       </form>
     </div>
   </div>
+
 </ng-template>
 
 
@@ -91,18 +96,16 @@
   </div>
   <div class="modal-body">
     <div class="col-lg-7">
-      <form class="was-validated" #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+      <form  #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
         <div class="form-group col-md-10">
           <label>Username</label>
           <input type="text" id="username" ngModel name="username" class="form-control form-control-lg" required>
-          <div class="valid-feedback">Valid.</div>
-          <div class="invalid-feedback">Please fill out this field.</div>
+         
         </div>
         <div class="form-group col-md-10">
           <label>Password</label>
           <input type="password"  id="password" ngModel name="password"  class="form-control form-control-lg" required>
-          <div class="valid-feedback">Valid.</div>
-          <div class="invalid-feedback">Please fill out this field.</div>
+        
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn1" (click)="modal.close('Save click')">Log in</button>
