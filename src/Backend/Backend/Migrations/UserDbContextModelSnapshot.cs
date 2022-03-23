@@ -43,9 +43,9 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                 //   b.Property<string>("Email")
-                  //      .IsRequired()
-                  //      .HasColumnType("TEXT");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
 
                     b.HasKey("UserId");
