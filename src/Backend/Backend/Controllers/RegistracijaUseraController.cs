@@ -108,7 +108,7 @@ namespace Backend.Controllers
             var entries = _context.ChangeTracker.Entries().Where(e => e.State == EntityState.Added).Select(e => new { e.State, e }).ToList();
             return CreatedAtAction("GetUser", new { id = user.UserId}, user);
         }
-        private bool User_postoji(string username)
+        private bool User_postoji(string username) //trazenje usera po Username-u. Bice bitno zbog menjanja ostalih podataka o njemu.
         {
             return _context.RegistrovaniUseri.Any(e => e.Username == username);
         }
@@ -145,7 +145,7 @@ namespace Backend.Controllers
             return NoContent();
         }
 
-        private bool UserExists(int id)
+        private bool UserExists(int id) //trazenje usera po Id-ju.
         {
             return _context.RegistrovaniUseri.Any(e => e.UserId == id);
         }
