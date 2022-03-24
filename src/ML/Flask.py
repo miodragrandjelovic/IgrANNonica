@@ -99,8 +99,8 @@ def treniraj():
     # potrebne su i vrednosti tj kolone koje korisnik zeli da ukljuci iz dataseta
     
   # titanic.csv 
-    features = ['Age', 'Sex', 'Ticket']
-    label = 'Survived'
+  #  features = ['Age', 'Sex', 'Ticket']
+  # label = 'Survived'
     
   # fish.csv
   #  features = ['Species','Length1','Length2','Length3','Height','Width']
@@ -114,6 +114,10 @@ def treniraj():
   #  features = ['transaction_date','house_age','distance_MRT','convenience_stores','latitude','longitude']
   #  label = 'unit_price'
     
+    # mpg
+    features = ['manufacturer','year','displ','cyl','cty']
+    label = 'class'
+
     # izmenjen nacin kreiranja i treniranja modela
     stats = Statistics(type='regression')
 
