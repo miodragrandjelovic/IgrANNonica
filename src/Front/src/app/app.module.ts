@@ -12,7 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { CsvComponent } from './home/csv/csv.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { fileMinus, filePlus, NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
 import { envelope,telephone} from 'ngx-bootstrap-icons';
@@ -20,6 +20,10 @@ import { SlojeviNeuroniComponent } from './home/slojevi-neuroni/slojevi-neuroni.
 import { MatSliderModule } from '@angular/material/slider'; 
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { AboutComponent } from './about/about.component';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { ProfileComponent } from './header/profile/profile.component';
+import{BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import{ToastrModule} from 'ngx-toastr';
 
 const icons = {
   envelope,
@@ -38,7 +42,8 @@ const icons = {
     HomeComponent,
     CsvComponent,
     SlojeviNeuroniComponent,
-    AboutComponent
+    AboutComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +54,12 @@ const icons = {
     NgbModule,
     NgxBootstrapIconsModule.pick(icons),
     MatSliderModule,
-    NgxSliderModule
+    NgxSliderModule,
+    MatPaginatorModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
+    NgbPaginationModule,
+    NgbAlertModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

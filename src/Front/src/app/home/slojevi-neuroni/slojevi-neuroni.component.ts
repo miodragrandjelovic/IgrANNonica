@@ -20,9 +20,11 @@ export class SlojeviNeuroniComponent implements OnInit {
  
   counter(type:any){
 
+    this.tekst="";
+
     if(type==='add'){
       this.count++;
-      this.tekst++;
+      this.tekst+="";
     }  
     else if(type==='minus'){
       this.count--;

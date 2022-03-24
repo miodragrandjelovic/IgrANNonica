@@ -13,8 +13,8 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Newtonsoft.Json;
-
-namespace Backend.Controllers
+//DODATI REFRESH TOKEN
+namespace Backend.Controllers 
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -89,7 +89,7 @@ namespace Backend.Controllers
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
-          //  user.Email = request.Email;
+            user.Email = request.Email;
             user.Username = request.Username;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
@@ -99,7 +99,7 @@ namespace Backend.Controllers
                 {
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                //    Email = user.Email,
+                    Email = user.Email,
                     Username = user.Username,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt

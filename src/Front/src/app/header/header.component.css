@@ -26,6 +26,12 @@
 ::ng-deep .modal-header #modal-basic-title1{
   margin-left: 150px;
 }
+::ng-deep .form-group{
+  padding-bottom: 15px;
+}
+::ng-deep .error{
+  color: red;
+}
 nav{
   background: #212F3C ;
   color: black;
