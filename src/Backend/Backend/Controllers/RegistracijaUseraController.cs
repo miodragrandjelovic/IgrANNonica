@@ -79,7 +79,34 @@ namespace Backend.Controllers
             return user;
         }
 
-        
+        [HttpPut("username")]//Menjanje podataka o korisniku sa datim Username-om. Menja se sve osim Username-a?!
+        public async Task<IActionResult> PutUsername(string username, User user)
+        {
+            /*if (username != user.Username)
+            {
+                return BadRequest();
+            }*/
+
+            _context.Entry(user).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserPostoji(username))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
         [HttpPut("{id}")]//Menjanje podataka o korisniku sa datim ID-jem.
         public async Task<IActionResult> PutUser(int id, User user)
         {
@@ -135,9 +162,13 @@ namespace Backend.Controllers
             var entries = _context.ChangeTracker.Entries().Where(e => e.State == EntityState.Added).Select(e => new { e.State, e }).ToList();
             return CreatedAtAction("GetUser", new { id = user.UserId}, user);
         }
-        private bool User_postoji(string username) //trazenje usera po Username-u. Bice bitno zbog menjanja ostalih podataka o njemu.
+        private bool UserPostoji(string username) //trazenje usera po Username-u. Bice bitno zbog menjanja ostalih podataka o njemu.
         {
             return _context.RegistrovaniUseri.Any(e => e.Username == username);
+        }
+        private bool UserExists(int id) //trazenje usera po Id-ju.
+        {
+            return _context.RegistrovaniUseri.Any(e => e.UserId == id);
         }
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt) //Enkodiranje sifre.
         {
@@ -172,10 +203,6 @@ namespace Backend.Controllers
             return NoContent();
         }
 
-        private bool UserExists(int id) //trazenje usera po Id-ju.
-        {
-            return _context.RegistrovaniUseri.Any(e => e.UserId == id);
-        }
 
         [HttpPost("login")]//Logovanje korisnika.
         public async Task<ActionResult<string>> Login(UserDto request)
