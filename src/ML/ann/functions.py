@@ -19,7 +19,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import VarianceThreshold
 
 
-import keras 
+import keras.regularizers
 from keras.models import Sequential
 from keras import Input
 from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D, Activation, Normalization
@@ -267,7 +267,7 @@ def showdata(X_train, X_test, y_train,y_test):
     print()
     print()
 
-def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_function):
+def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_function,regularization,reg_rate):
     # here, we are making our model
     
     #print("SHAPE OF X TRAIN DATASET ", X_train.shape[0], " and ", X_train.shape[1])
@@ -288,7 +288,11 @@ def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_f
 
     # hidden layers
     for i in range(hidden_layers_n):
-        model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function))
+        if(regularization=="L1"):
+            model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l1(l=reg_rate)))
+        else:
+            model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
+
         #model.add(Dropout(0.5))
         #model.add(Flatten())
         #model.add(BatchNormalization())

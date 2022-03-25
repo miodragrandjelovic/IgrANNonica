@@ -32,7 +32,7 @@ class Statistics():
 
         model=None
         model = ln.Model(data,regularization, regularization_rate)
-        model.makeModel(activation_function, hidden_layers_n, hidden_layer_neurons_list)
+        model.makeModel(activation_function, hidden_layers_n, hidden_layer_neurons_list,regularization,regularization_rate)
         model.compileModel(learning_rate)
         model.trainModel(epochs,batch_size)
       #  model.plotResults(epochs)
