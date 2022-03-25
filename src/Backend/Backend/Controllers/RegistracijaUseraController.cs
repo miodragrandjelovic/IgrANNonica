@@ -38,6 +38,20 @@ namespace Backend.Controllers
             return await _context.RegistrovaniUseri.ToListAsync();
         }
 
+        [HttpGet("username")]
+        public async Task<ActionResult<User>> GetUsername(string username)
+        {
+            //return User_postoji(username);
+            var user = await _context.RegistrovaniUseri.SingleOrDefaultAsync(x => x.Username == username);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
+        }
+
         // GET: api/RegistracijaUsera/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
