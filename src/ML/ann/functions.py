@@ -19,7 +19,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import VarianceThreshold
 
 
-import keras 
+import keras.regularizers
 from keras.models import Sequential
 from keras import Input
 from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D, Activation, Normalization
@@ -236,6 +236,7 @@ def scale_data(X_train, X_test, y_train, y_test):
     #print(y_train.shape)
     #print(y_train)
 
+    scaler=None
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
@@ -266,10 +267,11 @@ def showdata(X_train, X_test, y_train,y_test):
     print()
     print()
 
-def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_function):
+def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_function,regularization,reg_rate):
     # here, we are making our model
     
     #print("SHAPE OF X TRAIN DATASET ", X_train.shape[0], " and ", X_train.shape[1])
+    model=None
     model = Sequential()
 
     print("DATA LOOKS LIKE THIS")
@@ -279,13 +281,18 @@ def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_f
     # should have same shape as number of input features (columns)
     #model.add(Flatten(input_shape=(X_train.shape[1],)))
     #model.add(Activation(activation=activation_function,input_shape=(X_train.shape[1],)))
+    normalizer=None
     normalizer = Normalization(axis=-1)
     normalizer.adapt(X_train)
     model.add(normalizer)
 
     # hidden layers
     for i in range(hidden_layers_n):
-        model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function))
+        if(regularization=="L1"):
+            model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l1(l=reg_rate)))
+        else:
+            model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
+
         #model.add(Dropout(0.5))
         #model.add(Flatten())
         #model.add(BatchNormalization())
@@ -309,7 +316,7 @@ def compile_model(model, learning_rate):
     # regression: mse(Mean squared error)
 
     # also, there are multiple metrics that user can choose from
-    model.compile(optimizer='sgd', loss=MeanSquaredError(), metrics=['accuracy','mae','mse','AUC'])
+    model.compile(optimizer='adam', loss=MeanSquaredError(), metrics=['accuracy','mae','mse','AUC'])
     return model 
 
 def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
