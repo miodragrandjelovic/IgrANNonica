@@ -4,6 +4,7 @@ import { FormControl, FormGroup, NgForm,Validators } from '@angular/forms';
 import { PrijavaService } from '../prijava/./prijava.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { RegistracijaService } from '../registracija/./registracija.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -18,16 +19,18 @@ export class HeaderComponent implements OnInit {
     private httpClient: HttpClient,
     private modalService: NgbModal,
     private prijavaService: PrijavaService,
-    private registracijaService: RegistracijaService
+    private registracijaService: RegistracijaService,
+    private router:Router,
     ) { }
 
     registerForm:any;
-
+    loggedUser:string='';
+    
   ngOnInit(): void {
     this.registerForm=new FormGroup({
       "firstname":new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z]*')]),
       "lastname":new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z]*')]),
-      "email":new FormControl(null),
+      "email":new FormControl(null,[Validators.email]),
       "username":new FormControl(null,[Validators.required]),
       "password":new FormControl(null,[Validators.required])
     });
@@ -43,8 +46,12 @@ export class HeaderComponent implements OnInit {
     if (!form.valid) {
       return;
     }
+     
     const username = form.value.username;
     const password = form.value.password;
+    this.loggedUser=form.value.username;
+    this.router.navigate(['/home']);
+
     this.prijavaService.logIn(username, password).subscribe(resData => {
       console.log(resData);
     }, error => {

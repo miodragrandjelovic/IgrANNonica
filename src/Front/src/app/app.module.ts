@@ -15,7 +15,7 @@ import { CsvComponent } from './home/csv/csv.component';
 import { NgbAlertModule, NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { fileMinus, filePlus, NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
-import { envelope,telephone} from 'ngx-bootstrap-icons';
+import { envelope,telephone,personCircle} from 'ngx-bootstrap-icons';
 import { SlojeviNeuroniComponent } from './home/slojevi-neuroni/slojevi-neuroni.component';
 import { MatSliderModule } from '@angular/material/slider'; 
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
@@ -29,7 +29,8 @@ const icons = {
   envelope,
   telephone,
   fileMinus,
-  filePlus
+  filePlus,
+  personCircle
 };
 
 @NgModule({
