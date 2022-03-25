@@ -115,13 +115,14 @@ def treniraj():
   #  label = 'unit_price'
     
     # mpg
-    features = ['manufacturer','year','displ','cyl','cty']
-    label = 'class'
+    features = ['manufacturer','year','class','cyl','cty']
+    label = 'displ'
 
     # izmenjen nacin kreiranja i treniranja modela
+    stats=None
     stats = Statistics(type='regression')
 
-    stats.createModel(train=df,features=features, label=label, epochs=20, ratio=0.8, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5], encode_type='label', randomize=True,
+    stats.createModel(train=df,features=features, label=label, epochs=20, ratio=0.7, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[20,30,20,15,5], encode_type='label', randomize=True,
     batch_size=20, learning_rate=0.003, regularization='none' ,regularization_rate=0)
 
     # u objektu stats, u promenljivoj stats se nalaze statisticki podaci kroz epohe, u vidu dictionary-ja

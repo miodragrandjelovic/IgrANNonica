@@ -24,11 +24,13 @@ class Statistics():
         self.stats = None
 
     def createLinear(self,train, features, label, epochs, ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
+        data=None
         data = ln.Data(train)
         data.load_data(label, features)
         data.clearupData(encode_type)
         data.splitData(label, ratio, randomize, activation_function)
 
+        model=None
         model = ln.Model(data,regularization, regularization_rate)
         model.makeModel(activation_function, hidden_layers_n, hidden_layer_neurons_list)
         model.compileModel(learning_rate)
