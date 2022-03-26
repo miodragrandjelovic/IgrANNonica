@@ -44,4 +44,8 @@ iframe{
     height: 550px;
 }
 
+img{
+    border:5px solid #34495E;
+    border-radius: 5px;
+}
 

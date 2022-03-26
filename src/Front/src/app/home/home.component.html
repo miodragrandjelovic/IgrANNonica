@@ -4,8 +4,10 @@
 
     <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
       <div id="top-controls">
-        <div class="container l--page"  style="margin-top: 15px;">
-          <button type="submit" class="btn btn-primary btn-lg" style="margin-right: 20px;">Send Hyperparameters</button>
+        <div class="row">
+          <div class="control">
+            <button type="submit" class="btn btn-primary btn-lg">Send Hyperparameters</button>
+          </div>
           <div class="control epoch">
             <label for="epoch">Epoch</label>
             <div class="select" style="border-radius: 2px;">
@@ -16,7 +18,7 @@
           <div class="control learningRate">
             <label for="learningRate">Learning rate</label>
             <div class="select">
-              <select id="learningRate" formControlName="learningRate">
+              <select class="custom-select" id="learningRate" formControlName="learningRate">
                 <option value="0.00001">0.00001</option>
                 <option value="0.0001">0.0001</option>
                 <option value="0.001">0.001</option>
@@ -34,7 +36,7 @@
           <div class="control activation">
             <label for="activations">Activation</label>
             <div class="select">
-              <select id="activations" formControlName="activation">
+              <select class="custom-select" id="activations" formControlName="activation">
                 <option value="relu">ReLU</option>
                 <option value="tanh">Tanh</option>
                 <option value="sigmoid">Sigmoid</option>
@@ -45,7 +47,7 @@
           <div class="control regularization">
             <label for="regularizations">Regularization</label>
             <div class="select">
-              <select id="regularizations" formControlName="regularization">
+              <select class="custom-select" id="regularizations" formControlName="regularization">
                 <option value="none">None</option>
                 <option value="L1">L1</option>
                 <option value="L2">L2</option>
@@ -55,7 +57,7 @@
           <div class="control regularizationRate">
             <label for="regularRate">Regularization rate</label>
             <div class="select">
-              <select id="regularRate" formControlName="regularizationRate">
+              <select class="custom-select" id="regularRate" formControlName="regularizationRate">
                 <option value="0">0</option>
                 <option value="0.001">0.001</option>
                 <option value="0.003">0.003</option>
@@ -72,7 +74,7 @@
           <div class="control problem">
             <label for="problem">Problem type</label>
             <div class="select">
-              <select id="problem" formControlName="problemType">
+              <select class="custom-select" id="problem" formControlName="problemType">
                 <option value="classification">Classification</option>
                 <option value="regression">Regression</option>
               </select>
@@ -81,7 +83,7 @@
           <div class="control encoding">
             <label for="encoding">Encoding</label>
             <div class="select">
-              <select id="encoding" formControlName="encodingType">
+              <select class="custom-select" id="encoding" formControlName="encodingType">
                 <option value="onehot">One hot</option>
                 <option value="label">Label</option>
                 <option value="ordinal">Ordinal</option> 
@@ -97,17 +99,17 @@
           </div>
         </div>
       </div>
-      <div class="container-fluid" style="background: white;border-bottom: 1px solid black;"> 
+      <div class="container-fluid"> 
         <div class="row" >
             <div class="col" >
             <label for="percTrainData">Ratio of training to test data:<span class="value"></span></label>
             <p class="slider">
-              <ngx-slider [(value)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
+              <ngx-slider class="form-range" [(value)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
             </p>
           
             <label for="batchSize">Batch size:<span class="value"></span></label>
             <p class="slider">
-              <ngx-slider [(value)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
+              <ngx-slider class="form-range" [(value)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
             </p>
           
             </div>
