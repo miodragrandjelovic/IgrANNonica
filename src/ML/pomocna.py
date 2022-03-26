@@ -1,18 +1,36 @@
-from xml.etree.ElementInclude import include
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+from sklearn import metrics
 import tensorflow as tf
 from tensorflow import keras
 from sklearn.model_selection import train_test_split
 from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
+from keras import layers
+from keras.losses import MeanSquaredError
 
 df=pd.read_csv("src\ML\mpg.csv")
 
 df.head(10)
 ###
 
+cat = df.select_dtypes(include='O').keys()
+cat
+df=pd.get_dummies(df,columns=cat)
+
+for (columnName,columnData) in df.iteritems():
+    df[str(columnName)]=df[str(columnName)]/df[str(columnName)].max()
+
+pom=df.copy()
+
+
+y = pom.pop("hwy")
+y.columns = "hwy"
+
+X_train, X_test, y_train, y_test = train_test_split(pom, y, test_size = 0.2)
+
+
+"""
 y = df.pop("hwy")
 y.columns = "hwy"
 
@@ -21,6 +39,7 @@ X_train, X_test, y_train, y_test = train_test_split(df, y, test_size = 0.2)
 cat = df.select_dtypes(include='O').keys()
 X_train=pd.get_dummies(X_train,columns=cat)
 X_test=pd.get_dummies(X_test,columns=cat)
+
 
 for name in cat:
     if(y_train.name==name):
@@ -42,13 +61,28 @@ max=y_train.max()
 for i in y_train.index:
     y_train[i]=y_train[i]/max
 
+
 y_test=y_test.astype(float)
 max=y_test.max()
 for i in y_test.index:
     y_test[i]=y_test[i]/max
+"""
 
 model=None
 
-len(y_test)
-
 model=keras.Sequential()
+"""
+normalizer=None
+normalizer = layers.Normalization(axis=-1)
+normalizer.adapt(X_train)
+model.add(normalizer)
+"""
+
+model.add(layers.Dense(units=32,input_shape=(82,)))
+model.add(layers.Dense(units=32,activation='linear'))
+model.add(layers.Dense(units=16,activation='linear'))
+model.add(layers.Dense(1, activation="linear"))
+
+model.compile(optimizer='adam', loss=MeanSquaredError(),metrics=['accuracy','mae','mse'])
+
+hist=model.fit(X_train, y_train, epochs=15,batch_size=10, validation_data = (X_test, y_test), verbose=1)
