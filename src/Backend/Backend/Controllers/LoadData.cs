@@ -40,8 +40,16 @@ namespace Backend.Controllers
 
             HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
             var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
+
+            string path = Directory.GetCurrentDirectory() + @"\Users\" + "nikola";
+            string pathToCreate = System.IO.Path.Combine(path, "csv.csv");
+
+            if(System.IO.Directory.Exists(path))
+                if(!System.IO.File.Exists(pathToCreate))
+                {
+                    System.IO.File.Create(pathToCreate);
+                }
             return Ok(stat);
-            //return Ok(csve);
         }
 
         [HttpPost("stats")] //Slanje Stats na pajton
