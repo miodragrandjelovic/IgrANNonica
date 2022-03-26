@@ -44,7 +44,7 @@ const icons = {
     CsvComponent,
     SlojeviNeuroniComponent,
     AboutComponent,
-    ProfileComponent
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

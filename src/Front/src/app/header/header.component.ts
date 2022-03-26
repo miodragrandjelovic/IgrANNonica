@@ -5,6 +5,7 @@ import { PrijavaService } from '../prijava/./prijava.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { RegistracijaService } from '../registracija/./registracija.service';
 import { Router } from '@angular/router';
+import { User } from '../_model/user.model';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +15,8 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   closeResult: string | undefined;
 
- 
+  ulogovanUser: User=new User();
+
   constructor(
     private httpClient: HttpClient,
     private modalService: NgbModal,
@@ -49,11 +51,16 @@ export class HeaderComponent implements OnInit {
      
     const username = form.value.username;
     const password = form.value.password;
+    localStorage.setItem("username",username);
     this.loggedUser=form.value.username;
     this.router.navigate(['/home']);
 
     this.prijavaService.logIn(username, password).subscribe(resData => {
       console.log(resData);
+      this.prijavaService.getUserByUsername(localStorage.getItem("username")).subscribe(data=>{
+        this.ulogovanUser=data;
+        console.log(data);
+      })
     }, error => {
       
     });
@@ -108,6 +115,14 @@ export class HeaderComponent implements OnInit {
     } else {
       return `with: ${reason}`;
     }
+  }
+
+  onLogOut()
+  {
+    this.showMe=false;
+    this.showMe2=true;
+    localStorage.removeItem("username");
+    this.router.navigate(['/']);
   }
 
 }

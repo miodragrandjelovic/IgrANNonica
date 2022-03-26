@@ -33,7 +33,7 @@
               <a *ngIf="showMe" class="nav-link active" aria-current="page"  [routerLink]="['/profile']">My profile</a>
              </li>
              <li class="nav-item" *ngIf="showMe">
-                <a class="nav-link active" aria-current="page"  style="cursor: pointer;">Logout</a>
+                <a class="nav-link active" aria-current="page"  style="cursor: pointer;" (click)="onLogOut()">Logout</a>
              </li>
           </div>
         </li>
