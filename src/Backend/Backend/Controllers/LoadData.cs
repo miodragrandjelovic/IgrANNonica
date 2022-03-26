@@ -8,7 +8,6 @@ using Backend.Models;
 using System.Text.Json.Nodes;
 using System.Net.Http.Json;
 
-
 namespace Backend.Controllers
 {
     [Route("api/[controller]")]
@@ -41,6 +40,8 @@ namespace Backend.Controllers
             HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
             var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
 
+            //Treba doci do Username-a ulogovanog korisnika i staviti da se u njegov folder cuva ucitani csv.
+//Pozeljno promeniti model DataLoad tako da pored string CSV sadrzi i string NAME kako bi ja znao ime csv fajla koji je ucitan i kako bih ga sacuvao pod istim imenom u korisnikovom folderu.
             string path = Directory.GetCurrentDirectory() + @"\Users\" + "nikola";
             string pathToCreate = System.IO.Path.Combine(path, "csv.csv");
 
