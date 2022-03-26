@@ -165,7 +165,7 @@ namespace Backend.Controllers
             string currentPath = Directory.GetCurrentDirectory();
             string newPath = currentPath + @"\Users\" + user.Username;
             if(Directory.Exists(newPath))
-                Console.WriteLine("Directory already exists on disk!");
+                Console.WriteLine("User already exists on disk!");
             else
             {
                 System.IO.Directory.CreateDirectory(newPath);
@@ -173,7 +173,7 @@ namespace Backend.Controllers
             }
 
 
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+            return CreatedAtAction("GetUsername", new { username = user.Username }, user);
         }
         private bool UserPostoji(string username) //trazenje usera po Username-u. Bice bitno zbog menjanja ostalih podataka o njemu.
         {
