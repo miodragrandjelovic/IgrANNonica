@@ -14,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Newtonsoft.Json;
 //DODATI REFRESH TOKEN
-namespace Backend.Controllers 
+namespace Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -31,14 +31,14 @@ namespace Backend.Controllers
             _configuration = configuration;
         }
 
-        // GET: api/RegistracijaUsera
-        [HttpGet]
+
+        [HttpGet] //Vracanje svih korisnika iz baze.
         public async Task<ActionResult<IEnumerable<User>>> GetRegistrovaniUseri()
         {
             return await _context.RegistrovaniUseri.ToListAsync();
         }
 
-        [HttpGet("username")]
+        [HttpGet("username")] //Dobijanje podataka o korisniku sa datim Username-om.
         public async Task<ActionResult<User>> GetUsername(string username)
         {
             //return User_postoji(username);
@@ -51,9 +51,22 @@ namespace Backend.Controllers
 
             return user;
         }
+        [HttpDelete("username")]//Ukloniti nalog iz baze za odredjeni Username.
+        public async Task<IActionResult> DeleteUsername(string username)
+        {
+            var user = await _context.RegistrovaniUseri.SingleOrDefaultAsync(x => x.Username == username);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-        // GET: api/RegistracijaUsera/5
-        [HttpGet("{id}")]
+            _context.RegistrovaniUseri.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return Ok("Uspesno uklonjen nalog.");
+        }
+
+        [HttpGet("{id}")]//Dobijanje podataka o korisniku sa datim ID-jem.
         public async Task<ActionResult<User>> GetUser(int id)
         {
             var user = await _context.RegistrovaniUseri.FindAsync(id);
@@ -66,8 +79,35 @@ namespace Backend.Controllers
             return user;
         }
 
-        // PUT: api/RegistracijaUsera/5
-        [HttpPut("{id}")]
+        [HttpPut("username")]//Menjanje podataka o korisniku sa datim Username-om. Menja se sve osim Username-a?!
+        public async Task<IActionResult> PutUsername(string username, User user)
+        {
+            /*if (username != user.Username)
+            {
+                return BadRequest();
+            }*/
+
+            _context.Entry(user).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserPostoji(username))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+        [HttpPut("{id}")]//Menjanje podataka o korisniku sa datim ID-jem.
         public async Task<IActionResult> PutUser(int id, User user)
         {
             if (id != user.UserId)
@@ -95,9 +135,9 @@ namespace Backend.Controllers
 
             return NoContent();
         }
-      
-        // POST: api/RegistracijaUsera
-        [HttpPost] //-------------------------------------------------------------------------------------------------------------
+
+
+        [HttpPost] //Registrovanje korisnika.-------------------------------------------------------------------------------------------------------------
         public async Task<ActionResult<User>> PostUser(UserDto request)
         {
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -120,13 +160,17 @@ namespace Backend.Controllers
                 });
             await _context.SaveChangesAsync();
             var entries = _context.ChangeTracker.Entries().Where(e => e.State == EntityState.Added).Select(e => new { e.State, e }).ToList();
-            return CreatedAtAction("GetUser", new { id = user.UserId}, user);
+            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
-        private bool User_postoji(string username) //trazenje usera po Username-u. Bice bitno zbog menjanja ostalih podataka o njemu.
+        private bool UserPostoji(string username) //trazenje usera po Username-u. Bice bitno zbog menjanja ostalih podataka o njemu.
         {
             return _context.RegistrovaniUseri.Any(e => e.Username == username);
         }
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        private bool UserExists(int id) //trazenje usera po Id-ju.
+        {
+            return _context.RegistrovaniUseri.Any(e => e.UserId == id);
+        }
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt) //Enkodiranje sifre.
         {
             using (var hmac = new HMACSHA512())
             {
@@ -134,7 +178,7 @@ namespace Backend.Controllers
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt) //Verifikacija sifre.
         {
             using (var hmac = new HMACSHA512(passwordSalt))
             {
@@ -143,8 +187,8 @@ namespace Backend.Controllers
             }
         }
 
-        // DELETE: api/RegistracijaUsera/5
-        [HttpDelete("{id}")]
+
+        [HttpDelete("{id}")]//Ukloniti nalog iz baze za odredjeni ID.
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _context.RegistrovaniUseri.FindAsync(id);
@@ -159,17 +203,13 @@ namespace Backend.Controllers
             return NoContent();
         }
 
-        private bool UserExists(int id) //trazenje usera po Id-ju.
-        {
-            return _context.RegistrovaniUseri.Any(e => e.UserId == id);
-        }
 
-        [HttpPost("login")]
+        [HttpPost("login")]//Logovanje korisnika.
         public async Task<ActionResult<string>> Login(UserDto request)
         {
             var user = await _context.RegistrovaniUseri.SingleOrDefaultAsync(x => x.Username == request.Username);
 
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest("Korisnik nije pronadjen!");
             }
@@ -189,7 +229,7 @@ namespace Backend.Controllers
             };
             return Ok(jtoken);
         }
-        private string CreateToken(User user)
+        private string CreateToken(User user)//Pravljenje tokena pri logovanju.
         {
             List<Claim> claims = new List<Claim>
             {
