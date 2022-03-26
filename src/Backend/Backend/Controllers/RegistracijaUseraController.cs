@@ -160,6 +160,19 @@ namespace Backend.Controllers
                 });
             await _context.SaveChangesAsync();
             var entries = _context.ChangeTracker.Entries().Where(e => e.State == EntityState.Added).Select(e => new { e.State, e }).ToList();
+
+            //Pravljenje foldera za svakog korisnika posebno
+            string currentPath = Directory.GetCurrentDirectory();
+            string newPath = currentPath + @"\Users\" + user.Username;
+            if(Directory.Exists(newPath))
+                Console.WriteLine("Directory already exists on disk!");
+            else
+            {
+                System.IO.Directory.CreateDirectory(newPath);
+                Console.WriteLine("Directory for '{0}' created successfully!", user.Username);
+            }
+
+
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
         private bool UserPostoji(string username) //trazenje usera po Username-u. Bice bitno zbog menjanja ostalih podataka o njemu.
