@@ -1,6 +1,7 @@
 #sredina{
   background-color: #34495E;
-  height: 121vh;
+  /*height: 121vh;*/
+  padding-bottom: 200px;
 }
 
 #sredinaCentar{
@@ -95,6 +96,7 @@ font-size: 13px;
   box-shadow: #212F3C 10px 10px 10px -1px;
   border-radius: 4px;
   border-bottom: 1px solid black;
+  height: 100%;
 }
 
 .epoch{
