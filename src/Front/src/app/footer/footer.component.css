@@ -1,6 +1,6 @@
 #wrapper{
   background-color: #212F3C ;
-  margin-top: 150px;
+  /*margin-top: 150px;*/
 }
 .row{
  width: 100%;
@@ -28,4 +28,9 @@
 #wrapper .col-sm {
   background-color: #212F3C ;
   padding-top: 25px;
+}
+
+img{
+  height: 100px;
+  width: 100px;
 }
