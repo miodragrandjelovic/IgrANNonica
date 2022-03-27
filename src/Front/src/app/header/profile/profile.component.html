@@ -25,7 +25,7 @@
                 </div>
                 <div class="container update">
                     
-                    <form #form="ngForm" class="forma">
+                    <form #form="ngForm" class="forma"  (ngSubmit)="onUpdate(form)">
                         <div class="form-group">
                             <input type="hidden" class="form-control" name="id">
                         </div>

@@ -6,6 +6,7 @@ import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { RegistracijaService } from '../registracija/./registracija.service';
 import { Router } from '@angular/router';
 import { User } from '../_model/user.model';
+import { registerLocaleData } from '@angular/common';
 
 @Component({
   selector: 'app-header',
@@ -42,27 +43,28 @@ export class HeaderComponent implements OnInit {
   showMe2:boolean=true;
 
   onSubmit(form: NgForm) {
-    this.showMe=true;
-    this.showMe2=false;
-    
+
     if (!form.valid) {
       return;
     }
-     
+
     const username = form.value.username;
     const password = form.value.password;
-    localStorage.setItem("username",username);
-    this.loggedUser=form.value.username;
-    this.router.navigate(['/home']);
-
+    if(this.showMe2){
+      this.loggedUser=form.value.username;
+    }
     this.prijavaService.logIn(username, password).subscribe(resData => {
       console.log(resData);
-      this.prijavaService.getUserByUsername(localStorage.getItem("username")).subscribe(data=>{
-        this.ulogovanUser=data;
-        console.log(data);
-      })
-    }, error => {
-      
+      this.showMe=true;
+      this.showMe2=false;
+     
+      localStorage.setItem("username",username);
+      this.router.navigate(['/home']);
+    }, error =>{
+      if(error.status==400)
+      {
+        alert('incorect username or password');
+      }
     });
     form.reset()
   }

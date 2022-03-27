@@ -15,8 +15,8 @@ export class PrijavaService {
 
     }
 
-    logIn(username: string, password: string) {
-        return this.http.post('https://localhost:7167/api/RegistracijaUsera/login', {
+    logIn(username: string, password: string) : Observable<string> {
+        return this.http.post<string>('https://localhost:7167/api/RegistracijaUsera/login', {
             username: username,
             password: password
         });
