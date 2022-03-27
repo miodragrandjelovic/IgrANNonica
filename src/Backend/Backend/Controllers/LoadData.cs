@@ -60,7 +60,7 @@ namespace Backend.Controllers
                 return BadRequest("Ucitani fajl je vec u bazi.");
             }
             else
-                workbook.Save(pathToCreate, SaveFormat.CSV); //trenutno cuva sve u folderu 
+                workbook.Save(pathToCreate, SaveFormat.CSV); //trenutno cuva sve u folderu USERS
 
             return Ok(stat);
         }
