@@ -7,6 +7,8 @@ using System.Text;
 using Backend.Models;
 using System.Text.Json.Nodes;
 using System.Net.Http.Json;
+using Aspose.Cells;
+using Aspose.Cells.Utility;
 
 namespace Backend.Controllers
 {
@@ -30,6 +32,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("csv")] //Slanje CSV na pajton
+        [Obsolete]
         public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad cs)
         {
             string csve = cs.CsvData;
@@ -40,16 +43,25 @@ namespace Backend.Controllers
             HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
             var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
 
-            //Treba doci do Username-a ulogovanog korisnika i staviti da se u njegov folder cuva ucitani csv.
-//Pozeljno promeniti model DataLoad tako da pored string CSV sadrzi i string NAME kako bi ja znao ime csv fajla koji je ucitan i kako bih ga sacuvao pod istim imenom u korisnikovom folderu.
-            string path = Directory.GetCurrentDirectory() + @"\Users\" + "nikola";
-            string pathToCreate = System.IO.Path.Combine(path, "csv.csv");
+            //PM> Install-Package Aspose.Cells
+            var workbook = new Workbook();
+            var worksheet = workbook.Worksheets[0];
+            var layoutOptions = new JsonLayoutOptions();
+            layoutOptions.ArrayAsTable = true;
+            JsonUtility.ImportData(csve, worksheet.Cells, 0, 0, layoutOptions);
 
-            if(System.IO.Directory.Exists(path))
+            //Treba doci do Username-a ulogovanog korisnika i staviti da se u njegov folder cuva ucitani csv.
+            //Pozeljno promeniti model DataLoad tako da pored string CSV sadrzi i string NAME kako bi ja znao ime csv fajla koji je ucitan i kako bih ga sacuvao pod istim imenom u korisnikovom folderu.
+            string path = Directory.GetCurrentDirectory() + @"\Users";// + "nikola";
+            string pathToCreate = System.IO.Path.Combine(path, "AUTOPUT.csv");
+            workbook.Save(pathToCreate, SaveFormat.CSV); //trenutno cuva sve u folderu 
+            /*
+            if (System.IO.Directory.Exists(path))
                 if(!System.IO.File.Exists(pathToCreate))
                 {
                     System.IO.File.Create(pathToCreate);
                 }
+            */
             return Ok(stat);
         }
 
