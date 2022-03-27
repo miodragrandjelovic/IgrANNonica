@@ -59,6 +59,10 @@ namespace Backend.Controllers
             {
                 return BadRequest("Ucitani fajl je vec u bazi.");
             }
+            else if(!System.IO.File.Exists(path))
+            {
+                return BadRequest("Niste registrovani/ulogovani.");
+            }
             else
                 workbook.Save(pathToCreate, SaveFormat.CSV); //trenutno cuva sve u folderu USERS
 
