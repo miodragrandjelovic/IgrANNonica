@@ -52,16 +52,16 @@ namespace Backend.Controllers
 
             //Treba doci do Username-a ulogovanog korisnika i staviti da se u njegov folder cuva ucitani csv.
             //Pozeljno promeniti model DataLoad tako da pored string CSV sadrzi i string NAME kako bi ja znao ime csv fajla koji je ucitan i kako bih ga sacuvao pod istim imenom u korisnikovom folderu.
-            string path = Directory.GetCurrentDirectory() + @"\Users";// + "nikola";
-            string pathToCreate = System.IO.Path.Combine(path, "AUTOPUT1.csv");
-            workbook.Save(pathToCreate, SaveFormat.CSV); //trenutno cuva sve u folderu 
-            /*
-            if (System.IO.Directory.Exists(path))
-                if(!System.IO.File.Exists(pathToCreate))
-                {
-                    System.IO.File.Create(pathToCreate);
-                }
-            */
+            string path = Directory.GetCurrentDirectory() + @"\Users";// + "nikola"; treba dodati USERNAME od ulogovanog korisnika
+            string pathToCreate = System.IO.Path.Combine(path, "AUTOPUT.csv"); //umesto AUTOPUT treba staviti ime pravog fajla
+            
+            if(System.IO.File.Exists(pathToCreate))
+            {
+                return BadRequest("Ucitani fajl je vec u bazi.");
+            }
+            else
+                workbook.Save(pathToCreate, SaveFormat.CSV); //trenutno cuva sve u folderu 
+
             return Ok(stat);
         }
 
