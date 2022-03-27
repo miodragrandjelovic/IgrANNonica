@@ -80,7 +80,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("username")]//Menjanje podataka o korisniku sa datim Username-om. Menja se sve osim Username-a?!
-        public async Task<IActionResult> PutUsername(string username, User user)
+        public async Task<IActionResult> PutUsername(User user)
         {
             /*if (username != user.Username)
             {
@@ -95,7 +95,7 @@ namespace Backend.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserPostoji(username))
+                if (!UserPostoji(user.Username))
                 {
                     return NotFound();
                 }
