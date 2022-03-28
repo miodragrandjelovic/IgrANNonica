@@ -7,6 +7,8 @@ import { RegistracijaService } from '../registracija/./registracija.service';
 import { Router } from '@angular/router';
 import { User } from '../_model/user.model';
 import { registerLocaleData } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-header',
@@ -24,16 +26,19 @@ export class HeaderComponent implements OnInit {
     private prijavaService: PrijavaService,
     private registracijaService: RegistracijaService,
     private router:Router,
+    private toastr:ToastrService,
+    private cookie: CookieService,
     ) { }
 
     registerForm:any;
     loggedUser:string='';
-    
+    message:string='';
+
   ngOnInit(): void {
     this.registerForm=new FormGroup({
       "firstname":new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z]*')]),
       "lastname":new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z]*')]),
-      "email":new FormControl(null,[Validators.email]),
+      "email":new FormControl(null,[Validators.required,Validators.email]),
       "username":new FormControl(null,[Validators.required]),
       "password":new FormControl(null,[Validators.required])
     });
@@ -41,6 +46,7 @@ export class HeaderComponent implements OnInit {
 
   showMe:boolean=false;
   showMe2:boolean=true;
+  token:any;
 
   onSubmit(form: NgForm) {
 
@@ -55,6 +61,9 @@ export class HeaderComponent implements OnInit {
     }
     this.prijavaService.logIn(username, password).subscribe(resData => {
       console.log(resData);
+      this.token=(<any>resData).token;
+      this.cookie.set("token",this.token);
+     
       this.showMe=true;
       this.showMe2=false;
      
@@ -63,7 +72,8 @@ export class HeaderComponent implements OnInit {
     }, error =>{
       if(error.status==400)
       {
-        alert('incorect username or password');
+        this.message='Incorect username or password, please try again';
+     /*   alert('incorect username or password');*/
       }
     });
     form.reset()
@@ -81,6 +91,7 @@ export class HeaderComponent implements OnInit {
 
     this.registracijaService.signUp(firstname, lastname, email, username,password).subscribe(resData => {
       console.log(resData);
+      this.toastr.info('Sign up successfully', 'Users sign up');
     }, error => {
       console.log(error);
     });
@@ -124,6 +135,7 @@ export class HeaderComponent implements OnInit {
     this.showMe=false;
     this.showMe2=true;
     localStorage.removeItem("username");
+    this.cookie.delete("token",this.token);
     this.router.navigate(['/']);
   }
 

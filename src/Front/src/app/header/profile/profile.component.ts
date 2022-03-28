@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { PrijavaService } from 'src/app/prijava/prijava.service';
 import { User } from 'src/app/_model/user.model';
 import { ProfileService } from './profile.service';
@@ -14,7 +15,8 @@ export class ProfileComponent implements OnInit {
 
   ulogovanUser: User=new User();
   constructor(private prijavaService: PrijavaService,
-    private profilService: ProfileService) { }
+    private profilService: ProfileService,
+    private toastr:ToastrService) { }
 
   ngOnInit(): void {
     this.prijavaService.getUserByUsername(localStorage.getItem("username")).subscribe(data=>{
@@ -31,7 +33,7 @@ export class ProfileComponent implements OnInit {
 
     this.profilService.updateProfile(this.ulogovanUser).subscribe(data=>{
       console.log(data);
-      alert('uspesan update');
+      this.toastr.success('Updated successfully', 'Users update');
     }, error=>{
       console.log('Update error');
     });
