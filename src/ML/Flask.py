@@ -57,20 +57,6 @@ def post_hp():
    # hiperparametri.append(hp)
     global hiperp
     hiperp = hp
-
-    print("HIPERPARAMETRI SUU")
-    print("Tip problema ",hiperp['ProblemType'])
-    print("Broj epoha ",hiperp['Epoch'])
-    print("Learning rate ",hiperp['LearningRate'])
-    print("Activation ",hiperp['Activation'])
-    print("Regularization ",hiperp['Regularization'])
-    print("Reg rate ",hiperp['RegularizationRate'])
-    print("Encoding ",hiperp['EncodingType'])
-    print("Randomize ",hiperp['Randomize'])
-    print("Train test ratio ",hiperp['Ratio'])
-    print("Batch size ",hiperp['BatchSize'])
-    print("Number of hidden layers is ", hiperp['Layers'])
-    
     return hp
 
 @app.route("/hp", methods=['GET']) #Slanje HP na bek
@@ -142,10 +128,10 @@ def treniraj():
     ly = []
     for i in range(hiperp['Layers']):
         ly.append(hiperp['NeuronsLvl'+str(i+1)])
-    print("Hidden layer neurons are ", ly)
+   # print("Hidden layer neurons are ", ly)
     
     stats.createModel(train=df,features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'], activation_function=hiperp['Activation'],hidden_layers_n=hiperp['Layers'], hidden_layer_neurons_list=ly, encode_type=hiperp['EncodingType'], randomize=hiperp['Randomize'],
-    batch_size=hiperp['BatchSize'], learning_rate=hiperp['LearningRate'], regularization=hiperp['Regularization'] ,regularization_rate=hiperp['RegularizationRate'])
+        batch_size=hiperp['BatchSize'], learning_rate=hiperp['LearningRate'], regularization=hiperp['Regularization'] ,regularization_rate=hiperp['RegularizationRate'])
 
     # u objektu stats, u promenljivoj stats se nalaze statisticki podaci kroz epohe, u vidu dictionary-ja
     # npr. "Accuracy":[...]
