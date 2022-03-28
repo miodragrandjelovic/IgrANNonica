@@ -22,5 +22,9 @@ namespace Backend.Models
 
         public bool Randomize { get; set; }
 
+
+        public string Inputs { get; set; } = string.Empty;
+        public string Output { get; set; } = string.Empty;
+
     }
 }
