@@ -35,6 +35,7 @@ namespace Backend.Controllers
         //[Obsolete]
         public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad cs)
         {
+            string username = cs.Username;
             string csve = cs.CsvData;
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
             var url = "http://127.0.0.1:3000/csv";
@@ -52,7 +53,7 @@ namespace Backend.Controllers
 
             //Treba doci do Username-a ulogovanog korisnika i staviti da se u njegov folder cuva ucitani csv.
             //Pozeljno promeniti model DataLoad tako da pored string CSV sadrzi i string NAME kako bi ja znao ime csv fajla koji je ucitan i kako bih ga sacuvao pod istim imenom u korisnikovom folderu.
-            string path = Directory.GetCurrentDirectory() + @"\Users";// + "nikola"; treba dodati USERNAME od ulogovanog korisnika
+            string path = Directory.GetCurrentDirectory() + @"\Users";// \+ username; treba dodati USERNAME od ulogovanog korisnika
             string pathToCreate = System.IO.Path.Combine(path, "AUTOPUT.csv"); //umesto AUTOPUT treba staviti ime pravog fajla
             
             if(System.IO.File.Exists(pathToCreate))
