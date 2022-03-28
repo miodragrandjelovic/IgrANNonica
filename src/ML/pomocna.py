@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 from sklearn import metrics
 import tensorflow as tf
@@ -8,6 +7,7 @@ from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
 from keras import layers
 from keras.losses import MeanSquaredError
+from sklearn.preprocessing import LabelEncoder
 
 df=pd.read_csv("src\ML\mpg.csv")
 
@@ -16,7 +16,19 @@ df.head(10)
 
 cat = df.select_dtypes(include='O').keys()
 cat
+##one hot encoding
 df=pd.get_dummies(df,columns=cat)
+
+##
+lb=LabelEncoder()
+for ime in cat:
+    df[ime]=lb.fit_transform(df[ime])
+
+##binary encoding
+
+
+
+
 
 for (columnName,columnData) in df.iteritems():
     df[str(columnName)]=df[str(columnName)]/df[str(columnName)].max()
@@ -78,10 +90,10 @@ normalizer.adapt(X_train)
 model.add(normalizer)
 """
 
-model.add(layers.Dense(units=32,input_shape=(82,)))
-model.add(layers.Dense(units=32,activation='linear'))
-model.add(layers.Dense(units=16,activation='linear'))
-model.add(layers.Dense(1, activation="linear"))
+model.add(layers.Dense(units=32,input_shape=(10,)))
+model.add(layers.Dense(units=32,activation='sigmoid'))
+model.add(layers.Dense(units=16,activation='sigmoid'))
+model.add(layers.Dense(1, activation="sigmoid"))
 
 model.compile(optimizer='adam', loss=MeanSquaredError(),metrics=['accuracy','mae','mse'])
 
