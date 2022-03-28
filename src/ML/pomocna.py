@@ -20,6 +20,8 @@ cat
 ##one hot encoding
 df=pd.get_dummies(df,columns=cat)
 
+
+
 ##
 lb=LabelEncoder()
 for ime in cat:
@@ -31,18 +33,18 @@ for ime in cat:
     df=encoder.fit_transform(df)
 
 
-
 for (columnName,columnData) in df.iteritems():
-    df[str(columnName)]=df[str(columnName)]/df[str(columnName)].max()
-
+    df[str(columnName)]=columnData/columnData.max()
+#df[str(columnName)]=df[str(columnName)]/df[str(columnName)].max()
 pom=df.copy()
-
 
 y = pom.pop("hwy")
 y.columns = "hwy"
 
 X_train, X_test, y_train, y_test = train_test_split(pom, y, test_size = 0.2)
 
+
+X_train
 
 """
 y = df.pop("hwy")
@@ -91,12 +93,15 @@ normalizer = layers.Normalization(axis=-1)
 normalizer.adapt(X_train)
 model.add(normalizer)
 """
+len(X_train.columns)
 
-model.add(layers.Dense(units=32,input_shape=(26,)))
-model.add(layers.Dense(units=32,activation='sigmoid'))
-model.add(layers.Dense(units=16,activation='sigmoid'))
-model.add(layers.Dense(1, activation="sigmoid"))
+model.add(layers.Dense(units=32,input_shape=(len(X_train.columns),)))
+model.add(layers.Dense(units=32,activation='relu'))
+model.add(layers.Dense(units=16,activation='relu'))
+model.add(layers.Dense(1, activation="relu"))
 
 model.compile(optimizer='adam', loss=MeanSquaredError(),metrics=['accuracy','mae','mse'])
 
 hist=model.fit(X_train, y_train, epochs=15,batch_size=10, validation_data = (X_test, y_test), verbose=1)
+
+

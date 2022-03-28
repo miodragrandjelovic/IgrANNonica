@@ -118,7 +118,7 @@ def treniraj():
     
     # mpg
     features = ['manufacturer','year','class','cyl','cty']
-    label = 'displ'
+    label = 'hwy'
 
     # izmenjen nacin kreiranja i treniranja modela
     stats=None
