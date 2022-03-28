@@ -15,8 +15,8 @@ app = Flask(__name__)
  #   {"FirstName": "mika", "LastName": "mikic","Email": "e@gmail.com","Username": "mika", "Password": "sifra123"},
   #  {"FirstName": "milan", "LastName": "milanic","Email": "e@gmail.com","Username": "milan", "Password": "sifra123"}]
 
-hiperparametri=[{"EncodingType": "HotEncoding", "LearningRate": 0.03, "Activation": "Tanh", "Epoch": 3, "Regularization":"None", "RegularizationRate":1, "ProblemType":"Classification", "Layers": 1, "NeuronsLvl1": 1, "NeuronsLvl2": 1, "NeuronsLvl3": 1, "NeuronsLvl4": 1, "NeuronsLvl5": 1, "Ratio": 50, "BatchSize": 10, "Randomize": True},
-                {"EncodingType": "ColdEncoding", "LearningRate": 0.01, "Activation": "Tanko", "Epoch": 2,"Regularization":"None", "RegularizationRate":3, "ProblemType":"Classification","Layers": 0, "NeuronsLvl1": 0, "NeuronsLvl2": 1, "NeuronsLvl3": 1, "NeuronsLvl4": 1, "NeuronsLvl5": 1,"Ratio": 30, "BatchSize": 9, "Randomize": False}]
+# hiperparametri=[{"EncodingType": "HotEncoding", "LearningRate": 0.03, "Activation": "Tanh", "Epoch": 3, "Regularization":"None", "RegularizationRate":1, "ProblemType":"Classification", "Layers": 1, "NeuronsLvl1": 1, "NeuronsLvl2": 1, "NeuronsLvl3": 1, "NeuronsLvl4": 1, "NeuronsLvl5": 1, "Ratio": 50, "BatchSize": 10, "Randomize": True},
+#                {"EncodingType": "ColdEncoding", "LearningRate": 0.01, "Activation": "Tanko", "Epoch": 2,"Regularization":"None", "RegularizationRate":3, "ProblemType":"Classification","Layers": 0, "NeuronsLvl1": 0, "NeuronsLvl2": 1, "NeuronsLvl3": 1, "NeuronsLvl4": 1, "NeuronsLvl5": 1,"Ratio": 30, "BatchSize": 9, "Randomize": False}]
 
 #json ne moze da procita jer su jednostruki navodnici, a ako se stave dvostruki kako da stavimo string izmedju jer string mora sa dvostrukim da krece i da se zavrsava?!
 #csve = {"CsvData": "[{'PassengerId':1,'Survived':0,'Pclass':3,'Name':'Braund, Mr. Owen Harris','Sex':'male','Age':22,'SibSp':1,'Parch':0,'Ticket':'A/5 21171','Fare':7.25,'Cabin':'','Embarked':'S'},{'PassengerId':2,'Survived':1,'Pclass':1,'Name':'Cumings, Mrs. John Bradley (Florence Briggs Thayer)','Sex':'female','Age':38,'SibSp':1,'Parch':0,'Ticket':'PC 17599','Fare':71.2833,'Cabin':'C85','Embarked':C'}]"}
@@ -54,12 +54,14 @@ def  getStat():
 @app.route("/hp", methods=["POST"]) #Primanje HP sa beka
 def post_hp():
     hp = request.get_json()
-    hiperparametri.append(hp)
-    return hiperparametri
+   # hiperparametri.append(hp)
+    global hiperp
+    hiperp = hp
+    return hp
 
 @app.route("/hp", methods=['GET']) #Slanje HP na bek
 def  getAllHps():
-    return jsonify(hiperparametri)
+    return jsonify(hiperp)
 
 @app.route("/csv", methods=["POST"]) #Primanje CSV sa beka i njegovo sredjivanje 
 def post_csv():
@@ -120,10 +122,16 @@ def treniraj():
 
     # izmenjen nacin kreiranja i treniranja modela
     stats=None
-    stats = Statistics(type='regression')
+    stats = Statistics(type=hiperp['ProblemType'])
 
-    stats.createModel(train=df,features=features, label=label, epochs=20, ratio=0.7, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[20,30,20,15,5], encode_type='label', randomize=True,
-    batch_size=20, learning_rate=0.003, regularization='L2' ,regularization_rate=0.01)
+    # ly ce biti lista broja neurona za svaki skriveni sloj koji je prosledjen
+    ly = []
+    for i in range(hiperp['Layers']):
+        ly.append(hiperp['NeuronsLvl'+str(i+1)])
+   # print("Hidden layer neurons are ", ly)
+    
+    stats.createModel(train=df,features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'], activation_function=hiperp['Activation'],hidden_layers_n=hiperp['Layers'], hidden_layer_neurons_list=ly, encode_type=hiperp['EncodingType'], randomize=hiperp['Randomize'],
+        batch_size=hiperp['BatchSize'], learning_rate=hiperp['LearningRate'], regularization=hiperp['Regularization'] ,regularization_rate=hiperp['RegularizationRate'])
 
     # u objektu stats, u promenljivoj stats se nalaze statisticki podaci kroz epohe, u vidu dictionary-ja
     # npr. "Accuracy":[...]
