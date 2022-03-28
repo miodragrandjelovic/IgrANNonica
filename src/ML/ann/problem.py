@@ -56,9 +56,14 @@ class Model():
         self.regularization = regularization
         self.regularization_rate = regularization_rate
 
-    def makeModel(self, activation_function, hidden_layers_n, hidden_layer_neurons_list,regularization,reg_rate):
+    def makeModel(self, type, activation_function, hidden_layers_n, hidden_layer_neurons_list,regularization,reg_rate):
         # make model
-        self.model = fn.regression(self.data.X_train,hidden_layers_n, hidden_layer_neurons_list,activation_function,regularization,reg_rate)
+        # ako je regresioni problem , poziva se ova fja za kreiranje modela
+        if (type == 'regression'):
+            self.model = fn.regression(self.data.X_train,hidden_layers_n, hidden_layer_neurons_list,activation_function,regularization,reg_rate)
+        # ako je klasifikacioni problem, imamo male izmene u kreiranju modela
+        elif (type == 'classification'):
+            pass
 
     def compileModel(self, learning_rate):
         #compile the model

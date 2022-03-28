@@ -54,12 +54,14 @@ def  getStat():
 @app.route("/hp", methods=["POST"]) #Primanje HP sa beka
 def post_hp():
     hp = request.get_json()
-    hiperparametri.append(hp)
-    return hiperparametri
+   # hiperparametri.append(hp)
+    global hiperp
+    hiperp = hp
+    return hp
 
 @app.route("/hp", methods=['GET']) #Slanje HP na bek
 def  getAllHps():
-    return jsonify(hiperparametri)
+    return jsonify(hiperp)
 
 @app.route("/csv", methods=["POST"]) #Primanje CSV sa beka i njegovo sredjivanje 
 def post_csv():
@@ -120,10 +122,16 @@ def treniraj():
 
     # izmenjen nacin kreiranja i treniranja modela
     stats=None
-    stats = Statistics(type='regression')
+    stats = Statistics(type=hiperp['ProblemType'])
 
-    stats.createModel(train=df,features=features, label=label, epochs=20, ratio=0.7, activation_function='sigmoid',hidden_layers_n=5, hidden_layer_neurons_list=[20,30,20,15,5], encode_type='label', randomize=True,
-    batch_size=20, learning_rate=0.003, regularization='L2' ,regularization_rate=0.01)
+    # ly ce biti lista broja neurona za svaki skriveni sloj koji je prosledjen
+    ly = []
+    for i in range(hiperp['Layers']):
+        ly.append(hiperp['NeuronsLvl'+str(i+1)])
+   # print("Hidden layer neurons are ", ly)
+    
+    stats.createModel(train=df,features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'], activation_function=hiperp['Activation'],hidden_layers_n=hiperp['Layers'], hidden_layer_neurons_list=ly, encode_type=hiperp['EncodingType'], randomize=hiperp['Randomize'],
+        batch_size=hiperp['BatchSize'], learning_rate=hiperp['LearningRate'], regularization=hiperp['Regularization'] ,regularization_rate=hiperp['RegularizationRate'])
 
     # u objektu stats, u promenljivoj stats se nalaze statisticki podaci kroz epohe, u vidu dictionary-ja
     # npr. "Accuracy":[...]
