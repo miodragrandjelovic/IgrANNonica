@@ -8,6 +8,7 @@ from pandas.api.types import is_numeric_dtype
 from keras import layers
 from keras.losses import MeanSquaredError
 from sklearn.preprocessing import LabelEncoder
+import category_encoders as ce
 
 df=pd.read_csv("src\ML\mpg.csv")
 
@@ -25,8 +26,9 @@ for ime in cat:
     df[ime]=lb.fit_transform(df[ime])
 
 ##binary encoding
-
-
+for ime in cat:
+    encoder=ce.BinaryEncoder(cols=[ime])
+    df=encoder.fit_transform(df)
 
 
 
@@ -90,7 +92,7 @@ normalizer.adapt(X_train)
 model.add(normalizer)
 """
 
-model.add(layers.Dense(units=32,input_shape=(10,)))
+model.add(layers.Dense(units=32,input_shape=(26,)))
 model.add(layers.Dense(units=32,activation='sigmoid'))
 model.add(layers.Dense(units=16,activation='sigmoid'))
 model.add(layers.Dense(1, activation="sigmoid"))
