@@ -22,16 +22,16 @@ class Data():
         # deal with missing data
         # for numerical values fill with mean
         # for categorical values fill with mode 
-        fn.missing_data(self.data)
+      #  fn.missing_data(self.data)                                 ODKOMENTARISI POSLE
         
         # drop the outliers from numerical columns
         #fn.drop_numerical_outliers(self.data)
 
         # encode data
-        fn.encode_data(self.data, encode_type)
+        self.data=fn.encode_data(self.data, encode_type)
 
         # first take out the values that do not impact the model
-        fn.filter_data(self.data)
+#        fn.filter_data(self.data)
 
     def splitData(self, label, ratio, randomize, activation_function):
         

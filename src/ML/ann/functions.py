@@ -59,8 +59,9 @@ def feature_and_label(data, label):
     return data,y
 
 def normalize(df):
+    print(df)
     for (columnName,columnData) in df.iteritems():
-        df[str(columnName)]=df[str(columnName)]/df[str(columnName)].max()
+        df[str(columnName)]=columnData/columnData.max()
     return df
 
 
@@ -89,7 +90,7 @@ def normalize(df):
     
 
 def split_data(X, y, ratio, randomize):
-    (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
+    (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio)
     return (X_train, X_test, y_train, y_test)
 
 def filter_data(data):
@@ -189,6 +190,7 @@ def drop_numerical_outliers(df, z_thresh=3):
 def one_hot_encoder(df):
     cat = df.select_dtypes(include='O').keys()
     df=pd.get_dummies(df,columns=cat)
+    print(df)
     return df
 
 def label_encoding(df):
