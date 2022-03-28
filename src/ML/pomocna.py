@@ -19,13 +19,9 @@ cat = df.select_dtypes(include='O').keys()
 cat
 ##one hot encoding
 df=pd.get_dummies(df,columns=cat)
-cat = pom.select_dtypes(include='O').keys()
-pom=pd.get_dummies(pom,columns=cat)
-pom
 
-pd.Series.str.encode(encode="label")
-y=pd.get_dummies(y,columns=cat)
-y
+
+
 ##
 lb=LabelEncoder()
 for ime in cat:
@@ -42,11 +38,13 @@ for (columnName,columnData) in df.iteritems():
 #df[str(columnName)]=df[str(columnName)]/df[str(columnName)].max()
 pom=df.copy()
 
-y = pom.pop("class")
-y.columns = "class"
+y = pom.pop("hwy")
+y.columns = "hwy"
 
 X_train, X_test, y_train, y_test = train_test_split(pom, y, test_size = 0.2)
 
+
+X_train
 
 """
 y = df.pop("hwy")
@@ -105,3 +103,5 @@ model.add(layers.Dense(1, activation="relu"))
 model.compile(optimizer='adam', loss=MeanSquaredError(),metrics=['accuracy','mae','mse'])
 
 hist=model.fit(X_train, y_train, epochs=15,batch_size=10, validation_data = (X_test, y_test), verbose=1)
+
+
