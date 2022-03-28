@@ -65,13 +65,13 @@ def normalize(y, activation_function):
         # normalize data between 0 and 1
         min = y.describe()['min']
         max = y.describe()['max']
-        print("min je ", min)
-        print("max je ",max)
+       # print("min je ", min)
+       # print("max je ",max)
         
         k = (y - min) / (max - min)
 
-        print("K looks like")
-        print(k)
+       # print("K looks like")
+       # print(k)
 
         y = k
     
@@ -80,6 +80,8 @@ def normalize(y, activation_function):
     
 
 def split_data(X, y, ratio, randomize):
+    # ratio je npr 20, a nama treba 0.2
+    ratio = ratio / 100
     (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
     return (X_train, X_test, y_train, y_test)
 
@@ -256,16 +258,16 @@ def scale_data(X_train, X_test, y_train, y_test):
     return (X_train, X_test, y_train, y_test)
 
 def showdata(X_train, X_test, y_train,y_test):
-    print("X TRAIN DATA ")
+   # print("X TRAIN DATA ")
    
     print(X_train.shape)
-    print(X_train.describe())
-    print(X_train.head())
-    #print(X_train)
+   # print(X_train.describe())
+   # print(X_train.head())
+   # print(X_train)
 
-    print("Thats it")
-    print()
-    print()
+   # print("Thats it")
+   # print()
+   # print()
 
 def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_function,regularization,reg_rate):
     # here, we are making our model
@@ -274,8 +276,8 @@ def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_f
     model=None
     model = Sequential()
 
-    print("DATA LOOKS LIKE THIS")
-    print(X_train)
+   # print("DATA LOOKS LIKE THIS")
+   # print(X_train)
 
     # input layer
     # should have same shape as number of input features (columns)
@@ -328,17 +330,17 @@ def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
     # ovde se javlja greska kod svih aktivacionih funkcija sem sigmoid!!
     
     
-    print("X TRAIN")
-    print(pd.DataFrame(X_train).head())
+   # print("X TRAIN")
+   # print(pd.DataFrame(X_train).head())
 
-    print("Y TRAIN")
-    print(pd.DataFrame(y_train).head())
+   # print("Y TRAIN")
+   # print(pd.DataFrame(y_train).head())
 
-    print("X TEST")
-    print(pd.DataFrame(X_test).head())
+   # print("X TEST")
+   # print(pd.DataFrame(X_test).head())
 
-    print("Y TEST")
-    print(pd.DataFrame(y_test).head())
+   # print("Y TEST")
+   # print(pd.DataFrame(y_test).head())
     
 
     return model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_test, y_test), verbose=1) # VALIDATION DATA=(X_VAL, Y_VAL) 
