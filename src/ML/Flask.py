@@ -117,8 +117,8 @@ def treniraj():
   #  label = 'unit_price'
     
     # mpg
-    features = ['manufacturer','year','class','cyl','cty']
-    label = 'hwy'
+    features = ['color','clarity','x','y','z']
+    label = 'cut'
 
     # izmenjen nacin kreiranja i treniranja modela
     stats=None

@@ -25,12 +25,18 @@ class Statistics():
 
     def createModel(self,train, features, label, epochs, ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
         # model se kreira preko jedne fje, a u self.type se nalazi info da li treba da bude regresioni ili klasifikacioni
-
+        """
         data=None
         data =pr.Data(train)
         data.load_data(label, features)
-        data.clearupData(encode_type)
+        data.clearupData(encode_type,self.type)
         data.splitData(label, ratio, randomize, activation_function)
+        """
+
+        data=None
+        data=pr.Data(train)
+        data.Misa(encode_type,self.type,features,label,ratio,randomize)
+
 
         model=None
         model =pr.Model(data,regularization, regularization_rate)

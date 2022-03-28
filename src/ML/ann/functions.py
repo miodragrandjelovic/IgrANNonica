@@ -279,7 +279,7 @@ def showdata(X_train, X_test, y_train,y_test):
    # print()
    # print()
 
-def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_function,regularization,reg_rate):
+def regression(X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, activation_function,regularization,reg_rate):
     # here, we are making our model
     
     #print("SHAPE OF X TRAIN DATASET ", X_train.shape[0], " and ", X_train.shape[1])
@@ -298,6 +298,8 @@ def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_f
     #normalizer.adapt(X_train)
     #model.add(normalizer)
 
+
+
     # hidden layers
     model.add(Dense(units=hidden_layer_neurons_list[0],input_shape=(len(X_train.columns),)))
     for i in range(hidden_layers_n-1):
@@ -306,6 +308,7 @@ def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_f
         else:
             model.add(Dense(hidden_layer_neurons_list[i+1], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
 
+    model.add(Dense(len(y_train.columns), activation=activation_function))
         #model.add(Dropout(0.5))
         #model.add(Flatten())
         #model.add(BatchNormalization())
@@ -315,7 +318,7 @@ def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_f
     # if we have regressional model, we use just one neuron, which says expected number
     # if it's 0, the customer is satisfied
     # if it's 2, the customer is not satisfied
-    model.add(Dense(1, activation=activation_function))
+    #model.add(Dense(1, activation=activation_function))
 
     #model.summary()
     return model

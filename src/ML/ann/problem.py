@@ -14,22 +14,49 @@ class Data():
         self.X_test=None
         self.y_train=None
         self.y_test=None
+
+
+    
         
     def load_data(self, label, features):
         self.data = fn.load_data(features, label, self.data)
     
-    def clearupData(self, encode_type):
+
+    def Misa(self, encode_type,type,features,label,ratio,randomize):
+
+        self.data = fn.load_data(features, label, self.data)
+        X, y = fn.feature_and_label(self.data, label)
+        X=fn.encode_data(X, encode_type)
+        y=pd.DataFrame(y)
+        if (type == 'classification'):
+            y=fn.encode_data(y, encode_type)
+        
+        X=fn.normalize(X)
+        y=fn.normalize(y)
+
+        (self.X_train, self.X_test, self.y_train, self.y_test) = fn.split_data(X, y, ratio, randomize)
+
+
+
+
+    def clearupData(self, encode_type,type):
         # deal with missing data
         # for numerical values fill with mean
         # for categorical values fill with mode 
       #  fn.missing_data(self.data)                                 ODKOMENTARISI POSLE
-        
+      """ 
         # drop the outliers from numerical columns
         #fn.drop_numerical_outliers(self.data)
-
+        X, y = fn.feature_and_label(self.data, label)
         # encode data
-        self.data=fn.encode_data(self.data, encode_type)
+        X=fn.encode_data(X, encode_type)
+        y=pd.DataFrame(y)
 
+        if(type="")
+
+        self.data=fn.encode_data(self.data, encode_type)
+        """ 
+        
         # first take out the values that do not impact the model
 #        fn.filter_data(self.data)
 
@@ -62,12 +89,13 @@ class Model():
     def makeModel(self, type, activation_function, hidden_layers_n, hidden_layer_neurons_list,regularization,reg_rate):
         # make model
         # ako je regresioni problem , poziva se ova fja za kreiranje modela
-        if (type == 'regression'):
-            self.model = fn.regression(self.data.X_train,hidden_layers_n, hidden_layer_neurons_list,activation_function,regularization,reg_rate)
+       # if (type == 'regression'):
+        self.model = fn.regression(self.data.X_train,self.data.y_train,hidden_layers_n, hidden_layer_neurons_list,activation_function,regularization,reg_rate)
+        """
         # ako je klasifikacioni problem, imamo male izmene u kreiranju modela
         elif (type == 'classification'):
             pass
-
+        """       
     def compileModel(self, learning_rate):
         #compile the model
         fn.compile_model(self.model, learning_rate)
