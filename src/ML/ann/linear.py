@@ -34,17 +34,20 @@ class Data():
         fn.filter_data(self.data)
 
     def splitData(self, label, ratio, randomize, activation_function):
+        
+        self.data=fn.normalize(self.data)
+        
         # split x and y (features and label)
         X, y = fn.feature_and_label(self.data, label)
 
         # according to activation function, normalize y set
-        y = fn.normalize(y, activation_function)
+        #y = fn.normalize(y, activation_function)
 
         # split test and train data 
         (self.X_train, self.X_test, self.y_train, self.y_test) = fn.split_data(X, y, ratio, randomize)
 
         # now, shape all data
-        fn.scale_data(self.X_train, self.X_test, self.y_train, self.y_test)
+        #fn.scale_data(self.X_train, self.X_test, self.y_train, self.y_test)
 
 
 class Model():
@@ -77,7 +80,7 @@ class Model():
         self.hist['Accuracy'] = self.history.history['accuracy']
         self.hist['MAE'] = self.history.history['mae']
         self.hist['MSE'] = self.history.history['mse']
-        self.hist['AUC'] = self.history.history['auc']
+        #self.hist['AUC'] = self.history.history['auc']
         self.hist['Loss'] = self.history.history['loss']
 
     def plotResults(self, epochs):

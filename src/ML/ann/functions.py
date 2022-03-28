@@ -13,6 +13,8 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
+import category_encoders as ce
+
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -56,7 +58,13 @@ def feature_and_label(data, label):
 
     return data,y
 
-def normalize(y, activation_function):
+def normalize(df):
+    for (columnName,columnData) in df.iteritems():
+        df[str(columnName)]=df[str(columnName)]/df[str(columnName)].max()
+    return df
+
+
+    """
     if (activation_function == 'relu'):
         pass
     elif (activation_function == 'tanh'):
@@ -76,6 +84,7 @@ def normalize(y, activation_function):
         y = k
     
     return y
+    """
 
     
 
@@ -177,31 +186,30 @@ def drop_numerical_outliers(df, z_thresh=3):
 
     return df
 
-def one_hot_encoder(dataframe, categorical_cols):
-    # instantiate OneHotEncoder
-    ohe = OneHotEncoder(sparse=False) 
-    # categorical_features = boolean mask for categorical columns
-    # sparse = False output an array not sparse matrix
+def one_hot_encoder(df):
+    cat = df.select_dtypes(include='O').keys()
+    df=pd.get_dummies(df,columns=cat)
+    return df
 
-    oh_frame = ohe.fit_transform(dataframe[categorical_cols])
-    #print(oh_frame)
-
-    data_ohe = pd.DataFrame(oh_frame, index = dataframe.index)
-    dataframe_noncategorical = dataframe.drop(columns=categorical_cols)
-    dataframe = pd.concat([dataframe_noncategorical, data_ohe], axis=1)
-    return dataframe
-
-def label_encoding(dataframe, categorical_cols):
-    le = LabelEncoder()
-    # apply le on categorical feature columns
-    dataframe[categorical_cols] = dataframe[categorical_cols].apply(lambda col: le.fit_transform(col))
-    #dataframe[categorical_cols].head(10)
-    return dataframe
+def label_encoding(df):
+    lb=LabelEncoder()
+    cat = df.select_dtypes(include='O').keys()
+    for ime in cat:
+        df[ime]=lb.fit_transform(df[ime])
+    return df
 
 def ordinal_encoding(dataframe, categorical_cols):
     oe = OrdinalEncoder()
     dataframe[categorical_cols] = dataframe[categorical_cols].apply(lambda col: oe.fit_transform(col))
     return dataframe
+
+def binary_encoding(df):
+    cat = df.select_dtypes(include='O').keys()
+    for ime in cat:
+        encoder=ce.BinaryEncoder(cols=[ime])
+        df=encoder.fit_transform(df)
+    return df
+
 
 def encode_data(df, encoding):
     # data can be encoded in three ways
@@ -218,13 +226,13 @@ def encode_data(df, encoding):
 
     if (encoding == 'onehot'):
         #print("ENCODING ONE HOT ENCODER")
-        df = one_hot_encoder(df, categorical_cols)
+        df = one_hot_encoder(df)
     elif (encoding == 'label'):
         #print("ENCODING LABEL ENCODER")
-        df = label_encoding(df, categorical_cols)
+        df = label_encoding(df)
     elif (encoding == 'ordinal'):
         #print("ENCODING ORDINAL ENCODER")
-        df = ordinal_encoding(df, categorical_cols)
+        df = binary_encoding(df)
 
     return (df)
 
@@ -281,17 +289,18 @@ def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_f
     # should have same shape as number of input features (columns)
     #model.add(Flatten(input_shape=(X_train.shape[1],)))
     #model.add(Activation(activation=activation_function,input_shape=(X_train.shape[1],)))
-    normalizer=None
-    normalizer = Normalization(axis=-1)
-    normalizer.adapt(X_train)
-    model.add(normalizer)
+    #normalizer=None
+    #normalizer = Normalization(axis=-1)
+    #normalizer.adapt(X_train)
+    #model.add(normalizer)
 
     # hidden layers
-    for i in range(hidden_layers_n):
+    model.add(Dense(units=hidden_layer_neurons_list[0],input_shape=(len(X_train.columns),)))
+    for i in range(hidden_layers_n-1):
         if(regularization=="L1"):
-            model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l1(l=reg_rate)))
+            model.add(Dense(hidden_layer_neurons_list[i+1], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l1(l=reg_rate)))
         else:
-            model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
+            model.add(Dense(hidden_layer_neurons_list[i+1], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
 
         #model.add(Dropout(0.5))
         #model.add(Flatten())
@@ -316,7 +325,7 @@ def compile_model(model, learning_rate):
     # regression: mse(Mean squared error)
 
     # also, there are multiple metrics that user can choose from
-    model.compile(optimizer='adam', loss=MeanSquaredError(), metrics=['accuracy','mae','mse','AUC'])
+    model.compile(optimizer='adam', loss=MeanSquaredError(), metrics=['accuracy','mae','mse'])
     return model 
 
 def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):

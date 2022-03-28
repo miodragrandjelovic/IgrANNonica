@@ -91,8 +91,9 @@ normalizer = layers.Normalization(axis=-1)
 normalizer.adapt(X_train)
 model.add(normalizer)
 """
+len(X_train.columns)
 
-model.add(layers.Dense(units=32,input_shape=(26,)))
+model.add(layers.Dense(units=32,input_shape=(len(X_train.columns),)))
 model.add(layers.Dense(units=32,activation='sigmoid'))
 model.add(layers.Dense(units=16,activation='sigmoid'))
 model.add(layers.Dense(1, activation="sigmoid"))
