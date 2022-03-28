@@ -3,8 +3,6 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTr
 import { Observable } from 'rxjs';
 import { PrijavaService } from './prijava/prijava.service';
 
-
-
 @Injectable({
   providedIn: 'root'
 })

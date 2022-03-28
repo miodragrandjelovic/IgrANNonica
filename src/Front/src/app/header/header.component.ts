@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   closeResult: string | undefined;
 
   ulogovanUser: User=new User();
+  session:any;
 
   constructor(
     private httpClient: HttpClient,
@@ -28,11 +29,16 @@ export class HeaderComponent implements OnInit {
     private router:Router,
     private toastr:ToastrService,
     private cookie: CookieService,
-    ) { }
+    ) { 
+      this.session=this.get();
+      console.log(this.session);
+      this.loggedUser=this.get();
+    }
 
     registerForm:any;
-    loggedUser:string='';
+    loggedUser:any;
     message:string='';
+    token:any;
 
   ngOnInit(): void {
     this.registerForm=new FormGroup({
@@ -44,9 +50,10 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  showMe:boolean=false;
-  showMe2:boolean=true;
-  token:any;
+  save(username:string, password:string){
+    sessionStorage.setItem('username',username);
+    sessionStorage.setItem('password',password);
+  }
 
   onSubmit(form: NgForm) {
 
@@ -56,18 +63,13 @@ export class HeaderComponent implements OnInit {
 
     const username = form.value.username;
     const password = form.value.password;
-    if(this.showMe2){
-      this.loggedUser=form.value.username;
-    }
+   
     this.prijavaService.logIn(username, password).subscribe(resData => {
-      console.log(resData);
+      
       this.token=(<any>resData).token;
+      this.save(username,password);
       this.cookie.set("token",this.token);
      
-      this.showMe=true;
-      this.showMe2=false;
-     
-      localStorage.setItem("username",username);
       this.router.navigate(['/home']);
     }, error =>{
       if(error.status==400)
@@ -130,12 +132,14 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  get(){
+    return sessionStorage.getItem('username');
+  }
+
   onLogOut()
   {
-    this.showMe=false;
-    this.showMe2=true;
-    localStorage.removeItem("username");
-    this.cookie.delete("token",this.token);
+    this.cookie.deleteAll();
+    sessionStorage.clear();
     this.router.navigate(['/']);
   }
 
