@@ -25,6 +25,13 @@ export class CsvComponent {
     itemsPerPage: number = 10;
     itemPosition: number = 0;
     currentPage: number = 1;
+    response: any;
+
+    headersStatistics: any = [['Name', 'Q1', 'Q2', 'Q3', 'count', 'freq', 'max', 'mean', 'min', 'std', 'top', 'unique']];
+    rowLinesStatistics: any = [];
+
+    flag: number = 0;
+
 
     constructor(private http: HttpClient) {
 
@@ -32,12 +39,14 @@ export class CsvComponent {
 
 
     fileUpload(files: any) {
-
-        this.showMe=!this.showMe;
+        this.flag = 1;
+        if (this.flag)
+            this.showMe=true;
 
         this.dataObject = [];
         this.headingLines = [];
         this.rowLines = [];
+        this.rowLinesStatistics = [];
 
         let fileList = (<HTMLInputElement>files.target).files;
         if (fileList && fileList.length > 0) {
@@ -58,6 +67,7 @@ export class CsvComponent {
                 for (let i = 0; i < headers.length; i++) {
                     headersArray.push(data[i]);
                 }
+                
                 this.headingLines.push(headersArray);
 
                 let rowsArray = [];
@@ -79,12 +89,32 @@ export class CsvComponent {
                 }
                 this.rowLines = rowsArray.slice(0, this.itemsPerPage);
                 this.allData = rowsArray;
-
-                // this.numberOfPages = Math.ceil(this.rowLines.length / this.numberOfPages);
-                console.log(this.dataObject);
+                
                 return this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
                     csvData: JSON.stringify(this.dataObject)
-                }).subscribe();
+                }).subscribe(result => {
+                    const allRows = [];
+                    
+                    for(let i = 0; i < headers.length; i++){
+                        console.log(result[headers[i]]);
+                        const currentRow = [headers[i],
+                            result[headers[i]].Q1 ? result[headers[i]].Q1 : 'null',
+                            result[headers[i]].Q2 ? result[headers[i]].Q2 : 'null', 
+                            result[headers[i]].Q3 ? result[headers[i]].Q3 : 'null', 
+                            result[headers[i]].count ? result[headers[i]].count : 'null',
+                            result[headers[i]].freq ? result[headers[i]].freq : 'null', 
+                            result[headers[i]].max ? result[headers[i]].max : 'null', 
+                            result[headers[i]].mean ? result[headers[i]].mean : 'null', 
+                            result[headers[i]].min ? result[headers[i]].min : 'null', 
+                            result[headers[i]].std ? result[headers[i]].std : 'null', 
+                            result[headers[i]].top ? result[headers[i]].top : 'null', 
+                            result[headers[i]].unique ? result[headers[i]].unique : 'null'
+                        ];
+                        this.rowLinesStatistics.push(currentRow);
+                    }
+                });
+
+
             }
         }
     }
