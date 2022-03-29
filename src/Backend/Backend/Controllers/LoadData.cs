@@ -18,7 +18,7 @@ namespace Backend.Controllers
     {
         private readonly HttpClient http = new HttpClient();
         public static Hiperparametri hp = new Hiperparametri();
-
+        public static string? Username { get; set; }
 
         [HttpPost("hp")] //Slanje HP na pajton
         public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper)
@@ -35,7 +35,7 @@ namespace Backend.Controllers
         //[Obsolete]
         public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad cs)
         {
-            string username = cs.Username;
+            string name = cs.Name;
             string csve = cs.CsvData;
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
             var url = "http://127.0.0.1:3000/csv";
@@ -51,21 +51,20 @@ namespace Backend.Controllers
             layoutOptions.ArrayAsTable = true;
             JsonUtility.ImportData(csve, worksheet.Cells, 0, 0, layoutOptions);
 
-            //Treba doci do Username-a ulogovanog korisnika i staviti da se u njegov folder cuva ucitani csv.
             //Pozeljno promeniti model DataLoad tako da pored string CSV sadrzi i string NAME kako bi ja znao ime csv fajla koji je ucitan i kako bih ga sacuvao pod istim imenom u korisnikovom folderu.
-            string path = Directory.GetCurrentDirectory() + @"\Users";// \+ username; treba dodati USERNAME od ulogovanog korisnika
-            string pathToCreate = System.IO.Path.Combine(path, "AUTOPUT.csv"); //umesto AUTOPUT treba staviti ime pravog fajla
+            string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
+            string pathToCreate = System.IO.Path.Combine(path, "AUTOPUT.csv"); //umesto AUTOPUT treba staviti NAME koji se salje sa fronta
             
             if(System.IO.File.Exists(pathToCreate))
             {
                 return BadRequest("Ucitani fajl je vec u bazi.");
             }
-            else if(!System.IO.File.Exists(path))
+            else if(!System.IO.Directory.Exists(path))
             {
-                return BadRequest("Niste registrovani/ulogovani.");
+                return BadRequest("Niste registrovani/ulogovani."+path);
             }
             else
-                workbook.Save(pathToCreate, SaveFormat.CSV); //trenutno cuva sve u folderu USERS
+                workbook.Save(pathToCreate, SaveFormat.CSV); 
 
             return Ok(stat);
         }

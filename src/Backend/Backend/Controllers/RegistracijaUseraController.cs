@@ -235,6 +235,7 @@ namespace Backend.Controllers
                 return BadRequest("Pogresna sifra!");
             }
 
+            LoadData.Username = request.Username;
             string token1 = CreateToken(user);
             var jtoken = new
             {
