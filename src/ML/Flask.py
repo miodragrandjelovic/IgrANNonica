@@ -103,7 +103,7 @@ def statistika():
 def kor_matrica():
     return df.corr().to_json()
 
-@app.route("/csv1",methods=['GET']) #Parsovanje u df
+@app.route("/model",methods=['GET']) #Parsovanje u df
 def treniraj():
     # potrebne su i vrednosti tj kolone koje korisnik zeli da ukljuci iz dataseta
     
