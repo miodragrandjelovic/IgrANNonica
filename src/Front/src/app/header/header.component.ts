@@ -7,6 +7,8 @@ import { RegistracijaService } from '../registracija/./registracija.service';
 import { Router } from '@angular/router';
 import { User } from '../_model/user.model';
 import { registerLocaleData } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-header',
@@ -17,6 +19,7 @@ export class HeaderComponent implements OnInit {
   closeResult: string | undefined;
 
   ulogovanUser: User=new User();
+  session:any;
 
   constructor(
     private httpClient: HttpClient,
@@ -24,23 +27,32 @@ export class HeaderComponent implements OnInit {
     private prijavaService: PrijavaService,
     private registracijaService: RegistracijaService,
     private router:Router,
-    ) { }
+    private toastr:ToastrService,
+    private cookie: CookieService,
+    ) { 
+      this.session=this.get();
+      this.loggedUser=this.get();
+    }
 
     registerForm:any;
-    loggedUser:string='';
-    
+    loggedUser:any;
+    message:string='';
+    token:any;
+
   ngOnInit(): void {
     this.registerForm=new FormGroup({
       "firstname":new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z]*')]),
       "lastname":new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z]*')]),
-      "email":new FormControl(null,[Validators.email]),
+      "email":new FormControl(null,[Validators.required,Validators.email]),
       "username":new FormControl(null,[Validators.required]),
       "password":new FormControl(null,[Validators.required])
     });
   }
 
-  showMe:boolean=false;
-  showMe2:boolean=true;
+  save(username:string, password:string){
+    sessionStorage.setItem('username',username);
+    sessionStorage.setItem('password',password);
+  }
 
   onSubmit(form: NgForm) {
 
@@ -50,20 +62,23 @@ export class HeaderComponent implements OnInit {
 
     const username = form.value.username;
     const password = form.value.password;
-    if(this.showMe2){
-      this.loggedUser=form.value.username;
-    }
+   
     this.prijavaService.logIn(username, password).subscribe(resData => {
-      console.log(resData);
-      this.showMe=true;
-      this.showMe2=false;
+      
+      this.token=(<any>resData).token;
+      this.save(username,password);
+      this.cookie.set("token",this.token);
      
-      localStorage.setItem("username",username);
+      this.session=this.get();
+      this.loggedUser=this.get();
+
       this.router.navigate(['/home']);
     }, error =>{
       if(error.status==400)
       {
-        alert('incorect username or password');
+        this.message='Incorect username or password, please try again';
+        alert('Incorect username or password');
+     /*this.toastr.success('Incorect username or password', 'User login');*/
       }
     });
     form.reset()
@@ -81,6 +96,7 @@ export class HeaderComponent implements OnInit {
 
     this.registracijaService.signUp(firstname, lastname, email, username,password).subscribe(resData => {
       console.log(resData);
+      this.toastr.info('Sign up successfully', 'Users sign up');
     }, error => {
       console.log(error);
     });
@@ -119,11 +135,15 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  get(){
+    return sessionStorage.getItem('username');
+  }
+
   onLogOut()
   {
-    this.showMe=false;
-    this.showMe2=true;
-    localStorage.removeItem("username");
+    this.cookie.deleteAll();
+    sessionStorage.clear();
+    this.session=this.get();
     this.router.navigate(['/']);
   }
 
