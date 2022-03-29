@@ -113,12 +113,12 @@ def treniraj():
   #  label = 'charges'
 
   #  realestate
-  #  features = ['transaction_date','house_age','distance_MRT','convenience_stores','latitude','longitude']
-  #  label = 'unit_price'
+    features = ['transaction_date','house_age','distance_MRT','convenience_stores','latitude','longitude']
+    label = 'unit_price'
     
-    # mpg
-    features = ['color','clarity','x','y','z']
-    label = 'cut'
+    # diamonds
+  #  features = ['color','clarity','x','y','z']
+  #  label = 'cut'
 
     # izmenjen nacin kreiranja i treniranja modela
     stats=None

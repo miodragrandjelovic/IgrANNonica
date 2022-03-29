@@ -14,7 +14,6 @@
 
 from matplotlib.pyplot import hist
 #import problem as pr
-#import ann.problem as pr
 import ann.problem as pr
 import pandas as pd
 
