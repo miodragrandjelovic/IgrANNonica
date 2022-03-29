@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit {
   encodingType: string = "label";
   epochs: number=10;
   randomize: boolean = false;
-  layerNeuron: string = "2";
+  layerNeuron: string = "5";
   //
 
   options1: Options = {

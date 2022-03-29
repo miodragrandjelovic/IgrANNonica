@@ -116,17 +116,24 @@ def treniraj():
   #  label = 'Weight'
     
   #  insurance.csv
-  #  features = ['age','sex','bmi','children','smoker','region']
-  #  label = 'charges'
+    features = ['age','sex','bmi','children','smoker','region']
+    label = 'charges'
 
   #  realestate
     features = ['transaction_date','house_age','distance_MRT','convenience_stores','latitude','longitude']
     label = 'unit_price'
     
+<<<<<<< Updated upstream
     # insurance
+=======
+<<<<<<< Updated upstream
+    # mpg
+>>>>>>> Stashed changes
     features = ['age','sex','bmi','children']
     label = 'charges'
 
+=======
+>>>>>>> Stashed changes
     # izmenjen nacin kreiranja i treniranja modela
     stats=None
     stats = Statistics(type=hiperp['ProblemType'])
