@@ -24,6 +24,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import { ProfileComponent } from './header/profile/profile.component';
 import{BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import{ToastrModule} from 'ngx-toastr';
+import { SendEmailComponent } from './send-email/send-email.component';
 
 const icons = {
   envelope,
@@ -45,6 +46,7 @@ const icons = {
     SlojeviNeuroniComponent,
     AboutComponent,
     ProfileComponent,
+    SendEmailComponent,
   ],
   imports: [
     BrowserModule,

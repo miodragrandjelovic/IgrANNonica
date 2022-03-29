@@ -8,12 +8,14 @@ import { RegistracijaComponent } from './registracija/registracija.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { AboutComponent } from './about/about.component';
 import{ProfileComponent} from './header/profile/profile.component';
+import { SendEmailComponent } from './send-email/send-email.component';
 
 const routes: Routes = [
   {path:'', component:NavigationComponent},
   {path:'home', component:HomeComponent},
   {path:'about',component:AboutComponent},
-  {path:'profile',component:ProfileComponent}
+  {path:'profile',component:ProfileComponent},
+  {path:'send-email',component:SendEmailComponent}
 ];
 
 @NgModule({
