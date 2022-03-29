@@ -105,3 +105,22 @@ model.compile(optimizer='adam', loss=MeanSquaredError(),metrics=['accuracy','mae
 hist=model.fit(X_train, y_train, epochs=15,batch_size=10, validation_data = (X_test, y_test), verbose=1)
 
 
+
+def is_float(element) -> bool:
+    try:
+        float(element)
+        return True
+    except ValueError:
+        return False
+
+df=pd.DataFrame([["2.3","Pera","1"],["3.2","Mika","4"],["1.1","Laza","2"]])
+
+df.columns=["floatovi","imena","int"]
+
+for (columnName,columnData) in df.iteritems():
+        if(is_float(df[str(columnName)][0]) or df[str(columnName)][0].isnumeric()):
+            df[str(columnName)]=df[str(columnName)].astype(float)
+
+
+df
+df["floatovi"]
