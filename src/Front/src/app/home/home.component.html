@@ -11,7 +11,7 @@
           <div class="control epoch">
             <label for="epoch">Epoch</label>
             <div class="select" style="border-radius: 2px;">
-              <input type="number" id="epoch" style="width: 80px; " formControlName="epoch">
+              <input type="number" [(ngModel)]="epochs" id="epoch" style="width: 80px; " formControlName="epoch">
             </div>
           </div>
   
@@ -94,7 +94,7 @@
           <div class="form-check form-switch control randomize">
             <div class="select">
               <label class="form-check-label" for="flexSwitchCheckDefault">Randomize</label><br>
-              <input class="form-check-input" type="checkbox" value="" id="flexSwitchCheckDefault" style="margin:11px 15px;" formControlName="randomize">
+              <input class="form-check-input" type="checkbox" [(ngModel)]="randomize" id="flexSwitchCheckDefault" style="margin:11px 15px;" formControlName="randomize">
             </div>
           </div>
         </div>
@@ -104,12 +104,12 @@
             <div class="col" >
             <label for="percTrainData">Ratio of training to test data:<span class="value"></span></label>
             <p class="slider">
-              <ngx-slider class="form-range" [(value)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
+              <ngx-slider class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
             </p>
             
             <label for="batchSize">Batch size:<span class="value"></span></label>
             <p class="slider">
-              <ngx-slider class="form-range" [(value)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
+              <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
             </p>
             </div>
                 <div class="col-10" formArrayName="neurons" style="text-align: center;">
@@ -117,7 +117,7 @@
                   <button type="button" class="btn btn-outline-primary" (click)="onAddLayer()" style="margin: 5px;">Add Layer</button>
                   <div *ngFor="let neuron of neuronControls; let i = index">
                       <button type="button" class="btn btn-outline-danger" (click)="onRemoveLayer(i)" style="margin: 5px;">Remove</button>
-                      <input type="text" [formControlName]="i"/>
+                      <input type="text" [(ngModel)]="layerNeuron" [formControlName]="i"/>
                  </div>
                 </div>
           </div>

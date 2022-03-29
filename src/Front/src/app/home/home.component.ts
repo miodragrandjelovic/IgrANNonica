@@ -34,10 +34,22 @@ export class HomeComponent implements OnInit {
   
   value1: number = 10;
   value2: number = 20;
+  //dodato za default vrednosti
+  lrate: number = 0.00001;
+  activation: string = "relu";
+  regularization: string = "none";
+  regularizationRate: number = 0;
+  problemType: string = "regression";
+  encodingType: string = "label";
+  epochs: number=10;
+  randomize: boolean = false;
+  layerNeuron: string = "2";
+  //
 
   options1: Options = {
     floor: 0,
-    ceil: 100
+    ceil: 100,
+    //step: 10
   };
   options2: Options = {
     floor: 0,
@@ -46,15 +58,6 @@ export class HomeComponent implements OnInit {
 
   hyperparametersForm!: FormGroup;
 
-  //dodato za default vrednosti
-  lrate = 0.00001;
-  activation = "relu";
-  regularization = "none";
-  regularizationRate = 0;
-  problemType = "regression";
-  encodingType = "label";
-  epochs=10;
-  //
 
   constructor(private http: HttpClient) { }
 
