@@ -19,7 +19,7 @@ export class ProfileComponent implements OnInit {
     private toastr:ToastrService) { }
 
   ngOnInit(): void {
-    this.prijavaService.getUserByUsername(localStorage.getItem("username")).subscribe(data=>{
+    this.prijavaService.getUserByUsername(sessionStorage.getItem("username")).subscribe(data=>{
       this.ulogovanUser=data;
       console.log(data);
     })

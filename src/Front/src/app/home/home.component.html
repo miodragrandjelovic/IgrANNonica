@@ -106,18 +106,16 @@
             <p class="slider">
               <ngx-slider class="form-range" [(value)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
             </p>
-          
             <label for="batchSize">Batch size:<span class="value"></span></label>
             <p class="slider">
               <ngx-slider class="form-range" [(value)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
             </p>
-          
             </div>
                 <div class="col-10" formArrayName="neurons" style="text-align: center;">
                   <!--<app-slojevi-neuroni></app-slojevi-neuroni> -->
                   <button type="button" class="btn btn-outline-primary" (click)="onAddLayer()" style="margin: 5px;">Add Layer</button>
                   <div *ngFor="let neuron of neuronControls; let i = index">
-                      <button type="button" class="btn btn-outline-warning" (click)="onRemoveLayer(i)" style="margin: 5px;">Remove</button>
+                      <button type="button" class="btn btn-outline-danger" (click)="onRemoveLayer(i)" style="margin: 5px;">Remove</button>
                       <input type="text" [formControlName]="i"/>
                  </div>
                 </div>

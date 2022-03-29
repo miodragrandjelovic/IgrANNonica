@@ -31,7 +31,6 @@ export class HeaderComponent implements OnInit {
     private cookie: CookieService,
     ) { 
       this.session=this.get();
-      console.log(this.session);
       this.loggedUser=this.get();
     }
 
@@ -70,12 +69,16 @@ export class HeaderComponent implements OnInit {
       this.save(username,password);
       this.cookie.set("token",this.token);
      
+      this.session=this.get();
+      this.loggedUser=this.get();
+
       this.router.navigate(['/home']);
     }, error =>{
       if(error.status==400)
       {
         this.message='Incorect username or password, please try again';
-     /*   alert('incorect username or password');*/
+        alert('Incorect username or password');
+     /*this.toastr.success('Incorect username or password', 'User login');*/
       }
     });
     form.reset()
@@ -140,6 +143,7 @@ export class HeaderComponent implements OnInit {
   {
     this.cookie.deleteAll();
     sessionStorage.clear();
+    this.session=this.get();
     this.router.navigate(['/']);
   }
 
