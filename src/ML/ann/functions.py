@@ -316,19 +316,8 @@ def regression(X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, acti
             else:
                 model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
 
-<<<<<<< Updated upstream
-
-
-<<<<<<< Updated upstream
-        #model.add(Dropout(0.5))
-        #model.add(Flatten())
-        #model.add(BatchNormalization())
     """ MISINI SLOJEVI! (Ne radi kada korisnik ne stavi ni jedan hidden layer, Takodje, postavlja prvi hidden layer kao input layer, sto ne treba)
-=======
-=======
-    """ MISINI SLOJEVI! (Ne radi kada korisnik ne stavi ni jedan hidden layer, Takodje, postavlja prvi hidden layer kao input layer, sto ne treba)
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
     # hidden layers
     model.add(Dense(units=hidden_layer_neurons_list[0],input_shape=(len(X_train.columns),)))
     for i in range(hidden_layers_n-1):
