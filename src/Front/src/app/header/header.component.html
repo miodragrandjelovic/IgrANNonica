@@ -21,19 +21,19 @@
         </li>
 
         <li ngbDropdown class="nav-item dropdown">
-          <a ngbDropdownToggle *ngIf="showMe"  class="nav-link dropdown-toggle"  data-bs-toggle="dropdown" aria-current="page" style="cursor: pointer;"><i-bs name="person-circle" width="25" height="25"></i-bs> {{loggedUser}}</a>
-          <a ngbDropdownToggle *ngIf="showMe2"  class="nav-link dropdown-toggle"  data-bs-toggle="dropdown" aria-current="page" style="cursor: pointer;">Profile</a>
+          <a ngbDropdownToggle *ngIf="session"  class="nav-link dropdown-toggle"  data-bs-toggle="dropdown" aria-current="page" style="cursor: pointer;"><i-bs name="person-circle" width="25" height="25"></i-bs> {{loggedUser}}</a>
+          <a ngbDropdownToggle *ngIf="!session"  class="nav-link dropdown-toggle"  data-bs-toggle="dropdown" aria-current="page" style="cursor: pointer;">Profile</a>
           <div ngbDropdownMenu class="dropdown-menu" >
-            <li class="nav-item"  *ngIf="showMe2">
+            <li class="nav-item"  *ngIf="!session">
               <a ngbDropdownItem class="nav-link" style="background-color: rgb(22, 23, 31);" aria-current="page" role="button" (click)="openLogin(contentLogin)">Login</a>
             </li>
-              <li class="nav-item" *ngIf="showMe2">
+              <li class="nav-item" *ngIf="!session">
               <a ngbDropdownItem class="nav-link" style="background-color: rgb(22, 23, 31);" role="button" (click)="openRegister(contentRegister)">Sign up</a>
              </li>
              <li class="nav-item">
-              <a *ngIf="showMe" class="nav-link active" aria-current="page"  [routerLink]="['/profile']">My profile</a>
+              <a *ngIf="session" class="nav-link active" aria-current="page"  [routerLink]="['/profile']">My profile</a>
              </li>
-             <li class="nav-item" *ngIf="showMe">
+             <li class="nav-item" *ngIf="session">
                 <a class="nav-link active" aria-current="page"  style="cursor: pointer;" (click)="onLogOut()">Logout</a>
              </li>
           </div>
@@ -70,8 +70,9 @@
         </div>
         <div class="form-group col-md-10" >
           <input type="text" id="email"  formControlName="email" ngModel name="email" placeholder="Email" class="form-control form-control-lg" required>
-          <div *ngIf="username.invalid && (username.touched || username.dirty)">
-            <span class="error" *ngIf="username.errors?.required">*Email is required.</span>
+          <div *ngIf="email.invalid && (email.touched || email.dirty)">
+            <span class="error" *ngIf="email.errors?.required">*Email is required.</span>
+            <span class="error" *ngIf="email.errors?.email">*Enter valid email.</span>
           </div>
         </div>
         <div class="form-group col-md-10" >
@@ -115,6 +116,7 @@
           <input type="password"  id="password" ngModel name="password"  class="form-control form-control-lg" required>
         
         </div>
+        <span style="color: red;">{{message}}</span>
         <div class="modal-footer">
           <button  type="submit" class="btn1" (click)="modal.close('Save click')">Log in</button>
         </div>
