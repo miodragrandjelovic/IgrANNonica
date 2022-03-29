@@ -63,6 +63,14 @@ def post_hp():
 def  getAllHps():
     return jsonify(hiperp)
 
+
+def is_float(element) -> bool: ##fja za proveravanje da li je element tj string iz csva u stvari float
+    try:
+        float(element)
+        return True
+    except ValueError:
+        return False
+
 @app.route("/csv", methods=["POST"]) #Primanje CSV sa beka i njegovo sredjivanje 
 def post_csv():
     cs = request.get_json()
@@ -70,8 +78,7 @@ def post_csv():
     #statistika=df.describe()
     #return statistika.to_json()
     for (columnName,columnData) in data.iteritems():
-        if(data[str(columnName)][0].isnumeric()):
-            #print(df[str(columnName)][0].isnumeric())
+        if(is_float(data[str(columnName)][0]) or data[str(columnName)][0].isnumeric()):
             data[str(columnName)]=data[str(columnName)].astype(float)
 
     global df
@@ -116,9 +123,9 @@ def treniraj():
     features = ['transaction_date','house_age','distance_MRT','convenience_stores','latitude','longitude']
     label = 'unit_price'
     
-    # diamonds
-  #  features = ['color','clarity','x','y','z']
-  #  label = 'cut'
+    # insurance
+    features = ['age','sex','bmi','children']
+    label = 'charges'
 
     # izmenjen nacin kreiranja i treniranja modela
     stats=None
