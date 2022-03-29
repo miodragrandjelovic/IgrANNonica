@@ -29,21 +29,32 @@ interface RequestHyperparameters{
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
 
-  value1: number = 70;
-  value2: number = 70;
+export class HomeComponent implements OnInit {
+  
+  value1: number = 10;
+  value2: number = 20;
+
   options1: Options = {
     floor: 0,
     ceil: 100
   };
   options2: Options = {
     floor: 0,
-    ceil: 100
+    ceil: 50
   };
 
   hyperparametersForm!: FormGroup;
 
+  //dodato za default vrednosti
+  lrate = 0.00001;
+  activation = "relu";
+  regularization = "none";
+  regularizationRate = 0;
+  problemType = "regression";
+  encodingType = "label";
+  epochs=10;
+  //
 
   constructor(private http: HttpClient) { }
 
