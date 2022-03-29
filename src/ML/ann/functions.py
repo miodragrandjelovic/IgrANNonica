@@ -61,6 +61,10 @@ def feature_and_label(data, label):
 def normalize(df):
     print(df)
     for (columnName,columnData) in df.iteritems():
+       # print("COLUMN NAME IS ")
+       # print(columnName)
+       # print("COLUMN DATA IS ")
+       # print(columnData)
         df[str(columnName)]=columnData/columnData.max()
     return df
 
@@ -297,9 +301,27 @@ def regression(X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, acti
     #normalizer = Normalization(axis=-1)
     #normalizer.adapt(X_train)
     #model.add(normalizer)
+    
+    if (hidden_layers_n > 0):
+        model.add(Dense(units=hidden_layer_neurons_list[0], input_shape=(len(X_train.columns),)))
+    else:
+        model.add(Dense(units=1, input_shape=(len(X_train.columns),)))
+    
+
+    # hidden layers
+    if (hidden_layers_n > 0):
+        for i in range(hidden_layers_n):
+            if(regularization=="L1"):
+                model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l1(l=reg_rate)))
+            else:
+                model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
 
 
 
+        #model.add(Dropout(0.5))
+        #model.add(Flatten())
+        #model.add(BatchNormalization())
+    """ MISINI SLOJEVI! (Ne radi kada korisnik ne stavi ni jedan hidden layer, Takodje, postavlja prvi hidden layer kao input layer, sto ne treba)
     # hidden layers
     model.add(Dense(units=hidden_layer_neurons_list[0],input_shape=(len(X_train.columns),)))
     for i in range(hidden_layers_n-1):
@@ -307,18 +329,15 @@ def regression(X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, acti
             model.add(Dense(hidden_layer_neurons_list[i+1], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l1(l=reg_rate)))
         else:
             model.add(Dense(hidden_layer_neurons_list[i+1], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
-
     model.add(Dense(len(y_train.columns), activation=activation_function))
-        #model.add(Dropout(0.5))
-        #model.add(Flatten())
-        #model.add(BatchNormalization())
+    """
     # the output layer has one output number
     # it should have same shape as deisred prediction
     # usually, for categorical model, we have number of neurons equal to number of classification
     # if we have regressional model, we use just one neuron, which says expected number
     # if it's 0, the customer is satisfied
     # if it's 2, the customer is not satisfied
-    #model.add(Dense(1, activation=activation_function))
+    model.add(Dense(1, activation=activation_function))
 
     #model.summary()
     return model
@@ -332,7 +351,9 @@ def compile_model(model, learning_rate):
     # regression: mse(Mean squared error)
 
     # also, there are multiple metrics that user can choose from
-    model.compile(optimizer='adam', loss=MeanSquaredError(), metrics=['accuracy','mae','mse'])
+    full_metrics=['accuracy','mae','mse','AUC','Precision','Recall', 'TruePositives', 'TrueNegatives', 'FalsePositives','FalseNegatives','RootMeanSquaredError']
+    mmetrics = ['accuracy','mae','mse','Precision','Recall', 'RootMeanSquaredError']
+    model.compile(optimizer='adam', loss=MeanSquaredError(), metrics = mmetrics)
     return model 
 
 def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):

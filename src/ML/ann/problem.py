@@ -1,9 +1,9 @@
 # LINEAR CONTAINS STEPS FROM CONSTRUCTING A NEURAL NETWORK
 # ALL THE FUNCTIONS ARE CALLED FROM FUNCTIONS FILE
 
+from numpy import float64
 import ann.functions as fn
 #import functions as fn
-#import ann.functions as fn
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -30,7 +30,14 @@ class Data():
         y=pd.DataFrame(y)
         if (type == 'classification'):
             y=fn.encode_data(y, encode_type)
-        
+
+        # da se kolona iz object type kastuje u float
+       # print("BEFORE CASTING")
+       # print(y)
+        y = y.astype(float64)
+       # print("AFTER CASTING")
+       # print(y)
+
         X=fn.normalize(X)
         y=fn.normalize(y)
 
@@ -113,8 +120,30 @@ class Model():
         self.hist['Accuracy'] = self.history.history['accuracy']
         self.hist['MAE'] = self.history.history['mae']
         self.hist['MSE'] = self.history.history['mse']
-        #self.hist['AUC'] = self.history.history['auc']
         self.hist['Loss'] = self.history.history['loss']
+      #  self.hist['AUC'] = self.history.history['auc']
+        self.hist['Precision'] = self.history.history['precision']
+        self.hist['Recall'] = self.history.history['recall']
+      #  self.hist['TruePositives'] = self.history.history['true_positives']
+      #  self.hist['TrueNegatives'] = self.history.history['true_negatives']
+      #  self.hist['FalsePositives'] = self.history.history['false_positives']
+      #  self.hist['FalseNegatives'] = self.history.history['false_negatives']
+      #  self.hist['TrueNegatives'] = self.history.history['true_negatives']
+        self.hist['RMSE'] = self.history.history['root_mean_squared_error']
+
+        self.hist['valLoss'] = self.history.history['val_loss']
+        self.hist['valAccuracy'] = self.history.history['val_accuracy']
+        self.hist['valMAE'] = self.history.history['val_mae']
+        self.hist['valMSE'] = self.history.history['val_mse']
+      #  self.hist['valAUC'] = self.history.history['val_auc']
+        self.hist['valPrecision'] = self.history.history['val_precision']
+        self.hist['valRecall'] = self.history.history['val_recall']
+      #  self.hist['valTruePositives'] = self.history.history['val_true_positives']
+      #  self.hist['valTrueNegatives'] = self.history.history['val_true_negatives']
+      #  self.hist['valFalsePositives'] = self.history.history['val_false_positives']
+      #  self.hist['valFalseNegatives'] = self.history.history['val_false_negatives']
+      #  self.hist['valTrueNegatives'] = self.history.history['val_true_negatives']
+        self.hist['valRMSE'] = self.history.history['val_root_mean_squared_error']
 
     def plotResults(self, epochs):
         # print("The test accuracy is {}, and loss is {}".format(history.history['accuracy'], history.history['loss']))
@@ -139,6 +168,78 @@ class Model():
         plt.plot(epoch_range, self.history.history['val_auc'])
         plt.title("Model AUC")
         plt.ylabel("AUC")
+        plt.xlabel("Epoch")
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
+
+        plt.plot(epoch_range, self.history.history['mae'])
+        plt.plot(epoch_range, self.history.history['val_mae'])
+        plt.title("Model MAE")
+        plt.ylabel("MAE")
+        plt.xlabel("Epoch")
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
+
+        plt.plot(epoch_range, self.history.history['mse'])
+        plt.plot(epoch_range, self.history.history['val_mse'])
+        plt.title("Model MSE")
+        plt.ylabel("MSE")
+        plt.xlabel("Epoch")
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
+
+        plt.plot(epoch_range, self.history.history['precision'])
+        plt.plot(epoch_range, self.history.history['val_precision'])
+        plt.title("Model Precision")
+        plt.ylabel("Precision")
+        plt.xlabel("Epoch")
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
+
+        plt.plot(epoch_range, self.history.history['recall'])
+        plt.plot(epoch_range, self.history.history['val_recall'])
+        plt.title("Model Recall")
+        plt.ylabel("Recall")
+        plt.xlabel("Epoch")
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
+
+        plt.plot(epoch_range, self.history.history['true_positives'])
+        plt.plot(epoch_range, self.history.history['val_true_positives'])
+        plt.title("Model TP")
+        plt.ylabel("TP")
+        plt.xlabel("Epoch")
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
+
+        plt.plot(epoch_range, self.history.history['true_negatives'])
+        plt.plot(epoch_range, self.history.history['val_true_negatives'])
+        plt.title("Model TN")
+        plt.ylabel("TN")
+        plt.xlabel("Epoch")
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
+
+        plt.plot(epoch_range, self.history.history['false_positives'])
+        plt.plot(epoch_range, self.history.history['val_false_positives'])
+        plt.title("Model FP")
+        plt.ylabel("FP")
+        plt.xlabel("Epoch")
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
+
+        plt.plot(epoch_range, self.history.history['false_negatives'])
+        plt.plot(epoch_range, self.history.history['val_false_negatives'])
+        plt.title("Model FN")
+        plt.ylabel("FN")
+        plt.xlabel("Epoch")
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
+
+        plt.plot(epoch_range, self.history.history['root_mean_squared_error'])
+        plt.plot(epoch_range, self.history.history['val_root_mean_squared_error'])
+        plt.title("Model RMSE")
+        plt.ylabel("RMSE")
         plt.xlabel("Epoch")
         plt.legend(['Train', 'Val'], loc='upper left')
         plt.show()

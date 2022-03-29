@@ -120,10 +120,10 @@ def treniraj():
   #  label = 'charges'
 
   #  realestate
-  #  features = ['transaction_date','house_age','distance_MRT','convenience_stores','latitude','longitude']
-  #  label = 'unit_price'
+    features = ['transaction_date','house_age','distance_MRT','convenience_stores','latitude','longitude']
+    label = 'unit_price'
     
-    # mpg
+    # insurance
     features = ['age','sex','bmi','children']
     label = 'charges'
 
