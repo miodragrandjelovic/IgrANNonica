@@ -1,0 +1,31 @@
+<div class="container-fluid">
+    <div class="container sredina">
+            <div class="row">
+                <div class="col-4">
+                    <img src="assets/images/person.jpg" class="img-fluid rounded mx-auto d-block">
+                </div>
+                <div class="col-8 text-left">
+                    <span class="tekst" >Send Email </span>
+                </div>
+            </div>
+        
+        <form class="form">  
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                <input type="email" class="form-control " id="exampleFormControlInput1" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Message</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"  placeholder="Leave a comment here"></textarea>
+            </div>
+            <div class="mb-3">
+                <button (click)="PosaljiEmail()" type="submit" class="btn btn-primary dugmeUpdate">Send Email</button>
+                <a [routerLink]="['/profile']"><button type="submit" class="btn btn-primary dugmeUpdate" >Back</button></a>
+            </div>
+            <div *ngIf="isEmailSentSuccess" class="alert alert-success">
+                <strong>Success. You sent an email </strong>
+            </div>
+        </form>
+
+    </div>
+</div>
