@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit {
   value2: number = 20;
   //dodato za default vrednosti
   lrate: number = 0.00001;
-  activation: string = "relu";
+  activation: string = "sigmoid";
   regularization: string = "none";
   regularizationRate: number = 0;
   problemType: string = "regression";

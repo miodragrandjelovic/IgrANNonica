@@ -30,7 +30,7 @@ class Data():
         y=pd.DataFrame(y)
         if (type == 'classification'):
             y=fn.encode_data(y, encode_type)
-<<<<<<< Updated upstream
+
 
         # da se kolona iz object type kastuje u float
        # print("BEFORE CASTING")
@@ -39,13 +39,7 @@ class Data():
        # print("AFTER CASTING")
        # print(y)
 
-=======
-<<<<<<< Updated upstream
-        
-=======
 
->>>>>>> Stashed changes
->>>>>>> Stashed changes
         X=fn.normalize(X)
         y=fn.normalize(y)
 

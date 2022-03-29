@@ -349,7 +349,7 @@ def compile_model(model, learning_rate):
     # also, there are multiple metrics that user can choose from
     full_metrics=['accuracy','mae','mse','AUC','Precision','Recall', 'TruePositives', 'TrueNegatives', 'FalsePositives','FalseNegatives','RootMeanSquaredError']
     mmetrics = ['accuracy','mae','mse','Precision','Recall', 'RootMeanSquaredError']
-    model.compile(optimizer='adam', loss=MeanSquaredError(), metrics = mmetrics)
+    model.compile(optimizer='sgd', loss=MeanSquaredError(), metrics = mmetrics)
     return model 
 
 def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
