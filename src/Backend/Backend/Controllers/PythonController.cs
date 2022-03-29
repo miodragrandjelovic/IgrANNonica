@@ -48,5 +48,15 @@ namespace Backend.Controllers
             //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
             return Ok(data);
         }
+
+
+        [HttpGet("model")] //Primanje Modela iz pajtona 
+        public async Task<ActionResult<JsonDocument>> GetModel()
+        {
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/model");
+            var data = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
+            //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
+            return Ok(data);
+        }
     }
 }
