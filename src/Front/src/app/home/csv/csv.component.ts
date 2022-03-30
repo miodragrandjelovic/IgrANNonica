@@ -134,7 +134,6 @@ export class CsvComponent {
         this.http.get<any>('https://localhost:7167/api/Python/kor').subscribe(result => {
             console.log(result);
             let currentRow: any = [];
-            headersArray.push("Columns", this.headers);
             for (let i = 0; i < this.headers.length; i++) {
                 currentRow = [this.headers[i]];
                 for (let j = 0; j < this.headers.length; j++) {
