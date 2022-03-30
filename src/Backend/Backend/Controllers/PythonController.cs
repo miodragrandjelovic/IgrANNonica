@@ -67,14 +67,15 @@ namespace Backend.Controllers
             JsonUtility.ImportData(data, worksheet.Cells, 0, 0, layoutOptions);
 
             string path = Directory.GetCurrentDirectory() + @"\Users\" + Username;
-            string modelname = Name + "MODEL.csv";
-            string pathToCreate = System.IO.Path.Combine(path, modelname); // treba da stoji NameMODEL.csv
-
+            var upgradedName = Name.Substring(0, Name.Length-4);
+            string modelName = upgradedName + "Model.csv";
+            string pathToCreate = System.IO.Path.Combine(path, modelName); // treba da stoji NameMODEL.csv
+            /*
             if (System.IO.File.Exists(pathToCreate))
             {
                 return BadRequest("Ucitani fajl je vec u bazi.");
-            }
-            else if (!System.IO.Directory.Exists(path))
+            }*/
+            if (!System.IO.Directory.Exists(path))
             {
                 return BadRequest("Niste registrovani/ulogovani." + path);
             }
