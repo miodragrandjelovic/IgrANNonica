@@ -28,7 +28,7 @@ export class CsvComponent {
     currentPage: number = 1;
     response: any;
 
-    headersStatistics: any = [['Name', 'Q1', 'Q2', 'Q3', 'count', 'freq', 'max', 'mean', 'min', 'std', 'top', 'unique']];
+    headersStatistics: any = [['Columns', 'Q1', 'Q2', 'Q3', 'count', 'freq', 'max', 'mean', 'min', 'std', 'top', 'unique']];
     rowLinesStatistics: any = [];
 
     headersMatrix: any = [];
