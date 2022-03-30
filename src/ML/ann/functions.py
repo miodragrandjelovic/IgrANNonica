@@ -315,8 +315,10 @@ def regression(type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_list,
         for i in range(hidden_layers_n):
             if(regularization=="L1"):
                 model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l1(l=reg_rate)))
-            else:
+            elif(regularization=="L2"):
                 model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
+            else:
+                model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function))
 
     """ MISINI SLOJEVI! (Ne radi kada korisnik ne stavi ni jedan hidden layer, Takodje, postavlja prvi hidden layer kao input layer, sto ne treba)
 
