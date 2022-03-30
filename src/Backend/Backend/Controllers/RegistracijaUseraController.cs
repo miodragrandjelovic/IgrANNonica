@@ -236,6 +236,7 @@ namespace Backend.Controllers
             }
 
             LoadData.Username = request.Username;
+            PythonController.Username = request.Username;
             string token1 = CreateToken(user);
             var jtoken = new
             {
