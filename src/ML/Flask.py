@@ -116,8 +116,8 @@ def treniraj():
   #  label = 'Weight'
     
   #  insurance.csv
-    features = ['age','sex','bmi','children','smoker','region']
-    label = 'charges'
+    features = ['transaction_date','house_age','latitude','longitude','convenience_stores']
+    label = 'unit_price'
 
   #  churn
   #  features = ['CreditScore', 'Geography', 'Gender', 'Age','Tenure','Balance','NumOfProducts','HasCrCard','IsActiveMember','EstimatedSalary']
