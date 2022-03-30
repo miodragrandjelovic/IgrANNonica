@@ -3,40 +3,40 @@
 #hiperparametri koje treba da prosledi bek
 
 import pandas as pd
-import ann.py
+import py
 
-#import ML.ann.py as pw
-import ann.py as pw
-
-type='regression' # or classification
-activation_function = 'linear' # relu, tanh, sigmoid, linear - currenty only working for sigmoid!!
-learning_rate = '0.03' # 0.00001, 0.0001, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10
-regularization = 'none' # none, L1, L2
-regularization_rate = '0' # 0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10
+type='classification' # or classification
+activation_function = 'sigmoid' # relu, tanh, sigmoid, linear - currenty only working for sigmoid!!
+learning_rate = 0.003 # 0.00001, 0.0001, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10
+regularization = 'L1' # none, L1, L2
+regularization_rate = 0.001 # 0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10
 encode_type = 'label' # onehot, label, ordinal
-epochs = 12
-randomize = True
+epochs = 10
+randomize = False
+ratio = 20
+batch_size = 15
 
-"""
+
 # fish.csv
-df = pd.read_csv('./src/ML/ann/data/reg/fish.csv')
-
+#df = pd.read_csv('./src/ML/ann/data/reg/fish.csv')
 #features = ['Species','Length1','Length2','Length3','Height','Width']
-features = ['Length1']
-label = 'Weight'
-"""
-
-df = pd.read_csv('./src/ML/ann/data/class/titanic.csv')
-features = ['Age', 'Sex', 'Ticket']
-label = 'Survived'
+#label = 'Weight'
 
 
-"""
+#df = pd.read_csv('./src/ML/ann/data/reg/fish.csv')
+#features = ['Age', 'Sex', 'Ticket']
+#label = 'Survived'
+
+
 # insurance.csv
-df = pd.read_csv('./src/ML/ann/data/reg/insurance.csv')
-features = ['age','sex','bmi','children','smoker','region']
-label = 'charges'
-"""
+#df = pd.read_csv('./src/ML/ann/data/reg/insurance.csv')
+#features = ['age','sex','bmi','children','smoker','region']
+#label = 'charges'
+
+# diamond
+df = pd.read_csv('./src/ML/ann/data/class/diamonds.csv')
+features = ['carat','color','clarity','depth','price','x','y','z']
+label = 'cut'
 
 
 """
@@ -51,9 +51,10 @@ label = 'unit_price'
 # mean absolute error
 # hinge loss
 
-stats = pw.Statistics('regression')
-stats.createModel(train=df,features=features, label=label, epochs=15, ratio=0.8, activation_function='relu',hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5], encode_type='label', randomize=True,
-    batch_size=20, learning_rate=0.003, regularization='none' ,regularization_rate=0)
+stats = None
+stats = py.Statistics(type)
+stats.createModel(train=df,features=features, label=label, epochs=epochs, ratio=ratio, activation_function=activation_function,hidden_layers_n=5, hidden_layer_neurons_list=[8,6,2,4,5], encode_type=encode_type, randomize=randomize,
+    batch_size=batch_size, learning_rate=learning_rate, regularization=regularization ,regularization_rate=regularization_rate)
 
 print("The statistics are")
 print(stats.stats)
