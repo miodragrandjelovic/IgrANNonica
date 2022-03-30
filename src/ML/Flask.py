@@ -119,9 +119,9 @@ def treniraj():
     features = ['age','sex','bmi','children','smoker','region']
     label = 'charges'
 
-  #  realestate
-  #  features = ['transaction_date','house_age','distance_MRT','convenience_stores','latitude','longitude']
-  #  label = 'unit_price'
+  #  churn
+  #  features = ['CreditScore', 'Geography', 'Gender', 'Age','Tenure','Balance','NumOfProducts','HasCrCard','IsActiveMember','EstimatedSalary']
+  #  label = 'Exited'
 
     # izmenjen nacin kreiranja i treniranja modela
     stats=None

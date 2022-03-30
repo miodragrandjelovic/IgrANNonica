@@ -42,8 +42,8 @@ export class HomeComponent implements OnInit {
   problemType: string = "regression";
   encodingType: string = "label";
   epochs: number=10;
-  randomize: boolean = false;
-  layerNeuron: string = "5";
+  randomize: boolean = false; 
+  //layers:Array<string> = ["5","5","5","5","5"]
   //
 
   options1: Options = {
