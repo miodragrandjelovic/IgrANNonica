@@ -2,15 +2,16 @@ import { HttpClient } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { HttpHeaders } from "@angular/common/http";
 
-const headers = new HttpHeaders().set('content-type','application/x-www-form-urlencoded');
 @Component({
     selector: 'app-csv',
     templateUrl: 'csv.component.html'
 })
 export class CsvComponent {
 
-    showMe:boolean=false;
-    showMe2:boolean=false;
+
+    showMe: boolean = false;
+    showMe2:boolean = false;
+    showMe3:boolean = false;
     selectedValue:any="";
 
     selectChange(event:any){
@@ -27,11 +28,15 @@ export class CsvComponent {
     currentPage: number = 1;
     response: any;
 
-    headersStatistics: any = [['Name', 'Q1', 'Q2', 'Q3', 'count', 'freq', 'max', 'mean', 'min', 'std', 'top', 'unique']];
+    headersStatistics: any = [['Columns', 'Q1', 'Q2', 'Q3', 'count', 'freq', 'max', 'mean', 'min', 'std', 'top', 'unique']];
     rowLinesStatistics: any = [];
+
+    headersMatrix: any = [];
+    rowLinesMatrix:any = [];
 
     flag: number = 0;
 
+    headers: any;
 
     constructor(private http: HttpClient) {
 
@@ -60,11 +65,11 @@ export class CsvComponent {
                 let allTextLines = [];
                 allTextLines = csv.split('\n');
                 
-                let headers = allTextLines[0].split(/;|,/).map((x:string) => x.trim());
-                let data = headers;
+                this.headers = allTextLines[0].split(/;|,/).map((x:string) => x.trim());
+                let data = this.headers;
                 let headersArray = [];
 
-                for (let i = 0; i < headers.length; i++) {
+                for (let i = 0; i < this.headers.length; i++) {
                     headersArray.push(data[i]);
                 }
                 
@@ -94,21 +99,19 @@ export class CsvComponent {
                     csvData: JSON.stringify(this.dataObject)
                 }).subscribe(result => {
                     const allRows = [];
-                    
-                    for(let i = 0; i < headers.length; i++){
-                        console.log(result[headers[i]]);
-                        const currentRow = [headers[i],
-                            result[headers[i]].Q1 ? result[headers[i]].Q1 : 'null',
-                            result[headers[i]].Q2 ? result[headers[i]].Q2 : 'null', 
-                            result[headers[i]].Q3 ? result[headers[i]].Q3 : 'null', 
-                            result[headers[i]].count ? result[headers[i]].count : 'null',
-                            result[headers[i]].freq ? result[headers[i]].freq : 'null', 
-                            result[headers[i]].max ? result[headers[i]].max : 'null', 
-                            result[headers[i]].mean ? result[headers[i]].mean : 'null', 
-                            result[headers[i]].min ? result[headers[i]].min : 'null', 
-                            result[headers[i]].std ? result[headers[i]].std : 'null', 
-                            result[headers[i]].top ? result[headers[i]].top : 'null', 
-                            result[headers[i]].unique ? result[headers[i]].unique : 'null'
+                    for(let i = 0; i < this.headers.length; i++){
+                        const currentRow = [this.headers[i],
+                            result[this.headers[i]].Q1 ? result[this.headers[i]].Q1 : 'null',
+                            result[this.headers[i]].Q2 ? result[this.headers[i]].Q2 : 'null', 
+                            result[this.headers[i]].Q3 ? result[this.headers[i]].Q3 : 'null', 
+                            result[this.headers[i]].count ? result[this.headers[i]].count : 'null',
+                            result[this.headers[i]].freq ? result[this.headers[i]].freq : 'null', 
+                            result[this.headers[i]].max ? result[this.headers[i]].max : 'null', 
+                            result[this.headers[i]].mean ? result[this.headers[i]].mean : 'null', 
+                            result[this.headers[i]].min ? result[this.headers[i]].min : 'null', 
+                            result[this.headers[i]].std ? result[this.headers[i]].std : 'null', 
+                            result[this.headers[i]].top ? result[this.headers[i]].top : 'null', 
+                            result[this.headers[i]].unique ? result[this.headers[i]].unique : 'null'
                         ];
                         this.rowLinesStatistics.push(currentRow);
                     }
@@ -122,4 +125,24 @@ export class CsvComponent {
     changePage() {
         this.rowLines = this.allData.slice(this.itemsPerPage * (this.currentPage - 1),this.itemsPerPage * (this.currentPage - 1) + this.itemsPerPage)
     }
-}
+
+    korelacionaMatrica() {
+        this.showMe3 = true;
+        let headersArray:any = ['Columns'];
+        for (let k = 0; k < this.headers.length; k++)
+            headersArray.push(this.headers[k]);
+        this.http.get<any>('https://localhost:7167/api/Python/kor').subscribe(result => {
+            console.log(result);
+            let currentRow: any = [];
+            for (let i = 0; i < this.headers.length; i++) {
+                currentRow = [this.headers[i]];
+                for (let j = 0; j < this.headers.length; j++) {
+                    currentRow.push(result[this.headers[i]][this.headers[j]]);
+                }
+                this.rowLinesMatrix.push(currentRow);
+                }
+            });
+            this.headersMatrix.push(headersArray);
+        }
+    }
+    
