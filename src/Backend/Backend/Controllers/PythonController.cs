@@ -67,7 +67,8 @@ namespace Backend.Controllers
             JsonUtility.ImportData(data, worksheet.Cells, 0, 0, layoutOptions);
 
             string path = Directory.GetCurrentDirectory() + @"\Users\" + Username;
-            string pathToCreate = System.IO.Path.Combine(path, "MODEL.csv"); // treba da stoji NameMODEL.csv
+            string modelname = Name + "MODEL.csv";
+            string pathToCreate = System.IO.Path.Combine(path, modelname); // treba da stoji NameMODEL.csv
 
             if (System.IO.File.Exists(pathToCreate))
             {

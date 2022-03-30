@@ -83,7 +83,8 @@ export class CsvComponent {
                 // this.numberOfPages = Math.ceil(this.rowLines.length / this.numberOfPages);
                 console.log(this.dataObject);
                 return this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
-                    csvData: JSON.stringify(this.dataObject)
+                    csvData: JSON.stringify(this.dataObject),
+                    Name: file.name
                 }).subscribe();
             }
         }

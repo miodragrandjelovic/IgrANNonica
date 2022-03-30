@@ -54,7 +54,7 @@ namespace Backend.Controllers
 
             //Pozeljno promeniti model DataLoad tako da pored string CSV sadrzi i string NAME kako bi ja znao ime csv fajla koji je ucitan i kako bih ga sacuvao pod istim imenom u korisnikovom folderu.
             string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
-            string pathToCreate = System.IO.Path.Combine(path, "AUTOPUT.csv"); //umesto AUTOPUT treba staviti NAME koji se salje sa fronta
+            string pathToCreate = System.IO.Path.Combine(path, name); //umesto AUTOPUT treba staviti NAME koji se salje sa fronta
             
             if(System.IO.File.Exists(pathToCreate))
             {
