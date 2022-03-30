@@ -46,6 +46,20 @@
           </tbody>
         </table>
       </div>
+      <div *ngIf="showMe3" class="col"  style="overflow-x:scroll;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th *ngFor="let item of headersMatrix[0]; let i = index">{{item}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of rowLinesMatrix; let i = index">
+              <td *ngFor="let itemm of headersMatrix[0]; let j = index">{{item[j]}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="col col-lg-2" *ngIf="showMe" style="text-align: center;">
@@ -62,7 +76,7 @@
       <div>
         <p *ngIf="showMe2" style="color:black">Selected: {{selectedValue}}</p>
       </div>
-
+      <button type="button" class="btn btn-primary" (click)="korelacionaMatrica()" style="margin: 5px;">Prikazi korelacionu matricu</button>
     </div>
   </div>
 </div>
