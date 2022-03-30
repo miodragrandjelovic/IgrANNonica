@@ -25,7 +25,7 @@ import keras.regularizers
 from keras.models import Sequential
 from keras import Input
 from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D, Activation, Normalization
-from keras.losses import MeanSquaredError
+from keras.losses import MeanSquaredError, BinaryCrossentropy, SparseCategoricalCrossentropy, CategoricalCrossentropy
 from keras.optimizer_v2 import adam
 
 def load_data(features, label, data ):
@@ -283,9 +283,10 @@ def showdata(X_train, X_test, y_train,y_test):
    # print()
    # print()
 
-def regression(X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, activation_function,regularization,reg_rate):
+def regression(type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, activation_function,regularization,reg_rate):
     # here, we are making our model
-    
+    # type nam ukazuje koji je tip problema kojim se bavimo   !!!!!!!!!!!!!
+
     #print("SHAPE OF X TRAIN DATASET ", X_train.shape[0], " and ", X_train.shape[1])
     model=None
     model = Sequential()
@@ -302,6 +303,7 @@ def regression(X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, acti
     #normalizer.adapt(X_train)
     #model.add(normalizer)
     
+    # input layer
     if (hidden_layers_n > 0):
         model.add(Dense(units=hidden_layer_neurons_list[0], input_shape=(len(X_train.columns),)))
     else:
@@ -333,13 +335,13 @@ def regression(X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, acti
     # if we have regressional model, we use just one neuron, which says expected number
     # if it's 0, the customer is satisfied
     # if it's 2, the customer is not satisfied
-    model.add(Dense(1, activation=activation_function))
+    model.add(Dense(len(y_train.columns), activation=activation_function))
 
-    #model.summary()
+  #  model.summary()
     return model
 
 
-def compile_model(model, learning_rate):
+def compile_model(model, type, y_train):
     # these are the best options for linear regression!!
     # common loss functions for 
     # binary classification: binary_crossentropy
@@ -347,9 +349,23 @@ def compile_model(model, learning_rate):
     # regression: mse(Mean squared error)
 
     # also, there are multiple metrics that user can choose from
-    full_metrics=['accuracy','mae','mse','AUC','Precision','Recall', 'TruePositives', 'TrueNegatives', 'FalsePositives','FalseNegatives','RootMeanSquaredError']
-    mmetrics = ['accuracy','mae','mse','Precision','Recall', 'RootMeanSquaredError']
-    model.compile(optimizer='sgd', loss=MeanSquaredError(), metrics = mmetrics)
+    reg_metrics = ['mae','mse','RootMeanSquaredError', 'mean_absolute_percentage_error','CosineSimilarity']
+    class_metrics=['accuracy','AUC','Precision','Recall', 'TruePositives', 'TrueNegatives', 'FalsePositives','FalseNegatives']
+    
+    if (type == 'regression'):
+        met = reg_metrics
+        opt = "sgd"
+        loss = MeanSquaredError()
+    else:
+        met = class_metrics
+        opt = "adam"
+        if (len(y_train.columns) == 2):
+            # binary classification
+            loss = BinaryCrossentropy()
+        else:
+            loss = CategoricalCrossentropy()
+
+    model.compile(optimizer=opt, loss=loss, metrics = met)
     return model 
 
 def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):

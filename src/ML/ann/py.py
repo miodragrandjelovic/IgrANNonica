@@ -40,10 +40,10 @@ class Statistics():
         model=None
         model =pr.Model(data,regularization, regularization_rate)
         model.makeModel(self.type, activation_function, hidden_layers_n, hidden_layer_neurons_list,regularization,regularization_rate)
-        model.compileModel(learning_rate)
+        model.compileModel(self.type)
         model.trainModel(epochs,batch_size)
-      #  model.plotResults(epochs)
-        model.defMetrics()
+      #  model.plotResults(epochs, self.type)
+        model.defMetrics(self.type)
 
         self.stats = model.hist
         
