@@ -13,6 +13,8 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
+import category_encoders as ce
+
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -23,7 +25,7 @@ import keras.regularizers
 from keras.models import Sequential
 from keras import Input
 from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D, Activation, Normalization
-from keras.losses import MeanSquaredError
+from keras.losses import MeanSquaredError, BinaryCrossentropy, SparseCategoricalCrossentropy, CategoricalCrossentropy
 from keras.optimizer_v2 import adam
 
 def load_data(features, label, data ):
@@ -56,7 +58,18 @@ def feature_and_label(data, label):
 
     return data,y
 
-def normalize(y, activation_function):
+def normalize(df):
+    print(df)
+    for (columnName,columnData) in df.iteritems():
+       # print("COLUMN NAME IS ")
+       # print(columnName)
+       # print("COLUMN DATA IS ")
+       # print(columnData)
+        df[str(columnName)]=columnData/columnData.max()
+    return df
+
+
+    """
     if (activation_function == 'relu'):
         pass
     elif (activation_function == 'tanh'):
@@ -65,21 +78,24 @@ def normalize(y, activation_function):
         # normalize data between 0 and 1
         min = y.describe()['min']
         max = y.describe()['max']
-        print("min je ", min)
-        print("max je ",max)
+       # print("min je ", min)
+       # print("max je ",max)
         
         k = (y - min) / (max - min)
 
-        print("K looks like")
-        print(k)
+       # print("K looks like")
+       # print(k)
 
         y = k
     
     return y
+    """
 
     
 
 def split_data(X, y, ratio, randomize):
+    # ratio je npr 20, a nama treba 0.2
+    ratio = ratio / 100
     (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
     return (X_train, X_test, y_train, y_test)
 
@@ -177,31 +193,31 @@ def drop_numerical_outliers(df, z_thresh=3):
 
     return df
 
-def one_hot_encoder(dataframe, categorical_cols):
-    # instantiate OneHotEncoder
-    ohe = OneHotEncoder(sparse=False) 
-    # categorical_features = boolean mask for categorical columns
-    # sparse = False output an array not sparse matrix
+def one_hot_encoder(df):
+    cat = df.select_dtypes(include='O').keys()
+    df=pd.get_dummies(df,columns=cat)
+    print(df)
+    return df
 
-    oh_frame = ohe.fit_transform(dataframe[categorical_cols])
-    #print(oh_frame)
-
-    data_ohe = pd.DataFrame(oh_frame, index = dataframe.index)
-    dataframe_noncategorical = dataframe.drop(columns=categorical_cols)
-    dataframe = pd.concat([dataframe_noncategorical, data_ohe], axis=1)
-    return dataframe
-
-def label_encoding(dataframe, categorical_cols):
-    le = LabelEncoder()
-    # apply le on categorical feature columns
-    dataframe[categorical_cols] = dataframe[categorical_cols].apply(lambda col: le.fit_transform(col))
-    #dataframe[categorical_cols].head(10)
-    return dataframe
+def label_encoding(df):
+    lb=LabelEncoder()
+    cat = df.select_dtypes(include='O').keys()
+    for ime in cat:
+        df[ime]=lb.fit_transform(df[ime])
+    return df
 
 def ordinal_encoding(dataframe, categorical_cols):
     oe = OrdinalEncoder()
     dataframe[categorical_cols] = dataframe[categorical_cols].apply(lambda col: oe.fit_transform(col))
     return dataframe
+
+def binary_encoding(df):
+    cat = df.select_dtypes(include='O').keys()
+    for ime in cat:
+        encoder=ce.BinaryEncoder(cols=[ime])
+        df=encoder.fit_transform(df)
+    return df
+
 
 def encode_data(df, encoding):
     # data can be encoded in three ways
@@ -218,13 +234,13 @@ def encode_data(df, encoding):
 
     if (encoding == 'onehot'):
         #print("ENCODING ONE HOT ENCODER")
-        df = one_hot_encoder(df, categorical_cols)
+        df = one_hot_encoder(df)
     elif (encoding == 'label'):
         #print("ENCODING LABEL ENCODER")
-        df = label_encoding(df, categorical_cols)
+        df = label_encoding(df)
     elif (encoding == 'ordinal'):
         #print("ENCODING ORDINAL ENCODER")
-        df = ordinal_encoding(df, categorical_cols)
+        df = binary_encoding(df)
 
     return (df)
 
@@ -256,59 +272,76 @@ def scale_data(X_train, X_test, y_train, y_test):
     return (X_train, X_test, y_train, y_test)
 
 def showdata(X_train, X_test, y_train,y_test):
-    print("X TRAIN DATA ")
+   # print("X TRAIN DATA ")
    
     print(X_train.shape)
-    print(X_train.describe())
-    print(X_train.head())
-    #print(X_train)
+   # print(X_train.describe())
+   # print(X_train.head())
+   # print(X_train)
 
-    print("Thats it")
-    print()
-    print()
+   # print("Thats it")
+   # print()
+   # print()
 
-def regression(X_train, hidden_layers_n, hidden_layer_neurons_list, activation_function,regularization,reg_rate):
+def regression(type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, activation_function,regularization,reg_rate):
     # here, we are making our model
-    
+    # type nam ukazuje koji je tip problema kojim se bavimo   !!!!!!!!!!!!!
+
     #print("SHAPE OF X TRAIN DATASET ", X_train.shape[0], " and ", X_train.shape[1])
     model=None
     model = Sequential()
 
-    print("DATA LOOKS LIKE THIS")
-    print(X_train)
+   # print("DATA LOOKS LIKE THIS")
+   # print(X_train)
 
     # input layer
     # should have same shape as number of input features (columns)
     #model.add(Flatten(input_shape=(X_train.shape[1],)))
     #model.add(Activation(activation=activation_function,input_shape=(X_train.shape[1],)))
-    normalizer=None
-    normalizer = Normalization(axis=-1)
-    normalizer.adapt(X_train)
-    model.add(normalizer)
+    #normalizer=None
+    #normalizer = Normalization(axis=-1)
+    #normalizer.adapt(X_train)
+    #model.add(normalizer)
+    
+    # input layer
+    if (hidden_layers_n > 0):
+        model.add(Dense(units=hidden_layer_neurons_list[0], input_shape=(len(X_train.columns),)))
+    else:
+        model.add(Dense(units=1, input_shape=(len(X_train.columns),)))
+    
 
     # hidden layers
-    for i in range(hidden_layers_n):
-        if(regularization=="L1"):
-            model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l1(l=reg_rate)))
-        else:
-            model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
+    if (hidden_layers_n > 0):
+        for i in range(hidden_layers_n):
+            if(regularization=="L1"):
+                model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l1(l=reg_rate)))
+            else:
+                model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
 
-        #model.add(Dropout(0.5))
-        #model.add(Flatten())
-        #model.add(BatchNormalization())
+    """ MISINI SLOJEVI! (Ne radi kada korisnik ne stavi ni jedan hidden layer, Takodje, postavlja prvi hidden layer kao input layer, sto ne treba)
+
+    # hidden layers
+    model.add(Dense(units=hidden_layer_neurons_list[0],input_shape=(len(X_train.columns),)))
+    for i in range(hidden_layers_n-1):
+        if(regularization=="L1"):
+            model.add(Dense(hidden_layer_neurons_list[i+1], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l1(l=reg_rate)))
+        else:
+            model.add(Dense(hidden_layer_neurons_list[i+1], activation=activation_function,kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
+    model.add(Dense(len(y_train.columns), activation=activation_function))
+    """
     # the output layer has one output number
     # it should have same shape as deisred prediction
     # usually, for categorical model, we have number of neurons equal to number of classification
     # if we have regressional model, we use just one neuron, which says expected number
     # if it's 0, the customer is satisfied
     # if it's 2, the customer is not satisfied
-    model.add(Dense(1, activation=activation_function))
+    model.add(Dense(len(y_train.columns), activation=activation_function))
 
-    #model.summary()
+  #  model.summary()
     return model
 
 
-def compile_model(model, learning_rate):
+def compile_model(model, type, y_train):
     # these are the best options for linear regression!!
     # common loss functions for 
     # binary classification: binary_crossentropy
@@ -316,7 +349,23 @@ def compile_model(model, learning_rate):
     # regression: mse(Mean squared error)
 
     # also, there are multiple metrics that user can choose from
-    model.compile(optimizer='adam', loss=MeanSquaredError(), metrics=['accuracy','mae','mse','AUC'])
+    reg_metrics = ['mae','mse','RootMeanSquaredError', 'mean_absolute_percentage_error','CosineSimilarity']
+    class_metrics=['accuracy','AUC','Precision','Recall', 'TruePositives', 'TrueNegatives', 'FalsePositives','FalseNegatives']
+    
+    if (type == 'regression'):
+        met = reg_metrics
+        opt = "sgd"
+        loss = MeanSquaredError()
+    else:
+        met = class_metrics
+        opt = "adam"
+        if (len(y_train.columns) == 2):
+            # binary classification
+            loss = BinaryCrossentropy()
+        else:
+            loss = CategoricalCrossentropy()
+
+    model.compile(optimizer=opt, loss=loss, metrics = met)
     return model 
 
 def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
@@ -328,17 +377,17 @@ def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
     # ovde se javlja greska kod svih aktivacionih funkcija sem sigmoid!!
     
     
-    print("X TRAIN")
-    print(pd.DataFrame(X_train).head())
+   # print("X TRAIN")
+   # print(pd.DataFrame(X_train).head())
 
-    print("Y TRAIN")
-    print(pd.DataFrame(y_train).head())
+   # print("Y TRAIN")
+   # print(pd.DataFrame(y_train).head())
 
-    print("X TEST")
-    print(pd.DataFrame(X_test).head())
+   # print("X TEST")
+   # print(pd.DataFrame(X_test).head())
 
-    print("Y TEST")
-    print(pd.DataFrame(y_test).head())
+   # print("Y TEST")
+   # print(pd.DataFrame(y_test).head())
     
 
     return model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_test, y_test), verbose=1) # VALIDATION DATA=(X_VAL, Y_VAL) 
