@@ -37,6 +37,7 @@ namespace Backend.Controllers
         {
             string name = cs.Name;
             string csve = cs.CsvData;
+            PythonController.Name = cs.Name;
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
             var url = "http://127.0.0.1:3000/csv";
             var response = await http.PostAsync(url, data);

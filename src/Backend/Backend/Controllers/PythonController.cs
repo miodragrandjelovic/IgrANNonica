@@ -15,7 +15,8 @@ namespace Backend.Controllers
     public class PythonController : ControllerBase
     {
         private readonly HttpClient http = new HttpClient();
-        public static string? Username { get; set; }
+        public static string? Username { get; set; } //username trenutno prijavljenog korisnika
+        public static string? Name { get; set; } //ime ucitanog csv fajla
 
         [HttpGet("stats")] //Primanje statistickih parametara iz pajtona 
         public async Task<ActionResult<JsonDocument>> GetStat()
@@ -66,7 +67,7 @@ namespace Backend.Controllers
             JsonUtility.ImportData(data, worksheet.Cells, 0, 0, layoutOptions);
 
             string path = Directory.GetCurrentDirectory() + @"\Users\" + Username;
-            string pathToCreate = System.IO.Path.Combine(path, "MODEL.csv"); 
+            string pathToCreate = System.IO.Path.Combine(path, "MODEL.csv"); // treba da stoji NameMODEL.csv
 
             if (System.IO.File.Exists(pathToCreate))
             {
