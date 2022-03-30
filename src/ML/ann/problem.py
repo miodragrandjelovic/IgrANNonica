@@ -122,8 +122,8 @@ class Model():
             self.hist['valRMSE'] = self.history.history['val_root_mean_squared_error']        
             self.hist["MAPE"] = self.history.history['mean_absolute_percentage_error']
             self.hist["valMAPE"] = self.history.history['val_mean_absolute_percentage_error']
-            self.hist["Cosine"] = self.history.history['cosine_similarity']
-            self.hist["valCosine"] = self.history.history['val_cosine_similarity']
+          #  self.hist["Cosine"] = self.history.history['cosine_similarity']
+          #  self.hist["valCosine"] = self.history.history['val_cosine_similarity']
 
 
         if (type=="classification"):

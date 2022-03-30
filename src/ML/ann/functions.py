@@ -351,7 +351,7 @@ def compile_model(model, type, y_train):
     # regression: mse(Mean squared error)
 
     # also, there are multiple metrics that user can choose from
-    reg_metrics = ['mae','mse','RootMeanSquaredError', 'mean_absolute_percentage_error','CosineSimilarity']
+    reg_metrics = ['mae','mse','RootMeanSquaredError', 'mean_absolute_percentage_error']
     class_metrics=['accuracy','AUC','Precision','Recall', 'TruePositives', 'TrueNegatives', 'FalsePositives','FalseNegatives']
     
     if (type == 'regression'):
