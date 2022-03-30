@@ -8,7 +8,7 @@ namespace Backend.Models
         public float LearningRate { get; set; }
         public string Activation { get; set; } = string.Empty;
         public int Epoch { get; set; }
-        public string Regularization { get; set; } = string.Empty; 
+        public string Regularization { get; set; } = string.Empty;
         public float RegularizationRate { get; set; }
         public string ProblemType { get; set; } = string.Empty;
         public int Layers { get; set; }

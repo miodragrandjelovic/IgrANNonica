@@ -14,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Newtonsoft.Json;
 //DODATI REFRESH TOKEN
-namespace Backend.Controllers 
+namespace Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -31,7 +31,6 @@ namespace Backend.Controllers
             _configuration = configuration;
         }
 
-        
         [HttpGet] //Vracanje svih korisnika iz baze.
         public async Task<ActionResult<IEnumerable<User>>> GetRegistrovaniUseri()
         {
@@ -65,7 +64,6 @@ namespace Backend.Controllers
 
             return Ok("Uspesno uklonjen nalog.");
         }
-        
         [HttpGet("{id}")]//Dobijanje podataka o korisniku sa datim ID-jem.
         public async Task<ActionResult<User>> GetUser(int id)
         {
@@ -80,7 +78,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("username")]//Menjanje podataka o korisniku sa datim Username-om. Menja se sve osim Username-a?!
-        public async Task<IActionResult> PutUsername(string username, User user)
+        public async Task<IActionResult> PutUsername(User user)
         {
             /*if (username != user.Username)
             {
@@ -95,7 +93,7 @@ namespace Backend.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserPostoji(username))
+                if (!UserPostoji(user.Username))
                 {
                     return NotFound();
                 }
@@ -135,8 +133,8 @@ namespace Backend.Controllers
 
             return NoContent();
         }
-      
-        
+
+
         [HttpPost] //Registrovanje korisnika.-------------------------------------------------------------------------------------------------------------
         public async Task<ActionResult<User>> PostUser(UserDto request)
         {
@@ -160,7 +158,20 @@ namespace Backend.Controllers
                 });
             await _context.SaveChangesAsync();
             var entries = _context.ChangeTracker.Entries().Where(e => e.State == EntityState.Added).Select(e => new { e.State, e }).ToList();
-            return CreatedAtAction("GetUser", new { id = user.UserId}, user);
+
+            //Pravljenje foldera za svakog korisnika posebno
+            string currentPath = Directory.GetCurrentDirectory();
+            string newPath = currentPath + @"\Users\" + user.Username;
+            if(Directory.Exists(newPath))
+                Console.WriteLine("User already exists on disk!");
+            else
+            {
+                System.IO.Directory.CreateDirectory(newPath);
+                Console.WriteLine("Directory for '{0}' created successfully!", user.Username);
+            }
+
+
+            return CreatedAtAction("GetUsername", new { username = user.Username }, user);
         }
         private bool UserPostoji(string username) //trazenje usera po Username-u. Bice bitno zbog menjanja ostalih podataka o njemu.
         {
@@ -187,7 +198,6 @@ namespace Backend.Controllers
             }
         }
 
-        
         [HttpDelete("{id}")]//Ukloniti nalog iz baze za odredjeni ID.
         public async Task<IActionResult> DeleteUser(int id)
         {
@@ -209,7 +219,7 @@ namespace Backend.Controllers
         {
             var user = await _context.RegistrovaniUseri.SingleOrDefaultAsync(x => x.Username == request.Username);
 
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest("Korisnik nije pronadjen!");
             }
@@ -222,6 +232,8 @@ namespace Backend.Controllers
                 return BadRequest("Pogresna sifra!");
             }
 
+            LoadData.Username = request.Username;
+            PythonController.Username = request.Username;
             string token1 = CreateToken(user);
             var jtoken = new
             {

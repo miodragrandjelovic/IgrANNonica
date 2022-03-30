@@ -96,7 +96,8 @@ export class CsvComponent {
                 this.allData = rowsArray;
                 
                 return this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
-                    csvData: JSON.stringify(this.dataObject)
+                    csvData: JSON.stringify(this.dataObject),
+                    Name: file.name
                 }).subscribe(result => {
                     const allRows = [];
                     for(let i = 0; i < this.headers.length; i++){
