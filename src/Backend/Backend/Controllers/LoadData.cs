@@ -56,15 +56,15 @@ namespace Backend.Controllers
             string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
             string pathToCreate = System.IO.Path.Combine(path, name); //umesto AUTOPUT treba staviti NAME koji se salje sa fronta
             
-            if(System.IO.File.Exists(pathToCreate))
-            {
-                return BadRequest("Ucitani fajl je vec u bazi.");
-            }
-            else if(!System.IO.Directory.Exists(path))
-            {
-                return BadRequest("Niste registrovani/ulogovani."+path);
-            }
-            else
+           // if(System.IO.File.Exists(pathToCreate))
+          //  {
+           //     return BadRequest("Ucitani fajl je vec u bazi.");
+           // }
+           // else if(!System.IO.Directory.Exists(path))
+            //{
+            //    return BadRequest("Niste registrovani/ulogovani."+path);
+           // }
+         //   else
                 workbook.Save(pathToCreate, SaveFormat.CSV); 
 
             return Ok(stat);
