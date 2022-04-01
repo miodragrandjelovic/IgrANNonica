@@ -45,6 +45,19 @@ namespace Backend.Controllers
             HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
             var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
 
+            string currentPath = Directory.GetCurrentDirectory();
+            var upgradedName = name.Substring(0, name.Length - 4);
+            string path = currentPath + @"\Users\" + Username + "\\" + upgradedName;
+
+            if (Directory.Exists(path))
+                Console.WriteLine("File is already in system.");
+            else
+            {
+                System.IO.Directory.CreateDirectory(path);
+                Console.WriteLine("Directory for '{0}' created successfully!", name);
+            }
+
+
             //PM> Install-Package Aspose.Cells
             var workbook = new Workbook();
             var worksheet = workbook.Worksheets[0];
@@ -53,14 +66,9 @@ namespace Backend.Controllers
             JsonUtility.ImportData(csve, worksheet.Cells, 0, 0, layoutOptions);
 
             //Pozeljno promeniti model DataLoad tako da pored string CSV sadrzi i string NAME kako bi ja znao ime csv fajla koji je ucitan i kako bih ga sacuvao pod istim imenom u korisnikovom folderu.
-            string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
+            //string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
             string pathToCreate = System.IO.Path.Combine(path, name); //umesto AUTOPUT treba staviti NAME koji se salje sa fronta
-            
-           // if(System.IO.File.Exists(pathToCreate))
-          //  {
-           //     return BadRequest("Ucitani fajl je vec u bazi.");
-           // }
-           // else if(!System.IO.Directory.Exists(path))
+            //if(!System.IO.Directory.Exists(path))
             //{
             //    return BadRequest("Niste registrovani/ulogovani."+path);
            // }
