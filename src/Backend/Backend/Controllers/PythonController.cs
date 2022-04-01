@@ -66,21 +66,32 @@ namespace Backend.Controllers
             layoutOptions.ArrayAsTable = true;
             JsonUtility.ImportData(data, worksheet.Cells, 0, 0, layoutOptions);
 
-            string path = Directory.GetCurrentDirectory() + @"\Users\" + Username;
             var upgradedName = Name.Substring(0, Name.Length-4);
-            string modelName = upgradedName + "Model.csv";
+            int index = 1;
+            string modelName = upgradedName + "Model" + index + ".csv";
+
+            string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
             string pathToCreate = System.IO.Path.Combine(path, modelName); // treba da stoji NameMODEL.csv
+            //string pathToCreate = System.IO.Path.Combine(path, name);
+            while (System.IO.File.Exists(pathToCreate))
+            {
+                index++;
+                modelName = upgradedName + "Model" + index + ".csv";
+                pathToCreate = path + modelName;
+            }
+            //string modelName1 = upgradedName + "Model" + index + ".csv";
+
             /*
             if (System.IO.File.Exists(pathToCreate))
             {
                 return BadRequest("Ucitani fajl je vec u bazi.");
             }*/
-           // if (!System.IO.Directory.Exists(path))
+            // if (!System.IO.Directory.Exists(path))
             //{
-             //   return BadRequest("Niste registrovani/ulogovani." + path);
+            //   return BadRequest("Niste registrovani/ulogovani." + path);
             //}
-           // else
-                workbook.Save(pathToCreate, SaveFormat.CSV);
+            // else
+            workbook.Save(pathToCreate, SaveFormat.CSV);
 
 
             return Ok(model);
