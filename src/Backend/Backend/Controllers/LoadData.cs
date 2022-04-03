@@ -18,6 +18,7 @@ namespace Backend.Controllers
     {
         private readonly HttpClient http = new HttpClient();
         public static Hiperparametri hp = new Hiperparametri();
+        public static string? Name { get; set; }
         public static string? Username { get; set; }
 
         [HttpPost("hp")] //Slanje HP na pajton
@@ -27,8 +28,50 @@ namespace Backend.Controllers
             var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
             var url = "http://127.0.0.1:3000/hp";
             var response = await http.PostAsync(url, data);
-            //var hiperparametars = JsonSerializer.Deserialize<Hiperparametri>(await response.Content.ReadAsStringAsync());
-            return Ok(hiperjson);
+
+            var workbookhp = new Workbook();
+            var worksheethp = workbookhp.Worksheets[0];
+            var layoutOptionshp = new JsonLayoutOptions();
+            layoutOptionshp.ArrayAsTable = true;
+            JsonUtility.ImportData(hiperjson, worksheethp.Cells, 0, 0, layoutOptionshp);
+
+            var upgradedName = Name.Substring(0, Name.Length - 4);
+            int index = 1;
+            string hpName = upgradedName + "HP" + index + ".csv";
+
+            string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
+            string pathToCreateHP = System.IO.Path.Combine(path, hpName);
+
+            //                                                                                  hiperparametri                                                                                
+            //---------------------------------------------------------------------------------------------------
+            //                                                                                  model
+
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/model");
+            var model = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
+            var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
+
+            var workbook = new Workbook();
+            var worksheet = workbook.Worksheets[0];
+            var layoutOptions = new JsonLayoutOptions();
+            layoutOptions.ArrayAsTable = true;
+            JsonUtility.ImportData(dataModel, worksheet.Cells, 0, 0, layoutOptions);
+
+            string modelName = upgradedName + "Model" + index + ".csv";
+
+            string pathToCreate = System.IO.Path.Combine(path, modelName); 
+
+            while (System.IO.File.Exists(pathToCreate))
+            {
+                index++;
+                modelName = upgradedName + "Model" + index + ".csv";
+                hpName = upgradedName + "HP" + index + ".csv";
+                pathToCreate = path + modelName;
+                pathToCreateHP = path + hpName;
+            }
+            workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
+            workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
+
+            return Ok(model);
         }
 
         [HttpPost("csv")] //Slanje CSV na pajton
@@ -37,6 +80,7 @@ namespace Backend.Controllers
         {
             string name = cs.Name;
             string csve = cs.CsvData;
+            Name = cs.Name;
             PythonController.Name = cs.Name;
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
             var url = "http://127.0.0.1:3000/csv";
