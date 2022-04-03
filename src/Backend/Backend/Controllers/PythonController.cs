@@ -7,6 +7,7 @@ using System.Text;
 using Backend.Models;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers
 {
@@ -17,6 +18,20 @@ namespace Backend.Controllers
         private readonly HttpClient http = new HttpClient();
         public static string? Username { get; set; } //username trenutno prijavljenog korisnika
         public static string? Name { get; set; } //ime ucitanog csv fajla
+
+        private readonly IConfiguration _configuration;
+        private readonly UserDbContext _context;
+        public PythonController(UserDbContext context, IConfiguration configuration)
+        {
+            _context = context;
+            _configuration = configuration;
+        }
+
+        [HttpGet("preloadCsv")] //Vracanje ucitanog csv fajla iz baze.
+        public async Task<ActionResult<IEnumerable<Realestate>>> GetPreloadCsv()
+        {
+            return await _context.Realestate.ToListAsync();
+        }
 
         [HttpGet("stats")] //Primanje statistickih parametara iz pajtona 
         public async Task<ActionResult<JsonDocument>> GetStat()

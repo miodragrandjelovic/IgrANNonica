@@ -16,5 +16,6 @@ namespace Backend.Models
             options.UseSqlite(Configuration.GetConnectionString("ConnectionStr"));
         }*/
         public DbSet<User> RegistrovaniUseri { get; set; }
+        public DbSet<Realestate> Realestate { get; set; }
     }
 }
