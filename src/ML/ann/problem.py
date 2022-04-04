@@ -106,9 +106,9 @@ class Model():
         # make model
         self.model = fn.regression(self.data.X,self.data.y,type,self.data.X_train,self.data.y_train,hidden_layers_n, hidden_layer_neurons_list,activation_function,regularization,reg_rate)
               
-    def compileModel(self, type):
+    def compileModel(self, type,learning_rate):
         #compile the model
-        fn.compile_model(self.model, type, self.data.y)
+        fn.compile_model(self.model, type, self.data.y,learning_rate)
 
     def trainModel(self,epochs, batch_size):
         # train our model

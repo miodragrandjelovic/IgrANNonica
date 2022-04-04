@@ -20,13 +20,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import VarianceThreshold
 
-
+from tensorflow import keras
 import keras.regularizers
 from keras.models import Sequential
 from keras import Input
 from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D, Activation, Normalization
 from keras.losses import MeanSquaredError, BinaryCrossentropy, SparseCategoricalCrossentropy, CategoricalCrossentropy
-from keras.optimizer_v2 import adam
+
+
 
 def load_data(features, label, data ):
     # moze da se prosledi i kao json string
@@ -96,7 +97,10 @@ def normalize(df):
 def split_data(X, y, ratio, randomize):
     # ratio je npr 20, a nama treba 0.2
     ratio = ratio / 100
-    (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
+    if(randomize==False):
+        (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
+    else:
+        (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio)
     return (X_train, X_test, y_train, y_test)
 
 def filter_data(data):
@@ -352,7 +356,7 @@ def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_l
     return model
 
 
-def compile_model(model, type, y):
+def compile_model(model, type, y,lr):
     # these are the best options for linear regression!!
     # common loss functions for 
     # binary classification: binary_crossentropy
@@ -365,11 +369,11 @@ def compile_model(model, type, y):
     
     if (type == 'regression'):
         met = reg_metrics
-        opt = "sgd"
+        opt=tf.keras.optimizers.SGD(learning_rate=lr)
         loss = MeanSquaredError()
     else:
         met = class_metrics
-        opt = "adam"
+        opt = tf.keras.optimizers.Adam(learning_rate=lr)
         if (y.shape[1] == 2):
             # binary classification
             loss = BinaryCrossentropy()

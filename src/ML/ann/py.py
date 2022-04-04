@@ -40,7 +40,7 @@ class Statistics():
         model=None
         model =pr.Model(data,regularization, regularization_rate)
         model.makeModel(self.type, activation_function, hidden_layers_n, hidden_layer_neurons_list,regularization,regularization_rate)
-        model.compileModel(self.type)
+        model.compileModel(self.type,learning_rate)
         model.trainModel(epochs,batch_size)
       #  model.plotResults(epochs, self.type)
         model.defMetrics(self.type)
