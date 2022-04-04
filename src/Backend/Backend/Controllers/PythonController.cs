@@ -18,6 +18,7 @@ namespace Backend.Controllers
         private readonly HttpClient http = new HttpClient();
         public static string? Username { get; set; } //username trenutno prijavljenog korisnika
         public static string? Name { get; set; } //ime ucitanog csv fajla
+        public static Loaded? fajl { get; set; }
 
         private readonly IConfiguration _configuration;
         private readonly UserDbContext _context;
@@ -27,10 +28,84 @@ namespace Backend.Controllers
             _configuration = configuration;
         }
 
+
         [HttpGet("preloadCsv")] //Vracanje ucitanog csv fajla iz baze.
         public async Task<ActionResult<IEnumerable<Realestate>>> GetPreloadCsv()
         {
-            return await _context.Realestate.ToListAsync();
+            var loadedCsv = await _context.Realestate.ToListAsync(); //lista/json
+            string jsoncsv = JsonSerializer.Serialize(loadedCsv); //string
+            
+
+            return Ok(loadedCsv);
+        }
+
+
+        [HttpGet("preloadStat")] 
+        public async Task<ActionResult<JsonDocument>> GetPreloadStat()
+        {
+            //Loaded? fajl1;
+            var loadedCsv = await _context.Realestate.ToListAsync();
+            var csve = JsonSerializer.Serialize(loadedCsv); //string
+            var jsoncsva = JsonSerializer.Deserialize<JsonDocument>(csve); //json
+            
+
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+            var url = "http://127.0.0.1:3000/csv";
+            var response = await http.PostAsync(url, data);
+
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
+            var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
+            //var data = await httpResponse.Content.ReadAsStringAsync();
+
+            //fajl.Csv = jsoncsva;
+            //fajl.Stats = stat;
+            return Ok(stat);
+        }
+
+        [HttpGet("preloadKor")]
+        public async Task<ActionResult<JsonDocument>> GetPreloadKor()
+        {
+            var loadedCsv = await _context.Realestate.ToListAsync();
+            var csve = JsonSerializer.Serialize(loadedCsv); //string
+            var jsoncsva = JsonSerializer.Deserialize<JsonDocument>(csve); //json
+
+
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+            var url = "http://127.0.0.1:3000/csv";
+            var response = await http.PostAsync(url, data);
+
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/kor");
+            var kor = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
+            //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
+            
+            return Ok(kor);
+        }
+
+        [HttpGet("preloadAll")]
+        public async Task<ActionResult<Loaded>> GetPreloadAll()
+        {
+            Loaded? fajl1;
+            var loadedCsv = await _context.Realestate.ToListAsync();
+            var csve = JsonSerializer.Serialize(loadedCsv); //string
+            var jsoncsva = JsonSerializer.Deserialize<JsonDocument>(csve); //json
+
+
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+            var url = "http://127.0.0.1:3000/csv";
+            var response = await http.PostAsync(url, data);
+
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
+            //var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
+            var stat = await httpResponse.Content.ReadAsStringAsync();
+
+            HttpResponseMessage httpResponse1 = await http.GetAsync("http://127.0.0.1:3000/kor");
+            //var kor = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
+            var kor = await httpResponse1.Content.ReadAsStringAsync(); //forma stringa
+
+            fajl1.Csv = csve;
+            fajl1.Stats = stat;
+            fajl1.Kor = kor;
+            return Ok(fajl1);
         }
 
         [HttpGet("stats")] //Primanje statistickih parametara iz pajtona 
@@ -40,6 +115,7 @@ namespace Backend.Controllers
             var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
             return Ok(stat);
         }
+
 
         [HttpGet("hp")] //Primanje HP iz pajtona 
         public async Task<ActionResult<Hiperparametri>> GetHp()
