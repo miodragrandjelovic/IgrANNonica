@@ -2,27 +2,42 @@
     <div class="row ">
       <div class="col-sm-4 ">
         <div id="list-example" class="list-group">
-          <a class="list-group-item list-group-item-action" href="about#list-item1"><strong>What are neural networks?</strong></a>
-          <a class="list-group-item list-group-item-action" href="about#list-item2"><strong>How do neural network work?</strong> </a>
-          <a class="list-group-item list-group-item-action" href="about#list-item3"><strong>Types of neural network?</strong></a>
-          <a class="list-group-item list-group-item-action" href="about#list-item4"><strong>Neural network vs. deep learning</strong></a>
-          <a class="list-group-item list-group-item-action" href="about#list-item5"><strong>History of neural network</strong></a>
+          <a class="list-group-item list-group-item-action" href="about#list-item1"><strong>#1 Choose Data Ratio</strong></a>
+          <a class="list-group-item list-group-item-action" href="about#list-item2"><strong>#2 Set All Hyperparameters</strong> </a>
+          <a class="list-group-item list-group-item-action" href="about#list-item3"><strong>#3 Choose Network Layers</strong></a>
+          <a class="list-group-item list-group-item-action" href="about#list-item4"><strong>#4 Start Training!</strong></a>
+          <a class="list-group-item list-group-item-action" href="about#list-item5"><strong>History of neural networks</strong></a>
         </div>
       </div>
       
       <div id="glavno" class="col-sm-8 ">
         <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" class="scrollspy-example" tabindex="0">
           <div>
-            <h1 class="display-1 font-weight-bold text-center">Neural networks</h1>
-            <p class=" h4 font-weight-bold">
+            <h1 class="display-1 font-weight-bold text-center">Let's start!</h1>
+            <p style="font-size: 25px; text-align: center;">
+              Are you ready for your journey with neural networks? Get ready, because we are gonna teach you everything you need to know about the basics of Neural Networks! When you finish reading this article, you'll be able to train your first network, and make predictions with it.
+              <img class="round mx-auto d-block img-fluid" src="assets/images/steps.png">
+            </p>
+            <!--<p class=" h4 font-weight-bold">
               Neural networks reflect the behavior of the human brain, allowing computer programs 
               to recognize patterns and solve common problems in the fields of AI, machine learning,
               and deep learning.
+            </p>-->
+          </div>
+          
+          <h3 id="list-item1"class="display-5 text-center">Choose Ratio For the Data</h3>
+          <div class="stepsDiv">
+            <p class="text-center font-weight-normal" style="font-size: 1.8vw;">
+              What does this mean? It means that you choose the percentage of the data that network will not see. For instance, if you set ratio to 20%, the network will learn from 
+              only 80% of the remaining data, and you will see it's performance exactly on the 20% of the data that you've chosen.
+            </p>
+            <p>
+              This is very important, because if you choose to big training set, model will <span style="font-weight:bold; font-style: italic;">overfit</span>, and it will
+              not performe very good on data it has never seen before. On the contrary, if you choose too small training set, model can <span style="font-weight:bold; font-style: italic;">underfit</span>,
+              because you didn't provide enough data for it to learn properly.
             </p>
           </div>
-          <hr>
-          <h3 id="list-item1"class="display-5 text-center">What are neural networks?</h3>
-          <p class="text-justify font-weight-normal">
+          <!--<p class="text-justify font-weight-normal">
             Neural networks, also known as artificial neural networks (ANNs) or simulated neural networks (SNNs), are a subset of machine learning and are at the heart of deep learning algorithms. Their name and structure are inspired by the human brain, mimicking the way that biological neurons signal to one another.
           </p>
           <p class="text-justify font-weight-normal">
@@ -35,8 +50,25 @@
             Neural networkss rely on training data to learn and improve their accuracy over time. However, once these learning algorithms are fine-tuned for accuracy, they are powerful tools in computer science and artificial intelligence, allowing us to classify and cluster data at a high velocity. Tasks in speech recognition or image recognition can take minutes versus hours when compared to the manual identification by human experts. One of the most well-known neural networks is Google’s search algorithm.
           </p>
           <hr>
-  
-          <h3 id="list-item2"class="display-5 text-center">How do neural network work?</h3>
+          -->
+
+          <h3 id="list-item2"class="display-5 text-center">Set Hyperparameters</h3>
+          <div class="stepsDiv">
+            <p class="text-center font-weight-normal" style="font-size: 1.8vw;">
+              This is the most important step. Hyperparameters decide how will your model be structured - and it directly impacts it's performance.
+              There are multiple hyperparameters that can be set, and we're gonna go through them all.
+            </p>
+            <ul>
+              <li><span style="font-weight:bold;">Number of epochs</span> This is the </li>
+              <li><span style="font-weight:bold;">Learning rate</span> This is the </li>
+              <li><span style="font-weight:bold;">Activation function</span> This is the </li>
+              <li><span style="font-weight:bold;">Regularization</span> This is the </li>
+              <li><span style="font-weight:bold;">Probel type</span> This is the </li>
+              <li><span style="font-weight:bold;">Encoding</span> This is the </li>
+              <li><span style="font-weight:bold;">Randomization</span> This is the </li>
+            </ul>
+          </div>
+          <!--
           <p class="text-justify font-weight-normal">
             Think of each individual node as its own linear regression model, composed of input data, weights, a bias (or threshold), and an output. The formula would look something like this:
           </p>
@@ -82,9 +114,18 @@
             Y-hat = (1*5) + (0*2) + (1*4) – 3 = 6
           </p>
           <hr>
+          -->
           
   
-          <h3 id="list-item3"class="display-5 text-center">Types of neural network?</h3>
+          <h3 id="list-item3"class="display-5 text-center">Neural Network Layers</h3>
+          <div class="stepsDiv">
+            <p class="text-center font-weight-normal" style="font-size: 1.8vw;">
+            </p>
+            <p>
+              
+            </p>
+          </div>
+          <!--
           <p class="text-justify font-weight-normal">
             Neural networks can be classified into different types, which are used for different purposes. While this isn’t a comprehensive list of types, the below would be representative of the most common types of neural networks that you’ll come across for its common use cases:
           </p>
@@ -102,8 +143,17 @@
             Recurrent neural networks (RNNs) are identified by their feedback loops. These learning algorithms are primarily leveraged when using time-series data to make predictions about future outcomes, such as stock market predictions or sales forecasting.
           </p>
           <hr>
+          -->
   
-          <h3 id="list-item4"class="display-5 text-center">Neural network vs. deep learning</h3>
+          <h3 id="list-item4"class="display-5 text-center">Training Process</h3>
+          <div class="stepsDiv">
+            <p class="text-center font-weight-normal" style="font-size: 1.8vw;">
+            </p>
+            <p>
+              
+            </p>
+          </div>
+          <!--
           <p class="text-justify font-weight-normal">
             Deep Learning and neural networks tend to be used interchangeably in conversation, which can be confusing. As a result, it’s worth noting that the “deep” in deep learning is just referring to the depth of layers in a neural network. A neural network that consists of more than three layers—which would be inclusive of the inputs and the output—can be considered a deep learning algorithm. A neural network that only has two or three layers is just a basic neural network.
           </p>
@@ -111,8 +161,17 @@
             To learn more about the differences between neural networks and other forms of artificial intelligence,  like machine learning, please read the blog post “AI vs. Machine Learning vs. Deep Learning vs. Neural Networks: What’s the Difference?”
           </p>
           <hr>
-  
+          -->
+
           <h3  id="list-item5"class="display-5 text-center">History of neural network</h3>
+          <div class="stepsDiv">
+            <p class="text-center font-weight-normal" style="font-size: 1.8vw;">
+            </p>
+            <p>
+              
+            </p>
+          </div>
+          <!--
           <p class="text-justify font-weight-normal">
             The history of neural networks is longer than most people think. While the idea of “a machine that thinks” can be traced to the Ancient Greeks, we’ll focus on the key events that led to the evolution of thinking around neural networks, which has ebbed and flowed in popularity over the years:
           </p>
@@ -133,7 +192,9 @@
            title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen>
           </iframe>
+          -->
         </div>
       </div>
+
     </div>
   </div>
