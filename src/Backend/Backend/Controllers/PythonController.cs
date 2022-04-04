@@ -80,7 +80,7 @@ namespace Backend.Controllers
             
             return Ok(kor);
         }
-
+        /*
         [HttpGet("preloadAll")]
         public async Task<ActionResult<Loaded>> GetPreloadAll()
         {
@@ -107,7 +107,7 @@ namespace Backend.Controllers
             fajl1.Kor = kor;
             return Ok(fajl1);
         }
-
+        */
         [HttpGet("stats")] //Primanje statistickih parametara iz pajtona 
         public async Task<ActionResult<JsonDocument>> GetStat()
         {
