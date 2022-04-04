@@ -4,9 +4,9 @@ namespace Backend.Models
 {
     public class Loaded
     {
-        public String Csv { get; set; } = string.Empty;
-        public String Stats { get; set; } = string.Empty;
-        public String Kor { get; set; } = string.Empty;
+        public string Csv { get; set; } = string.Empty;
+        public string Stats { get; set; } = string.Empty;
+        public string Kor { get; set; } = string.Empty;
 
     }
 }
