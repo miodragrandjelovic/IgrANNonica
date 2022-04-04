@@ -27,6 +27,21 @@ namespace Backend.Controllers
             _configuration = configuration;
         }
 
+        [HttpGet("savedCsvs")] //Vracanje imena sacuvanih fajlova.
+        public async Task<ActionResult<String>> GetSavedCsvs()
+        {
+
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string SelectedPath = CurrentPath + @"\Users\" + Username;
+            if (Username == null)
+            {
+                return BadRequest("Niste ulogovani.");
+            }
+            string[] subdirs = Directory.GetDirectories(SelectedPath).Select(Path.GetFileName).ToArray();
+
+            return Ok(subdirs);
+        }
+
 
         [HttpGet("preloadCsv")] //Vracanje ucitanog csv fajla iz baze.
         public async Task<ActionResult<IEnumerable<Realestate>>> GetPreloadCsv()

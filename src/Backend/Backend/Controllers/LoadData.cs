@@ -18,8 +18,28 @@ namespace Backend.Controllers
     {
         private readonly HttpClient http = new HttpClient();
         public static Hiperparametri hp = new Hiperparametri();
-        public static string? Name { get; set; }
-        public static string? Username { get; set; }
+        public static string? Name { get; set; } //Ime ucitanog Csv fajla
+        public static string? Username { get; set; } //Ulogovan korisnik
+
+        [HttpPost("savedCsv")] //Otvaranje foldera gde se nalazi izabrani csv
+        public async Task<ActionResult<Statistika>> PostSavedCsv(String name)
+        {
+
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + name;
+            if(!System.IO.Directory.Exists(SelectedPath))
+            {
+                return BadRequest("Ne postoji dati fajl.");
+            }
+            else if (Username == null)
+            {
+                return BadRequest("Niste ulogovani.");
+            }
+            string[] files = Directory.GetFiles(SelectedPath).Select(Path.GetFileName).ToArray();
+
+            return Ok(files);
+        }
+
 
         [HttpPost("hp")] //Slanje HP na pajton
         public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper)
