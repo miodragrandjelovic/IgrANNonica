@@ -10,12 +10,23 @@
                     </div>
                 </div>
                 <div class="container datasetovi">
-                    <div class="row">
-                        <div class="col" style="text-align: center;">
-                            <span id="tekst" style="font-size: 20px;">You don't have any yet </span>
-                        </div>
+                    <div class="row" style="height: 400px; overflow: scroll;">
+                        
+                    
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th *ngFor="let item of map|keyvalue">{{item.key}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of array2d">
+                              <td *ngFor="let item1 of item">{{item1}}</td>
+                            </tr>
+                          </tbody>
+                    </table>
                     </div>
-                
+                    
                     <div class="mb-3">
                         <a [routerLink]="['/profile']"><button type="submit" class="btn btn-primary dugmeUpdate" >Back</button></a>
                     </div>
