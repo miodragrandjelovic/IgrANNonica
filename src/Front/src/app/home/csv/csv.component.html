@@ -6,6 +6,7 @@
         <p  *ngIf="showMe" style="color: black;">Choose inputs:</p>
         <div *ngFor="let item of headingLines[0];" style="padding-left: 35px;">
           <input class="form-check-input" type="checkbox" value="{{item}}"
+          [checked]="this.selectedValue!=item"
             [disabled]="this.selectedValue==item" id="flexCheckDefault" >
         <label style="color: black;">{{item}}</label>
         </div>

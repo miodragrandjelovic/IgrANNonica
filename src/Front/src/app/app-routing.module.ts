@@ -10,6 +10,7 @@ import { AboutComponent } from './about/about.component';
 import{ProfileComponent} from './header/profile/profile.component';
 import { AuthGuardService } from './auth-guard.service';
 import { SendEmailComponent } from './send-email/send-email.component';
+import{DatasetComponent} from './header/dataset/dataset.component';
 
 const routes: Routes = [
   {path:'', component:NavigationComponent},
@@ -17,7 +18,8 @@ const routes: Routes = [
   {path:'about',component:AboutComponent},
   {path:'profile',component:ProfileComponent,
   canActivate:[AuthGuardService]},
-  {path:'send-email',component:SendEmailComponent}
+  {path:'send-email',component:SendEmailComponent},
+  {path:'dataset',component:DatasetComponent},
 ];
 
 @NgModule({
