@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-
+    
     <div class="col">
       <input class="form-control mb-5" type="file" class="upload" (change)="fileUpload($event)">
       <div *ngIf="showMe" class="col"  style="overflow-x:scroll;">
@@ -79,5 +79,55 @@
       </div>
       <button type="button" class="btn btn-primary" (click)="korelacionaMatrica()" style="margin: 5px;">Prikazi korelacionu matricu</button>
     </div>
+  </div>
+<!------------------ preload data------------------>
+  <div class="row">  
+    <div class="col">
+      <button (click)="preloadCsv()" type="button" class="btn btn-primary">Preloaded dataset</button>
+      <div *ngIf="showMe4" class="col"  style="height: 500px; overflow-x:scroll;">
+        <table class="table">
+          <thead>
+            <tr>
+             <!-- <th *ngFor="let item of map|keyvalue">{{item.key}}</th>-->
+              <th>No</th>
+              <th>Transaction_date</th>
+              <th>Hous_age</th>
+              <th>Distance_MRT</th>
+              <th>Convenience_stores</th>
+              <th>Latitude</th>
+              <th>Longitude</th>
+              <th>Unit_price</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let item of array2d">
+                <td *ngFor="let item1 of item">{{item1}}</td>
+              </tr>
+            </tbody>
+      </table>
+      </div>
+    </div>
+
+  </div>
+  <div class="row" style="margin-top: 20px;">  
+    <div class="col">
+      <div *ngIf="showMe4" class="col"  style="height: 500px; overflow-x:scroll;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th *ngFor="let item of kolona">{{item}}</th>
+              <tr *ngFor="let item of array2d2">
+                <td *ngFor="let item1 of item">{{item1}}</td>
+            </tr>
+          </thead>
+          <tbody>
+              <tr >
+                <td ></td>
+              </tr>
+            </tbody>
+      </table>
+      </div>
+    </div>
+
   </div>
 </div>

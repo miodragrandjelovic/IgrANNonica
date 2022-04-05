@@ -68,7 +68,7 @@ export class DatasetComponent implements OnInit {
     
   posaljiNaziv(naziv:any){
 
-    return this.http.post<any>('https://localhost:7167/api/LoadData/savedCsv?name='+naziv, {
+    return this.http.post<any>('https://localhost:7167/api/LoadData/selectedCsv?name='+naziv, {
         name: naziv
       }).subscribe(data=>{
         
