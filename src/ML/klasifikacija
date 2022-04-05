@@ -97,9 +97,13 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 model.fit(X_train,y_train,batch_size=15,epochs=10, validation_data = (X_valid, y_valid),verbose=1)
 
 pred = model.predict(X_test) 
-model.evaluate(X_test,y_test)
+ev=model.evaluate(X_test,y_test)
+
 pred = np.argmax(pred, axis = 1) 
 label = np.argmax(y_test,axis = 1) 
+
+pred=pd.Series(pred)
+ev=pd.DataFrame(ev)
 
 print(pred) 
 print(label)

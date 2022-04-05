@@ -1,5 +1,6 @@
 from multiprocessing.dummy import active_children
 from tkinter.ttk import Label
+from matplotlib.font_manager import json_dump
 import pandas as pd
 import numpy as np
 from sklearn.feature_selection import VarianceThreshold
@@ -98,10 +99,13 @@ def split_data(X, y, ratio, randomize):
     # ratio je npr 20, a nama treba 0.2
     ratio = ratio / 100
     if(randomize==False):
-        (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
+        (X_train, X_rem, y_train, y_rem) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
+        (X_val, X_test, y_val, y_test) = train_test_split(X_rem, y_rem, test_size = 0.5, random_state=5)
+
     else:
-        (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio)
-    return (X_train, X_test, y_train, y_test)
+        (X_train, X_rem, y_train, y_rem) = train_test_split(X, y, test_size = 1-ratio)
+        (X_val, X_test, y_val, y_test) = train_test_split(X_rem, y_rem, test_size = 0.5)
+    return (X_train,X_val, X_test, y_train,y_val, y_test)
 
 def filter_data(data):
     # check for duplicate rows
@@ -383,7 +387,7 @@ def compile_model(model, type, y,lr):
     model.compile(optimizer=opt, loss=loss, metrics = met)
     return model 
 
-def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
+def train_model(model, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test):
     #print(X_train.shape)
     #print(X_train)
 
@@ -404,8 +408,24 @@ def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
    # print("Y TEST")
    # print(pd.DataFrame(y_test).head())
     
+    fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_val, y_val), verbose=1)
 
-    return model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_test, y_test), verbose=1) # VALIDATION DATA=(X_VAL, Y_VAL) 
+    pred = model.predict(X_test) 
+    pred = np.argmax(pred, axis = 1)
+    pred=pred.tolist()
+    #pred=pd.Series(pred) 
+    label = np.argmax(y_test,axis = 1)
+    label=label.tolist()
+    #label=pd.Series(label) 
+    ev=model.evaluate(X_test,y_test)
+    #ev=ev.tolist()
+    #ev=pd.Series(ev)
+    yield pred
+    yield label
+    yield ev
+    yield fit # VALIDATION DATA=(X_VAL, Y_VAL) 
+
+
 
 def missing_data(data):
     # if user decides to drop data containing nan values
