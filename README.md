@@ -56,6 +56,6 @@ Sto se tice Python dela, pored biblioteke **Tensorflow**, trebamo instalirati jo
     pip install category_encoders
     pip install matplotlib 
 ```
-Otvaramo folder ML u Visula Studio Code-u, i otvaramo fajl **Flask.py** i klikom da dugme Run Python File koji se nalasi u gornjem levom uglu pokrecemo ovaj deo.
+Otvaramo folder revolutionn u Visula Studio Code-u, i otvaramo fajl **Flask.py** i klikom da dugme Run Python File koji se nalasi u gornjem desnom uglu pokrecemo ovaj deo.
 
 I sada imamo pokrenut ceo projekat koji mozemo koristiti.
