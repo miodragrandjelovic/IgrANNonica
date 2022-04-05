@@ -32,6 +32,7 @@ interface RequestHyperparameters{
 
 export class HomeComponent implements OnInit {
   
+  edited: boolean = false;
   value1: number = 10;
   value2: number = 20;
   //dodato za default vrednosti
@@ -79,6 +80,13 @@ export class HomeComponent implements OnInit {
       'randomize': new FormControl(0),
       'neurons': new FormArray([])
     });
+  }
+
+  showCsv() {
+    this.edited = true;
+  }
+  showHp() {
+    this.edited = false;
   }
 
   onSubmitHyperparameters() {
