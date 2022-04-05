@@ -54,13 +54,11 @@ namespace Backend.Controllers
             {
                 csvTable.Load(csvReader);
             }
-
+            //csvTable.Rows.RemoveAt(csvTable.Rows.Count - 1);
             string result = string.Empty;
             result = JsonConvert.SerializeObject(csvTable);
 
             var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); //json
-            //var result = JsonSerializer.Deserialize<JsonElement>(csvTable); //json
-            //string result = JsonConvert.SerializeObject(DatatableToDictionary(queryResult, "Title"), Newtonsoft.Json.Formatting.Indented);
             return Ok(resultjson);
         }
 
@@ -114,7 +112,14 @@ namespace Backend.Controllers
             }
             workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
             workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
-
+            
+            string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
+            string names = upgradedName + "1" + ".csv";
+            string pathToDelete = System.IO.Path.Combine(path1, names);
+            if (System.IO.File.Exists(pathToDelete))
+            {
+                //System.IO.File.Delete(pathToDelete);
+            }
             return Ok(model);
         }
 
@@ -155,13 +160,37 @@ namespace Backend.Controllers
 
             //Pozeljno promeniti model DataLoad tako da pored string CSV sadrzi i string NAME kako bi ja znao ime csv fajla koji je ucitan i kako bih ga sacuvao pod istim imenom u korisnikovom folderu.
             //string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
-            string pathToCreate = System.IO.Path.Combine(path, name); //umesto AUTOPUT treba staviti NAME koji se salje sa fronta
+            string names = upgradedName + "1" + ".csv";
+            string pathToCreate = System.IO.Path.Combine(path, names); 
             //if(!System.IO.Directory.Exists(path))
             //{
             //    return BadRequest("Niste registrovani/ulogovani."+path);
            // }
          //   else
-                workbook.Save(pathToCreate, SaveFormat.CSV); 
+                workbook.Save(pathToCreate, SaveFormat.CSV);
+            
+            List<String> lines = new List<string>();
+            string line;
+            System.IO.StreamReader file = new System.IO.StreamReader(pathToCreate);
+
+            while ((line = file.ReadLine()) != null)
+            {
+                lines.Add(line);
+                Console.WriteLine(line);
+            }
+
+            lines.RemoveAll(l => l.Contains("Evaluation Only."));
+            /*if(System.IO.File.Exists(pathToCreate))
+            {
+                System.IO.File.Delete(pathToCreate);
+            }*/
+            
+            
+            string pathToCreate12 = System.IO.Path.Combine(path, name);
+            using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(pathToCreate12))
+            {
+                outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
+            }
 
             return Ok(stat);
         }
