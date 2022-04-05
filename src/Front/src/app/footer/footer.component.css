@@ -2,16 +2,28 @@
   background-color: #212F3C ;
   /*margin-top: 150px;*/
 }
+
 .row{
  width: 100%;
+ margin: 0px;
 }
+ 
+#footLogo, #footAbout, #footContact{
+/*
+  width: 30%;
+*/
+  padding: 0px;
+}
+
+
 #wrapper .col-sm h1 {
   color: white;
   text-align: center;
   font-size: 17px;
   font-family: 'Century Gothic';
-  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
+
 #wrapper .col-sm .col p {
   color: white;
   text-align: center;
@@ -19,11 +31,17 @@
   font-family: 'Century Gothic';
 }
 
+#col1 ul{
+  padding-left: 0px;
+}
+
 #col1 li{
   color: white;
   text-align: center;
+  height: 20px;
   list-style-type: none;
   font-family: 'Century Gothic';
+  margin-left: 0px;
 }
 #wrapper .col-sm {
   background-color: #212F3C ;
@@ -31,6 +49,15 @@
 }
 
 img{
-  height: 100px;
-  width: 100px;
+  width: 150px;
+  height: auto;
+  margin:0px;
+}
+
+
+@media screen and (max-width: 990px) {
+  img{
+    width: 100px;
+    height: auto;
+  }
 }
