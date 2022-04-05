@@ -2,6 +2,7 @@
 .modal-body{
   margin-left: 100px;
 }
+
 ::ng-deep .btn1{
   border: none;
   outline: none;
@@ -32,10 +33,12 @@
 ::ng-deep .error{
   color: red;
 }
+
 nav{
   background: #212F3C ;
   color: black;
-  padding: 30px 100px;
+  padding: 30px 100px 30px 100px;
+  max-height: 160px;
 }
 nav ul li{
   padding: 10px;
@@ -56,6 +59,25 @@ nav ul li a:hover{
 }
 
 img{
-  height: 100px;
-  width: 100px;
+  width: 150px;
+  height: auto;
+  float:left;
+}
+
+@media screen and (max-width: 990px) {
+  img{
+    width: 100px;
+    height: auto;
+  }
+
+  nav div{
+    padding-left: 20px;
+  }
+
+  nav{
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+
 }
