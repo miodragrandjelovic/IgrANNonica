@@ -10,6 +10,16 @@
                     </div>
                 </div>
                 <div class="container datasetovi">
+
+                  <div class="list-group">
+                    <a class="list-group-item list-group-item-action active">
+                      Choose one dataset
+                    </a>
+                    <a  (click)="selectChange($event)"
+                    (change)="this.selectedValue=item.selectedValue" id="{{item}}" style="cursor: pointer;" *ngFor="let item of datasetsNames" class="list-group-item list-group-item-action"  >{{item}}</a>
+               
+                  </div>
+
                     <div class="row" style="height: 400px; overflow: scroll;">
                         
                     
@@ -32,7 +42,5 @@
                     </div>
 
                 </div>
-         
-       
     </div>
 </div>

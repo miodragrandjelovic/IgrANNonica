@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs';
 import { CsvComponent } from 'src/app/home/csv/csv.component';
+import { DatasetService } from './dataset.service';
 
 @Component({
   selector: 'app-dataset',
@@ -13,13 +14,21 @@ export class DatasetComponent implements OnInit {
   
   map:Map<string, string[]>;
   array2d: string[][]; 
+  datasetsNames: any;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private datasets:DatasetService) { }
 
   ngOnInit(): void {
+         
+        this.http.get<any>('https://localhost:7167/api/Python/savedCsvs').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
+            console.log(result);
+            this.datasetsNames=result;
+            console.log(this.datasetsNames);
+        });
     
-    this.http.get<any>('https://localhost:7167/api/Python/csv').subscribe(result => {
-    
+
+    this.http.get<any>('https://localhost:7167/api/Python/csv').subscribe(result => { //ispisuje u tabel csv 
 
     var map = new Map<string, string[]>();
     
@@ -38,18 +47,35 @@ export class DatasetComponent implements OnInit {
           map.set(aaa[j], array);
         }
       }
-      
     }
     console.log(map);
     this.map=map;
     this.array2d=Array.from(map.values());
 
     this.array2d= this.array2d[0].map((_, colIndex) =>this.array2d.map(row => row[colIndex]));
-    
   });
- 
+
   }
 
+  selectedValue:any="";
+
+    selectChange(event:any){
+
+        this.selectedValue=event.target.id;
+        console.log('ovo je kliknuto za naziv '+this.selectedValue);
+        this.posaljiNaziv(this.selectedValue);
+    }
+    
+  posaljiNaziv(naziv:any){
+
+    return this.http.post<any>('https://localhost:7167/api/LoadData/savedCsv?name='+naziv, {
+        name: naziv
+      }).subscribe(data=>{
+        
+        console.log(data);
+      });
+    }
+   
   personImg:string="assets/images/person.jpg";
 
 }
