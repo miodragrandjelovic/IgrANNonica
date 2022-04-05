@@ -118,8 +118,8 @@ def treniraj():
   #  insurance.csv
 
 
-    features = ['manufacturer','model','displ','year','class','trans']
-    label = 'hwy'
+    features = ['hwy','model','year','class','trans']
+    label = 'displ'
 
   #  churn
   #  features = ['CreditScore', 'Geography', 'Gender', 'Age','Tenure','Balance','NumOfProducts','HasCrCard','IsActiveMember','EstimatedSalary']

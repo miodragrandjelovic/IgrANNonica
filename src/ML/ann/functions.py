@@ -413,7 +413,6 @@ def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_
     pred = model.predict(X_test) 
     if(type=="classification"):
         pred = np.argmax(pred, axis = 1)
-        pred=pred.tolist()
         label = np.argmax(y_test,axis = 1)
         label=label.tolist()
 

@@ -37,7 +37,6 @@ class Data():
         X=fn.encode_data(X, encode_type)
 
         if (type == "regression"):
-            y=pd.DataFrame(y)
             X=fn.normalize(X)
             y=pd.DataFrame(y)
             y=fn.normalize(y)
@@ -54,6 +53,7 @@ class Data():
         if(type == "classification"):
             scaler=StandardScaler()
             self.X_train=scaler.fit_transform(self.X_train)
+            self.X_val=scaler.fit_transform(self.X_val)
             self.X_test=scaler.fit_transform(self.X_test)
             self.X=X
             self.y=y
