@@ -151,14 +151,12 @@ namespace Backend.Controllers
             }
 
 
-            //PM> Install-Package Aspose.Cells
             var workbook = new Workbook();
             var worksheet = workbook.Worksheets[0];
             var layoutOptions = new JsonLayoutOptions();
             layoutOptions.ArrayAsTable = true;
             JsonUtility.ImportData(csve, worksheet.Cells, 0, 0, layoutOptions);
 
-            //Pozeljno promeniti model DataLoad tako da pored string CSV sadrzi i string NAME kako bi ja znao ime csv fajla koji je ucitan i kako bih ga sacuvao pod istim imenom u korisnikovom folderu.
             //string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
             string names = upgradedName + "1" + ".csv";
             string pathToCreate = System.IO.Path.Combine(path, names); 
