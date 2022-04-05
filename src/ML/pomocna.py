@@ -9,6 +9,7 @@ from keras import layers
 from keras.losses import MeanSquaredError
 from sklearn.preprocessing import LabelEncoder
 import category_encoders as ce
+import numpy as np
 
 df=pd.read_csv("src\ML\mpg.csv")
 
@@ -39,7 +40,7 @@ for (columnName,columnData) in df.iteritems():
 pom=df.copy()
 
 y = pom.pop("hwy")
-y.columns = "hwy"
+#y.columns = "hwy"
 
 X_train, X_test, y_train, y_test = train_test_split(pom, y, test_size = 0.2)
 
@@ -100,9 +101,15 @@ model.add(layers.Dense(units=32,activation='relu'))
 model.add(layers.Dense(units=16,activation='relu'))
 model.add(layers.Dense(1, activation="relu"))
 
-model.compile(optimizer='adam', loss=MeanSquaredError(),metrics=['accuracy','mae','mse'])
+model.compile(optimizer='adam', loss=MeanSquaredError(),metrics=['mae','mse'])
 
 hist=model.fit(X_train, y_train, epochs=15,batch_size=10, validation_data = (X_test, y_test), verbose=1)
+
+pred = model.predict(X_test) 
+model.evaluate(X_test,y_test)
+pred
+y_test
+y_test.type
 
 
 

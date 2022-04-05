@@ -387,7 +387,7 @@ def compile_model(model, type, y,lr):
     model.compile(optimizer=opt, loss=loss, metrics = met)
     return model 
 
-def train_model(model, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test):
+def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test):
     #print(X_train.shape)
     #print(X_train)
 
@@ -411,12 +411,17 @@ def train_model(model, X_train, y_train, epochs, batch_size,X_val,y_val, X_test,
     fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_val, y_val), verbose=1)
 
     pred = model.predict(X_test) 
-    pred = np.argmax(pred, axis = 1)
+    if(type=="classification"):
+        pred = np.argmax(pred, axis = 1)
+        pred=pred.tolist()
+        label = np.argmax(y_test,axis = 1)
+        label=label.tolist()
+
+    else:
+        label=y_test.to_numpy(dtype ='float32')
+        label=label.tolist()
+
     pred=pred.tolist()
-    #pred=pd.Series(pred) 
-    label = np.argmax(y_test,axis = 1)
-    label=label.tolist()
-    #label=pd.Series(label) 
     ev=model.evaluate(X_test,y_test)
     
     #ev=ev.tolist()
