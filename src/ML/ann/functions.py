@@ -418,11 +418,12 @@ def train_model(model, X_train, y_train, epochs, batch_size,X_val,y_val, X_test,
     label=label.tolist()
     #label=pd.Series(label) 
     ev=model.evaluate(X_test,y_test)
+    
     #ev=ev.tolist()
     #ev=pd.Series(ev)
     yield pred
     yield label
-    yield ev
+    yield dict(zip(model.metrics_names, ev))
     yield fit # VALIDATION DATA=(X_VAL, Y_VAL) 
 
 
