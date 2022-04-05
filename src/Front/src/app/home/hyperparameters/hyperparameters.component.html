@@ -1,0 +1,130 @@
+<div id="sredina">
+  <div id="sredinaCentar">  
+    <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
+        <div id="top-controls">
+          <div class="row">
+            
+            <div class="control epoch">
+              <label for="epoch">Epoch</label>
+              <div class="select" style="border-radius: 2px;">
+                <input type="number" [(ngModel)]="epochs" id="epoch" style="width: 80px; " formControlName="epoch">
+              </div>
+            </div>
+
+            <div class="control learningRate">
+              <label for="learningRate">Learning rate</label>
+              <div class="select">
+                <select [(ngModel)]='lrate' class="custom-select" name="learningRate" id="learningRate" formControlName="learningRate">
+                  <option value="0.00001" selected>0.00001</option>
+                  <option value="0.0001">0.0001</option>
+                  <option value="0.001">0.001</option>
+                  <option value="0.003">0.003</option>
+                  <option value="0.01">0.01</option>
+                  <option value="0.03">0.03</option>
+                  <option value="0.1">0.1</option>
+                  <option value="0.3">0.3</option>
+                  <option value="1">1</option>
+                  <option value="3">3</option>
+                  <option value="10">10</option>
+                </select>
+              </div>
+            </div>
+            <div class="control activation">
+              <label for="activations">Activation</label>
+              <div class="select">
+                <select [(ngModel)]='activation' class="custom-select" id="activations" formControlName="activation">
+                  <option value="relu">ReLU</option>
+                  <option value="tanh">Tanh</option>
+                  <option value="sigmoid">Sigmoid</option>
+                  <option value="linear">Linear</option>
+                </select>
+              </div>
+            </div>
+            <div class="control regularization">
+              <label for="regularizations">Regularization</label>
+              <div class="select">
+                <select [(ngModel)]='regularization' class="custom-select" id="regularizations" formControlName="regularization">
+                  <option value="none">None</option>
+                  <option value="L1">L1</option>
+                  <option value="L2">L2</option>
+                </select>
+              </div>
+            </div>
+            <div class="control regularizationRate">
+              <label for="regularRate">Regularization rate</label>
+              <div class="select">
+                <select [(ngModel)]='regularizationRate' class="custom-select" id="regularRate" formControlName="regularizationRate">
+                  <option value="0">0</option>
+                  <option value="0.001">0.001</option>
+                  <option value="0.003">0.003</option>
+                  <option value="0.01">0.01</option>
+                  <option value="0.03">0.03</option>
+                  <option value="0.1">0.1</option>
+                  <option value="0.3">0.3</option>
+                  <option value="1">1</option>
+                  <option value="3">3</option>
+                  <option value="10">10</option>
+                </select>
+              </div>
+            </div>
+            <div class="control problem">
+              <label for="problem">Problem type</label>
+              <div class="select">
+                <select [(ngModel)]='problemType' class="custom-select" id="problem" formControlName="problemType">
+                  <option value="regression">Regression</option>
+                  <option value="classification">Classification</option>
+                </select>
+              </div>
+            </div>
+            <div class="control encoding">
+              <label for="encoding">Encoding</label>
+              <div class="select">
+                <select [(ngModel)]='encodingType' class="custom-select" id="encoding" formControlName="encodingType">
+                  <option value="label">Label</option>
+                  <option value="onehot">One hot</option>
+                  <option value="ordinal">Ordinal</option> 
+                </select>
+              </div>
+            </div>
+
+            <div class="form-check form-switch control randomize">
+              <div class="select">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Randomize</label><br>
+                <input class="form-check-input" type="checkbox" [(ngModel)]="randomize" id="flexSwitchCheckDefault" style="margin:11px 15px;" formControlName="randomize">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid"> 
+          <div class="row" >
+              <div class="col" >
+              <label for="percTrainData">Ratio of training to test data:<span class="value"></span></label>
+              <p class="slider">
+                <ngx-slider class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
+              </p>
+              
+              <label for="batchSize">Batch size:<span class="value"></span></label>
+              <p class="slider">
+                <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
+              </p>
+              </div>
+              <div class="col-10" formArrayName="neurons" style="text-align: center;">
+                    <!--<app-slojevi-neuroni></app-slojevi-neuroni> -->
+                    <button type="button" class="btn btn-outline-primary" (click)="onAddLayer()" style="margin: 5px;">Add Layer</button>
+                    <div *ngFor="let neuron of neuronControls; let i = index">
+                        <button type="button" class="btn btn-outline-danger" (click)="onRemoveLayer(i)" style="margin: 5px;">Remove</button>
+                        <input type="text" [formControlName]="i"/>
+                  </div>
+              </div>
+              <div class="col">
+                
+              </div>
+          </div>
+          <div class="control d-grid gap-2 d-md-flex justify-content-md-end">
+              <button type="submit" class="btn btn-primary btn-lg">Treniraj Model</button>
+          </div> 
+        </div>
+      </form>
+       
+  </div>
+</div>
