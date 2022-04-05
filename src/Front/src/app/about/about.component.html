@@ -13,7 +13,7 @@
       <div id="glavno" class="col-sm-8 ">
         <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" class="scrollspy-example" tabindex="0">
           <div>
-            <h1 class="display-1">Let's start!</h1>
+            <h1 id="list-itemm" class="display-1">Let's start</h1>
             <p class="main-par">
               Are you ready for your journey with neural networks? Get ready, because we are gonna teach you everything you need to know about the basics of Neural Networks! When you finish reading this article, you'll be able to train your first network, and make predictions with it.
               <img class="round mx-auto d-block img-fluid" src="assets/images/steps.png">
@@ -25,17 +25,23 @@
             </p>-->
           </div>
           
-          <h3 id="list-item1"class="display-5 text-center">Choose Ratio For the Data</h3>
+          <h3 id="list-item1" class="display-5 text-center">Choose Ratio For the Data</h3>
           <div class="stepsDiv">
             <p class="main-par">
               What does this mean? It means that you choose the percentage of the data that network will not see. For instance, if you set ratio to 20%, the network will learn from 
               only 80% of the remaining data, and you will see it's performance exactly on the 20% of the data that you've chosen.
             </p>
             <p>
-              This is very important, because if you choose to big training set, model will <span style="font-weight:bold; font-style: italic;">overfit</span>, and it will
-              not performe very good on data it has never seen before. On the contrary, if you choose too small training set, model can <span style="font-weight:bold; font-style: italic;">underfit</span>,
+              This is very important, because if you choose to big training set, model will <span class="span-italic-bold">overfit</span>, and it will
+              not performe very good on data it has never seen before. On the contrary, if you choose too small training set, model can <span class="span-italic-bold">underfit</span>,
               because you didn't provide enough data for it to learn properly.
             </p>
+            <p>
+              When the model is underfit, it has <span class="span-italic-bold">high bias</span>, and it means you didn't provide enough info for it to learn.
+              On the contrary, if you gave it too much data model will overfit, which will result in <span class="span-italic-bold">high variance</span>.
+              You can see these two cases on the photo under, and in the middle is so called 'ideal' case.
+            </p>
+            <img class="round mx-auto d-block img-fluid" src="assets/images/split.png">
           </div>
           <!--<p class="text-justify font-weight-normal">
             Neural networks, also known as artificial neural networks (ANNs) or simulated neural networks (SNNs), are a subset of machine learning and are at the heart of deep learning algorithms. Their name and structure are inspired by the human brain, mimicking the way that biological neurons signal to one another.
@@ -129,6 +135,7 @@
               change depending on the problem.
               Each one of hidden layers that you add can have different number of neurons, and separate activation functions. This gives you flexibility for more specified construction of the network.
             </p>
+            <img class="round mx-auto d-block img-fluid" src="assets/images/layers.jpg">
           </div>
           <!--
           <p class="text-justify font-weight-normal">
@@ -200,7 +207,7 @@
             </iframe>
 -->
             <p class="main-par">
-              You've come to the end of this brief tutorial! If you still don't understand the use and architecture of Neural Networks, watch this short video.
+              You've come to an end of this brief tutorial! If you still don't understand the use and architecture of Neural Networks, watch this short video.
               <!--Now that you've come to the end of this short tutorial, watch this video to fully understand use of Neural Networks and their potential. -->
             </p>
             <video title="What are neural networks?" frameborder="0" controls
