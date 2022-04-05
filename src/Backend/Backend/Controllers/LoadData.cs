@@ -142,54 +142,58 @@ namespace Backend.Controllers
             var upgradedName = name.Substring(0, name.Length - 4);
             string path = currentPath + @"\Users\" + Username + "\\" + upgradedName;
 
-            if (Directory.Exists(path))
-                Console.WriteLine("File is already in system.");
+
+            if(Username != null)
+            {
+                if (Directory.Exists(path))
+                    Console.WriteLine("File is already in system.");
+                else
+                {
+                    System.IO.Directory.CreateDirectory(path);
+                    Console.WriteLine("Directory for '{0}' created successfully!", name);
+                
+                    var workbook = new Workbook();
+                    var worksheet = workbook.Worksheets[0];
+                    var layoutOptions = new JsonLayoutOptions();
+                    layoutOptions.ArrayAsTable = true;
+                    JsonUtility.ImportData(csve, worksheet.Cells, 0, 0, layoutOptions);
+
+                    //string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
+                    string names = upgradedName + "1" + ".csv";
+                    string pathToCreate = System.IO.Path.Combine(path, names); 
+                    //if(!System.IO.Directory.Exists(path))
+                    //{
+                    //    return BadRequest("Niste registrovani/ulogovani."+path);
+                   // }
+                 //   else
+                        workbook.Save(pathToCreate, SaveFormat.CSV);
+            
+                    List<String> lines = new List<string>();
+                    string line;
+                    System.IO.StreamReader file = new System.IO.StreamReader(pathToCreate);
+
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        lines.Add(line);
+                        Console.WriteLine(line);
+                    }
+
+                    lines.RemoveAll(l => l.Contains("Evaluation Only."));
+                    /*if(System.IO.File.Exists(pathToCreate))
+                    {
+                        System.IO.File.Delete(pathToCreate);
+                    }*/
+            
+            
+                    string pathToCreate12 = System.IO.Path.Combine(path, name);
+                    using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(pathToCreate12))
+                    {
+                        outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
+                    }
+                }
+            }
             else
-            {
-                System.IO.Directory.CreateDirectory(path);
-                Console.WriteLine("Directory for '{0}' created successfully!", name);
-            }
-
-
-            var workbook = new Workbook();
-            var worksheet = workbook.Worksheets[0];
-            var layoutOptions = new JsonLayoutOptions();
-            layoutOptions.ArrayAsTable = true;
-            JsonUtility.ImportData(csve, worksheet.Cells, 0, 0, layoutOptions);
-
-            //string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
-            string names = upgradedName + "1" + ".csv";
-            string pathToCreate = System.IO.Path.Combine(path, names); 
-            //if(!System.IO.Directory.Exists(path))
-            //{
-            //    return BadRequest("Niste registrovani/ulogovani."+path);
-           // }
-         //   else
-                workbook.Save(pathToCreate, SaveFormat.CSV);
-            
-            List<String> lines = new List<string>();
-            string line;
-            System.IO.StreamReader file = new System.IO.StreamReader(pathToCreate);
-
-            while ((line = file.ReadLine()) != null)
-            {
-                lines.Add(line);
-                Console.WriteLine(line);
-            }
-
-            lines.RemoveAll(l => l.Contains("Evaluation Only."));
-            /*if(System.IO.File.Exists(pathToCreate))
-            {
-                System.IO.File.Delete(pathToCreate);
-            }*/
-            
-            
-            string pathToCreate12 = System.IO.Path.Combine(path, name);
-            using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(pathToCreate12))
-            {
-                outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
-            }
-
+                Console.WriteLine("Niste ulogovani.");
             return Ok(stat);
         }
 
