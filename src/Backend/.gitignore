@@ -10,8 +10,9 @@
 *.userosscache
 *.sln.docstates
 
-.RevolutionnDB
-
+RevolutionnDB
+RevolutionnDB.db-shm
+RevolutionnDB.db-wal
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
