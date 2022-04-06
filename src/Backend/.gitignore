@@ -16,6 +16,8 @@ RevolutionnDB.db-wal
 *.db-shm
 *.db-wal
 
+Users/
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
