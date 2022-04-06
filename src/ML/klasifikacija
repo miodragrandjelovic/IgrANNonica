@@ -159,3 +159,20 @@ model.add(layers.Dense(y.shape[1], activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy','AUC'])
 
 model.fit(X_train,y_train,batch_size=15,epochs=10, validation_data = (X_test, y_test),verbose=1)
+
+
+niz='pera,mika,laza,zika'
+niz
+
+x=niz.split(",")
+
+features=[]
+
+for input in x:
+    features.append(input)
+
+features
+
+
+
+

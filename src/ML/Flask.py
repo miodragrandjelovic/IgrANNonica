@@ -116,10 +116,18 @@ def treniraj():
   #  label = 'Weight'
     
   #  insurance.csv
+    
+    x=hiperp['Inputs'].split(",")
+    features = []
+    for input in x:
+        features.append(input)
 
+    label = hiperp['Output']
 
-    features = ['hwy','model','year','class','trans']
-    label = 'displ'
+    """
+    features=['manufacturer','model','displ','year','cyl','trans','drv','cty','hwy']
+    label='class'
+    """
 
   #  churn
   #  features = ['CreditScore', 'Geography', 'Gender', 'Age','Tenure','Balance','NumOfProducts','HasCrCard','IsActiveMember','EstimatedSalary']
