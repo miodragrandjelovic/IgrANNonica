@@ -33,8 +33,12 @@ export class CsvComponent {
     headersStatistics: any = [['Columns', 'Q1', 'Q2', 'Q3', 'count', 'freq', 'max', 'mean', 'min', 'std', 'top', 'unique']];
     rowLinesStatistics: any = [];
 
+    rowsArray: any = [];
+
+    
     headersMatrix: any = [];
     rowLinesMatrix:any = [];
+    matrix: any = [];
 
     flag: number = 0;
 
@@ -49,6 +53,7 @@ export class CsvComponent {
         this.flag = 1;
         if (this.flag)
             this.showMe=true;
+        this.showMe3 = false;
 
         this.dataObject = [];
         this.headingLines = [];
@@ -77,7 +82,7 @@ export class CsvComponent {
                 
                 this.headingLines.push(headersArray);
 
-                let rowsArray = [];
+                this.rowsArray = [];
 
                 let length = allTextLines.length - 1;
                 
@@ -92,10 +97,11 @@ export class CsvComponent {
                 }
                 length = rows.length;
                 for (let j = 0; j < length; j++) {
-                    rowsArray.push(rows[j]);
+                    this.rowsArray.push(rows[j]);
                 }
-                this.rowLines = rowsArray.slice(0, this.itemsPerPage);
-                this.allData = rowsArray;
+                console.log(this.rowsArray);
+                this.rowLines = this.rowsArray.slice(0, this.itemsPerPage);
+                this.allData = this.rowsArray;
                 
                 return this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
                     csvData: JSON.stringify(this.dataObject),
@@ -131,16 +137,24 @@ export class CsvComponent {
 
     korelacionaMatrica() {
         this.showMe3 = true;
+        this.headersMatrix = [];
+        this.rowLinesMatrix = [];
+        this.matrix = [];
+        this.showMe3 = true;
         let headersArray:any = ['Columns'];
-        for (let k = 0; k < this.headers.length; k++)
-            headersArray.push(this.headers[k]);
+        for (let k = 0; k < this.headers.length; k++) {
+            if (!isNaN(this.rowsArray[0][k])) {
+                headersArray.push(this.headers[k]);
+                this.matrix.push(this.headers[k]);
+            }
+        }
         this.http.get<any>('https://localhost:7167/api/Python/kor').subscribe(result => {
             console.log(result);
             let currentRow: any = [];
-            for (let i = 0; i < this.headers.length; i++) {
-                currentRow = [this.headers[i]];
-                for (let j = 0; j < this.headers.length; j++) {
-                    currentRow.push(result[this.headers[i]][this.headers[j]]);
+            for (let i = 0; i < this.matrix.length; i++) {
+                currentRow = [this.matrix[i]];
+                for (let j = 0; j < this.matrix.length; j++) {
+                    currentRow.push(result[this.matrix[i]][this.matrix[j]]);
                 }
                 this.rowLinesMatrix.push(currentRow);
                 }
