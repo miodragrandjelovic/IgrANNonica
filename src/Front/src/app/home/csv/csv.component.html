@@ -1,31 +1,20 @@
-<div class="container-fluid" style="color: white;">
+<div [hidden]="false" class="container-fluid" style="color: white;">
 
   <div class="row">  
     <div class="col col-lg-2">
-      <div class="form-check"  style="padding-top: 15px">
+      <button type="button" class="btn btn-primary btn-lg" style="position: absolute;left: 40%" (click)="showHp()">Go to Hyperparameters</button>
+
+      <div class="form-check"  style="padding-top: 15px;">
         <p  *ngIf="showMe" style="color: black;">Choose inputs:</p>
-        <div *ngFor="let item of headingLines[0];" style="padding-left: 35px;">
-          <input class="form-check-input" type="checkbox" value="{{item}}"
-            [disabled]="this.selectedValue==item" id="flexCheckDefault" >
-        <label style="color: black;">{{item}}</label>
+        <div *ngFor="let item of inputsArray" style="padding-left: 35px;">
+          <input class="form-check-input" type="checkbox" [(ngModel)]="item.isChecked"
+            [disabled]="this.selectedValue==item" id="flexCheckDefault" (change)="changeSelection()">
+        <label style="color: black;">{{item.label}}</label>
         </div>
-        <div ngbDropdown class="btn-group" style="padding-top: 15px;" *ngIf="showMe">
-          <button ngbDropdownToggle type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Output
-            </button>
-            <div ngbDropdownMenu class="dropdown-menu">
-              <option ngbDropdownItem  (click)="selectChange($event)"
-              (change)="this.selectedValue=item"
-              class="dropdown-item" [value]="item" *ngFor="let item of headingLines[0]"  style="cursor: pointer;" >{{item}}</option>
-            </div>
-          </div><br>
-          <div>
-            <p *ngIf="showMe" style="color:black">Selected: {{selectedValue}}</p>
-          </div>
       </div>
     </div>
 
-    <div class="col" style="margin-top: 100px;">
+    <div class="col">
       <input class="form-control mb-5" type="file" class="upload" (change)="fileUpload($event)">
       <div *ngIf="showMe" class="col"  style="overflow-x:scroll;">
         <table class="table">
@@ -76,6 +65,19 @@
     </div>
 
     <div class="col col-lg-2" *ngIf="showMe" style="text-align: center;">
+      <div ngbDropdown class="btn-group" style="padding-top: 15px;">
+      <button ngbDropdownToggle type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Output
+        </button>
+        <div ngbDropdownMenu class="dropdown-menu" >
+          <option ngbDropdownItem  (click)="selectChange($event)" *ngFor="let output of outputs"
+          (change)="this.selectedValue=output"
+          class="dropdown-item" [value]="output.label"  style="cursor: pointer;" >{{output.label}}</option>
+        </div>
+      </div><br>
+      <div>
+        <p *ngIf="showMe2" style="color:black">Selected: {{selectedValue}}</p>
+      </div>
       <button type="button" class="btn btn-primary" (click)="korelacionaMatrica()" style="margin: 5px;">Prikazi korelacionu matricu</button>
     </div>
   </div>

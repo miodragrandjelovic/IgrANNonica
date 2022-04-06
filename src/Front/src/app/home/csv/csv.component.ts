@@ -1,13 +1,24 @@
 import { HttpClient } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { HttpHeaders } from "@angular/common/http";
+import { ParametersService } from "src/app/services/parameters.service";
+
+
+interface CheckBox {
+    id: number,
+    label: String,
+    isChecked: boolean
+}
 
 @Component({
     selector: 'app-csv',
     templateUrl: 'csv.component.html'
 })
-export class CsvComponent {
 
+
+export class CsvComponent implements OnInit {    
+
+    hidden: boolean;
 
     showMe: boolean = false;
     showMe2:boolean = false;
@@ -17,6 +28,7 @@ export class CsvComponent {
     selectChange(event:any){
         this.showMe2=true;
         this.selectedValue=event.target.value;
+        console.log(this.selectedValue);
     }
     
     dataObject:any = [];
@@ -31,27 +43,73 @@ export class CsvComponent {
     headersStatistics: any = [['Columns', 'Q1', 'Q2', 'Q3', 'count', 'freq', 'max', 'mean', 'min', 'std', 'top', 'unique']];
     rowLinesStatistics: any = [];
 
-    rowsArray: any = [];
-
-    
     headersMatrix: any = [];
     rowLinesMatrix:any = [];
-    matrix: any = [];
 
     flag: number = 0;
 
     headers: any;
 
-    constructor(private http: HttpClient) {
+    outputs: Array<CheckBox> = [];
+    selectedInputs: Array<CheckBox> = [];
+    inputsArray: Array<CheckBox> = [];
+    sendHp: string = "";
+    
+    ngOnInit(): void {
+        this.parametersService.getShowHp().subscribe(res => {
+            this.hidden = res;
+        })
+    }
+
+    constructor(private http: HttpClient, private parametersService: ParametersService) {
 
     }
 
 
+    fetchSelectedItems() {
+        this.selectedInputs = this.inputsArray.filter((value, index) => {
+          return value.isChecked
+        })
+    }
+
+    fetchOutputs() {
+        this.outputs = this.inputsArray.filter((value, index) => {
+            return value.isChecked == false
+        })
+    }
+
+    changeSelection() {
+        this.sendHp = "";
+        this.fetchSelectedItems();
+        this.fetchOutputs();
+
+        console.log(this.selectedInputs);
+        console.log(this.outputs);
+        for (let i = 0; i < this.selectedInputs.length; i++) {
+            const str = this.selectedInputs[i].label;
+            if (i != 0) {
+               this.sendHp = this.sendHp.concat("," + str);
+            }
+            else
+                this.sendHp = this.sendHp.concat('' + str);
+        }
+        console.log(this.sendHp);
+        this.selectedValue = "";
+    }
+
+    showHp() {
+        this.parametersService.setShowHp(true);
+        this.parametersService.setParamsObs('parametri test');
+    }
+
     fileUpload(files: any) {
+        this.sendHp = '';
+
+        this.inputsArray = [];
+
         this.flag = 1;
         if (this.flag)
             this.showMe=true;
-        this.showMe3 = false;
 
         this.dataObject = [];
         this.headingLines = [];
@@ -80,7 +138,48 @@ export class CsvComponent {
                 
                 this.headingLines.push(headersArray);
 
-                this.rowsArray = [];
+                this.outputs[0] = headersArray[headersArray.length - 1];
+                
+                this.inputsArray = [];
+
+                for (let i = 0; i < headersArray.length; i++) {
+                    
+                    let isChecked;
+                    let id = i + 1;
+                    let label = headersArray[i];
+                    if (i != headersArray.length - 1)
+                        isChecked = true;
+                    else
+                        isChecked = false;
+                    
+                    const myObject: CheckBox = {
+                        id: id,
+                        label: label,
+                        isChecked: isChecked
+                    }
+
+                    this.inputsArray.push(myObject);
+                }
+
+                this.fetchSelectedItems();
+                this.fetchOutputs();
+
+                for (let i = 0; i < this.selectedInputs.length; i++) {
+                    const str = this.selectedInputs[i].label;
+                    if (i != 0) {
+                       this.sendHp = this.sendHp.concat("," + str);
+                    }
+                    else
+                        this.sendHp = this.sendHp.concat('' + str);
+                }
+                this.selectedValue = this.outputs[0].label;
+                this.sendHp = this.sendHp.concat(',' + this.selectedValue);
+                console.log(this.sendHp);
+
+
+                
+
+                let rowsArray = [];
 
                 let length = allTextLines.length - 1;
                 
@@ -95,11 +194,10 @@ export class CsvComponent {
                 }
                 length = rows.length;
                 for (let j = 0; j < length; j++) {
-                    this.rowsArray.push(rows[j]);
+                    rowsArray.push(rows[j]);
                 }
-                console.log(this.rowsArray);
-                this.rowLines = this.rowsArray.slice(0, this.itemsPerPage);
-                this.allData = this.rowsArray;
+                this.rowLines = rowsArray.slice(0, this.itemsPerPage);
+                this.allData = rowsArray;
                 
                 return this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
                     csvData: JSON.stringify(this.dataObject),
@@ -135,29 +233,20 @@ export class CsvComponent {
 
     korelacionaMatrica() {
         this.showMe3 = true;
-        this.headersMatrix = [];
-        this.rowLinesMatrix = [];
-        this.matrix = [];
-        this.showMe3 = true;
         let headersArray:any = ['Columns'];
-        for (let k = 0; k < this.headers.length; k++) {
-            if (!isNaN(this.rowsArray[0][k])) {
-                headersArray.push(this.headers[k]);
-                this.matrix.push(this.headers[k]);
-            }
-        }
+        for (let k = 0; k < this.headers.length; k++)
+            headersArray.push(this.headers[k]);
         this.http.get<any>('https://localhost:7167/api/Python/kor').subscribe(result => {
             console.log(result);
             let currentRow: any = [];
-            for (let i = 0; i < this.matrix.length; i++) {
-                currentRow = [this.matrix[i]];
-                for (let j = 0; j < this.matrix.length; j++) {
-                    currentRow.push(result[this.matrix[i]][this.matrix[j]]);
+            for (let i = 0; i < this.headers.length; i++) {
+                currentRow = [this.headers[i]];
+                for (let j = 0; j < this.headers.length; j++) {
+                    currentRow.push(result[this.headers[i]][this.headers[j]]);
                 }
                 this.rowLinesMatrix.push(currentRow);
-                }
-            });
+            }
+         });
             this.headersMatrix.push(headersArray);
-        }
     }
-    
+}

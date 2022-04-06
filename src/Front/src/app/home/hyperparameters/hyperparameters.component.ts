@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
 import { Form, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { ParametersService } from 'src/app/services/parameters.service';
 
 interface RequestHyperparameters{
   encodingType: string,
@@ -29,6 +30,8 @@ interface RequestHyperparameters{
 })
 export class HyperparametersComponent implements OnInit {
 
+  hyperparameters: string;
+  hidden: boolean;
   value1: number = 10;
   value2: number = 20;
   //dodato za default vrednosti
@@ -56,7 +59,7 @@ export class HyperparametersComponent implements OnInit {
   hyperparametersForm!: FormGroup;
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private parametersService: ParametersService) { }
 
   get neuronControls() {
     return (<FormArray>this.hyperparametersForm.get('neurons')).controls;
@@ -76,6 +79,16 @@ export class HyperparametersComponent implements OnInit {
       'randomize': new FormControl(0),
       'neurons': new FormArray([])
     });
+
+    this.parametersService.getShowHp().subscribe(res => {this.hidden = res});
+    this.parametersService.getParamsObs().subscribe(res => {
+      this.hyperparameters = res;
+      console.log(this.hyperparameters);
+    });
+  }
+
+  showCsv() {
+    this.parametersService.setShowHp(false);
   }
 
   onSubmitHyperparameters() {
