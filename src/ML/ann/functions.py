@@ -1,5 +1,6 @@
 from multiprocessing.dummy import active_children
 from tkinter.ttk import Label
+from matplotlib.font_manager import json_dump
 import pandas as pd
 import numpy as np
 from sklearn.feature_selection import VarianceThreshold
@@ -20,13 +21,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import VarianceThreshold
 
-
+from tensorflow import keras
 import keras.regularizers
 from keras.models import Sequential
 from keras import Input
 from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D, Activation, Normalization
 from keras.losses import MeanSquaredError, BinaryCrossentropy, SparseCategoricalCrossentropy, CategoricalCrossentropy
-from keras.optimizer_v2 import adam
+
+
 
 def load_data(features, label, data ):
     # moze da se prosledi i kao json string
@@ -96,8 +98,14 @@ def normalize(df):
 def split_data(X, y, ratio, randomize):
     # ratio je npr 20, a nama treba 0.2
     ratio = ratio / 100
-    (X_train, X_test, y_train, y_test) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
-    return (X_train, X_test, y_train, y_test)
+    if(randomize==False):
+        (X_train, X_rem, y_train, y_rem) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
+        (X_val, X_test, y_val, y_test) = train_test_split(X_rem, y_rem, test_size = 0.5, random_state=5)
+
+    else:
+        (X_train, X_rem, y_train, y_rem) = train_test_split(X, y, test_size = 1-ratio)
+        (X_val, X_test, y_val, y_test) = train_test_split(X_rem, y_rem, test_size = 0.5)
+    return (X_train,X_val, X_test, y_train,y_val, y_test)
 
 def filter_data(data):
     # check for duplicate rows
@@ -352,7 +360,7 @@ def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_l
     return model
 
 
-def compile_model(model, type, y):
+def compile_model(model, type, y,lr):
     # these are the best options for linear regression!!
     # common loss functions for 
     # binary classification: binary_crossentropy
@@ -365,11 +373,11 @@ def compile_model(model, type, y):
     
     if (type == 'regression'):
         met = reg_metrics
-        opt = "sgd"
+        opt=tf.keras.optimizers.SGD(learning_rate=lr)
         loss = MeanSquaredError()
     else:
         met = class_metrics
-        opt = "adam"
+        opt = tf.keras.optimizers.Adam(learning_rate=lr)
         if (y.shape[1] == 2):
             # binary classification
             loss = BinaryCrossentropy()
@@ -379,7 +387,7 @@ def compile_model(model, type, y):
     model.compile(optimizer=opt, loss=loss, metrics = met)
     return model 
 
-def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
+def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test):
     #print(X_train.shape)
     #print(X_train)
 
@@ -400,8 +408,29 @@ def train_model(model, X_train, y_train, epochs, batch_size, X_test, y_test):
    # print("Y TEST")
    # print(pd.DataFrame(y_test).head())
     
+    fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_val, y_val), verbose=1)
 
-    return model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_test, y_test), verbose=1) # VALIDATION DATA=(X_VAL, Y_VAL) 
+    pred = model.predict(X_test) 
+    if(type=="classification"):
+        pred = np.argmax(pred, axis = 1)
+        label = np.argmax(y_test,axis = 1)
+        label=label.tolist()
+
+    else:
+        label=y_test.to_numpy(dtype ='float32')
+        label=label.tolist()
+
+    pred=pred.tolist()
+    ev=model.evaluate(X_test,y_test)
+    
+    #ev=ev.tolist()
+    #ev=pd.Series(ev)
+    yield pred
+    yield label
+    yield dict(zip(model.metrics_names, ev))
+    yield fit # VALIDATION DATA=(X_VAL, Y_VAL) 
+
+
 
 def missing_data(data):
     # if user decides to drop data containing nan values

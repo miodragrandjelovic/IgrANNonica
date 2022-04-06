@@ -17,8 +17,13 @@ class Data():
         self.X_test=None
         self.y_train=None
         self.y_test=None
+        self.X_val=None
+        self.y_val=None
         self.y=None
         self.X=None
+        self.eveluate=None
+        self.pred=None
+        self.label=None
 
 
     def load_data(self, label, features):
@@ -32,7 +37,6 @@ class Data():
         X=fn.encode_data(X, encode_type)
 
         if (type == "regression"):
-            y=pd.DataFrame(y)
             X=fn.normalize(X)
             y=pd.DataFrame(y)
             y=fn.normalize(y)
@@ -43,12 +47,13 @@ class Data():
             y=np_utils.to_categorical(y)
             
 
-        (self.X_train, self.X_test, self.y_train, self.y_test) = fn.split_data(X, y, ratio, randomize)
+        (self.X_train,self.X_val, self.X_test, self.y_train,self.y_val, self.y_test) = fn.split_data(X, y, ratio, randomize)
 
 
         if(type == "classification"):
             scaler=StandardScaler()
             self.X_train=scaler.fit_transform(self.X_train)
+            self.X_val=scaler.fit_transform(self.X_val)
             self.X_test=scaler.fit_transform(self.X_test)
             self.X=X
             self.y=y
@@ -106,13 +111,13 @@ class Model():
         # make model
         self.model = fn.regression(self.data.X,self.data.y,type,self.data.X_train,self.data.y_train,hidden_layers_n, hidden_layer_neurons_list,activation_function,regularization,reg_rate)
               
-    def compileModel(self, type):
+    def compileModel(self, type,learning_rate):
         #compile the model
-        fn.compile_model(self.model, type, self.data.y)
+        fn.compile_model(self.model, type, self.data.y,learning_rate)
 
-    def trainModel(self,epochs, batch_size):
+    def trainModel(self,type,epochs, batch_size):
         # train our model
-        self.history = fn.train_model(self.model, self.data.X_train, self.data.y_train, epochs, batch_size, self.data.X_test, self.data.y_test)
+        self.pred,self.label,self.eveluate,self.history = fn.train_model(self.model,type, self.data.X_train, self.data.y_train, epochs, batch_size,self.data.X_val,self.data.y_val, self.data.X_test, self.data.y_test)
 
     def defMetrics(self, type):
         #print("HISTORY OF TRAINING")
@@ -122,6 +127,9 @@ class Model():
 
         self.hist['Loss'] = self.history.history['loss']
         self.hist['valLoss'] = self.history.history['val_loss']
+        self.hist['pred']=self.pred
+        self.hist['label']=self.label
+        self.hist['eveluate']=self.eveluate
         if (type == "regression"):
             self.hist['MAE'] = self.history.history['mae']
             self.hist['MSE'] = self.history.history['mse']
