@@ -6,6 +6,9 @@ import ann.functions as fn
 #import functions as fn
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import LabelEncoder
+from keras.utils import np_utils
+from sklearn.preprocessing import StandardScaler
 
 class Data():
     def __init__(self, train_file):
@@ -14,6 +17,8 @@ class Data():
         self.X_test=None
         self.y_train=None
         self.y_test=None
+        self.y=None
+        self.X=None
 
 
     def load_data(self, label, features):
@@ -25,24 +30,28 @@ class Data():
         self.data = fn.load_data(features, label, self.data)
         X, y = fn.feature_and_label(self.data, label)
         X=fn.encode_data(X, encode_type)
-        y=pd.DataFrame(y)
-        if (type == 'classification'):
-            y=fn.encode_data(y, encode_type)
 
+        if (type == "regression"):
+            y=pd.DataFrame(y)
+            X=fn.normalize(X)
+            y=pd.DataFrame(y)
+            y=fn.normalize(y)
 
-        # da se kolona iz object type kastuje u float
-       # print("BEFORE CASTING")
-       # print(y)
-        y = y.astype(float64)
-       # print("AFTER CASTING")
-       # print(y)
-
-
-        X=fn.normalize(X)
-        y=fn.normalize(y)
+        else:
+            lb=LabelEncoder()
+            y=lb.fit_transform(y)
+            y=np_utils.to_categorical(y)
+            
 
         (self.X_train, self.X_test, self.y_train, self.y_test) = fn.split_data(X, y, ratio, randomize)
 
+
+        if(type == "classification"):
+            scaler=StandardScaler()
+            self.X_train=scaler.fit_transform(self.X_train)
+            self.X_test=scaler.fit_transform(self.X_test)
+            self.X=X
+            self.y=y
 
 
 
@@ -95,11 +104,11 @@ class Model():
 
     def makeModel(self, type, activation_function, hidden_layers_n, hidden_layer_neurons_list,regularization,reg_rate):
         # make model
-        self.model = fn.regression(type,self.data.X_train,self.data.y_train,hidden_layers_n, hidden_layer_neurons_list,activation_function,regularization,reg_rate)
+        self.model = fn.regression(self.data.X,self.data.y,type,self.data.X_train,self.data.y_train,hidden_layers_n, hidden_layer_neurons_list,activation_function,regularization,reg_rate)
               
     def compileModel(self, type):
         #compile the model
-        fn.compile_model(self.model, type, self.data.y_train)
+        fn.compile_model(self.model, type, self.data.y)
 
     def trainModel(self,epochs, batch_size):
         # train our model

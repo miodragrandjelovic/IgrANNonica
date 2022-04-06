@@ -283,7 +283,7 @@ def showdata(X_train, X_test, y_train,y_test):
    # print()
    # print()
 
-def regression(type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, activation_function,regularization,reg_rate):
+def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, activation_function,regularization,reg_rate):
     # here, we are making our model
     # type nam ukazuje koji je tip problema kojim se bavimo   !!!!!!!!!!!!!
 
@@ -305,9 +305,15 @@ def regression(type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_list,
     
     # input layer
     if (hidden_layers_n > 0):
-        model.add(Dense(units=hidden_layer_neurons_list[0], input_shape=(len(X_train.columns),)))
+        if(type=="regression"):
+            model.add(Dense(units=hidden_layer_neurons_list[0], input_shape=(len(X_train.columns),)))
+        else:
+            model.add(Dense(units=hidden_layer_neurons_list[0], input_dim=X.shape[1]))
     else:
-        model.add(Dense(units=1, input_shape=(len(X_train.columns),)))
+        if(type=="regression"):
+            model.add(Dense(units=1, input_shape=(len(X_train.columns),)))
+        else:
+            model.add(Dense(units=1, input_dim=X.shape[1]))
     
 
     # hidden layers
@@ -337,13 +343,16 @@ def regression(type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_list,
     # if we have regressional model, we use just one neuron, which says expected number
     # if it's 0, the customer is satisfied
     # if it's 2, the customer is not satisfied
-    model.add(Dense(len(y_train.columns), activation=activation_function))
+    if(type=="regression"):
+        model.add(Dense(len(y_train.columns), activation=activation_function))
+    else:
+        model.add(Dense(y.shape[1], activation='softmax'))
 
   #  model.summary()
     return model
 
 
-def compile_model(model, type, y_train):
+def compile_model(model, type, y):
     # these are the best options for linear regression!!
     # common loss functions for 
     # binary classification: binary_crossentropy
@@ -361,7 +370,7 @@ def compile_model(model, type, y_train):
     else:
         met = class_metrics
         opt = "adam"
-        if (len(y_train.columns) == 2):
+        if (y.shape[1] == 2):
             # binary classification
             loss = BinaryCrossentropy()
         else:
