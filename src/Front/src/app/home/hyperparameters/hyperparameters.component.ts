@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
 import { Form, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { ParametersService } from 'src/app/services/parameters.service';
 
 interface RequestHyperparameters{
   encodingType: string,
@@ -19,7 +20,9 @@ interface RequestHyperparameters{
   neuronsLvl5: number,
   ratio: number,
   batchSize: number,
-  randomize: boolean
+  randomize: boolean,
+  inputs: string,
+  output: string
 }
 
 @Component({
@@ -29,6 +32,13 @@ interface RequestHyperparameters{
 })
 export class HyperparametersComponent implements OnInit {
 
+
+  hpArray: any;
+  inputs: any = [];
+  inputsString: string;
+  outputString: string = "";
+  hyperparameters: string;
+  hidden: boolean;
   value1: number = 10;
   value2: number = 20;
   //dodato za default vrednosti
@@ -56,13 +66,15 @@ export class HyperparametersComponent implements OnInit {
   hyperparametersForm!: FormGroup;
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private parametersService: ParametersService) { }
 
   get neuronControls() {
     return (<FormArray>this.hyperparametersForm.get('neurons')).controls;
    }
 
   ngOnInit(): void {
+    this.inputs = [];
+    this.hpArray = [];
     this.hyperparametersForm = new FormGroup({
       'encodingType': new FormControl(null),
       'learningRate': new FormControl(0),
@@ -74,12 +86,24 @@ export class HyperparametersComponent implements OnInit {
       'ratio': new FormControl(0),
       'batchSize': new FormControl(0),
       'randomize': new FormControl(0),
-      'neurons': new FormArray([])
+      'neurons': new FormArray([]),
     });
+
+    this.parametersService.getShowHp().subscribe(res => {this.hidden = res});
+    this.parametersService.getParamsObs().subscribe(res => {
+      this.hyperparameters = res;
+      console.log(this.hyperparameters);
+    });
+    
+  }
+
+  showCsv() {
+    this.parametersService.setShowHp(false);
   }
 
   onSubmitHyperparameters() {
-    console.log(this.hyperparametersForm)
+    this.inputsString = '';
+    this.outputString = '';
     const layers = (<FormArray>this.hyperparametersForm.get('neurons')).controls.length;
     const neurons = (<FormArray>this.hyperparametersForm.get('neurons')).controls;
     let neuron1 = 0, neuron2 = 0, neuron3 = 0, neuron4 = 0, neuron5 = 0;
@@ -95,6 +119,18 @@ export class HyperparametersComponent implements OnInit {
       else
         neuron5 = neurons[i].value;
     }
+
+    this.inputs = this.hyperparameters.split(',');
+    for (let i = 0; i < this.inputs.length - 1; i++) {
+      if (i != 0)
+        this.inputsString = this.inputsString.concat(',' + this.inputs[i]);
+      else
+        this.inputsString = this.inputsString.concat(this.inputs[i]);
+    }
+
+    this.outputString = this.outputString.concat(this.inputs[this.inputs.length - 1]);
+    console.log(this.inputsString);
+    console.log(this.outputString);
 
     const myreq: RequestHyperparameters = {
       encodingType : this.hyperparametersForm.get('encodingType')?.value,
@@ -113,9 +149,9 @@ export class HyperparametersComponent implements OnInit {
       ratio: this.hyperparametersForm.get('ratio')?.value,
       batchSize: this.hyperparametersForm.get('batchSize')?.value,
       randomize: this.hyperparametersForm.get('randomize')?.value,
-    }
-
-    console.log(myreq);
+      inputs: this.inputsString,
+      output: this.outputString
+    } 
 
     this.http.post('https://localhost:7167/api/LoadData/hp', myreq).subscribe(result => {
       console.log(result);

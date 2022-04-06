@@ -1,28 +1,46 @@
 import { HttpClient } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { HttpHeaders } from "@angular/common/http";
+import { ParametersService } from "src/app/services/parameters.service";
+
+
+interface CheckBox {
+    id: number,
+    label: String,
+    isChecked: boolean
+}
 
 @Component({
     selector: 'app-csv',
     templateUrl: 'csv.component.html'
 })
-export class CsvComponent {
 
+
+export class CsvComponent implements OnInit {    
+
+    hidden: boolean;
 
     showMe: boolean = false;
     showMe2:boolean = false;
     showMe3:boolean = false;
     selectedValue:any="";
+    showMeMatrix: boolean = false;
 
     selectChange(event:any){
+        this.changeSelection();
         this.showMe2=true;
-        this.selectedValue=event.target.value;
+        if (this.selectedValue != event.target.value) {
+            this.selectedValue=event.target.value;
+            this.sendHp = this.sendHp.concat(',' + this.selectedValue);
+        }
     }
     
     dataObject:any = [];
     headingLines: any = [];
     rowLines: any = [];
     allData: any = [];
+    rowsArray: any = [];
+    matrix: any = [];
     itemsPerPage: number = 10;
     itemPosition: number = 0;
     currentPage: number = 1;
@@ -31,27 +49,71 @@ export class CsvComponent {
     headersStatistics: any = [['Columns', 'Q1', 'Q2', 'Q3', 'count', 'freq', 'max', 'mean', 'min', 'std', 'top', 'unique']];
     rowLinesStatistics: any = [];
 
-    rowsArray: any = [];
-
-    
     headersMatrix: any = [];
     rowLinesMatrix:any = [];
-    matrix: any = [];
 
     flag: number = 0;
 
     headers: any;
 
-    constructor(private http: HttpClient) {
+    outputs: Array<CheckBox> = [];
+    selectedInputs: Array<CheckBox> = [];
+    inputsArray: Array<CheckBox> = [];
+    sendHp: string = "";
+    
+    ngOnInit(): void {
+        this.parametersService.getShowHp().subscribe(res => {
+            this.hidden = res;
+        })
+    }
+
+    constructor(private http: HttpClient, private parametersService: ParametersService) {
 
     }
 
 
+    fetchSelectedItems() {
+        this.selectedInputs = this.inputsArray.filter((value, index) => {
+          return value.isChecked
+        })
+    }
+
+    fetchOutputs() {
+        this.outputs = this.inputsArray.filter((value, index) => {
+            return value.isChecked == false
+        })
+    }
+
+    changeSelection() {
+        this.sendHp = "";
+        this.fetchSelectedItems();
+        this.fetchOutputs();
+
+        for (let i = 0; i < this.selectedInputs.length; i++) {
+            const str = this.selectedInputs[i].label;
+            if (i != 0) {
+               this.sendHp = this.sendHp.concat("," + str);
+            }
+            else
+                this.sendHp = this.sendHp.concat('' + str);
+        }
+        this.selectedValue = "";
+    }
+
+    showHp() {
+        this.parametersService.setShowHp(true);
+        this.parametersService.setParamsObs(this.sendHp);
+    }
+
     fileUpload(files: any) {
+        this.sendHp = '';
+        this.showMe2 = true;
+        this.showMeMatrix = false;
+        this.inputsArray = [];
+
         this.flag = 1;
         if (this.flag)
             this.showMe=true;
-        this.showMe3 = false;
 
         this.dataObject = [];
         this.headingLines = [];
@@ -61,7 +123,6 @@ export class CsvComponent {
         let fileList = (<HTMLInputElement>files.target).files;
         if (fileList && fileList.length > 0) {
             let file : File = fileList[0];
-            console.log(file.name);
 
             let reader: FileReader =  new FileReader();
             reader.readAsText(file);
@@ -80,6 +141,43 @@ export class CsvComponent {
                 
                 this.headingLines.push(headersArray);
 
+                this.outputs[0] = headersArray[headersArray.length - 1];
+                
+                this.inputsArray = [];
+
+                for (let i = 0; i < headersArray.length; i++) {
+                    
+                    let isChecked;
+                    let id = i + 1;
+                    let label = headersArray[i];
+                    if (i != headersArray.length - 1)
+                        isChecked = true;
+                    else
+                        isChecked = false;
+                    
+                    const myObject: CheckBox = {
+                        id: id,
+                        label: label,
+                        isChecked: isChecked
+                    }
+
+                    this.inputsArray.push(myObject);
+                }
+
+                this.fetchSelectedItems();
+                this.fetchOutputs();
+
+                for (let i = 0; i < this.selectedInputs.length; i++) {
+                    const str = this.selectedInputs[i].label;
+                    if (i != 0) {
+                       this.sendHp = this.sendHp.concat("," + str);
+                    }
+                    else
+                        this.sendHp = this.sendHp.concat('' + str);
+                }
+                this.selectedValue = this.outputs[0].label;
+                this.sendHp = this.sendHp.concat(',' + this.selectedValue);                
+
                 this.rowsArray = [];
 
                 let length = allTextLines.length - 1;
@@ -97,7 +195,6 @@ export class CsvComponent {
                 for (let j = 0; j < length; j++) {
                     this.rowsArray.push(rows[j]);
                 }
-                console.log(this.rowsArray);
                 this.rowLines = this.rowsArray.slice(0, this.itemsPerPage);
                 this.allData = this.rowsArray;
                 
@@ -134,7 +231,8 @@ export class CsvComponent {
     }
 
     korelacionaMatrica() {
-        this.showMe3 = true;
+
+        this.showMeMatrix = true;
         this.headersMatrix = [];
         this.rowLinesMatrix = [];
         this.matrix = [];
@@ -147,7 +245,6 @@ export class CsvComponent {
             }
         }
         this.http.get<any>('https://localhost:7167/api/Python/kor').subscribe(result => {
-            console.log(result);
             let currentRow: any = [];
             for (let i = 0; i < this.matrix.length; i++) {
                 currentRow = [this.matrix[i]];
@@ -159,5 +256,4 @@ export class CsvComponent {
             });
             this.headersMatrix.push(headersArray);
         }
-    }
-    
+}

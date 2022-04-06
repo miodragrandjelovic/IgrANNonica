@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
 import { Form, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { ParametersService } from '../services/parameters.service';
 
 
 interface RequestHyperparameters{

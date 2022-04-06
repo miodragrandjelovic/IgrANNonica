@@ -1,9 +1,10 @@
-<div id="sredina">
+<div id="sredina" [hidden]="!hidden">
   <div id="sredinaCentar">  
     <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
         <div id="top-controls">
+
           <div class="row">
-            
+
             <div class="control epoch">
               <label for="epoch">Epoch</label>
               <div class="select" style="border-radius: 2px;">
@@ -121,8 +122,10 @@
               </div>
           </div>
           <div class="control d-grid gap-2 d-md-flex justify-content-md-end">
+              <button type="button" class="btn btn-primary btn-lg" (click)="showCsv()"> CSV </button>
               <button type="submit" class="btn btn-primary btn-lg">Treniraj Model</button>
-          </div> 
+          </div>
+          <!--<button type="button" class="btn btn-primary btn-lg" style="position: absolute;left: 50%;" (click)="showCsv()"> CSV </button>-->
         </div>
       </form>
        
