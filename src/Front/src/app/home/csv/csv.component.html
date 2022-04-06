@@ -81,7 +81,20 @@
     </div>
   </div>
 <!------------------ preload data------------------>
+<div class="container-fluid" style="color: white;">
   <div class="row">  
+    <div class="col col-lg-2">
+      <div class="form-check"  style="padding-top: 15px;">
+        <p  *ngIf="showMe4" style="color: black;">Choose inputs:</p>
+        <div *ngFor="let item of map|keyvalue;" style="padding-left: 35px;">
+          <input class="form-check-input" type="checkbox" value="{{item.key}}"
+          [checked]="this.selectedValue1!=item.key"
+            [disabled]="this.selectedValue1==item.key" id="flexCheckDefault" >
+        <label style="color: black;">{{item.key}}</label>
+        </div>
+      </div>
+    </div>
+
     <div class="col">
       <button (click)="preloadCsv()" type="button" class="btn btn-primary">Preloaded dataset</button>
       <div *ngIf="showMe4" class="col"  style="height: 500px; overflow-x:scroll;">
@@ -104,14 +117,10 @@
                 <td *ngFor="let item1 of item">{{item1}}</td>
               </tr>
             </tbody>
-      </table>
+        </table>
       </div>
-    </div>
-
-  </div>
-  <div class="row" style="margin-top: 20px;">  
-    <div class="col">
-      <div *ngIf="showMe4" class="col"  style="height: 500px; overflow-x:scroll;">
+   
+      <div *ngIf="showMe4" class="col"  style="height: 400px; overflow-x:scroll;margin-top: 20px;">
         <table class="table">
           <thead>
             <tr>
@@ -120,14 +129,39 @@
                 <td *ngFor="let item1 of item">{{item1}}</td>
             </tr>
           </thead>
-          <tbody>
-              <tr >
-                <td ></td>
-              </tr>
-            </tbody>
-      </table>
+        </table>
+      </div>
+
+      <div *ngIf="prikazKorMat" class="col"  style="height: 400px; overflow-x:scroll;margin-top: 20px;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th *ngFor="let item of kolona2">{{item}}</th>
+              <tr *ngFor="let item of array2d3">
+                <td *ngFor="let item1 of item">{{item1}}</td>
+            </tr>
+          </thead>
+        </table>
       </div>
     </div>
 
+    <div class="col col-lg-2" *ngIf="showMe4" style="text-align: center;">
+      <div ngbDropdown class="btn-group" style="padding-top: 15px;">
+      <button ngbDropdownToggle type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Output
+        </button>
+        <div ngbDropdownMenu class="dropdown-menu">
+          <option ngbDropdownItem  (click)="selectChange1($event)"
+          (change)="this.selectedValue1=item.key"
+          class="dropdown-item" [value]="item.key" *ngFor="let item of map|keyvalue"  style="cursor: pointer;" >{{item.key}}</option>
+        </div>
+      </div><br>
+      <div>
+        <p *ngIf="odabrano" style="color:black">Selected: {{selectedValue1}}</p>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="preloadKorelacionaMatrica()" style="margin: 5px;">Prikazi korelacionu matricu</button>
+    </div>
+
   </div>
+</div>
 </div>

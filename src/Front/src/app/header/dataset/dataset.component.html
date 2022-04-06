@@ -1,7 +1,5 @@
 <div class="container-fluid">
     <div class="container sredina">
-            
-      
                 <div class="container naslov">
                     <div class="row">
                         <div class="col" style="text-align: center;">
@@ -9,9 +7,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="container datasetovi">
+                <div class="container datasetovi" style="height: auto;">
 
-                  <div class="list-group">
+                  <div class="list-group" style="margin-bottom: 20px;">
                     <a class="list-group-item list-group-item-action active">
                       Choose one dataset
                     </a>
@@ -19,10 +17,7 @@
                     (change)="this.selectedValue=item.selectedValue" id="{{item}}" style="cursor: pointer;" *ngFor="let item of datasetsNames" class="list-group-item list-group-item-action"  >{{item}}</a>
                
                   </div>
-
-                    <div class="row" style="height: 400px; overflow: scroll;">
-                        
-                    
+                    <div class="row" style="height: 300px; overflow: auto;">
                     <table class="table">
                         <thead>
                           <tr>
