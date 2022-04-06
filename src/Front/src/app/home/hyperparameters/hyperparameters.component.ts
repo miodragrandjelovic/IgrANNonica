@@ -41,6 +41,7 @@ export class HyperparametersComponent implements OnInit {
   hidden: boolean;
   value1: number = 10;
   value2: number = 20;
+  value3: any = "";
   //dodato za default vrednosti
   lrate: number = 0.00001;
   activation: string = "sigmoid";
@@ -95,6 +96,14 @@ export class HyperparametersComponent implements OnInit {
       console.log(this.hyperparameters);
     });
     
+  }
+
+  onFirstTextInputChange(event:any){
+    this.value1 = event.target.value;
+  }
+
+  onSecondTextInputChange(event:any){
+    this.value2 = event.target.value;
   }
 
   showCsv() {
