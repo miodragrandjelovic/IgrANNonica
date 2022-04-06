@@ -27,8 +27,11 @@ export class CsvComponent implements OnInit {
 
     selectChange(event:any){
         this.showMe2=true;
-        this.selectedValue=event.target.value;
-        console.log(this.selectedValue);
+        if (this.selectedValue != event.target.value) {
+            this.selectedValue=event.target.value;
+            this.sendHp = this.sendHp.concat(',' + this.selectedValue);
+        }
+        console.log(this.sendHp);
     }
     
     dataObject:any = [];
@@ -99,7 +102,7 @@ export class CsvComponent implements OnInit {
 
     showHp() {
         this.parametersService.setShowHp(true);
-        this.parametersService.setParamsObs('parametri test');
+        this.parametersService.setParamsObs(this.sendHp);
     }
 
     fileUpload(files: any) {

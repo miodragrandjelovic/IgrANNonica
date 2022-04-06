@@ -69,14 +69,14 @@
       <button ngbDropdownToggle type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Output
         </button>
-        <div ngbDropdownMenu class="dropdown-menu" >
+        <div ngbDropdownMenu class="dropdown-menu">
           <option ngbDropdownItem  (click)="selectChange($event)" *ngFor="let output of outputs"
           (change)="this.selectedValue=output"
           class="dropdown-item" [value]="output.label"  style="cursor: pointer;" >{{output.label}}</option>
         </div>
       </div><br>
       <div>
-        <p *ngIf="showMe2" style="color:black">Selected: {{selectedValue}}</p>
+        <p *ngIf="showMe" style="color:black">Selected: {{selectedValue}}</p>
       </div>
       <button type="button" class="btn btn-primary" (click)="korelacionaMatrica()" style="margin: 5px;">Prikazi korelacionu matricu</button>
     </div>
