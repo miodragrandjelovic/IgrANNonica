@@ -3,7 +3,6 @@ import { Options } from '@angular-slider/ngx-slider';
 import { Form, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
-
 interface RequestHyperparameters{
   encodingType: string,
   learningRate: number,
@@ -23,16 +22,13 @@ interface RequestHyperparameters{
   randomize: boolean
 }
 
-
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: 'app-hyperparameters',
+  templateUrl: './hyperparameters.component.html',
+  styleUrls: ['./hyperparameters.component.css']
 })
+export class HyperparametersComponent implements OnInit {
 
-export class HomeComponent implements OnInit {
-  
-  edited: boolean = false;
   value1: number = 10;
   value2: number = 20;
   //dodato za default vrednosti
@@ -63,8 +59,8 @@ export class HomeComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   get neuronControls() {
-   return (<FormArray>this.hyperparametersForm.get('neurons')).controls;
-  }
+    return (<FormArray>this.hyperparametersForm.get('neurons')).controls;
+   }
 
   ngOnInit(): void {
     this.hyperparametersForm = new FormGroup({
@@ -80,13 +76,6 @@ export class HomeComponent implements OnInit {
       'randomize': new FormControl(0),
       'neurons': new FormArray([])
     });
-  }
-
-  showCsv() {
-    this.edited = true;
-  }
-  showHp() {
-    this.edited = false;
   }
 
   onSubmitHyperparameters() {
@@ -134,7 +123,6 @@ export class HomeComponent implements OnInit {
 
   }
 
-
   onAddLayer() {
     const control = new FormControl(0);
     (<FormArray>this.hyperparametersForm.get('neurons')).push(control);
@@ -149,5 +137,5 @@ export class HomeComponent implements OnInit {
     console.warn(val)
     this.currentVal=val;
   }
-
+  
 }

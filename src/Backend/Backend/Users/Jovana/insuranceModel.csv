@@ -1,4 +1,0 @@
-AUC,Accuracy,FalseNegatives,FalsePositives,Loss,Precision,Recall,TrueNegatives,TruePositives,valAUC,valAccuracy,valFalseNegatives,valFalsePositives,valLoss,valPrecision,valRecall,valTrueNegatives,valTruePositives
-0.0,0.00241545890457928,0.0,0.0,0.013299636542797,1.0,1.0,0.0,414.0,0.0,0.0,0.0,0.0,0.0132790394127368,1.0,1.0,0.0,923.0
-0.0,0.00241545890457928,0.0,0.0,0.0132673438638448,1.0,1.0,0.0,414.0,0.0,0.0,0.0,0.0,0.0132508520036935,1.0,1.0,0.0,923.0
-Evaluation Only. Created with Aspose.Cells for .NET.Copyright 2003 - 2022 Aspose Pty Ltd.
