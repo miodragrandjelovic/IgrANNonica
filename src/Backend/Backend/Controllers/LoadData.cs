@@ -92,34 +92,39 @@ namespace Backend.Controllers
             var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
             var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
 
-            var workbook = new Workbook();
-            var worksheet = workbook.Worksheets[0];
-            var layoutOptions = new JsonLayoutOptions();
-            layoutOptions.ArrayAsTable = true;
-            JsonUtility.ImportData(dataModel, worksheet.Cells, 0, 0, layoutOptions);
-
-            string modelName = upgradedName + "Model" + index + ".csv";
-
-            string pathToCreate = System.IO.Path.Combine(path, modelName); 
-
-            while (System.IO.File.Exists(pathToCreate))
+            if(Username != null)
             {
-                index++;
-                modelName = upgradedName + "Model" + index + ".csv";
-                hpName = upgradedName + "HP" + index + ".csv";
-                pathToCreate = path + modelName;
-                pathToCreateHP = path + hpName;
-            }
-            workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
-            workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
+                var workbook = new Workbook();
+                var worksheet = workbook.Worksheets[0];
+                var layoutOptions = new JsonLayoutOptions();
+                layoutOptions.ArrayAsTable = true;
+                JsonUtility.ImportData(dataModel, worksheet.Cells, 0, 0, layoutOptions);
+
+                string modelName = upgradedName + "Model" + index + ".csv";
+
+                string pathToCreate = System.IO.Path.Combine(path, modelName); 
+
+                while (System.IO.File.Exists(pathToCreate))
+                {
+                    index++;
+                    modelName = upgradedName + "Model" + index + ".csv";
+                    hpName = upgradedName + "HP" + index + ".csv";
+                    pathToCreate = path + modelName;
+                    pathToCreateHP = path + hpName;
+                }
+                workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
+                workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
             
-            string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
-            string names = upgradedName + "1" + ".csv";
-            string pathToDelete = System.IO.Path.Combine(path1, names);
-            if (System.IO.File.Exists(pathToDelete))
-            {
-                //System.IO.File.Delete(pathToDelete);
+                string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
+                string names = upgradedName + "1" + ".csv";
+                string pathToDelete = System.IO.Path.Combine(path1, names);
+                if (System.IO.File.Exists(pathToDelete))
+                {
+                    //System.IO.File.Delete(pathToDelete);
+                }
             }
+            else
+                Console.WriteLine("Niste ulogovani.");
             return Ok(model);
         }
 
