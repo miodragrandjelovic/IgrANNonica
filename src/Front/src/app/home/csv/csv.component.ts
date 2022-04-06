@@ -24,20 +24,23 @@ export class CsvComponent implements OnInit {
     showMe2:boolean = false;
     showMe3:boolean = false;
     selectedValue:any="";
+    showMeMatrix: boolean = false;
 
     selectChange(event:any){
+        this.changeSelection();
         this.showMe2=true;
         if (this.selectedValue != event.target.value) {
             this.selectedValue=event.target.value;
             this.sendHp = this.sendHp.concat(',' + this.selectedValue);
         }
-        console.log(this.sendHp);
     }
     
     dataObject:any = [];
     headingLines: any = [];
     rowLines: any = [];
     allData: any = [];
+    rowsArray: any = [];
+    matrix: any = [];
     itemsPerPage: number = 10;
     itemPosition: number = 0;
     currentPage: number = 1;
@@ -86,8 +89,6 @@ export class CsvComponent implements OnInit {
         this.fetchSelectedItems();
         this.fetchOutputs();
 
-        console.log(this.selectedInputs);
-        console.log(this.outputs);
         for (let i = 0; i < this.selectedInputs.length; i++) {
             const str = this.selectedInputs[i].label;
             if (i != 0) {
@@ -96,7 +97,6 @@ export class CsvComponent implements OnInit {
             else
                 this.sendHp = this.sendHp.concat('' + str);
         }
-        console.log(this.sendHp);
         this.selectedValue = "";
     }
 
@@ -107,7 +107,8 @@ export class CsvComponent implements OnInit {
 
     fileUpload(files: any) {
         this.sendHp = '';
-
+        this.showMe2 = true;
+        this.showMeMatrix = false;
         this.inputsArray = [];
 
         this.flag = 1;
@@ -122,7 +123,6 @@ export class CsvComponent implements OnInit {
         let fileList = (<HTMLInputElement>files.target).files;
         if (fileList && fileList.length > 0) {
             let file : File = fileList[0];
-            console.log(file.name);
 
             let reader: FileReader =  new FileReader();
             reader.readAsText(file);
@@ -176,13 +176,9 @@ export class CsvComponent implements OnInit {
                         this.sendHp = this.sendHp.concat('' + str);
                 }
                 this.selectedValue = this.outputs[0].label;
-                this.sendHp = this.sendHp.concat(',' + this.selectedValue);
-                console.log(this.sendHp);
+                this.sendHp = this.sendHp.concat(',' + this.selectedValue);                
 
-
-                
-
-                let rowsArray = [];
+                this.rowsArray = [];
 
                 let length = allTextLines.length - 1;
                 
@@ -197,10 +193,10 @@ export class CsvComponent implements OnInit {
                 }
                 length = rows.length;
                 for (let j = 0; j < length; j++) {
-                    rowsArray.push(rows[j]);
+                    this.rowsArray.push(rows[j]);
                 }
-                this.rowLines = rowsArray.slice(0, this.itemsPerPage);
-                this.allData = rowsArray;
+                this.rowLines = this.rowsArray.slice(0, this.itemsPerPage);
+                this.allData = this.rowsArray;
                 
                 return this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
                     csvData: JSON.stringify(this.dataObject),
@@ -235,21 +231,29 @@ export class CsvComponent implements OnInit {
     }
 
     korelacionaMatrica() {
+
+        this.showMeMatrix = true;
+        this.headersMatrix = [];
+        this.rowLinesMatrix = [];
+        this.matrix = [];
         this.showMe3 = true;
         let headersArray:any = ['Columns'];
-        for (let k = 0; k < this.headers.length; k++)
-            headersArray.push(this.headers[k]);
+        for (let k = 0; k < this.headers.length; k++) {
+            if (!isNaN(this.rowsArray[0][k])) {
+                headersArray.push(this.headers[k]);
+                this.matrix.push(this.headers[k]);
+            }
+        }
         this.http.get<any>('https://localhost:7167/api/Python/kor').subscribe(result => {
-            console.log(result);
             let currentRow: any = [];
-            for (let i = 0; i < this.headers.length; i++) {
-                currentRow = [this.headers[i]];
-                for (let j = 0; j < this.headers.length; j++) {
-                    currentRow.push(result[this.headers[i]][this.headers[j]]);
+            for (let i = 0; i < this.matrix.length; i++) {
+                currentRow = [this.matrix[i]];
+                for (let j = 0; j < this.matrix.length; j++) {
+                    currentRow.push(result[this.matrix[i]][this.matrix[j]]);
                 }
                 this.rowLinesMatrix.push(currentRow);
-            }
-         });
+                }
+            });
             this.headersMatrix.push(headersArray);
-    }
+        }
 }

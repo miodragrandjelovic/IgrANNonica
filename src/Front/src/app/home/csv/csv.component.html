@@ -1,4 +1,4 @@
-<div [hidden]="false" class="container-fluid" style="color: white;">
+<div [hidden]="this.hidden" class="container-fluid" style="color: white;">
 
   <div class="row">  
     <div class="col col-lg-2">
@@ -48,7 +48,7 @@
           </tbody>
         </table>
       </div>
-      <div *ngIf="showMe3" class="col"  style="overflow-x:scroll; margin-top: 20px;">
+      <div *ngIf="showMeMatrix" class="col"  style="overflow-x:scroll; margin-top: 20px;">
         <table class="table">
           <thead>
             <tr>
@@ -76,7 +76,7 @@
         </div>
       </div><br>
       <div>
-        <p *ngIf="showMe" style="color:black">Selected: {{selectedValue}}</p>
+        <p *ngIf="showMe2" style="color:black">Selected: {{selectedValue}}</p>
       </div>
       <button type="button" class="btn btn-primary" (click)="korelacionaMatrica()" style="margin: 5px;">Prikazi korelacionu matricu</button>
     </div>
