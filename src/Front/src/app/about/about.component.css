@@ -1,13 +1,36 @@
+@media screen and (max-width: 720px) {
+    #glavno{
+        width: 100%;
+    }
+    #list-example{
+        width: 100%;
+    }
+    .col-sm-4{
+        width:100%;
+    }
+    .col-sm-8{
+        width: 100%;
+    }
+}
+
+.row{
+    width: 100%;
+    margin: auto;
+    padding:0px;
+}
+
 .container1{
     padding: 20px;
     background-color: #34495E ;
     color: white;
-    padding-right: 100px;
+    /*padding-right: 100px;*/
 }
+
 #list-example{
     border: 2px solid #212F3C;
     text-align: center;
-    width: 90%;
+    position: sticky;
+    top: 20px;;
 }
 #list-example a{
     background-color: #212F3C;
@@ -16,36 +39,73 @@
 
 .col-sm-4{
     padding-top:20px;
+    margin-bottom: 20px;
 }
 
 #glavno{
-    background-color: #212F3C;
+    background-color: white;
     border-radius: 5px;
+    color:#212F3C;
+    border: #212F3C 2px solid;
 }
 
 h1{
+    font-size: 40px;
+    padding: 3px;
+    font-weight: bold;
+    text-align: center;
     margin-top: 10px;
     border-radius: 5px;
     background-color: #34495E;
+    color:white;
 }
+
 h3{
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 3px;
+    font-size: 35px;
     border-radius: 5px;
     background-color: #34495E;
+    color:white;
 }
 
 hr{
     color:#34495E ;
 }
 
+p, ul
+{
+    font-size: 21px;
+}
+
+#stepsDiv{
+    width: 90%;
+    margin: auto;
+}
+
+/* za prikazivanje yt snimaka */
 iframe{
     width: 100%;
-    height: 550px;
+    height: auto;
 }
 
+video{
+    width: 100%;
+    height: auto;
+}
+
+/* za prikaz slika */
 img{
-    border:5px solid #34495E;
-    border-radius: 5px;
+    border:5px solid #344;
+    margin:10px;
 }
 
+.span-italic-bold{
+    font-style: italic;
+    font-weight: bold;
+}
+
+p.main-par{
+    font-size: 28px;
+    text-align: center;
+    font-weight: normal;
+}

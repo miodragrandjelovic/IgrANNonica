@@ -1,10 +1,18 @@
 .container-fluid{
     background-color: #34495E;
-    height: 100vh;
+    padding-bottom: 10px;
+  /*  height: 100vh; */
 }
 .container .sredina{
-    height:  100vh;
-    margin: 0 90px 0 90px;
+   /* height:  100vh;*/
+    margin: 0px 90px 0px 90px;
+}
+
+.row{
+    margin-bottom: 0px;
+}
+#slikaInfo{
+    width: auto;
 }
 .container .opcije{
     background-color: #34495E;
@@ -41,7 +49,7 @@
 }
 .personImg{
     width: 90px;
-    height: 90px;
+    height: auto;
     margin: 25px;
 }
 .form-control{

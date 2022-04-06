@@ -23,3 +23,11 @@ describe('AboutComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
+windowScrolled = false;
+
+  ngOnInit() {
+    window.addEventListener('scroll', () => {
+      this.windowScrolled = window.pageYOffset !== 0;
+    });
+  }
