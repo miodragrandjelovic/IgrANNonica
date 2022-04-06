@@ -1,11 +1,9 @@
 .container-fluid{
     background-color: #34495E;
-    height: 100vh;
     padding-top: 50px;
     padding-bottom: 100px;
-    padding-left: 200px;
-    padding-right: 200px;
 }
+
 .sredina{
     height: 100%;
     width: 100%;
@@ -13,18 +11,19 @@
     border-radius: 5px;
     box-shadow: #212F3C 10px 10px 10px -1px;
 }
+
 .row {
-    height: 150px;
+    /*height: 150px;*/
     padding: 10px;
 }
 
 .col-4 img{
-    width: 130px;
-    height: 130px;
+    height: 100px;
+    width: auto;
 }
 
 .tekst{
-    font-size: 70px;
+    font-size: 7vw;
 }
 .form{
     padding: 50px;
@@ -32,6 +31,7 @@
 .form-control{
     width: 100%;
 }
+
 textarea{
     height: 200px;
 }
