@@ -9,6 +9,8 @@ interface CheckBox {
     label: String,
     isChecked: boolean
 }
+import { PreloadCsv, PreloadStatistic } from "src/app/_model/preload.model";
+import { Observable } from "rxjs";
 
 @Component({
     selector: 'app-csv',
@@ -23,9 +25,14 @@ export class CsvComponent implements OnInit {
     showMe: boolean = false;
     showMe2:boolean = false;
     showMe3:boolean = false;
-    selectedValue:any="";
+    
     showMeMatrix: boolean = false;
+    prikazPreucitano:boolean = false;
+    odabrano:boolean=false;
 
+    selectedValue:any="";
+    selectedValue1:any="";
+    
     selectChange(event:any){
         this.changeSelection();
         this.showMe2=true;
@@ -34,7 +41,11 @@ export class CsvComponent implements OnInit {
             this.sendHp = this.sendHp.concat(',' + this.selectedValue);
         }
     }
-    
+    selectChange1(event:any){
+        this.odabrano=true;
+        this.selectedValue1=event.target.value;
+    }
+
     dataObject:any = [];
     headingLines: any = [];
     rowLines: any = [];
@@ -256,4 +267,112 @@ export class CsvComponent implements OnInit {
             });
             this.headersMatrix.push(headersArray);
         }
-}
+
+        //---------------------------------------------------------- preload data
+        map:Map<string, string[]>;
+        map2:Map<string, string[]>;
+        map3:Map<string, string[]>;
+        array2d: string[][]; 
+        array2d2: string[][];
+        array2d3: string[][];
+        datasetsNames: any;
+        showMe4:boolean=false;
+    
+        kolona: any = [];
+       
+
+        rowLinesStatistics1: any = [];
+
+        preloadCsv()
+        {
+            this.prikazPreucitano=true;
+            this.rowLinesStatistics1 = [];
+            this.kolona=[];
+
+            this.showMe4 = true;
+            this.http.get<any>('https://localhost:7167/api/Python/preloadCsv').subscribe(result =>{
+            console.log(result);
+               
+            var map = new Map<string, string[]>();
+    
+            for(var i = 0; i < result.length; i++) {
+              if(i == 0) {
+                var aaa = Object.keys(result[i]);
+                for(var j = 0; j < aaa.length; j++) {
+                  map.set(aaa[j], ["" + Object.values(result[i])[j]]);
+                }
+              } else {
+                var aaa = Object.keys(result[i]);
+                for(var j = 0; j < aaa.length; j++) {
+                  var array = map.get(aaa[j]);
+                  if(array == undefined) array = [];
+                  array.push("" + Object.values(result[i])[j]);
+                  map.set(aaa[j], array);
+                }
+              }
+            }
+            console.log(map);
+            this.map=map;
+            this.array2d=Array.from(map.values());
+        
+            this.array2d= this.array2d[0].map((_, colIndex) =>this.array2d.map(row => row[colIndex]));
+          });
+    
+            this.http.get<any>('https://localhost:7167/api/Python/preloadStat').subscribe(data =>{
+               
+                var map = new Map<string, string[]>();
+                var map2 = new Map<string, Map<string, string[]>>();
+                var map3 = new Map<string, string[]>();
+
+                for(const p in data) {
+                    var array1:any=[];
+                   var map:Map<string, string[]>;
+                   array1.push(p);
+                      for(const a in data[p]) {
+                        array1.push(data[p][a])
+                        map.set(a,data[p][a]);
+                    } 
+                    map2.set(p, map);
+                    map3.set(p,array1);
+                    this.array2d2=Array.from(map3.values());
+    
+                  } console.log(map2);
+                  this.kolona=Array.from(Array.from(map2.entries().next().value[1].keys()));
+                  this.kolona.unshift("Colums");
+                
+            });
+
+        }
+        kolona2: any = [];
+        prikazKorMat:boolean=false;
+        preloadKorelacionaMatrica(){
+
+            this.kolona2=[];
+            this.prikazKorMat=true;
+            this.http.get<any>('https://localhost:7167/api/Python/preloadKor').subscribe(data =>{
+               
+                var map = new Map<string, string[]>();
+                var map22 = new Map<string, Map<string, string[]>>();
+                var map33 = new Map<string, string[]>();
+
+                for(const p in data) {
+                    var array11:any=[];
+                   var map:Map<string, string[]>;
+                   array11.push(p);
+                      for(const a in data[p]) {
+                        array11.push(data[p][a])
+                        map.set(a,data[p][a]);
+                    } 
+                    map22.set(p, map);
+                    map33.set(p,array11);
+                    this.array2d3=Array.from(map33.values());
+    
+                  } console.log(map22);
+                  this.kolona2=Array.from(Array.from(map22.entries().next().value[1].keys()));
+                  this.kolona2.unshift("Colums");
+                
+              });     
+        }
+    }
+
+    

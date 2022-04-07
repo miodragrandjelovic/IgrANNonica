@@ -11,6 +11,7 @@ import{ProfileComponent} from './header/profile/profile.component';
 import { AuthGuardService } from './auth-guard.service';
 import { SendEmailComponent } from './send-email/send-email.component';
 import { HyperparametersComponent } from './home/hyperparameters/hyperparameters.component';
+import{DatasetComponent} from './header/dataset/dataset.component';
 
 const routes: Routes = [
   {path:'', component:NavigationComponent},
@@ -20,6 +21,7 @@ const routes: Routes = [
   canActivate:[AuthGuardService]},
   {path:'send-email',component:SendEmailComponent},
   {path:'hyperparameters',component:HyperparametersComponent}
+  {path:'dataset',component:DatasetComponent},
 ];
 
 @NgModule({

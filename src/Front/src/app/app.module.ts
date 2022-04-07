@@ -26,6 +26,7 @@ import{BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import{ToastrModule} from 'ngx-toastr';
 import { SendEmailComponent } from './send-email/send-email.component';
 import { HyperparametersComponent } from './home/hyperparameters/hyperparameters.component';
+import { DatasetComponent } from './header/dataset/dataset.component';
 
 const icons = {
   envelope,
@@ -49,6 +50,7 @@ const icons = {
     ProfileComponent,
     SendEmailComponent,
     HyperparametersComponent,
+    DatasetComponent,
   ],
   imports: [
     BrowserModule,

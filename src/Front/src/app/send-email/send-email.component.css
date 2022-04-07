@@ -1,5 +1,6 @@
 .container-fluid{
     background-color: #34495E;
+    height: auto;
     padding-top: 50px;
     padding-bottom: 100px;
 }

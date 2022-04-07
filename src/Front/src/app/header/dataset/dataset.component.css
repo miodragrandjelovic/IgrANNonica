@@ -1,0 +1,24 @@
+.container-fluid{
+    background-color: #34495E;
+    height: 100vh;
+    padding-bottom: 20px;
+}
+.container .sredina{
+    height:  auto;
+    margin: 0 90px 0 90px;
+}
+
+.container .naslov{
+    margin-bottom: 30px;
+    background: white;
+    box-shadow: #212F3C 10px 10px 10px -1px;
+    border-radius: 4px;
+    height: auto;
+}
+.container .datasetovi{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background: white;
+    box-shadow: #212F3C 10px 10px 10px -1px;
+    border-radius: 4px;
+}
