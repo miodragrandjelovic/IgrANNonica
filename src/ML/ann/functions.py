@@ -1,3 +1,4 @@
+from gc import callbacks
 from multiprocessing.dummy import active_children
 from tkinter.ttk import Label
 from matplotlib.font_manager import json_dump
@@ -28,6 +29,24 @@ from keras import Input
 from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D, Activation, Normalization
 from keras.losses import MeanSquaredError, BinaryCrossentropy, SparseCategoricalCrossentropy, CategoricalCrossentropy
 
+from keras.callbacks import Callback
+
+
+class epochResults(Callback):
+    def on_epoch_end(self, epoch, logs=None):
+        listOfLogs = dict()
+        listOfLogs["Epoch"] = epoch + 1
+
+        keys = list(logs.keys())
+        for key in keys:
+            listOfLogs[key] = logs.get(key)
+
+        print("LIST OF LOGS FOR EPOCH ",listOfLogs["Epoch"])
+        print(listOfLogs)
+
+    
+    def on_batch_end(self, epoch, logs=None):
+        print("ITS THE END OF A BATCH")
 
 
 def load_data(features, label, data ):
@@ -61,7 +80,7 @@ def feature_and_label(data, label):
     return data,y
 
 def normalize(df):
-    print(df)
+    #print(df)
     for (columnName,columnData) in df.iteritems():
        # print("COLUMN NAME IS ")
        # print(columnName)
@@ -204,7 +223,7 @@ def drop_numerical_outliers(df, z_thresh=3):
 def one_hot_encoder(df):
     cat = df.select_dtypes(include='O').keys()
     df=pd.get_dummies(df,columns=cat)
-    print(df)
+    #print(df)
     return df
 
 def label_encoding(df):
@@ -407,8 +426,9 @@ def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_
 
    # print("Y TEST")
    # print(pd.DataFrame(y_test).head())
-    
-    fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_val, y_val), verbose=1)
+    call = epochResults()
+
+    fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, callbacks=[call] ,validation_data = (X_val, y_val), verbose=2)
 
     pred = model.predict(X_test) 
     if(type=="classification"):
