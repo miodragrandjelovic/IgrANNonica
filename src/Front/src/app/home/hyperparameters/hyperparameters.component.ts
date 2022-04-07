@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { ParametersService } from 'src/app/services/parameters.service';
 import { Chart, registerables, LineController, LineElement, PointElement, LinearScale, Title } from 'chart.js'
 
+
 interface RequestHyperparameters{
   encodingType: string,
   learningRate: number,
@@ -33,7 +34,7 @@ interface RequestHyperparameters{
 })
 export class HyperparametersComponent implements OnInit {
 
-
+  hpY1: Array<Number> = [];
   hpY: Array<Number> = [];
   hpX: Array<string> = [];
   inputs: any = [];
@@ -165,8 +166,10 @@ export class HyperparametersComponent implements OnInit {
       for (var i = 0; i < this.hpResponse.Loss.length; i++) {
         this.hpX.push("" + i);
         this.hpY.push(this.hpResponse.Loss[i]);
+        this.hpY1.push(this.hpResponse.valLoss[i]);
       }
 
+      console.log(this.hpY1);
       console.log(this.hpX);
       console.log(this.hpY);
       
@@ -180,10 +183,30 @@ export class HyperparametersComponent implements OnInit {
             fill: false,
             label: 'Loss',
             backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)'
+            borderColor: 'rgb(255, 99, 132)',
+            yAxisID: 'y'
+            },
+            {
+              data: this.hpY1,
+              label: 'valLoss',
+              backgroundColor: 'rgb(99, 122, 255)',
+              borderColor: 'rgb(99, 122, 255)',
+              yAxisID: 'y1'
             }]
           },
-        options: {}
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              display: true,
+              position: 'left',
+            },
+            y1: {
+              display: true,
+              position: 'right'
+            }
+          }
+          }
         });
       });
     }
