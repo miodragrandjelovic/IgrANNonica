@@ -1,3 +1,4 @@
+
 <div id="sredina" [hidden]="!hidden">
   <div id="sredinaCentar">  
     <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
@@ -117,7 +118,9 @@
                         <input type="text" [formControlName]="i"/>
                   </div>
               </div>
-              <div class="col">
+              <div class="col" width="400px" height="400px">
+
+                <canvas id="chart"></canvas>
                 
               </div>
           </div>

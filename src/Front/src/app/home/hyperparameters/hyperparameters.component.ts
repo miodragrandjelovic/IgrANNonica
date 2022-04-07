@@ -3,6 +3,8 @@ import { Options } from '@angular-slider/ngx-slider';
 import { Form, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ParametersService } from 'src/app/services/parameters.service';
+import { Chart, registerables, LineController, LineElement, PointElement, LinearScale, Title } from 'chart.js'
+
 
 interface RequestHyperparameters{
   encodingType: string,
@@ -32,8 +34,9 @@ interface RequestHyperparameters{
 })
 export class HyperparametersComponent implements OnInit {
 
-
-  hpArray: any;
+  hpY1: Array<Number> = [];
+  hpY: Array<Number> = [];
+  hpX: Array<string> = [];
   inputs: any = [];
   inputsString: string;
   outputString: string = "";
@@ -49,7 +52,9 @@ export class HyperparametersComponent implements OnInit {
   problemType: string = "regression";
   encodingType: string = "label";
   epochs: number=10;
-  randomize: boolean = false; 
+  randomize: boolean = false;
+  hpResponse: any;
+  ctx: any;
   //layers:Array<string> = ["5","5","5","5","5"]
   //
 
@@ -66,7 +71,10 @@ export class HyperparametersComponent implements OnInit {
   hyperparametersForm!: FormGroup;
 
 
-  constructor(private http: HttpClient, private parametersService: ParametersService) { }
+  constructor(private http: HttpClient, private parametersService: ParametersService) {
+    Chart.register(...registerables);
+    Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
+   } 
 
   get neuronControls() {
     return (<FormArray>this.hyperparametersForm.get('neurons')).controls;
@@ -74,7 +82,6 @@ export class HyperparametersComponent implements OnInit {
 
   ngOnInit(): void {
     this.inputs = [];
-    this.hpArray = [];
     this.hyperparametersForm = new FormGroup({
       'encodingType': new FormControl(null),
       'learningRate': new FormControl(0),
@@ -154,10 +161,55 @@ export class HyperparametersComponent implements OnInit {
     } 
 
     this.http.post('https://localhost:7167/api/LoadData/hp', myreq).subscribe(result => {
-      console.log(result);
-    });
+      this.hpResponse = result;
+      console.log(this.hpResponse);
+      for (var i = 0; i < this.hpResponse.Loss.length; i++) {
+        this.hpX.push("" + i);
+        this.hpY.push(this.hpResponse.Loss[i]);
+        this.hpY1.push(this.hpResponse.valLoss[i]);
+      }
 
-  }
+      console.log(this.hpY1);
+      console.log(this.hpX);
+      console.log(this.hpY);
+      
+      this.ctx = document.getElementById('chart') as HTMLCanvasElement;
+      let chart = new Chart(this.ctx, {
+        type: 'line',
+        data: {
+          labels: this.hpX,
+          datasets: [{
+            data: this.hpY,
+            fill: false,
+            label: 'Loss',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            yAxisID: 'y'
+            },
+            {
+              data: this.hpY1,
+              label: 'valLoss',
+              backgroundColor: 'rgb(99, 122, 255)',
+              borderColor: 'rgb(99, 122, 255)',
+              yAxisID: 'y1'
+            }]
+          },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              display: true,
+              position: 'left',
+            },
+            y1: {
+              display: true,
+              position: 'right'
+            }
+          }
+          }
+        });
+      });
+    }
 
   onAddLayer() {
     const control = new FormControl(0);
