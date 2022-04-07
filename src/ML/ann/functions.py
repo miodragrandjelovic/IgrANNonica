@@ -1,3 +1,4 @@
+from gc import callbacks
 from multiprocessing.dummy import active_children
 from tkinter.ttk import Label
 from matplotlib.font_manager import json_dump
@@ -31,54 +32,21 @@ from keras.losses import MeanSquaredError, BinaryCrossentropy, SparseCategorical
 from keras.callbacks import Callback
 
 
-class regressionEpochResults(Callback):
+class epochResults(Callback):
     def on_epoch_end(self, epoch, logs=None):
         listOfLogs = dict()
         listOfLogs["Epoch"] = epoch + 1
-        listOfLogs["Loss"] = logs.get('loss')
-        listOfLogs["valLoss"] = logs.get('val_loss')
-        listOfLogs["MAE"] = logs.get('mae')
-        listOfLogs["valMAE"] = logs.get('val_mae')
-        listOfLogs["MSE"] = logs.get('mse')
-        listOfLogs["valMSE"] = logs.get('val_mse')
-        listOfLogs["RMSE"] = logs.get('root_mean_squared_error')
-        listOfLogs["valRMSE"] = logs.get('val_root_mean_squared_error')
-        listOfLogs["MAPE"] = logs.get('mean_absolute_percentage_error')
-        listOfLogs["valMAPE"] = logs.get('val_mean_absolute_percentage_error')
+
+        keys = list(logs.keys())
+        for key in keys:
+            listOfLogs[key] = logs.get(key)
+
         print("LIST OF LOGS FOR EPOCH ",listOfLogs["Epoch"])
         print(listOfLogs)
 
     
     def on_batch_end(self, epoch, logs=None):
         print("ITS THE END OF A BATCH")
-
-
-class classificationEpochResults(Callback):
-    def on_epoch_end(self, epoch, logs=None):
-        listOfLogs = dict()
-        listOfLogs["Epoch"] = epoch + 1
-        listOfLogs["Accuracy"] = logs.get('accuracy')
-        listOfLogs["valAccuracy"] = logs.get('val_accuracy')
-        listOfLogs["AUC"] = logs.get('auc')
-        listOfLogs["valAUC"] = logs.get('val_auc')
-        listOfLogs["Precision"] = logs.get('precision')
-        listOfLogs["valPrecision"] = logs.get('val_precision')
-        listOfLogs["Recall"] = logs.get('recall')
-        listOfLogs["valRecall"] = logs.get('val_recall')
-        listOfLogs["TruePositives"] = logs.get('true_positives')
-        listOfLogs["valTruePositives"] = logs.get('val_true_positives')
-        listOfLogs["TrueNegatives"] = logs.get('true_negatives')
-        listOfLogs["valTrueNegatives"] = logs.get('val_true_negatives')
-        listOfLogs["FalsePositives"] = logs.get('false_positives')
-        listOfLogs["valFalsePositives"] = logs.get('val_false_positives')
-        listOfLogs["FalseNegatives"] = logs.get('false_negatives')
-        listOfLogs["valFalseNegatives"] = logs.get('val_false_negatives')
-        print("LIST OF LOGS FOR EPOCH ",listOfLogs["Epoch"])
-        print(listOfLogs)
-    
-    def on_batch_end(self, epoch, logs=None):
-        print("ITS THE END OF A BATCH")
-
 
 
 def load_data(features, label, data ):
@@ -112,7 +80,7 @@ def feature_and_label(data, label):
     return data,y
 
 def normalize(df):
-    print(df)
+    #print(df)
     for (columnName,columnData) in df.iteritems():
        # print("COLUMN NAME IS ")
        # print(columnName)
@@ -255,7 +223,7 @@ def drop_numerical_outliers(df, z_thresh=3):
 def one_hot_encoder(df):
     cat = df.select_dtypes(include='O').keys()
     df=pd.get_dummies(df,columns=cat)
-    print(df)
+    #print(df)
     return df
 
 def label_encoding(df):
@@ -458,8 +426,9 @@ def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_
 
    # print("Y TEST")
    # print(pd.DataFrame(y_test).head())
-    
-    fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, validation_data = (X_val, y_val), verbose=1)
+    call = epochResults()
+
+    fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, callbacks=[call] ,validation_data = (X_val, y_val), verbose=2)
 
     pred = model.predict(X_test) 
     if(type=="classification"):
