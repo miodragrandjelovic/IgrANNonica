@@ -116,7 +116,11 @@ export class CsvComponent implements OnInit {
         this.parametersService.setParamsObs(this.sendHp);
     }
 
+    prikazPreload:boolean=true;
+
     fileUpload(files: any) {
+        this.prikazPreload=false;
+
         this.sendHp = '';
         this.showMe2 = true;
         this.showMeMatrix = false;
