@@ -84,7 +84,7 @@
                 <select [(ngModel)]='encodingType' class="custom-select" id="encoding" formControlName="encodingType">
                   <option value="label">Label</option>
                   <option value="onehot">One hot</option>
-                  <option value="ordinal">Ordinal</option> 
+                  <option value="binary">Binary</option> 
                 </select>
               </div>
             </div>
@@ -99,18 +99,18 @@
         </div>
         <div class="container-fluid"> 
           <div class="row" >
-              <div class="col" >
-              <label for="percTrainData">Ratio of training to test data:<span class="value"></span></label>
+              <div class="col-4" >
+              <label for="percTrainData">Ratio of training to test data:<span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
               <p class="slider">
                 <ngx-slider class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
               </p>
               
-              <label for="batchSize">Batch size:<span class="value"></span></label>
+              <label for="batchSize">Batch size:<span class="value"><input type="text" value = "{{value2}}" (keyup)="onSecondTextInputChange($event)" style="width: 40px;" /></span></label>
               <p class="slider">
                 <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
               </p>
               </div>
-              <div class="col-10" formArrayName="neurons" style="text-align: center;">
+              <div class="col-6" formArrayName="neurons" style="text-align: center;">
                     <!--<app-slojevi-neuroni></app-slojevi-neuroni> -->
                     <button type="button" class="btn btn-outline-primary" (click)="onAddLayer()" style="margin: 5px;">Add Layer</button>
                     <div *ngFor="let neuron of neuronControls; let i = index">
