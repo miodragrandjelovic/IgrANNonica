@@ -212,5 +212,15 @@ namespace Backend.Controllers
             return Ok(statjson);
         }
 
+        [HttpPost("path")] //Slanje Username-a do pajtona
+        public async Task<ActionResult<String>> PostPath(String name)
+        {
+            var username = name;
+            var data = new StringContent(name, System.Text.Encoding.UTF8, "application/text");
+            var url = "http://127.0.0.1:3000/stats";
+            var response = await http.PostAsync(url, data);
+            return Ok(username);
+        }
+
     }
 }
