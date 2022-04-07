@@ -20,7 +20,7 @@ const routes: Routes = [
   {path:'profile',component:ProfileComponent,
   canActivate:[AuthGuardService]},
   {path:'send-email',component:SendEmailComponent},
-  {path:'hyperparameters',component:HyperparametersComponent}
+  {path:'hyperparameters',component:HyperparametersComponent},
   {path:'dataset',component:DatasetComponent},
 ];
 
