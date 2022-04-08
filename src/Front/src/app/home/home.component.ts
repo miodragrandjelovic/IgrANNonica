@@ -3,6 +3,7 @@ import { Options } from '@angular-slider/ngx-slider';
 import { Form, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ParametersService } from '../services/parameters.service';
+import { MessageService } from './home.service';
 
 
 interface RequestHyperparameters{
@@ -28,11 +29,12 @@ interface RequestHyperparameters{
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
+  providers: [MessageService],
   styleUrls: ['./home.component.css']
 })
 
 export class HomeComponent implements OnInit {
-  
+    
   edited: boolean = false;
   value1: number = 10;
   value2: number = 20;
@@ -61,13 +63,15 @@ export class HomeComponent implements OnInit {
   hyperparametersForm!: FormGroup;
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private service: MessageService) { }
 
   get neuronControls() {
    return (<FormArray>this.hyperparametersForm.get('neurons')).controls;
   }
 
   ngOnInit(): void {
+    this.service.sayMessage(0);
+
     this.hyperparametersForm = new FormGroup({
       'encodingType': new FormControl(null),
       'learningRate': new FormControl(0),
@@ -81,7 +85,19 @@ export class HomeComponent implements OnInit {
       'randomize': new FormControl(0),
       'neurons': new FormArray([])
     });
+
   }
+
+  // salje se komponenta child-u <app-csv> poruka je 0
+  showCsvData(){
+    this.service.sayMessage(0);
+  }
+
+  // salje se komponenta childu <app-hyperparameters> - poruka je 1
+  showHyperp(){
+    this.service.sayMessage(1);
+  }
+
 
   showCsv() {
     this.edited = true;
