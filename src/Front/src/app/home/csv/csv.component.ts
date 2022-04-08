@@ -86,6 +86,7 @@ export class CsvComponent implements OnInit {
                 else
                 {
                     this.hidden = true;
+                    this.showHp();
                 }
             }
         })
@@ -94,6 +95,7 @@ export class CsvComponent implements OnInit {
     constructor(private http: HttpClient, private parametersService: ParametersService, private service: MessageService) {
 
     }
+
 
 
     fetchSelectedItems() {
