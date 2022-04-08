@@ -1,15 +1,9 @@
 #sredina{
   background-color: #34495E;
   /*height: 121vh;*/
-  padding-top: 50px;
-  padding-bottom: 200px;
-  margin-top: 100px;
+
 }
 
-#sredinaCentar{
-  height: auto;
-  margin: 0 90px 0 90px;
-}
 #top-controls {
     border-bottom: 1px solid black;
     padding: 18px 0;

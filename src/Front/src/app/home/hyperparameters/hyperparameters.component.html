@@ -1,10 +1,9 @@
 
 <div id="sredina" [hidden]="!hidden">
-  <div id="sredinaCentar">  
     <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
         <div id="top-controls">
 
-          <div class="row">
+          <div class="row" style="width:100%;margin:auto;">
 
             <div class="control epoch">
               <label for="epoch">Epoch</label>
@@ -95,17 +94,21 @@
                 <input class="form-check-input" type="checkbox" [(ngModel)]="randomize" id="flexSwitchCheckDefault" style="margin:11px 15px;" formControlName="randomize">
               </div>
             </div>
+
+            <div class="form-check control" style="padding-bottom:0px;">
+              <button type="submit" class="btn btn-primary" style="margin:20% 0% 20% 0%; background-color: #ff9800; font-weight: bold; color:#212F3C; border:#212F3C solid 1px;">Treniraj Model</button>
+            </div>
           </div>
         </div>
         <div class="container-fluid"> 
           <div class="row" >
-              <div class="col-4" >
-              <label for="percTrainData">Ratio of training to test data:<span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
+              <div class="col-4" style="width:20%; min-width: 170px;">
+              <label for="percTrainData">Train-Test Ratio: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
               <p class="slider">
                 <ngx-slider class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
               </p>
               
-              <label for="batchSize">Batch size:<span class="value"><input type="text" value = "{{value2}}" (keyup)="onSecondTextInputChange($event)" style="width: 40px;" /></span></label>
+              <label for="batchSize">Batch Size: <span class="value"><input type="text" value = "{{value2}}" (keyup)="onSecondTextInputChange($event)" style="width: 40px;" /></span></label>
               <p class="slider">
                 <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
               </p>
@@ -124,13 +127,13 @@
                 
               </div>
           </div>
+          <!--
           <div class="control d-grid gap-2 d-md-flex justify-content-md-end">
               <button type="button" class="btn btn-primary btn-lg" (click)="showCsv()"> CSV </button>
               <button type="submit" class="btn btn-primary btn-lg">Treniraj Model</button>
           </div>
-          <!--<button type="button" class="btn btn-primary btn-lg" style="position: absolute;left: 50%;" (click)="showCsv()"> CSV </button>-->
+          <button type="button" class="btn btn-primary btn-lg" style="position: absolute;left: 50%;" (click)="showCsv()"> CSV </button>-->
         </div>
       </form>
-       
-  </div>
+  
 </div>

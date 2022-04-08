@@ -4,6 +4,7 @@ import { Form, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ParametersService } from 'src/app/services/parameters.service';
 import { Chart, registerables, LineController, LineElement, PointElement, LinearScale, Title } from 'chart.js'
+import { MessageService } from '../home.service';
 
 
 interface RequestHyperparameters{
@@ -72,7 +73,7 @@ export class HyperparametersComponent implements OnInit {
   hyperparametersForm!: FormGroup;
 
 
-  constructor(private http: HttpClient, private parametersService: ParametersService) {
+  constructor(private http: HttpClient, private parametersService: ParametersService, private service : MessageService) {
     Chart.register(...registerables);
     Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
    } 
@@ -102,6 +103,20 @@ export class HyperparametersComponent implements OnInit {
       this.hyperparameters = res;
       console.log(this.hyperparameters);
     });
+
+    this.service.messageSubject.subscribe({
+      next: x => {
+        if (x == 0)
+        {
+          this.hidden = false;
+          //alert("IM HIDDEN");
+        }
+        else{
+          this.hidden = true;
+        }
+      }
+    })
+
     
   }
 

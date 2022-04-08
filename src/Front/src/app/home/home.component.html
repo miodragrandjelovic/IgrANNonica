@@ -2,6 +2,11 @@
 <div id="sredina">
   <div id="sredinaCentar">  
     <div id="tabelaCentar">
+      <!-- tabela centar treba da sadrzi sve-->
+      <div class="btn-group" role="group" aria-label="navigationToggle" style="width:100%;">
+        <button type="button" class="btn btn-primary no_border" (click)="showCsvData()">Load Data</button>
+        <button type="button" class="btn btn-primary no_border" (click)="showHyperp()">Train Model</button>
+      </div>
       <app-hyperparameters></app-hyperparameters>
       <app-csv></app-csv>
     </div>
