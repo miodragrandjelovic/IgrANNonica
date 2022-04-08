@@ -151,6 +151,15 @@ namespace Backend.Controllers
             return Ok(kor);
         }
 
+        [HttpGet("path")] //Slanje Username-a do pajtona
+        public async Task<ActionResult<String>> GetPath()
+        {
+            var name = Username;
+            var data = new StringContent(name, System.Text.Encoding.UTF8, "application/text");
+            var url = "http://127.0.0.1:3000/username";
+            var response = await http.PostAsync(url, data);
+            return Ok(name);
+        }
 
         [HttpGet("model")] //Primanje Modela iz pajtona 
         public async Task<ActionResult<JsonDocument>> GetModel()
