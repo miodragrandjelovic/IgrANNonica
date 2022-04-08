@@ -113,7 +113,7 @@
                 <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
               </p>
               </div>
-              <div class="col-6" formArrayName="neurons" style="text-align: center;">
+              <div class="col-6" formArrayName="neurons" style="text-align: center; width: 80%;">
                     <!--<app-slojevi-neuroni></app-slojevi-neuroni> -->
                     <button type="button" class="btn btn-outline-primary" (click)="onAddLayer()" style="margin: 5px;">Add Layer</button>
                     <div *ngFor="let neuron of neuronControls; let i = index">
@@ -121,7 +121,7 @@
                         <input type="text" [formControlName]="i"/>
                   </div>
               </div>
-              <div class="col" width="400px" height="400px">
+              <div class="col" style="width:100%;">
 
                 <canvas id="chart"></canvas>
                 

@@ -98,11 +98,13 @@ export class HyperparametersComponent implements OnInit {
       'neurons': new FormArray([]),
     });
 
+
     this.parametersService.getShowHp().subscribe(res => {this.hidden = res});
     this.parametersService.getParamsObs().subscribe(res => {
       this.hyperparameters = res;
       console.log(this.hyperparameters);
     });
+
 
     this.service.messageSubject.subscribe({
       next: x => {
@@ -115,9 +117,9 @@ export class HyperparametersComponent implements OnInit {
           this.hidden = true;
         }
       }
-    })
+    });
 
-    
+    this.onAddLayer();
   }
 
   onFirstTextInputChange(event:any){
