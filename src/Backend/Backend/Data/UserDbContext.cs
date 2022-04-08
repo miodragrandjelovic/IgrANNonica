@@ -17,5 +17,7 @@ namespace Backend.Models
         }*/
         public DbSet<User> RegistrovaniUseri { get; set; }
         public DbSet<Realestate> Realestate { get; set; }
+        public DbSet<Mpg> Mpg { get; set; }
+
     }
 }

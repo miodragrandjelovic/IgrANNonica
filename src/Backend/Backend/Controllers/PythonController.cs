@@ -88,7 +88,53 @@ namespace Backend.Controllers
             
             return Ok(kor);
         }
-        
+
+        [HttpGet("preloadCsvClass")] //Vracanje ucitanog klasifikacionog csv fajla iz baze.
+        public async Task<ActionResult<IEnumerable<Mpg>>> GetPreloadCsvClass()
+        {
+            var loadedCsv = await _context.Mpg.ToListAsync(); //lista/json
+            string jsoncsv = JsonSerializer.Serialize(loadedCsv); //string
+
+
+            return Ok(loadedCsv);
+        }
+
+
+        [HttpGet("preloadStatClass")] //statistika za klasifikacioni 
+        public async Task<ActionResult<JsonDocument>> GetPreloadStatClass()
+        {
+            var loadedCsv = await _context.Mpg.ToListAsync();
+            var csve = JsonSerializer.Serialize(loadedCsv); //string
+            var jsoncsva = JsonSerializer.Deserialize<JsonDocument>(csve); //json
+
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+            var url = "http://127.0.0.1:3000/csv";
+            var response = await http.PostAsync(url, data);
+
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
+            var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
+
+            return Ok(stat);
+        }
+
+        [HttpGet("preloadKorClass")]
+        public async Task<ActionResult<JsonDocument>> GetPreloadKorClass()
+        {
+            var loadedCsv = await _context.Mpg.ToListAsync();
+            var csve = JsonSerializer.Serialize(loadedCsv); //string
+            var jsoncsva = JsonSerializer.Deserialize<JsonDocument>(csve); //json
+
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+            var url = "http://127.0.0.1:3000/csv";
+            var response = await http.PostAsync(url, data);
+
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/kor");
+            var kor = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
+            //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
+
+            return Ok(kor);
+        }
+
         [HttpGet("preloadAll")]
         public async Task<ActionResult<Loaded>> GetPreloadAll()
         {
