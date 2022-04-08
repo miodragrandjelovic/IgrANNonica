@@ -91,6 +91,16 @@ def post_csv():
 def  getCsv():
     return jsonify(csvdata)
 
+@app.route("/username", methods=["POST"]) #Primanje Username-a sa beka
+def post_username():
+    global username
+    username = request.get_data()
+    return username
+
+@app.route("/username", methods=['GET']) #slanje Username-a na bek cisto za proveru
+def getUsername():
+    return username    
+
 @app.route("/stats",methods=['GET']) #statistika
 def statistika(): 
     statistika=df.describe(include='all')

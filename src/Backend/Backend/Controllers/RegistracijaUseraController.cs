@@ -24,6 +24,7 @@ namespace Backend.Controllers
         public static User user = new User();
         private readonly IConfiguration _configuration;
         private readonly UserDbContext _context;
+        public static string Username;
 
         public RegistracijaUseraController(UserDbContext context, IConfiguration configuration)
         {
@@ -231,9 +232,9 @@ namespace Backend.Controllers
             {
                 return BadRequest("Pogresna sifra!");
             }
-
-            LoadData.Username = request.Username;
-            PythonController.Username = request.Username;
+            Username = request.Username;
+            LoadData.Username = Username;
+            PythonController.Username = Username;
             string token1 = CreateToken(user);
             var jtoken = new
             {
@@ -241,6 +242,23 @@ namespace Backend.Controllers
             };
             return Ok(jtoken);
         }
+
+        [HttpGet("logout")]//Logout korisnika.
+        public async Task<ActionResult<string>> Logout()
+        {
+            string previousUser = Username;
+            Username = null;
+            LoadData.Username = Username;
+            PythonController.Username = Username;
+            if(previousUser != null)
+            {
+                return Ok("Korisnik " + previousUser + " se uspesno izlogovao.");
+            }
+            else
+                return Ok("Niko nije bio ulogovan.");
+
+        }
+
         private string CreateToken(User user)//Pravljenje tokena pri logovanju.
         {
             List<Claim> claims = new List<Claim>
