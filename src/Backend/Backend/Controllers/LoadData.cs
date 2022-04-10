@@ -62,6 +62,21 @@ namespace Backend.Controllers
             return Ok(resultjson);
         }
 
+        [HttpPost("savedModels")] //Vracanje imena sacuvanih Modela.
+        public async Task<ActionResult<String>> PostSavedModels(String name)
+        {
+            string CsvName = name;
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + CsvName;
+            if (Username == null)
+            {
+                return BadRequest("Niste ulogovani.");
+            }
+            string[] subdirs = Directory.GetDirectories(SelectedPath).Select(Path.GetFileName).ToArray();
+
+            return Ok(subdirs);
+        }
+
 
         [HttpPost("hp")] //Slanje HP na pajton
         public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper)
