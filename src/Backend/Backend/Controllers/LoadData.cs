@@ -26,6 +26,7 @@ namespace Backend.Controllers
         public static Hiperparametri hp = new Hiperparametri();
         public static string? Name { get; set; } //Ime ucitanog Csv fajla
         public static string? Username { get; set; } //Ulogovan korisnik
+        public static string? DirName { get; set; } //Ime foldera 
 
         [HttpPost("selectedCsv")] //Otvaranje foldera gde se nalazi izabrani csv
         public async Task<ActionResult<String>> PostSelectedCsv(String name)
@@ -69,6 +70,7 @@ namespace Backend.Controllers
         [HttpPost("savedModels")] //Vracanje imena sacuvanih Modela.
         public async Task<ActionResult<String>> PostSavedModels(String name)
         {
+            DirName = name;
             string CsvName = name;
             string CurrentPath = Directory.GetCurrentDirectory();
             string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + CsvName;
@@ -88,12 +90,14 @@ namespace Backend.Controllers
             {
                 return BadRequest("Niste ulogovani.");
             }
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
 
             var modelName = name;
             var data = new StringContent(modelName, System.Text.Encoding.UTF8, "application/text");
             var url = "http://127.0.0.1:3000/savedModel";
             var response = await http.PostAsync(url, data);
-            return Ok(modelName);
+            return Ok(SelectedPath);
 
         }
 
