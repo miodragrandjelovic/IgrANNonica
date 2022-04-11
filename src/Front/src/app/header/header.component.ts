@@ -39,6 +39,8 @@ export class HeaderComponent implements OnInit {
     message:string='';
     token:any;
 
+    isMenuCollapsed:boolean;
+
   ngOnInit(): void {
     this.registerForm=new FormGroup({
       "firstname":new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z]*')]),
@@ -47,7 +49,10 @@ export class HeaderComponent implements OnInit {
       "username":new FormControl(null,[Validators.required]),
       "password":new FormControl(null,[Validators.required])
     });
+
+    this.isMenuCollapsed = true;
   }
+
 
   save(username:string, password:string){
     sessionStorage.setItem('username',username);
@@ -72,6 +77,7 @@ export class HeaderComponent implements OnInit {
       this.session=this.get();
       this.loggedUser=this.get();
 
+      this.selectedIndex = 'homePage';
       this.router.navigate(['/home']);
     }, error =>{
       if(error.status==400)
@@ -111,6 +117,7 @@ export class HeaderComponent implements OnInit {
 
 
   openRegister(contentRegister: any) {
+    this.isMenuCollapsed = true;
     this.modalService.open(contentRegister, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -119,6 +126,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openLogin(contentLogin: any) {
+    this.isMenuCollapsed = true;
     this.modalService.open(contentLogin, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -137,6 +145,7 @@ export class HeaderComponent implements OnInit {
 
   get(){
     return sessionStorage.getItem('username');
+    
   }
 
   onLogOut()
@@ -145,6 +154,18 @@ export class HeaderComponent implements OnInit {
     sessionStorage.clear();
     this.session=this.get();
     this.router.navigate(['/']);
+    this.selectedIndex = "";
+    this.isMenuCollapsed = true;
   }
+
+
+  selectedIndex: string;
+  onSelect(index: string){
+    this.selectedIndex = index;
+    this.isMenuCollapsed = true;
+  }
+
+
+
 
 }
