@@ -91,6 +91,20 @@ def post_csv():
 def  getCsv():
     return jsonify(csvdata)
 
+
+#primanje csv-a za predikciju i posle slanje rezultata nazad
+
+@app.route("/predictionCsv", methods=["POST"]) #Primanje CSV za predikciju sa beka i njegovo sredjivanje 
+def post_predictioncsv():
+    cs = request.get_json()
+    return cs
+
+@app.route("/prediction", methods=['GET']) #Slanje predikcije na bek
+def  getPrediction():
+    return jsonify(csvdata) #predikcija 
+
+#
+
 @app.route("/username", methods=["POST"]) #Primanje Username-a sa beka
 def post_username():
     global username
@@ -100,6 +114,28 @@ def post_username():
 @app.route("/username", methods=['GET']) #slanje Username-a na bek cisto za proveru
 def getUsername():
     return username    
+
+
+@app.route("/savedModel", methods=["POST"]) #Primanje putanje do foldera savedModel-a izabranog 
+def post_savedModel():
+    global savedModel
+    savedModel = request.get_data()
+    return savedModel
+
+@app.route("/savedModel", methods=['GET']) #slanje savedModel-a na bek cisto za proveru
+def getsavedModel():
+    return savedModel    
+
+@app.route("/pathModel", methods=["POST"]) #Primanje putanje do foldera novog modela
+def post_pathmodel():
+    global pathmodel
+    pathmodel = request.get_data()
+    return pathmodel
+
+@app.route("/pathModel", methods=['GET']) #slanje putanje do foldera novog modelas na bek cisto za proveru
+def getpathmodel():
+    return pathmodel    
+
 
 @app.route("/stats",methods=['GET']) #statistika
 def statistika(): 

@@ -26,6 +26,7 @@ namespace Backend.Controllers
         public static Hiperparametri hp = new Hiperparametri();
         public static string? Name { get; set; } //Ime ucitanog Csv fajla
         public static string? Username { get; set; } //Ulogovan korisnik
+        public static string? DirName { get; set; } //Ime foldera 
 
         [HttpPost("selectedCsv")] //Otvaranje foldera gde se nalazi izabrani csv
         public async Task<ActionResult<String>> PostSelectedCsv(String name)
@@ -69,6 +70,7 @@ namespace Backend.Controllers
         [HttpPost("savedModels")] //Vracanje imena sacuvanih Modela.
         public async Task<ActionResult<String>> PostSavedModels(String name)
         {
+            DirName = name;
             string CsvName = name;
             string CurrentPath = Directory.GetCurrentDirectory();
             string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + CsvName;
@@ -81,6 +83,23 @@ namespace Backend.Controllers
             return Ok(subdirs);
         }
 
+        [HttpPost("selectedModel")] //Vracanje imena izabranog modela.
+        public async Task<ActionResult<JsonDocument>> PostSelectedModel(String name)
+        {
+            if (Username == null)
+            {
+                return BadRequest("Niste ulogovani.");
+            }
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
+
+            var modelName = name;
+            var data = new StringContent(modelName, System.Text.Encoding.UTF8, "application/text");
+            var url = "http://127.0.0.1:3000/savedModel";
+            var response = await http.PostAsync(url, data);
+            return Ok(SelectedPath);
+
+        }
 
         [HttpPost("hp")] //Slanje HP na pajton
         public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper)
@@ -121,8 +140,10 @@ namespace Backend.Controllers
                 JsonUtility.ImportData(dataModel, worksheet.Cells, 0, 0, layoutOptions);
 
                 string modelName = upgradedName + "Model" + index + ".csv";
+                string modelDirName = upgradedName + "Model" + index;
 
-                string pathToCreate = System.IO.Path.Combine(path, modelName); 
+                string pathToCreate = System.IO.Path.Combine(path, modelName);
+                string pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
 
                 while (System.IO.File.Exists(pathToCreate))
                 {
@@ -132,9 +153,23 @@ namespace Backend.Controllers
                     pathToCreate = path + modelName;
                     pathToCreateHP = path + hpName;
                 }
-                workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
+                index = 1;
+                while (System.IO.Directory.Exists(pathToCreateDir))
+                {
+                    index++;
+                    modelDirName = upgradedName + "Model" + index;
+                    pathToCreateDir = path + modelDirName;
+                }
+                //workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
-            
+
+                System.IO.Directory.CreateDirectory(pathToCreateDir);
+                Console.WriteLine("Directory for new Model created successfully!");
+
+                var pathdata = new StringContent(pathToCreateDir, System.Text.Encoding.UTF8, "application/json");
+                var pathurl = "http://127.0.0.1:3000/pathModel";
+                var pathresponse = await http.PostAsync(pathurl, pathdata);
+
                 string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
                 string names = upgradedName + "1" + ".csv";
                 string pathToDelete = System.IO.Path.Combine(path1, names);
@@ -142,6 +177,7 @@ namespace Backend.Controllers
                 {
                     //System.IO.File.Delete(pathToDelete);
                 }
+
             }
             else
                 Console.WriteLine("Niste ulogovani.");
@@ -220,6 +256,24 @@ namespace Backend.Controllers
             else
                 Console.WriteLine("Niste ulogovani.");
             return Ok(stat);
+        }
+
+        [HttpPost("predictionCsv")] //Slanje csv fajla za predikciju na pajton i primanje predikcije i prosledjivanje na front preko responsa.
+        //[Obsolete]
+        public async Task<ActionResult<DataLoad>> PostPredictedCsv([FromBody] DataLoad cs)
+        {
+            string name = cs.Name;
+            string csve = cs.CsvData;
+            Name = cs.Name;
+            PythonController.Name = cs.Name;
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+            var url = "http://127.0.0.1:3000/predictionCsv"; //slanje csv-a za prediktovanje na pajton
+            var response = await http.PostAsync(url, data);
+
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/prediction"); //rezultati predikcije
+            var predikcija = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
+
+            return Ok(predikcija);
         }
 
         [HttpPost("stats")] //Slanje Stats na pajton
