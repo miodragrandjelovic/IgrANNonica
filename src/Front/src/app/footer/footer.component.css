@@ -1,11 +1,13 @@
 #wrapper{
   background-color: #212F3C ;
   /*margin-top: 150px;*/
+  padding-top: 0px;
 }
 
 .row{
  width: 100%;
- margin: 0px;
+ margin: auto;
+ text-align: center;
 }
  
 #footLogo, #footAbout, #footContact{
@@ -45,19 +47,20 @@
 }
 #wrapper .col-sm {
   background-color: #212F3C ;
-  padding-top: 25px;
+  padding-top: 20px;
 }
 
 img{
-  width: 150px;
+  width: 100px;
   height: auto;
   margin:0px;
 }
 
-
+/*
 @media screen and (max-width: 990px) {
   img{
-    width: 100px;
+    width: 80px;
     height: auto;
   }
 }
+*/
