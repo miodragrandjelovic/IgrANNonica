@@ -59,6 +59,10 @@ namespace Backend.Controllers
             result = JsonConvert.SerializeObject(csvTable);
 
             var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); //json
+
+            var data = new StringContent(result, System.Text.Encoding.UTF8, "application/json");
+            var url = "http://127.0.0.1:3000/csv";
+            var response = await http.PostAsync(url, data);
             return Ok(resultjson);
         }
 
