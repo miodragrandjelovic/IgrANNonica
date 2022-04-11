@@ -140,8 +140,10 @@ namespace Backend.Controllers
                 JsonUtility.ImportData(dataModel, worksheet.Cells, 0, 0, layoutOptions);
 
                 string modelName = upgradedName + "Model" + index + ".csv";
+                string modelDirName = upgradedName + "Model" + index;
 
-                string pathToCreate = System.IO.Path.Combine(path, modelName); 
+                string pathToCreate = System.IO.Path.Combine(path, modelName);
+                string pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
 
                 while (System.IO.File.Exists(pathToCreate))
                 {
@@ -151,9 +153,23 @@ namespace Backend.Controllers
                     pathToCreate = path + modelName;
                     pathToCreateHP = path + hpName;
                 }
-                workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
+                index = 1;
+                while (System.IO.Directory.Exists(pathToCreateDir))
+                {
+                    index++;
+                    modelDirName = upgradedName + "Model" + index;
+                    pathToCreateDir = path + modelDirName;
+                }
+                //workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
-            
+
+                System.IO.Directory.CreateDirectory(pathToCreateDir);
+                Console.WriteLine("Directory for new Model created successfully!");
+
+                var pathdata = new StringContent(pathToCreateDir, System.Text.Encoding.UTF8, "application/json");
+                var pathurl = "http://127.0.0.1:3000/pathModel";
+                var pathresponse = await http.PostAsync(pathurl, pathdata);
+
                 string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
                 string names = upgradedName + "1" + ".csv";
                 string pathToDelete = System.IO.Path.Combine(path1, names);
@@ -161,6 +177,7 @@ namespace Backend.Controllers
                 {
                     //System.IO.File.Delete(pathToDelete);
                 }
+
             }
             else
                 Console.WriteLine("Niste ulogovani.");

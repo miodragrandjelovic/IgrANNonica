@@ -92,7 +92,7 @@ def  getCsv():
     return jsonify(csvdata)
 
 
-#
+#primanje csv-a za predikciju i posle slanje rezultata nazad
 
 @app.route("/predictionCsv", methods=["POST"]) #Primanje CSV za predikciju sa beka i njegovo sredjivanje 
 def post_predictioncsv():
@@ -116,7 +116,7 @@ def getUsername():
     return username    
 
 
-@app.route("/savedModel", methods=["POST"]) #Primanje savedModel-a sa beka
+@app.route("/savedModel", methods=["POST"]) #Primanje putanje do foldera savedModel-a izabranog 
 def post_savedModel():
     global savedModel
     savedModel = request.get_data()
@@ -126,6 +126,15 @@ def post_savedModel():
 def getsavedModel():
     return savedModel    
 
+@app.route("/pathModel", methods=["POST"]) #Primanje putanje do foldera novog modela
+def post_pathmodel():
+    global pathmodel
+    pathmodel = request.get_data()
+    return pathmodel
+
+@app.route("/pathModel", methods=['GET']) #slanje putanje do foldera novog modelas na bek cisto za proveru
+def getpathmodel():
+    return pathmodel    
 
 
 @app.route("/stats",methods=['GET']) #statistika
