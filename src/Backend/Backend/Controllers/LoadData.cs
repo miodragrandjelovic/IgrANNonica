@@ -81,6 +81,21 @@ namespace Backend.Controllers
             return Ok(subdirs);
         }
 
+        [HttpPost("selectedModel")] //Vracanje imena izabranog modela.
+        public async Task<ActionResult<JsonDocument>> PostSelectedModel(String name)
+        {
+            if (Username == null)
+            {
+                return BadRequest("Niste ulogovani.");
+            }
+
+            var modelName = name;
+            var data = new StringContent(modelName, System.Text.Encoding.UTF8, "application/text");
+            var url = "http://127.0.0.1:3000/savedModel";
+            var response = await http.PostAsync(url, data);
+            return Ok(response);
+
+        }
 
         [HttpPost("hp")] //Slanje HP na pajton
         public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper)

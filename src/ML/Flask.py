@@ -101,6 +101,19 @@ def post_username():
 def getUsername():
     return username    
 
+
+@app.route("/savedModel", methods=["POST"]) #Primanje savedModel-a sa beka
+def post_savedModel():
+    global savedModel
+    savedModel = request.get_data()
+    return savedModel
+
+@app.route("/savedModel", methods=['GET']) #slanje savedModel-a na bek cisto za proveru
+def getsavedModel():
+    return savedModel    
+
+
+
 @app.route("/stats",methods=['GET']) #statistika
 def statistika(): 
     statistika=df.describe(include='all')
