@@ -37,8 +37,8 @@
 nav{
   background: #212F3C ;
   color: black;
-  padding: 30px 100px 30px 100px;
-  max-height: 160px;
+  padding: 30px 50px 30px 50px;
+  /*max-height: 160px;*/
 }
 nav ul li{
   padding: 10px;
@@ -49,25 +49,26 @@ nav ul li a{
   letter-spacing: 2px;
   font-size: 17px;
   font-weight: 500;
-   font-family: 'Century Gothic';
+  font-family: 'Century Gothic';
+  text-align: center;
 }
 nav ul li a:hover{
-  color: #5499C7;
+  color: #03A9F4;
 }
 .nav-item .dropdown-menu{
   background-color: rgb(22, 23, 31);
 }
 
 img{
-  width: 150px;
-  height: auto;
+  height: 70px;
+  width: auto;
   float:left;
 }
 
 @media screen and (max-width: 990px) {
   img{
-    width: 100px;
-    height: auto;
+    height: 50px;
+    width: auto;
   }
 
   nav div{
