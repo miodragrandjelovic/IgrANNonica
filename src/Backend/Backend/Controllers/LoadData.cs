@@ -93,7 +93,7 @@ namespace Backend.Controllers
             var data = new StringContent(modelName, System.Text.Encoding.UTF8, "application/text");
             var url = "http://127.0.0.1:3000/savedModel";
             var response = await http.PostAsync(url, data);
-            return Ok(response);
+            return Ok(modelName);
 
         }
 
@@ -235,6 +235,24 @@ namespace Backend.Controllers
             else
                 Console.WriteLine("Niste ulogovani.");
             return Ok(stat);
+        }
+
+        [HttpPost("predictionCsv")] //Slanje csv fajla za predikciju na pajton i primanje predikcije i prosledjivanje na front preko responsa.
+        //[Obsolete]
+        public async Task<ActionResult<DataLoad>> PostPredictedCsv([FromBody] DataLoad cs)
+        {
+            string name = cs.Name;
+            string csve = cs.CsvData;
+            Name = cs.Name;
+            PythonController.Name = cs.Name;
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+            var url = "http://127.0.0.1:3000/predictionCsv"; //slanje csv-a za prediktovanje na pajton
+            var response = await http.PostAsync(url, data);
+
+            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/prediction"); //rezultati predikcije
+            var predikcija = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
+
+            return Ok(predikcija);
         }
 
         [HttpPost("stats")] //Slanje Stats na pajton
