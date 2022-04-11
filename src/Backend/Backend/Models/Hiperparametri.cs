@@ -26,5 +26,7 @@ namespace Backend.Models
         public string Inputs { get; set; } = string.Empty;
         public string Output { get; set; } = string.Empty;
 
+        public string Username { get; set; } = string.Empty;   
+
     }
 }
