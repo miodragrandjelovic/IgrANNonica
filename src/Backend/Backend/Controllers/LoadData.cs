@@ -81,6 +81,7 @@ namespace Backend.Controllers
         [HttpPost("hp")] //Slanje HP na pajton
         public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper)
         {
+            hiper.Username = Username;
             var hiperjson = System.Text.Json.JsonSerializer.Serialize(hiper);
             var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
             var url = "http://127.0.0.1:3000/hp";
