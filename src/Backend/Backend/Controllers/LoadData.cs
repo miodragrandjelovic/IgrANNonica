@@ -104,6 +104,24 @@ namespace Backend.Controllers
         [HttpPost("hp")] //Slanje HP na pajton
         public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper)
         {
+            int indexDir = 1;
+            var upgradedName = Name.Substring(0, Name.Length - 4);
+            string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
+            string modelDirName = upgradedName + "Model" + indexDir;
+            string pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
+
+            if (Username != null)
+            {
+                while (System.IO.Directory.Exists(pathToCreateDir))
+                {
+                    indexDir++;
+                    modelDirName = upgradedName + "Model" + indexDir;
+                    pathToCreateDir = path + modelDirName;
+                }
+                System.IO.Directory.CreateDirectory(pathToCreateDir);
+                Console.WriteLine("Directory for new Model created successfully!");
+            }
+
             hiper.Username = Username;
             var hiperjson = System.Text.Json.JsonSerializer.Serialize(hiper);
             var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
@@ -116,11 +134,9 @@ namespace Backend.Controllers
             layoutOptionshp.ArrayAsTable = true;
             JsonUtility.ImportData(hiperjson, worksheethp.Cells, 0, 0, layoutOptionshp);
 
-            var upgradedName = Name.Substring(0, Name.Length - 4);
+            
             int index = 1;
-            string hpName = upgradedName + "HP" + index + ".csv";
-
-            string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
+            string hpName = upgradedName + "HP" + index + ".csv";            
             string pathToCreateHP = System.IO.Path.Combine(path, hpName);
 
             //                                                                                  hiperparametri                                                                                
@@ -139,12 +155,9 @@ namespace Backend.Controllers
                 layoutOptions.ArrayAsTable = true;
                 JsonUtility.ImportData(dataModel, worksheet.Cells, 0, 0, layoutOptions);
 
-                string modelName = upgradedName + "Model" + index + ".csv";
-                string modelDirName = upgradedName + "Model" + index;
-
+                string modelName = upgradedName + "Model" + index + ".csv";            
                 string pathToCreate = System.IO.Path.Combine(path, modelName);
-                string pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
-
+                
                 while (System.IO.File.Exists(pathToCreate))
                 {
                     index++;
@@ -153,18 +166,10 @@ namespace Backend.Controllers
                     pathToCreate = path + modelName;
                     pathToCreateHP = path + hpName;
                 }
-                index = 1;
-                while (System.IO.Directory.Exists(pathToCreateDir))
-                {
-                    index++;
-                    modelDirName = upgradedName + "Model" + index;
-                    pathToCreateDir = path + modelDirName;
-                }
+               
                 //workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
 
-                System.IO.Directory.CreateDirectory(pathToCreateDir);
-                Console.WriteLine("Directory for new Model created successfully!");
 
                 var pathdata = new StringContent(pathToCreateDir, System.Text.Encoding.UTF8, "application/json");
                 var pathurl = "http://127.0.0.1:3000/pathModel";
