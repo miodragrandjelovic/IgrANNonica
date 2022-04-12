@@ -2,15 +2,15 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 import tensorflow as tf
 
-from functions import encode_data,normalize
+import ann.functions as fn
 
 def predikcija(path,csv):
     model = tf.keras.models.load_model(path)
     X=csv
-    X=encode_data(X, "onehot")
+    X=fn.encode_data(X, "onehot")
     
     if (type == "regression"):
-        X=normalize(X)
+        X=fn.normalize(X)
 
     if(type == "classification"):
         scaler=StandardScaler()

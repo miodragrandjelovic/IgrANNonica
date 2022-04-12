@@ -69,10 +69,6 @@ def post_predictioncsv():
     predictdf=data
     return predictdf.to_json()
 
-@app.route("/prediction", methods=['GET']) #Slanje predikcije na bek
-def  getPrediction():
-    return pr.predikcija(savedModel,predictdf)
-
 #
 
 @app.route("/username", methods=["POST"]) #Primanje Username-a sa beka
@@ -149,6 +145,10 @@ def treniraj():
     
     return jsonify(stats.stats)
     
+
+@app.route("/prediction", methods=['GET']) #Slanje predikcije na bek
+def  getPrediction():
+    return pr.predikcija(savedModel,predictdf)
 
 #if(__name__=="main"):
 app.run(port = 3000)
