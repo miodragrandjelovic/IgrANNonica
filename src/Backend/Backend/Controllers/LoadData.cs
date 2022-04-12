@@ -121,6 +121,7 @@ namespace Backend.Controllers
                 System.IO.Directory.CreateDirectory(pathToCreateDir);
                 Console.WriteLine("Directory for new Model created successfully!");
 
+                var pathjson = System.Text.Json.JsonSerializer.Serialize(pathToCreateDir);
                 var pathdata = new StringContent(pathToCreateDir, System.Text.Encoding.UTF8, "application/json");
                 var pathurl = "http://127.0.0.1:3000/pathModel";
                 var pathresponse = await http.PostAsync(pathurl, pathdata);
