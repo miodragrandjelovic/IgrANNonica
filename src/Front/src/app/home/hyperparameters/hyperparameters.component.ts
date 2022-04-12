@@ -99,7 +99,7 @@ export class HyperparametersComponent implements OnInit {
     });
 
 
-    this.parametersService.getShowHp().subscribe(res => {this.hidden = res});
+    //this.parametersService.getShowHp().subscribe(res => {this.hidden = res});
     this.parametersService.getParamsObs().subscribe(res => {
       this.hyperparameters = res;
       console.log(this.hyperparameters);

@@ -127,7 +127,7 @@ export class CsvComponent implements OnInit {
     }
 
     showHp() {
-        this.parametersService.setShowHp(true);
+       // this.parametersService.setShowHp(true);
         this.parametersService.setParamsObs(this.sendHp);
     }
 
