@@ -12,17 +12,15 @@
 # zatim, aktivacionu funkciju za output layer
 
 
-from matplotlib.pyplot import hist
 #import problem as pr
 import ann.problem as pr
-import pandas as pd
 
 class Statistics():
     def __init__(self,type):
         self.type = type    
         self.stats = None
 
-    def createModel(self,train, features, label, epochs, ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate):
+    def createModel(self,train, features, label, epochs, ratio, activation_function, hidden_layers_n, hidden_layer_neurons_list, encode_type,randomize, batch_size, learning_rate, regularization, regularization_rate,path):
         # model se kreira preko jedne fje, a u self.type se nalazi info da li treba da bude regresioni ili klasifikacioni
         """
         data=None
@@ -41,7 +39,7 @@ class Statistics():
         model =pr.Model(data,regularization, regularization_rate)
         model.makeModel(self.type, activation_function, hidden_layers_n, hidden_layer_neurons_list,regularization,regularization_rate)
         model.compileModel(self.type,learning_rate)
-        model.trainModel(self.type,epochs,batch_size)
+        model.trainModel(self.type,epochs,batch_size,path)
       #  model.plotResults(epochs, self.type)
         model.defMetrics(self.type)
 
