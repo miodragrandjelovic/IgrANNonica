@@ -1,20 +1,11 @@
 from gc import callbacks
-from multiprocessing.dummy import active_children
-from tkinter.ttk import Label
-from matplotlib.font_manager import json_dump
 import pandas as pd
 import numpy as np
 from sklearn.feature_selection import VarianceThreshold
-from sklearn.linear_model import SGDClassifier, SGDRegressor
-from sklearn.metrics import mean_absolute_error
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder, StandardScaler, scale
-from sklearn.utils import shuffle
 
 
 import tensorflow as tf
-import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy import stats
 import category_encoders as ce
 
 
@@ -23,11 +14,9 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import VarianceThreshold
 
 from tensorflow import keras
-import keras.regularizers
 from keras.models import Sequential
-from keras import Input
-from keras.layers import Flatten, Dense, BatchNormalization, Dropout, MaxPool1D, Conv1D, Activation, Normalization
-from keras.losses import MeanSquaredError, BinaryCrossentropy, SparseCategoricalCrossentropy, CategoricalCrossentropy
+from keras.layers import Dense 
+from keras.losses import MeanSquaredError, BinaryCrossentropy, CategoricalCrossentropy
 
 from keras.callbacks import Callback
 
@@ -406,29 +395,13 @@ def compile_model(model, type, y,lr):
     model.compile(optimizer=opt, loss=loss, metrics = met)
     return model 
 
-def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test):
-    #print(X_train.shape)
-    #print(X_train)
+def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test,path):
 
-    # during the training of a model , we need to monitor the process, and send the data to front, so the user can have an overview
-    # for this, we need to use callbacks argument
-    # ovde se javlja greska kod svih aktivacionih funkcija sem sigmoid!!
-    
-    
-   # print("X TRAIN")
-   # print(pd.DataFrame(X_train).head())
-
-   # print("Y TRAIN")
-   # print(pd.DataFrame(y_train).head())
-
-   # print("X TEST")
-   # print(pd.DataFrame(X_test).head())
-
-   # print("Y TEST")
-   # print(pd.DataFrame(y_test).head())
     call = epochResults()
 
     fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, callbacks=[call] ,validation_data = (X_val, y_val), verbose=2)
+
+    model.save(path)
 
     pred = model.predict(X_test) 
     if(type=="classification"):
