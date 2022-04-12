@@ -67,11 +67,11 @@ def post_predictioncsv():
 
     global predictdf
     predictdf=data
-    return csvdata
+    return predictdf.to_json()
 
 @app.route("/prediction", methods=['GET']) #Slanje predikcije na bek
 def  getPrediction():
-    return pr.predikcija(pathmodel,predictdf)
+    return pr.predikcija(savedModel,predictdf)
 
 #
 
