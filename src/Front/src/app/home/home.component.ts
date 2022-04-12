@@ -70,7 +70,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.service.sayMessage(0);
+    this.showCsvData();
+    //alert("UCITAO");
 
     this.hyperparametersForm = new FormGroup({
       'encodingType': new FormControl(null),
