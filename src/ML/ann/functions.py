@@ -401,7 +401,7 @@ def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_
 
     fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, callbacks=[call] ,validation_data = (X_val, y_val), verbose=2)
 
-    model.save(path)
+    model.save(str(path))
 
     pred = model.predict(X_test) 
     if(type=="classification"):

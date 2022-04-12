@@ -95,7 +95,10 @@ def getsavedModel():
 @app.route("/pathModel", methods=["POST"]) #Primanje putanje do foldera novog modela
 def post_pathmodel():
     global pathmodel
-    pathmodel = request.get_data()
+    path=request.get_data()
+    raw_string = r"{}".format(path)
+    raw_string=raw_string[2:-1]
+    pathmodel=raw_string
     return pathmodel
 
 @app.route("/pathModel", methods=['GET']) #slanje putanje do foldera novog modelas na bek cisto za proveru
