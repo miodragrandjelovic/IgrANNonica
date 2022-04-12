@@ -120,6 +120,10 @@ namespace Backend.Controllers
                 }
                 System.IO.Directory.CreateDirectory(pathToCreateDir);
                 Console.WriteLine("Directory for new Model created successfully!");
+
+                var pathdata = new StringContent(pathToCreateDir, System.Text.Encoding.UTF8, "application/json");
+                var pathurl = "http://127.0.0.1:3000/pathModel";
+                var pathresponse = await http.PostAsync(pathurl, pathdata);
             }
 
             hiper.Username = Username;
@@ -169,11 +173,6 @@ namespace Backend.Controllers
                
                 //workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
-
-
-                var pathdata = new StringContent(pathToCreateDir, System.Text.Encoding.UTF8, "application/json");
-                var pathurl = "http://127.0.0.1:3000/pathModel";
-                var pathresponse = await http.PostAsync(pathurl, pathdata);
 
                 string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
                 string names = upgradedName + "1" + ".csv";
