@@ -1,14 +1,16 @@
 
 #slikaPocetna{
   height: 100vh;
+  position: relative;
 }
   #tekstPocetna{
     color: white;
     position: absolute;
-    top: 220px;
+    top:30px;
     left: 50px;
-    font-size: 40px;
+    font-size: 50px;
     font-family: 'Century Gothic';
+    /*font-variant:small-caps;*/
 
   }
   #slikaPocetna img{

@@ -11,6 +11,7 @@ interface CheckBox {
 }
 import { PreloadCsv, PreloadStatistic } from "src/app/_model/preload.model";
 import { Observable } from "rxjs";
+import { MessageService } from "../home.service";
 
 @Component({
     selector: 'app-csv',
@@ -75,12 +76,26 @@ export class CsvComponent implements OnInit {
     ngOnInit(): void {
         this.parametersService.getShowHp().subscribe(res => {
             this.hidden = res;
+        }),
+        this.service.messageSubject.subscribe({
+            next: x => {
+                if (x == 0)
+                {
+                    this.hidden = false;
+                }
+                else
+                {
+                    this.hidden = true;
+                    this.showHp();
+                }
+            }
         })
     }
 
-    constructor(private http: HttpClient, private parametersService: ParametersService) {
+    constructor(private http: HttpClient, private parametersService: ParametersService, private service: MessageService) {
 
     }
+
 
 
     fetchSelectedItems() {
@@ -112,7 +127,7 @@ export class CsvComponent implements OnInit {
     }
 
     showHp() {
-        this.parametersService.setShowHp(true);
+       // this.parametersService.setShowHp(true);
         this.parametersService.setParamsObs(this.sendHp);
     }
 

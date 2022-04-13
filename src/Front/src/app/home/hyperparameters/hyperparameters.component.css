@@ -1,21 +1,16 @@
 #sredina{
   background-color: #34495E;
   /*height: 121vh;*/
-  padding-top: 50px;
-  padding-bottom: 200px;
-  margin-top: 100px;
+
 }
 
-#sredinaCentar{
-  height: auto;
-  margin: 0 90px 0 90px;
-}
 #top-controls {
     border-bottom: 1px solid black;
     padding: 18px 0;
     box-shadow: #212F3C 10px 10px 10px -1px;
     background: white;
-    border-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
     }
     
     #top-controls .container {

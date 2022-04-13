@@ -39,6 +39,8 @@ export class HeaderComponent implements OnInit {
     message:string='';
     token:any;
 
+    isMenuCollapsed:boolean;
+
   ngOnInit(): void {
     this.registerForm=new FormGroup({
       "firstname":new FormControl(null,[Validators.required,Validators.pattern('[a-zA-Z]*')]),
@@ -47,7 +49,10 @@ export class HeaderComponent implements OnInit {
       "username":new FormControl(null,[Validators.required]),
       "password":new FormControl(null,[Validators.required])
     });
+
+    this.isMenuCollapsed = true;
   }
+
 
   save(username:string, password:string){
     sessionStorage.setItem('username',username);
@@ -72,13 +77,19 @@ export class HeaderComponent implements OnInit {
       this.session=this.get();
       this.loggedUser=this.get();
 
+      this.selectedIndex = 'homePage';
+      
+      this.message = '';
+    
+      this.toastr.success('Welcome, '+username, 'User login');
       this.router.navigate(['/home']);
     }, error =>{
       if(error.status==400)
       {
         this.message='Incorect username or password, please try again';
-        alert('Incorect username or password');
-     /*this.toastr.success('Incorect username or password', 'User login');*/
+        //alert('Incorect username or password');
+        //modal should not close!
+        this.toastr.error('Incorrect username or password!', 'User login');
       }
     });
     form.reset()
@@ -96,9 +107,34 @@ export class HeaderComponent implements OnInit {
 
     this.registracijaService.signUp(firstname, lastname, email, username,password).subscribe(resData => {
       console.log(resData);
-      this.toastr.info('Sign up successfully', 'Users sign up');
+      this.toastr.success('Sign up successfully', 'Users sign up');
+      //log him in
+      this.prijavaService.logIn(username, password).subscribe(resData => {
+      
+        this.token=(<any>resData).token;
+        this.save(username,password);
+        this.cookie.set("token",this.token);
+       
+        this.session=this.get();
+        this.loggedUser=this.get();
+  
+        this.selectedIndex = 'homePage';
+        this.message='';
+        
+        this.toastr.success('Welcome, '+username, 'User login');
+        this.router.navigate(['/home']);
+      }, error =>{
+        if(error.status==400)
+        {
+          //this.message='Incorect username or password, please try again';
+          //alert('Incorect username or password');
+          //modal should not close!
+          this.toastr.error('We could not log you in! Try again!', 'User login');
+        }
+      });
     }, error => {
       console.log(error);
+      this.toastr.error('Sign up unsuccessful!', 'User sign up');
     });
     this.registerForm.reset();
   }
@@ -111,6 +147,7 @@ export class HeaderComponent implements OnInit {
 
 
   openRegister(contentRegister: any) {
+    this.isMenuCollapsed = true;
     this.modalService.open(contentRegister, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -119,6 +156,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openLogin(contentLogin: any) {
+    this.isMenuCollapsed = true;
     this.modalService.open(contentLogin, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -137,6 +175,7 @@ export class HeaderComponent implements OnInit {
 
   get(){
     return sessionStorage.getItem('username');
+    
   }
 
   onLogOut()
@@ -145,6 +184,18 @@ export class HeaderComponent implements OnInit {
     sessionStorage.clear();
     this.session=this.get();
     this.router.navigate(['/']);
+    this.selectedIndex = "";
+    this.isMenuCollapsed = true;
   }
+
+
+  selectedIndex: string;
+  onSelect(index: string){
+    this.selectedIndex = index;
+    this.isMenuCollapsed = true;
+  }
+
+
+
 
 }
