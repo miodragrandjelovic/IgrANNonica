@@ -105,7 +105,9 @@ namespace Backend.Controllers
         public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper)
         {
             int indexDir = 1;
-            var upgradedName = Name.Substring(0, Name.Length - 4);
+            var upgradedName = "realestate";
+            if(Name != null)
+                upgradedName = Name.Substring(0, Name.Length - 4);
             string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
             string modelDirName = upgradedName + "Model" + indexDir;
             string pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
