@@ -79,6 +79,8 @@ export class HeaderComponent implements OnInit {
 
       this.selectedIndex = 'homePage';
       
+      this.message = '';
+    
       this.toastr.success('Welcome, '+username, 'User login');
       this.router.navigate(['/home']);
     }, error =>{
@@ -117,13 +119,14 @@ export class HeaderComponent implements OnInit {
         this.loggedUser=this.get();
   
         this.selectedIndex = 'homePage';
+        this.message='';
         
         this.toastr.success('Welcome, '+username, 'User login');
         this.router.navigate(['/home']);
       }, error =>{
         if(error.status==400)
         {
-          this.message='Incorect username or password, please try again';
+          //this.message='Incorect username or password, please try again';
           //alert('Incorect username or password');
           //modal should not close!
           this.toastr.error('We could not log you in! Try again!', 'User login');
