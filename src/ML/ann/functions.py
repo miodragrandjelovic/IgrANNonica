@@ -395,13 +395,13 @@ def compile_model(model, type, y,lr):
     model.compile(optimizer=opt, loss=loss, metrics = met)
     return model 
 
-def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test,path):
+def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test):
 
     call = epochResults()
 
     fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, callbacks=[call] ,validation_data = (X_val, y_val), verbose=2)
 
-    model.save(str(path))
+    #model.save(str(path))
 
     pred = model.predict(X_test) 
     if(type=="classification"):

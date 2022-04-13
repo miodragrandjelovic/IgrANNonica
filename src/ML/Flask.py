@@ -141,7 +141,7 @@ def treniraj():
    # print("Hidden layer neurons are ", ly)
     
     stats.createModel(train=df,features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'], activation_function=hiperp['Activation'],hidden_layers_n=hiperp['Layers'], hidden_layer_neurons_list=ly, encode_type=hiperp['EncodingType'], randomize=hiperp['Randomize'],
-        batch_size=hiperp['BatchSize'], learning_rate=hiperp['LearningRate'], regularization=hiperp['Regularization'] ,regularization_rate=hiperp['RegularizationRate'],path=pathmodel)
+        batch_size=hiperp['BatchSize'], learning_rate=hiperp['LearningRate'], regularization=hiperp['Regularization'] ,regularization_rate=hiperp['RegularizationRate'])
 
     # u objektu stats, u promenljivoj stats se nalaze statisticki podaci kroz epohe, u vidu dictionary-ja
     # npr. "Accuracy":[...]
