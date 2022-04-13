@@ -1,8 +1,4 @@
 
-.modal-body{
-  margin-left: 100px;
-}
-
 ::ng-deep .btn1{
   border: none;
   outline: none;
@@ -18,21 +14,38 @@
   border: 1px solid;
   color: rgb(22, 23, 31);
 }
+/*
 ::ng-deep .form-control{
   width: 300px;
 }
+*/
+/*
 ::ng-deep .modal-header #modal-basic-title{
   margin-left: 110px;
-}
-::ng-deep .modal-header #modal-basic-title1{
+}*/
+/*::ng-deep .modal-header #modal-basic-title1{
   margin-left: 150px;
-}
+}*/
 ::ng-deep .form-group{
   padding-bottom: 15px;
+  width: 100%;
 }
 ::ng-deep .error{
   color: red;
 }
+
+::ng-deep .modal-header{
+  width: 100%;
+}
+
+::ng-deep .modal-body{
+  width: 100%;
+}
+
+::ng-deep .col-lg-7{
+  width: 100%;
+}
+
 
 nav{
   background: #212F3C ;

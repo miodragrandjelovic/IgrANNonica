@@ -47,52 +47,54 @@
 <!--///////////////////REGISTRACIJA I LOGIN////////////////-->
 
 <ng-template #contentRegister let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Welcome to igrANNonica</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-  </div>
-
-  <div class="modal-body">
-    <div class="col-lg-7">
-      <form  [formGroup]="registerForm" (ngSubmit)="onSubmitReg()">
-        <div class="form-group col-md-10">
-          <input type="text"  id="firstname"  formControlName="firstname" ngModel name="firstname" placeholder="First Name" class="form-control form-control-lg" required>
-          <div *ngIf="firstname.invalid && (firstname.touched || firstname.dirty)">
-            <span class="error" *ngIf="firstname.errors?.required">*Firts name is required.</span>
-            <span class="error" *ngIf="firstname.errors?.pattern">*Enter only characters.</span>
+  <div style="width: 90%; margin: auto;">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title" style="width:90%;margin:auto;text-align:center;">Welcome to igrANNonica</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+  
+    <div class="modal-body">
+      <div class="col-lg-7" >
+        <form  [formGroup]="registerForm" (ngSubmit)="onSubmitReg()">
+          <div class="form-group col-md-10">
+            <input type="text"  id="firstname"  formControlName="firstname" ngModel name="firstname" placeholder="First Name" class="form-control form-control-lg" required>
+            <div *ngIf="firstname.invalid && (firstname.touched || firstname.dirty)">
+              <span class="error" *ngIf="firstname.errors?.required">*First name is required.</span>
+              <span class="error" *ngIf="firstname.errors?.pattern">*Enter only characters.</span>
+            </div>
           </div>
-        </div>
-        <div class="form-group col-md-10">
-          <input type="text" id="lastname"  formControlName="lastname" ngModel name="lastname" placeholder="Last Name" class="form-control form-control-lg" required>
-          <div *ngIf="lastname.invalid && (lastname.touched || lastname.dirty)">
-            <span class="error" *ngIf="lastname.errors?.required">*Last name is required.</span>
-            <span class="error" *ngIf="lastname.errors?.pattern">*Enter only characters.</span>
+          <div class="form-group col-md-10">
+            <input type="text" id="lastname"  formControlName="lastname" ngModel name="lastname" placeholder="Last Name" class="form-control form-control-lg" required>
+            <div *ngIf="lastname.invalid && (lastname.touched || lastname.dirty)">
+              <span class="error" *ngIf="lastname.errors?.required">*Last name is required.</span>
+              <span class="error" *ngIf="lastname.errors?.pattern">*Enter only characters.</span>
+            </div>
           </div>
-        </div>
-        <div class="form-group col-md-10" >
-          <input type="text" id="email"  formControlName="email" ngModel name="email" placeholder="Email" class="form-control form-control-lg" required>
-          <div *ngIf="email.invalid && (email.touched || email.dirty)">
-            <span class="error" *ngIf="email.errors?.required">*Email is required.</span>
-            <span class="error" *ngIf="email.errors?.email">*Enter valid email.</span>
+          <div class="form-group col-md-10" >
+            <input type="text" id="email"  formControlName="email" ngModel name="email" placeholder="Email" class="form-control form-control-lg" required>
+            <div *ngIf="email.invalid && (email.touched || email.dirty)">
+              <span class="error" *ngIf="email.errors?.required">*Email is required.</span>
+              <span class="error" *ngIf="email.errors?.email">*Enter valid email.</span>
+            </div>
           </div>
-        </div>
-        <div class="form-group col-md-10" >
-          <input type="text" id="username"  formControlName="username" ngModel name="username" placeholder="Username" class="form-control form-control-lg" required>
-          <div *ngIf="username.invalid && (username.touched || username.dirty)">
-            <span class="error" *ngIf="username.errors?.required">*Username is required.</span>
+          <div class="form-group col-md-10" >
+            <input type="text" id="username"  formControlName="username" ngModel name="username" placeholder="Username" class="form-control form-control-lg" required>
+            <div *ngIf="username.invalid && (username.touched || username.dirty)">
+              <span class="error" *ngIf="username.errors?.required">*Username is required.</span>
+            </div>
           </div>
-        </div>
-        
-        <div class="form-group col-md-10">
-          <input type="password"  id="password"  formControlName="password"  ngModel name="password" placeholder="Password" class="form-control form-control-lg" required>
-          <div *ngIf="password.invalid && (password.touched || password.dirty)">
-            <span class="error" *ngIf="password.errors?.required">*Password is required.</span>
+          
+          <div class="form-group col-md-10">
+            <input type="password"  id="password"  formControlName="password"  ngModel name="password" placeholder="Password" class="form-control form-control-lg" required>
+            <div *ngIf="password.invalid && (password.touched || password.dirty)">
+              <span class="error" *ngIf="password.errors?.required">*Password is required.</span>
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" [disabled]="registerForm.invalid" class="btn1" (click)="modal.close('Save click')">Create Account</button>
-        </div>
-      </form>
+          <div class="modal-footer">
+            <button type="submit" [disabled]="registerForm.invalid" class="btn1" (click)="modal.close('Save click')">Create Account</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -100,28 +102,30 @@
 
 
 <ng-template #contentLogin let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title1">Welcome back</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-  </div>
-  <div class="modal-body">
-    <div class="col-lg-7">
-      <form  #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
-        <div class="form-group col-md-10">
-          <label>Username</label>
-          <input type="text" id="username" ngModel name="username" class="form-control form-control-lg" required>
-         
-        </div>
-        <div class="form-group col-md-10">
-          <label>Password</label>
-          <input type="password"  id="password" ngModel name="password"  class="form-control form-control-lg" required>
-        
-        </div>
-        <span style="color: red;">{{message}}</span>
-        <div class="modal-footer">
-          <button  type="submit" class="btn1" (click)="modal.close('Save click')">Log in</button>
-        </div>
-      </form>
+  <div style="width:90%;margin: auto;">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title1" style="width:90%;margin:auto;text-align:center;">Welcome back</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="col-lg-7">
+        <form  #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+          <div class="form-group col-md-10">
+            <label>Username</label>
+            <input type="text" id="username" ngModel name="username" class="form-control form-control-lg" required>
+           
+          </div>
+          <div class="form-group col-md-10">
+            <label>Password</label>
+            <input type="password"  id="password" ngModel name="password"  class="form-control form-control-lg" required>
+          
+          </div>
+          <span style="color: red;">{{message}}</span>
+          <div class="modal-footer">
+            <button  type="submit" class="btn1" (click)="modal.close('Save click')">Log in</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </ng-template>
