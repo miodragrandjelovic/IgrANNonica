@@ -15,10 +15,10 @@
           <a class="nav-link active" aria-current="page"  [routerLink]="['/home']" [style.color]="selectedIndex==='homePage' ? '#03A9F4' : ''">Home</a>
         </li>
         <li id="aboutPage" class="nav-item" (click)="onSelect('aboutPage')">
-          <a class="nav-link active" aria-current="page"  [routerLink]="['/about']" [style.color]="selectedIndex==='aboutPage' ? '#03A9F4' : ''">About</a>
+          <a class="nav-link active" aria-current="page"  [routerLink]="['/about']" [style.color]="selectedIndex==='aboutPage' ? '#03A9F4' : ''">Learn More</a>
         </li>
         <li id="infoPage" class="nav-item" (click)="onSelect('infoPage')">
-          <a class="nav-link active" aria-current="page" [routerLink]="['/informations']" [style.color]="selectedIndex==='infoPage' ? '#03A9F4' : ''">Informations</a>
+          <a class="nav-link active" aria-current="page" [routerLink]="['/informations']" [style.color]="selectedIndex==='infoPage' ? '#03A9F4' : ''">About Us</a>
         </li>
 
         <li ngbDropdown class="nav-item dropdown">
@@ -32,7 +32,7 @@
               <a ngbDropdownItem class="nav-link" style="background-color: rgb(22, 23, 31);" role="button" (click)="openRegister(contentRegister)">Sign up</a>
              </li>
              <li class="nav-item">
-              <a *ngIf="session" class="nav-link active" style="background-color: rgb(22, 23, 31);" aria-current="page"  [routerLink]="['/profile']">My profile</a>
+              <a *ngIf="session" class="nav-link active" style="background-color: rgb(22, 23, 31);" aria-current="page"  [routerLink]="['/profile']" (click)="onSelect('myProfile')">My profile</a>
              </li>
              <li class="nav-item" *ngIf="session">
                 <a class="nav-link active" aria-current="page"  style="background-color: rgb(22, 23, 31);" style="cursor: pointer;" (click)="onLogOut()">Logout</a>
