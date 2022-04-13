@@ -12,14 +12,17 @@ export class GraphicComponent implements OnInit {
   ctx: any;
   hpX: Array<string> = [];
   charts: any = [];
+  @Input() id: number;
   constructor() { }
 
   ngOnInit(): void {
     console.log('selected:', this.selected);
-    for (let i = 0; i < this.selected.length; i++) {
-      this.charts.push(this.loadGraphic(this.selected[i].label, this.selected[i].values, this.selected[i].valuesVal)); 
-    }
   }
+
+  ngAfterViewInit(): void {
+    this.loadGraphic(this.selected.label, this.selected.values, this.selected.valuesVal);
+  }
+
 
   loadGraphic(str: string, hpY: Array<number>, hpY1: Array<number>) {
 
@@ -30,8 +33,14 @@ export class GraphicComponent implements OnInit {
     this.hpX = [];
     for (let i = 0; i < hpY.length; i++) {
       this.hpX[i] = '' + i;
+      hpY[i] = parseFloat(hpY[i].toFixed(5));
+      hpY1[i] = parseFloat(hpY1[i].toFixed(5));
     }
-    this.ctx = document.getElementById('0') as HTMLCanvasElement;
+    console.log(hpY);
+    console.log(hpY1);
+    console.log(`ID GRAPH: ${this.id}`)
+    this.ctx = document.getElementById(`${this.id}`) as HTMLCanvasElement;
+    console.log(this.ctx)
       let chart = new Chart(this.ctx, {
         type: 'line',
         data: {
@@ -39,14 +48,14 @@ export class GraphicComponent implements OnInit {
           datasets: [{
             data: hpY,
             fill: false,
-            label: 'Loss',
+            label: str,
             backgroundColor: 'rgb(255, 99, 132)',
             borderColor: 'rgb(255, 99, 132)',
             yAxisID: 'y'
             },
             {
               data: hpY1,
-              label: 'valLoss',
+              label: 'val' + str,
               backgroundColor: 'rgb(99, 122, 255)',
               borderColor: 'rgb(99, 122, 255)',
               yAxisID: 'y1'
