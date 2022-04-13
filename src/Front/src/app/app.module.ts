@@ -27,6 +27,7 @@ import{ToastrModule} from 'ngx-toastr';
 import { SendEmailComponent } from './send-email/send-email.component';
 import { HyperparametersComponent } from './home/hyperparameters/hyperparameters.component';
 import { DatasetComponent } from './header/dataset/dataset.component';
+import { GraphicComponent } from './graphic/graphic.component';
 
 const icons = {
   envelope,
@@ -51,6 +52,7 @@ const icons = {
     SendEmailComponent,
     HyperparametersComponent,
     DatasetComponent,
+    GraphicComponent,
   ],
   imports: [
     BrowserModule,

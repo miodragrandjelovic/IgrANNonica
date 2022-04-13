@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
-import { Form, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { CheckboxControlValueAccessor, Form, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ParametersService } from 'src/app/services/parameters.service';
 import { Chart, registerables, LineController, LineElement, PointElement, LinearScale, Title } from 'chart.js'
 import { MessageService } from '../home.service';
+import { GraphicComponent } from '../../graphic/graphic.component';
 
 
 interface RequestHyperparameters{
@@ -28,6 +29,14 @@ interface RequestHyperparameters{
   output: string
 }
 
+interface CheckBox {
+  id: Number;
+  label: string;
+  values: Array<Number>;
+  valuesVal: Array<Number>;
+  isChecked: Boolean;
+}
+
 @Component({
   selector: 'app-hyperparameters',
   templateUrl: './hyperparameters.component.html',
@@ -35,6 +44,12 @@ interface RequestHyperparameters{
 })
 export class HyperparametersComponent implements OnInit {
 
+
+  @ViewChild(GraphicComponent) graphic: GraphicComponent;
+
+  inputCheckBoxes : Array<CheckBox> = [];
+  selectedCheckBoxes: Array<CheckBox> = [];
+  properties: Array<string> = [];
   hpY1: Array<Number> = [];
   hpY: Array<Number> = [];
   hpX: Array<string> = [];
@@ -122,6 +137,17 @@ export class HyperparametersComponent implements OnInit {
     this.onAddLayer();
   }
 
+  fetchSelectedGraphics() {
+    this.selectedCheckBoxes = this.inputCheckBoxes.filter((value, index) => {
+      return value.isChecked;
+    })
+  }
+
+  changeSelection() {
+    this.fetchSelectedGraphics();
+    console.log(this.selectedCheckBoxes);
+  }
+
   onFirstTextInputChange(event:any){
     this.value1 = event.target.value;
   }
@@ -189,51 +215,26 @@ export class HyperparametersComponent implements OnInit {
     this.http.post('https://localhost:7167/api/LoadData/hp', myreq).subscribe(result => {
       this.hpResponse = result;
       console.log(this.hpResponse);
-      for (var i = 0; i < this.hpResponse.Loss.length; i++) {
-        this.hpX.push("" + i);
-        this.hpY.push(this.hpResponse.Loss[i]);
-        this.hpY1.push(this.hpResponse.valLoss[i]);
+      this.properties = Object.keys(this.hpResponse);
+      for (let i = 0; i < this.properties.length; i++) {
+        if (this.properties[i] == 'label' || this.properties[i] == 'eveluate')
+          continue;
+        if (this.properties[i] == 'pred')
+          break;
+        const str = 'val' + this.properties[i];
+        let object: CheckBox = {
+          id: i + 1,
+          label: this.properties[i],
+          values: this.hpResponse[this.properties[i]],
+          valuesVal: this.hpResponse[str],  
+          isChecked: true
+        }
+        console.log(object);
+        this.inputCheckBoxes.push(object);
       }
 
-      console.log(this.hpY1);
-      console.log(this.hpX);
-      console.log(this.hpY);
-      
-      this.ctx = document.getElementById('chart') as HTMLCanvasElement;
-      let chart = new Chart(this.ctx, {
-        type: 'line',
-        data: {
-          labels: this.hpX,
-          datasets: [{
-            data: this.hpY,
-            fill: false,
-            label: 'Loss',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            yAxisID: 'y'
-            },
-            {
-              data: this.hpY1,
-              label: 'valLoss',
-              backgroundColor: 'rgb(99, 122, 255)',
-              borderColor: 'rgb(99, 122, 255)',
-              yAxisID: 'y1'
-            }]
-          },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              display: true,
-              position: 'left',
-            },
-            y1: {
-              display: true,
-              position: 'right'
-            }
-          }
-          }
-        });
+      this.fetchSelectedGraphics();
+      console.log(this.selectedCheckBoxes);
       });
     }
 
@@ -251,5 +252,4 @@ export class HyperparametersComponent implements OnInit {
     console.warn(val)
     this.currentVal=val;
   }
-  
 }
