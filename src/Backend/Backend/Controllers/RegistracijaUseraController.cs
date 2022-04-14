@@ -42,6 +42,16 @@ namespace Backend.Controllers
 
             return Ok("Uspesno uklonjen model.");
         }
+        [HttpDelete("csv")]//Ukloniti model iz foldera za odredjeni Username.
+        public async Task<IActionResult> DeleteCsv(string username)
+        {
+
+
+            _context.RegistrovaniUseri.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return Ok("Uspesno uklonjen model.");
+        }
 
         [HttpGet] //Vracanje svih korisnika iz baze.
         public async Task<ActionResult<IEnumerable<User>>> GetRegistrovaniUseri()
