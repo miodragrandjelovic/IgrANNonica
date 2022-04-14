@@ -32,6 +32,17 @@ namespace Backend.Controllers
             _configuration = configuration;
         }
 
+        [HttpDelete("model")]//Ukloniti model iz foldera za odredjeni Username.
+        public async Task<IActionResult> DeleteModel(string username)
+        {
+            
+
+            _context.RegistrovaniUseri.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return Ok("Uspesno uklonjen model.");
+        }
+
         [HttpGet] //Vracanje svih korisnika iz baze.
         public async Task<ActionResult<IEnumerable<User>>> GetRegistrovaniUseri()
         {
@@ -65,6 +76,7 @@ namespace Backend.Controllers
 
             return Ok("Uspesno uklonjen nalog.");
         }
+
         [HttpGet("{id}")]//Dobijanje podataka o korisniku sa datim ID-jem.
         public async Task<ActionResult<User>> GetUser(int id)
         {
