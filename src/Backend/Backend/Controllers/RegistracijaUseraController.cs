@@ -45,7 +45,8 @@ namespace Backend.Controllers
             else
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
-                string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
+                //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
+                string pathToDelete = Path.Combine(CurrentPath, "Users", Username, DirName, name);
 
                 if (System.IO.Directory.Exists(pathToDelete))
                 {
@@ -62,10 +63,11 @@ namespace Backend.Controllers
             {
                 return BadRequest("Niste ulogovani.");
             }
-            if(DirName != null)
+            if(DirName == null)
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
-                string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName;
+                //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName;
+                string pathToDelete = Path.Combine(CurrentPath, "Users", Username, DirName);
 
                 if (System.IO.Directory.Exists(pathToDelete))
                 {
@@ -76,7 +78,9 @@ namespace Backend.Controllers
             else
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
-                string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + DirName + ".csv";
+                //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + DirName + ".csv";
+                string fileName = DirName + ".csv";
+                string pathToDelete = Path.Combine(CurrentPath, "Users", Username, DirName, fileName);
 
                 if (System.IO.File.Exists(pathToDelete))
                 {
@@ -118,7 +122,8 @@ namespace Backend.Controllers
             await _context.SaveChangesAsync();
 
             string CurrentPath = Directory.GetCurrentDirectory();
-            string pathToDelete = CurrentPath + @"\Users\" + username;
+            //string pathToDelete = CurrentPath + @"\Users\" + username;
+            string pathToDelete = Path.Combine(CurrentPath, "Users", username);
 
             if (System.IO.Directory.Exists(pathToDelete))
             {
@@ -225,8 +230,9 @@ namespace Backend.Controllers
 
             //Pravljenje foldera za svakog korisnika posebno
             string currentPath = Directory.GetCurrentDirectory();
-            string newPath = currentPath + @"\Users\" + user.Username;
-            if(Directory.Exists(newPath))
+            //string newPath = currentPath + @"\Users\" + user.Username;
+            string newPath = Path.Combine(currentPath, "Users", user.Username);
+            if (Directory.Exists(newPath))
                 Console.WriteLine("User already exists on disk!");
             else
             {

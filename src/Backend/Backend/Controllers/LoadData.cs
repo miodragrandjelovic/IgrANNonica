@@ -33,8 +33,9 @@ namespace Backend.Controllers
         {
             string fileName = name + ".csv";
             string CurrentPath = Directory.GetCurrentDirectory();
-            string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + name;
-            if(!System.IO.Directory.Exists(SelectedPath))
+            //string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + name;
+            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, name);
+            if (!System.IO.Directory.Exists(SelectedPath))
             {
                 return BadRequest("Ne postoji dati fajl.");
             }
@@ -45,7 +46,8 @@ namespace Backend.Controllers
 
             string[] files = Directory.GetFiles(SelectedPath).Select(Path.GetFileName).ToArray();
 
-            string SelectedPaths = CurrentPath + @"\Users\" + Username + "\\" + name + "\\" + fileName;
+            //string SelectedPaths = CurrentPath + @"\Users\" + Username + "\\" + name + "\\" + fileName;
+            string SelectedPaths = Path.Combine(CurrentPath, "Users", Username, name, fileName);
             /*var reader = new StreamReader(SelectedPaths);
             var csv = new CsvHelper.CsvReader(reader, CultureInfo.InvariantCulture);
             List<JsonDocument> cList = csv.GetRecords<JsonDocument>().ToList();*/
@@ -74,7 +76,8 @@ namespace Backend.Controllers
             RegistracijaUseraController.DirName = name;
             string CsvName = name;
             string CurrentPath = Directory.GetCurrentDirectory();
-            string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + CsvName;
+            //string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + CsvName;
+            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, CsvName);
             if (Username == null)
             {
                 return BadRequest("Niste ulogovani.");
@@ -92,7 +95,8 @@ namespace Backend.Controllers
                 return BadRequest("Niste ulogovani.");
             }
             string CurrentPath = Directory.GetCurrentDirectory();
-            string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
+            //string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
+            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, DirName, name);
 
             var modelName = name;
             var data = new StringContent(modelName, System.Text.Encoding.UTF8, "application/text");
@@ -109,7 +113,9 @@ namespace Backend.Controllers
             var upgradedName = "realestate";
             if(Name != null)
                 upgradedName = Name.Substring(0, Name.Length - 4);
-            string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
+            //string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
             string modelDirName = upgradedName + "Model" + indexDir;
             string pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
 
@@ -119,7 +125,7 @@ namespace Backend.Controllers
                 {
                     indexDir++;
                     modelDirName = upgradedName + "Model" + indexDir;
-                    pathToCreateDir = path + modelDirName;
+                    pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
                 }
                 System.IO.Directory.CreateDirectory(pathToCreateDir);
                 Console.WriteLine("Directory for new Model created successfully!");
@@ -171,14 +177,15 @@ namespace Backend.Controllers
                     index++;
                     modelName = upgradedName + "Model" + index + ".csv";
                     hpName = upgradedName + "HP" + index + ".csv";
-                    pathToCreate = path + modelName;
-                    pathToCreateHP = path + hpName;
+                    pathToCreate = System.IO.Path.Combine(path, modelName);
+                    pathToCreateHP = System.IO.Path.Combine(path, hpName);
                 }
                
                 //workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
 
-                string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
+                //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
+                string path1 = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
                 string names = upgradedName + "1" + ".csv";
                 string pathToDelete = System.IO.Path.Combine(path1, names);
                 if (System.IO.File.Exists(pathToDelete))
@@ -209,10 +216,11 @@ namespace Backend.Controllers
 
             string currentPath = Directory.GetCurrentDirectory();
             var upgradedName = name.Substring(0, name.Length - 4);
-            string path = currentPath + @"\Users\" + Username + "\\" + upgradedName;
+            //string path = currentPath + @"\Users\" + Username + "\\" + upgradedName;
+            string path = System.IO.Path.Combine(currentPath, "Users", Username, upgradedName);
 
 
-            if(Username != null)
+            if (Username != null)
             {
                 if (Directory.Exists(path))
                     Console.WriteLine("File is already in system.");

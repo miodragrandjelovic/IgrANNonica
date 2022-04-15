@@ -32,7 +32,8 @@ namespace Backend.Controllers
         {
 
             string CurrentPath = Directory.GetCurrentDirectory();
-            string SelectedPath = CurrentPath + @"\Users\" + Username;
+            //string SelectedPath = CurrentPath + @"\Users\" + Username;
+            string SelectedPath = System.IO.Path.Combine(CurrentPath, "Users", Username);
             if (Username == null)
             {
                 return BadRequest("Niste ulogovani.");
@@ -201,10 +202,16 @@ namespace Backend.Controllers
         public async Task<ActionResult<String>> GetPath()
         {
             var name = Username;
-            var data = new StringContent(name, System.Text.Encoding.UTF8, "application/text");
-            var url = "http://127.0.0.1:3000/username";
-            var response = await http.PostAsync(url, data);
-            return Ok(name);
+            if (name == null)
+                return "Korisnik nije ulogovan";
+            else
+            {
+                var data = new StringContent(name, System.Text.Encoding.UTF8, "application/text");
+                var url = "http://127.0.0.1:3000/username";
+                var response = await http.PostAsync(url, data);
+
+                return Ok(name);
+            }
         }
 
         [HttpGet("model")] //Primanje Modela iz pajtona 
@@ -224,14 +231,16 @@ namespace Backend.Controllers
             int index = 1;
             string modelName = upgradedName + "Model" + index + ".csv";
 
-            string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
+            //string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string path = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
             string pathToCreate = System.IO.Path.Combine(path, modelName); // treba da stoji NameMODEL.csv
             //string pathToCreate = System.IO.Path.Combine(path, name);
             while (System.IO.File.Exists(pathToCreate))
             {
                 index++;
                 modelName = upgradedName + "Model" + index + ".csv";
-                pathToCreate = path + modelName;
+                pathToCreate = System.IO.Path.Combine(path, modelName);
             }
             //string modelName1 = upgradedName + "Model" + index + ".csv";
 
