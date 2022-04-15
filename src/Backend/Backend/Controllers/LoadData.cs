@@ -71,6 +71,7 @@ namespace Backend.Controllers
         public async Task<ActionResult<String>> PostSavedModels(String name)
         {
             DirName = name;
+            RegistracijaUseraController.DirName = name;
             string CsvName = name;
             string CurrentPath = Directory.GetCurrentDirectory();
             string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + CsvName;

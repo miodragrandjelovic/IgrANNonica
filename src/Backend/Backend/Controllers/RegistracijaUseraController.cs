@@ -25,6 +25,7 @@ namespace Backend.Controllers
         private readonly IConfiguration _configuration;
         private readonly UserDbContext _context;
         public static string Username;
+        public static string? DirName { get; set; } //Ime foldera 
 
         public RegistracijaUseraController(UserDbContext context, IConfiguration configuration)
         {
@@ -33,24 +34,56 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("model")]//Ukloniti model iz foldera za odredjeni Username.
-        public async Task<IActionResult> DeleteModel(string username)
+        public async Task<IActionResult> DeleteModel(string name)
         {
+            //string pathToDelete = System.IO.Path.Combine(path1, names);
+
+            if (Username == null)
+            {
+                return BadRequest("Niste ulogovani.");
+            }
+            else
+            {
+                string CurrentPath = Directory.GetCurrentDirectory();
+                string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
+
+                if (System.IO.Directory.Exists(pathToDelete))
+                {
+                    System.IO.Directory.Delete(pathToDelete, true);
+                }
+                return Ok("Uspesno uklonjen model." + pathToDelete);
+            }
             
-
-            _context.RegistrovaniUseri.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return Ok("Uspesno uklonjen model.");
         }
-        [HttpDelete("csv")]//Ukloniti model iz foldera za odredjeni Username.
-        public async Task<IActionResult> DeleteCsv(string username)
+        [HttpDelete("csv")]//Ukloniti samo csv bez modela ili ukloniti sve?!.
+        public async Task<IActionResult> DeleteCsv(string name)
         {
+            if (Username == null)
+            {
+                return BadRequest("Niste ulogovani.");
+            }
+            if(DirName != null)
+            {
+                string CurrentPath = Directory.GetCurrentDirectory();
+                string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName;
 
+                if (System.IO.Directory.Exists(pathToDelete))
+                {
+                    System.IO.Directory.Delete(pathToDelete, true);
+                }
+                return Ok("Uspesno uklonjen csv folder sa svim modelima i hiperparametrima." + pathToDelete);
+            }
+            else
+            {
+                string CurrentPath = Directory.GetCurrentDirectory();
+                string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + DirName + ".csv";
 
-            _context.RegistrovaniUseri.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return Ok("Uspesno uklonjen model.");
+                if (System.IO.File.Exists(pathToDelete))
+                {
+                    System.IO.File.Delete(pathToDelete);
+                }
+                return Ok("Uspesno uklonjen samo csv fajl." + pathToDelete);
+            }
         }
 
         [HttpGet] //Vracanje svih korisnika iz baze.
@@ -72,7 +105,7 @@ namespace Backend.Controllers
 
             return user;
         }
-        [HttpDelete("username")]//Ukloniti nalog iz baze za odredjeni Username.
+        [HttpDelete("username")]//Ukloniti nalog iz baze za odredjeni Username kao i ukloniti njegov folder sa sacuvanim eksperimentima.
         public async Task<IActionResult> DeleteUsername(string username)
         {
             var user = await _context.RegistrovaniUseri.SingleOrDefaultAsync(x => x.Username == username);
@@ -83,6 +116,14 @@ namespace Backend.Controllers
 
             _context.RegistrovaniUseri.Remove(user);
             await _context.SaveChangesAsync();
+
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string pathToDelete = CurrentPath + @"\Users\" + username;
+
+            if (System.IO.Directory.Exists(pathToDelete))
+            {
+                System.IO.Directory.Delete(pathToDelete, true);
+            }
 
             return Ok("Uspesno uklonjen nalog.");
         }
