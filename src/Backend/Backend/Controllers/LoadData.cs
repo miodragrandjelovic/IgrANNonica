@@ -219,9 +219,9 @@ namespace Backend.Controllers
             //string path = currentPath + @"\Users\" + Username + "\\" + upgradedName;
             string path = System.IO.Path.Combine(currentPath, "Users", Username, upgradedName);
 
-
+            string pathToCreate = "";
             if (Username != null)
-            {
+            { 
                 if (Directory.Exists(path))
                     Console.WriteLine("File is already in system.");
                 else
@@ -237,7 +237,7 @@ namespace Backend.Controllers
 
                     //string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
                     string names = upgradedName + "1" + ".csv";
-                    string pathToCreate = System.IO.Path.Combine(path, names); 
+                    pathToCreate = System.IO.Path.Combine(path, names); 
                     //if(!System.IO.Directory.Exists(path))
                     //{
                     //    return BadRequest("Niste registrovani/ulogovani."+path);
@@ -256,21 +256,23 @@ namespace Backend.Controllers
                     }
 
                     lines.RemoveAll(l => l.Contains("Evaluation Only."));
-                    /*if(System.IO.File.Exists(pathToCreate))
-                    {
-                        System.IO.File.Delete(pathToCreate);
-                    }*/
-            
-            
+
                     string pathToCreate12 = System.IO.Path.Combine(path, name);
                     using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(pathToCreate12))
                     {
                         outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
                     }
+
+                    /*if (System.IO.File.Exists(pathToCreate))
+                    {
+                        System.IO.File.Delete(pathToCreate);
+                    }*/
                 }
             }
             else
                 Console.WriteLine("Niste ulogovani.");
+
+            //System.IO.File.Delete(pathToCreate);
             return Ok(stat);
         }
 
