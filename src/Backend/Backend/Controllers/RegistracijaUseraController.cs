@@ -63,7 +63,7 @@ namespace Backend.Controllers
             {
                 return BadRequest("Niste ulogovani.");
             }
-            if(DirName == null)
+            if(DirName == "name")
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
                 //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName;
@@ -79,8 +79,8 @@ namespace Backend.Controllers
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
                 //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + DirName + ".csv";
-                string fileName = DirName + ".csv";
-                string pathToDelete = Path.Combine(CurrentPath, "Users", Username, DirName, fileName);
+                string fileName = name + ".csv";
+                string pathToDelete = Path.Combine(CurrentPath, "Users", Username, name, fileName);
 
                 if (System.IO.File.Exists(pathToDelete))
                 {
