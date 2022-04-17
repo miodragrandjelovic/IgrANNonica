@@ -1,10 +1,9 @@
 
 <div id="sredina" [hidden]="!hidden">
     <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
-        <div id="top-controls">
+        <div id="top-controls" >
 
-          <div class="row" style="width:100%;margin:auto;">
-
+          <div class="row parametri" style="width:100%;margin:auto;">
             <div class="control epoch">
               <label for="epoch">Epoch</label>
               <div class="select" style="border-radius: 2px;">
@@ -95,10 +94,11 @@
               </div>
             </div>
 
-            <div class="form-check control" style="padding-bottom:0px;">
-              <button type="submit" class="btn btn-primary" style="margin:20% 0% 20% 0%; background-color: #03a9f4; font-weight: bold; color:white; border:#212F3C solid 1px;">Start Training!</button>
+            <div class="form-check control" style="padding-bottom:0px;padding-left: 10%;">
+              <button type="submit" class="round-button playButton" ><i-bs width="55" height="55" name="caret-right-fill"></i-bs></button>
             </div>
           </div>
+
         </div>
         <div class="container-fluid"> 
           <div class="row" >
@@ -113,32 +113,62 @@
                 <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
               </p>
               </div>
-              <div class="col-6" formArrayName="neurons" style="text-align: center; width: 80%;">
+              <div class="col-6" formArrayName="neurons" style="text-align: center; width: 77%; background-color: #CEECFA;" >
                     <!--<app-slojevi-neuroni></app-slojevi-neuroni> -->
-                    <button type="button" class="btn btn-outline-primary" (click)="onAddLayer()" style="margin: 5px;">Add Layer</button>
-                    <div *ngFor="let neuron of neuronControls; let i = index">
-                        <button type="button" class="btn btn-outline-danger" (click)="onRemoveLayer(i)" style="margin: 5px;">Remove</button>
+                
+                      <i-bs  (click)="onAddLayer()"  width="25" height="25" name="plus-circle-fill" style="cursor: pointer;padding: 1%;"></i-bs>
+                         <i-bs width="25" height="25" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
+                         <span>br hidden layer</span>
+                         
+                    <td *ngFor="let neuron of neuronControls; let i = index" style="padding: 2%;">
+                        <i-bs  (click)="onAddLayer()" width="15" height="15" name="plus-circle-fill"  style="cursor: pointer; padding: 2%;"></i-bs>
+                        <i-bs  (click)="onRemoveLayer(i)" width="15" height="15" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
+                        <br>
+                        <span >br neuron</span>
                         <input type="text" [formControlName]="i"/>
-                  </div>
-              </div>
-              <div class="form-check" style="padding-left: 0px; padding-bottom: 5px;">
-                <p  *ng style="color: white; font-weight: bold; border-radius: 2px; background-color: #212f3c;">Choose Graphics:</p>
-                <div *ngFor="let item of inputCheckBoxes" style="padding-left: 35px">
-                  <input class="form-check-input" type="checkbox" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone: true}" id="flexCheckDefault" (change)="changeSelection()">
-                <label style="color: black;">{{item.label}}</label>
+                    </td>
                 </div>
-              </div>
-              <div class="col" style="width:100%;">
-                <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
-              </div>
-          </div>
+            </div>
+        </div>
+
+        <div class="container-fluid" > 
+            <div class="row" >
+              <div class="col-4"  style="width:auto; min-width: 170px;display: flex;
+              align-items: center;
+              ">
+                <div class="checkbox-list">
+                  <p  *ng style="color: white; font-weight: bold; border-radius: 2px; background-color: #212f3c;">Choose Graphics:</p>
+                    <div class="checkbox" *ngFor="let item of inputCheckBoxes" >
+                      <input  class="form-check-input" type="checkbox" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone: true}" id="item"  checked="" (change)="changeSelection()">
+                      <label for="item" style="color: white;">{{item.label}}</label>
+                    </div>
+                    
+                </div>
+             </div>
+            
+             <!--
+                <div class="col-4" style="width:20%; min-width: 170px;">
+                  <div class="form-check" style="padding-left: 0px; padding-bottom: 5px;">
+                      <p  *ng style="color: white; font-weight: bold; border-radius: 2px; background-color: #212f3c;">Choose Graphics:</p>
+                      <div *ngFor="let item of inputCheckBoxes" style="padding-left: 35px">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone: true}" id="flexCheckDefault" (change)="changeSelection()">
+                        <label style="color: black;">{{item.label}}</label>
+                      </div>
+                  </div>
+                </div>-->
+                <div class="col" style="width:100%;">
+                  <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
+                </div>
+            </div>
+        </div>
+          
           <!--
           <div class="control d-grid gap-2 d-md-flex justify-content-md-end">
               <button type="button" class="btn btn-primary btn-lg" (click)="showCsv()"> CSV </button>
               <button type="submit" class="btn btn-primary btn-lg">Treniraj Model</button>
           </div>
           <button type="button" class="btn btn-primary btn-lg" style="position: absolute;left: 50%;" (click)="showCsv()"> CSV </button>-->
-        </div>
+     
       </form>
   
 </div>
