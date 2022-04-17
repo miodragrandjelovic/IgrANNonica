@@ -1,183 +1,228 @@
-<div [hidden]="this.hidden" class="container-fluid" style="color: white;">
-
-  <div style="margin-top:5px;margin-bottom:5px;text-align:center;">
-    <input class="form-control mb-5" type="file" class="upload" data-max-file-size="2M" (change)="fileUpload($event)" style="text-align:center; margin-top: 10px;margin-bottom: 10px; color:black;">
-    <!-- ovo mora da se izmeniii -->
+<div [hidden]="this.hidden" class="container-fluid" style="margin: 0px; padding: 0px;">
+  
+  <!-- ovaj div ce se prikazivati samo ulogovanim korisnicima!-->
+  <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
+    Ovde ce da ide tabela sacuvanih datasetova
   </div>
 
-  <div class="row" *ngIf="showMe" style="width:100%;">
-    <div class="row left-div form-check" style="width:20%;margin-left: 12px;margin-right: 3px; height: fit-content;">  
+  <!-- ovo je prikaz izabranog dataseta koji ce se prikazivati ulogovanom korisniku -->
+  <div style="background-color: white; padding:10px; border-radius: 4px;margin-bottom: 10px; margin: auto;">
+    <!--
+    <div class="mb-3" style="width:50%;margin: auto;">
+      <input class="form-control upload" type="file" id="formFile" (change)="fileUpload($event)">
+    </div>
+    -->
+    <div style="width:25%;margin-left: 20px; background-color: pink;float:left;text-align: center; padding-top: 50px; padding-bottom: 50px;"><!--this div will be for choosing regression or class dataset, and onInit regression will be chosen-->
+      <div *ngIf="!session"> <!-- ovo ce da se prikazuje neulogovanom-->
+        <h3 style="color:#212f3c;">Choose Dataset</h3>
+        <p>Which dataset do you want to use?</p>
+        <br>
+        <div style="width:fit-content;margin: auto;">
+          <button style="border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float:left; margin-right:30px;" (click)="loadRegressionDataset()">
+            <img src="assets/images/regression.png" width="50px" height="50px">
+          </button>
+          <button style="border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float: left;" (click)="loadClassificationDataset()">
+            <img src="assets/images/classification.png" width="50px" height="50px">
+          </button>
+          <div style="float:left;clear:both; display: inline;"></div>
+        </div>
+      </div>
 
-      <div class="col col-lg-2" style="width:90%; text-align: center; margin: auto; margin-top: 20px; margin-bottom: 10px;">
-        <!--<button type="button" class="btn btn-primary btn-lg" style="position: absolute;left: 40%" (click)="showHp()">Go to Hyperparameters</button> -->
+      <div *ngIf="session" style="width:80%;margin:auto; margin-top: -20px;"> <!-- ovo ce da se prikazuje ulogovanom-->
+        <div style="border:#212f3c 1px solid; border-radius: 20px; padding-top: 5px;padding-bottom: 5px; margin-bottom: 10px; height: 45px;">
+          Dataset title
+        </div>
+        <div style="border:#212f3c 1px solid;border-radius:20px; min-height:150px; margin-bottom: 10px;">
+          Dataset description - ovo je hardkodovano a treba da se dobija iz beka i da se dozvoli izmena!!!
+        </div>
+
+        <button style="border-radius:15px; border:#212f3c 1px solid; background-color: #03A9F4; width: 40%; float:right; color:white; font-weight: bold; height: 35px;">Save</button>
+      </div>
+    </div>
+
+    <div style="width:70%; background-color: red; float: left;margin-left: 20px;">
+      <br><br>
+      <!-- ovde treba da se nalazi tabela dataseta koji korisnik izabere! -->
+      
+    </div>
+
+    <div class="row" *ngIf="showMe" style="width:100%;">
+      <div class="row left-div form-check" style="width:20%;margin-left: 12px;margin-right: 3px; height: fit-content;">  
   
-        <div class="form-check" *ngIf="showMe" style="padding-left: 0px; padding-bottom: 5px;">
-          <p  *ngIf="showMe" style="color: white; font-weight: bold; border-radius: 2px; background-color: #212f3c;">Choose Features:</p>
-          <div *ngFor="let item of inputsArray" style="padding-left: 35px">
-            <input class="form-check-input" type="checkbox" [(ngModel)]="item.isChecked"
-              [disabled]="this.selectedValue==item" id="flexCheckDefault" (change)="changeSelection()">
-          <label style="color: black;">{{item.label}}</label>
+        <div class="col col-lg-2" style="width:90%; text-align: center; margin: auto; margin-top: 20px; margin-bottom: 10px;">
+          <!--<button type="button" class="btn btn-primary btn-lg" style="position: absolute;left: 40%" (click)="showHp()">Go to Hyperparameters</button> -->
+    
+          <div class="form-check" *ngIf="showMe" style="padding-left: 0px; padding-bottom: 5px;">
+            <p  *ngIf="showMe" style="color: white; font-weight: bold; border-radius: 2px; background-color: #212f3c;">Choose Features:</p>
+            <div *ngFor="let item of inputsArray" style="padding-left: 35px">
+              <input class="form-check-input" type="checkbox" [(ngModel)]="item.isChecked"
+                [disabled]="this.selectedValue==item" id="flexCheckDefault" (change)="changeSelection()">
+            <label style="color: black;">{{item.label}}</label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col col-lg-2" *ngIf="showMe" style="text-align: center; width: 100%;">
+          <div ngbDropdown class="btn-group" style="padding-top: 15px;">
+          <button ngbDropdownToggle type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:#212f3c; color:white; font-weight: bold; border:#212f3c;">
+              Label
+            </button>
+            <div ngbDropdownMenu class="dropdown-menu">
+              <option ngbDropdownItem  (click)="selectChange($event)" *ngFor="let output of outputs"
+              (change)="this.selectedValue=output"
+              class="dropdown-item" [value]="output.label"  style="cursor: pointer;" >{{output.label}}</option>
+            </div>
+          </div><br>
+          <div>
+            <p *ngIf="showMe2" style="color:black">Selected: {{selectedValue}}</p>
+          </div>
+          <button type="button" class="btn btn-primary" (click)="korelacionaMatrica()" style="margin: 5px; background-color: #212f3c; color:white; font-weight: bold; border-color: #212f3c;">Show Correlation Matrix</button>
+        </div>
+    
+      </div>
+    
+      <div class="row right-div" style="width:80%;">
+        <div class="col">
+          <!--  <input class="form-control mb-5" type="file" class="upload" (change)="fileUpload($event)">  -->
+          <div *ngIf="showMe" class="col"  style="overflow-x:scroll;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th *ngFor="let item of headingLines[0]; let i = index">{{item}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of rowLines; let i = index">
+                  <td *ngFor="let itemm of headingLines[0]; let j = index">{{item[j]}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-between p-2">
+            <ngb-pagination *ngIf="showMe" [boundaryLinks]="true" [maxSize]="10" [collectionSize]="allData.length" [(page)]="currentPage" [pageSize]="itemsPerPage" (pageChange)="changePage()">
+            </ngb-pagination>
+          </div>
+          <div *ngIf="showMe" class="col"  style="overflow-x:scroll;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th *ngFor="let item of headersStatistics[0]; let i = index">{{item}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of rowLinesStatistics; let i = index">
+                  <td *ngFor="let itemm of headersStatistics[0]; let j = index">{{item[j]}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="showMeMatrix" class="col"  style="overflow-x:scroll; margin-top: 20px;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th *ngFor="let item of headersMatrix[0]; let i = index">{{item}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of rowLinesMatrix; let i = index">
+                  <td *ngFor="let itemm of headersMatrix[0]; let j = index">{{item[j]}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
+    </div>
+  
+    <div class="blanko" style="display:block;clear:both;"> 
+    </div>
       
-      <div class="col col-lg-2" *ngIf="showMe" style="text-align: center; width: 100%;">
+  <!------------------ preload data------------------>
+  <!--
+  <div class="container-fluid" style="color: white;" *ngIf="prikazPreload">
+    <div class="row">  
+      <div class="col col-lg-2">
+        <div class="form-check"  style="padding-top: 15px;">
+          <p  *ngIf="showMe4" style="color: black;">Choose inputs:</p>
+          <div *ngFor="let item of map|keyvalue;" style="padding-left: 35px;">
+            <input class="form-check-input" type="checkbox" value="{{item.key}}"
+            [checked]="this.selectedValue1!=item.key"
+              [disabled]="this.selectedValue1==item.key" id="flexCheckDefault" >
+          <label style="color: black;">{{item.key}}</label>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col">
+        <button (click)="preloadCsv()" type="button" class="btn btn-primary">Preloaded dataset</button>
+        <div *ngIf="showMe4" class="col"  style="height: 500px; overflow-x:scroll;">
+          <table class="table">
+            <thead>
+              <tr>-->
+               <!-- <th *ngFor="let item of map|keyvalue">{{item.key}}</th>-->
+               <!-- 
+                <th>No</th>
+                <th>Transaction_date</th>
+                <th>Hous_age</th>
+                <th>Distance_MRT</th>
+                <th>Convenience_stores</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Unit_price</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of array2d">
+                  <td *ngFor="let item1 of item">{{item1}}</td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+     
+        <div *ngIf="showMe4" class="col"  style="height: 400px; overflow-x:scroll;margin-top: 20px;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th *ngFor="let item of kolona">{{item}}</th>
+                <tr *ngFor="let item of array2d2">
+                  <td *ngFor="let item1 of item">{{item1}}</td>
+              </tr>
+            </thead>
+          </table>
+        </div>
+  
+        <div *ngIf="prikazKorMat" class="col"  style="height: 400px; overflow-x:scroll;margin-top: 20px;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th *ngFor="let item of kolona2">{{item}}</th>
+                <tr *ngFor="let item of array2d3">
+                  <td *ngFor="let item1 of item">{{item1}}</td>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+  
+      <div class="col col-lg-2" *ngIf="showMe4" style="text-align: center;">
         <div ngbDropdown class="btn-group" style="padding-top: 15px;">
-        <button ngbDropdownToggle type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:#212f3c; color:white; font-weight: bold; border:#212f3c;">
-            Label
+        <button ngbDropdownToggle type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Output
           </button>
           <div ngbDropdownMenu class="dropdown-menu">
-            <option ngbDropdownItem  (click)="selectChange($event)" *ngFor="let output of outputs"
-            (change)="this.selectedValue=output"
-            class="dropdown-item" [value]="output.label"  style="cursor: pointer;" >{{output.label}}</option>
+            <option ngbDropdownItem  (click)="selectChange1($event)"
+            (change)="this.selectedValue1=item.key"
+            class="dropdown-item" [value]="item.key" *ngFor="let item of map|keyvalue"  style="cursor: pointer;" >{{item.key}}</option>
           </div>
         </div><br>
         <div>
-          <p *ngIf="showMe2" style="color:black">Selected: {{selectedValue}}</p>
+          <p *ngIf="odabrano" style="color:black">Selected: {{selectedValue1}}</p>
         </div>
-        <button type="button" class="btn btn-primary" (click)="korelacionaMatrica()" style="margin: 5px; background-color: #212f3c; color:white; font-weight: bold; border-color: #212f3c;">Show Correlation Matrix</button>
+        <button type="button" class="btn btn-primary" (click)="preloadKorelacionaMatrica()" style="margin: 5px;">Prikazi korelacionu matricu</button>
       </div>
   
     </div>
-  
-    <div class="row right-div" style="width:80%;">
-      <div class="col">
-        <!--  <input class="form-control mb-5" type="file" class="upload" (change)="fileUpload($event)">  -->
-        <div *ngIf="showMe" class="col"  style="overflow-x:scroll;">
-          <table class="table">
-            <thead>
-              <tr>
-                <th *ngFor="let item of headingLines[0]; let i = index">{{item}}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of rowLines; let i = index">
-                <td *ngFor="let itemm of headingLines[0]; let j = index">{{item[j]}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="d-flex justify-content-between p-2">
-          <ngb-pagination *ngIf="showMe" [boundaryLinks]="true" [maxSize]="10" [collectionSize]="allData.length" [(page)]="currentPage" [pageSize]="itemsPerPage" (pageChange)="changePage()">
-          </ngb-pagination>
-        </div>
-        <div *ngIf="showMe" class="col"  style="overflow-x:scroll;">
-          <table class="table">
-            <thead>
-              <tr>
-                <th *ngFor="let item of headersStatistics[0]; let i = index">{{item}}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of rowLinesStatistics; let i = index">
-                <td *ngFor="let itemm of headersStatistics[0]; let j = index">{{item[j]}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div *ngIf="showMeMatrix" class="col"  style="overflow-x:scroll; margin-top: 20px;">
-          <table class="table">
-            <thead>
-              <tr>
-                <th *ngFor="let item of headersMatrix[0]; let i = index">{{item}}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of rowLinesMatrix; let i = index">
-                <td *ngFor="let itemm of headersMatrix[0]; let j = index">{{item[j]}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
   </div>
-
-  <div class="blanko" style="display:block;clear:both;"> 
+  -->
   </div>
-    
-<!------------------ preload data------------------>
-<div class="container-fluid" style="color: white;" *ngIf="prikazPreload">
-  <div class="row">  
-    <div class="col col-lg-2">
-      <div class="form-check"  style="padding-top: 15px;">
-        <p  *ngIf="showMe4" style="color: black;">Choose inputs:</p>
-        <div *ngFor="let item of map|keyvalue;" style="padding-left: 35px;">
-          <input class="form-check-input" type="checkbox" value="{{item.key}}"
-          [checked]="this.selectedValue1!=item.key"
-            [disabled]="this.selectedValue1==item.key" id="flexCheckDefault" >
-        <label style="color: black;">{{item.key}}</label>
-        </div>
-      </div>
-    </div>
-
-    <div class="col">
-      <button (click)="preloadCsv()" type="button" class="btn btn-primary">Preloaded dataset</button>
-      <div *ngIf="showMe4" class="col"  style="height: 500px; overflow-x:scroll;">
-        <table class="table">
-          <thead>
-            <tr>
-             <!-- <th *ngFor="let item of map|keyvalue">{{item.key}}</th>-->
-              <th>No</th>
-              <th>Transaction_date</th>
-              <th>Hous_age</th>
-              <th>Distance_MRT</th>
-              <th>Convenience_stores</th>
-              <th>Latitude</th>
-              <th>Longitude</th>
-              <th>Unit_price</th>
-            </tr>
-          </thead>
-          <tbody>
-              <tr *ngFor="let item of array2d">
-                <td *ngFor="let item1 of item">{{item1}}</td>
-              </tr>
-            </tbody>
-        </table>
-      </div>
-   
-      <div *ngIf="showMe4" class="col"  style="height: 400px; overflow-x:scroll;margin-top: 20px;">
-        <table class="table">
-          <thead>
-            <tr>
-              <th *ngFor="let item of kolona">{{item}}</th>
-              <tr *ngFor="let item of array2d2">
-                <td *ngFor="let item1 of item">{{item1}}</td>
-            </tr>
-          </thead>
-        </table>
-      </div>
-
-      <div *ngIf="prikazKorMat" class="col"  style="height: 400px; overflow-x:scroll;margin-top: 20px;">
-        <table class="table">
-          <thead>
-            <tr>
-              <th *ngFor="let item of kolona2">{{item}}</th>
-              <tr *ngFor="let item of array2d3">
-                <td *ngFor="let item1 of item">{{item1}}</td>
-            </tr>
-          </thead>
-        </table>
-      </div>
-    </div>
-
-    <div class="col col-lg-2" *ngIf="showMe4" style="text-align: center;">
-      <div ngbDropdown class="btn-group" style="padding-top: 15px;">
-      <button ngbDropdownToggle type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Output
-        </button>
-        <div ngbDropdownMenu class="dropdown-menu">
-          <option ngbDropdownItem  (click)="selectChange1($event)"
-          (change)="this.selectedValue1=item.key"
-          class="dropdown-item" [value]="item.key" *ngFor="let item of map|keyvalue"  style="cursor: pointer;" >{{item.key}}</option>
-        </div>
-      </div><br>
-      <div>
-        <p *ngIf="odabrano" style="color:black">Selected: {{selectedValue1}}</p>
-      </div>
-      <button type="button" class="btn btn-primary" (click)="preloadKorelacionaMatrica()" style="margin: 5px;">Prikazi korelacionu matricu</button>
-    </div>
-
-  </div>
-</div>
 </div>

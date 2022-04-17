@@ -33,6 +33,8 @@ export class CsvComponent implements OnInit {
 
     selectedValue:any="";
     selectedValue1:any="";
+
+    session:any;
     
     selectChange(event:any){
         this.changeSelection();
@@ -89,7 +91,9 @@ export class CsvComponent implements OnInit {
                     this.showHp();
                 }
             }
-        })
+        });
+
+        this.session = sessionStorage.getItem('username');
     }
 
     constructor(private http: HttpClient, private parametersService: ParametersService, private service: MessageService) {
@@ -287,6 +291,19 @@ export class CsvComponent implements OnInit {
             this.headersMatrix.push(headersArray);
         }
 
+
+
+
+
+    loadRegressionDataset(){
+        alert("UCITAJ REGRESIONI");
+        // treba sa beka da dobijemo podrazumevani regresioni dataset
+    }
+
+    loadClassificationDataset(){   
+        alert("UCITAJ KLASIFIKACIONI");
+        // treba sa beka da dobijemo podrazumevani klasifikacioni dataset
+    }
         //---------------------------------------------------------- preload data
         map:Map<string, string[]>;
         map2:Map<string, string[]>;
@@ -392,6 +409,10 @@ export class CsvComponent implements OnInit {
                 
               });     
         }
+
+
+
+
     }
 
     
