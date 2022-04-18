@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Chart, registerables, LineController, LineElement, PointElement, LinearScale, Title } from 'chart.js'
+import { LoadingService } from '../loading/loading.service';
 
 @Component({
   selector: 'app-graphic',
@@ -13,7 +14,7 @@ export class GraphicComponent implements OnInit {
   hpX: Array<string> = [];
   charts: any = [];
   @Input() id: number;
-  constructor() { }
+  constructor(public spiner:LoadingService) { }
 
   ngOnInit(): void {
     console.log('selected:', this.selected);
@@ -21,6 +22,7 @@ export class GraphicComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.loadGraphic(this.selected.label, this.selected.values, this.selected.valuesVal);
+    this.spiner.showSpiner=false;
   }
 
 

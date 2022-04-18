@@ -1,6 +1,11 @@
 
 <div id="sredina" [hidden]="!hidden">
     <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
+
+      <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
+        Ovde ce da ide tabela sacuvanih datasetova
+      </div>
+    
         <div id="top-controls" >
 
           <div class="row parametri" style="width:100%;margin:auto;">
@@ -131,11 +136,10 @@
             </div>
         </div>
 
-        <div class="container-fluid" > 
+        <div class="container-fluid" *ngIf="prikazGrafika"> 
+          
             <div class="row" >
-              <div class="col-4"  style="width:auto; min-width: 170px;display: flex;
-              align-items: center;
-              ">
+              <div class="col-4"  style="width:auto; min-width: 170px;display: flex;align-items: center;">
                 <div class="checkbox-list">
                   <p  *ng style="color: white; font-weight: bold; border-radius: 2px; background-color: #212f3c;">Choose Graphics:</p>
                     <div class="checkbox" *ngFor="let item of inputCheckBoxes" >
@@ -157,6 +161,7 @@
                   </div>
                 </div>-->
                 <div class="col" style="width:100%;">
+                  <app-loading></app-loading>
                   <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
                 </div>
             </div>
