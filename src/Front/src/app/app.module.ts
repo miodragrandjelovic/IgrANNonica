@@ -31,6 +31,7 @@ import { GraphicComponent } from './graphic/graphic.component';
 import { TableComponent } from './table/table.component';
 import { HeatmapComponent } from './home/heatmap/heatmap.component';
 
+
 const icons = {
   envelope,
   telephone,
