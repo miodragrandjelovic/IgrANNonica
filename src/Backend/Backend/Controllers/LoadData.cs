@@ -28,6 +28,8 @@ namespace Backend.Controllers
         public static string? Username { get; set; } //Ulogovan korisnik
         public static string? DirName { get; set; } //Ime foldera 
 
+        public static string url = "http://127.0.0.1:3000";
+
         [HttpPost("selectedCsv")] //Otvaranje foldera gde se nalazi izabrani csv
         public async Task<ActionResult<String>> PostSelectedCsv(String name)
         {
@@ -64,8 +66,9 @@ namespace Backend.Controllers
             var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); //json
 
             var data = new StringContent(result, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/csv";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/csv";
+            var csvurl = Path.Combine(url, "csv");
+            var response = await http.PostAsync(csvurl, data);
             return Ok(resultjson);
         }
 
@@ -100,8 +103,9 @@ namespace Backend.Controllers
 
             var modelName = name;
             var data = new StringContent(modelName, System.Text.Encoding.UTF8, "application/text");
-            var url = "http://127.0.0.1:3000/savedModel";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/savedModel";
+            var modelurl = Path.Combine(url, "savedModel");
+            var response = await http.PostAsync(modelurl, data);
             return Ok(SelectedPath);
 
         }
@@ -132,15 +136,17 @@ namespace Backend.Controllers
 
                 var pathjson = System.Text.Json.JsonSerializer.Serialize(pathToCreateDir);
                 var pathdata = new StringContent(pathToCreateDir, System.Text.Encoding.UTF8, "application/json");
-                var pathurl = "http://127.0.0.1:3000/pathModel";
+                //var  = "http://127.0.0.1:3000/pathModel";
+                var pathurl = Path.Combine(url, "pathModel");
                 var pathresponse = await http.PostAsync(pathurl, pathdata);
             }
 
             hiper.Username = Username;
             var hiperjson = System.Text.Json.JsonSerializer.Serialize(hiper);
             var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/hp";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/hp";
+            var hpurl = Path.Combine(url, "hp");
+            var response = await http.PostAsync(hpurl, data); 
 
             var workbookhp = new Workbook();
             var worksheethp = workbookhp.Worksheets[0];
@@ -156,8 +162,8 @@ namespace Backend.Controllers
             //                                                                                  hiperparametri                                                                                
             //---------------------------------------------------------------------------------------------------
             //                                                                                  model
-
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/model");
+            var modelurl = Path.Combine(url, "model");
+            HttpResponseMessage httpResponse = await http.GetAsync(modelurl);
             var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
             var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
 
@@ -208,10 +214,12 @@ namespace Backend.Controllers
             Name = cs.Name;
             PythonController.Name = cs.Name;
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/csv";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/csv";
+            var urlcsv = Path.Combine(url, "csv");
+            var response = await http.PostAsync(urlcsv, data);
 
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
+            var statsurl = Path.Combine(url, "stats");
+            HttpResponseMessage httpResponse = await http.GetAsync(statsurl);
             var stat = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
 
             string currentPath = Directory.GetCurrentDirectory();
@@ -285,10 +293,12 @@ namespace Backend.Controllers
             Name = cs.Name;
             PythonController.Name = cs.Name;
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/predictionCsv"; //slanje csv-a za prediktovanje na pajton
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/predictionCsv"; //slanje csv-a za prediktovanje na pajton
+            var urlpred = Path.Combine(url, "predictionCsv");
+            var response = await http.PostAsync(urlpred, data);
 
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/prediction"); //rezultati predikcije
+            var predurl = Path.Combine(url, "prediction");
+            HttpResponseMessage httpResponse = await http.GetAsync(predurl); //rezultati predikcije
             var predikcija = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
 
             return Ok(predikcija);
@@ -299,8 +309,9 @@ namespace Backend.Controllers
         {
             var statjson = System.Text.Json.JsonSerializer.Serialize(stat);
             var data = new StringContent(statjson, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/stats";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/stats";
+            var urlst = Path.Combine(url, "stats");
+            var response = await http.PostAsync(urlst, data);
             return Ok(statjson);
         }
 
