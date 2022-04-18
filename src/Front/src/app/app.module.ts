@@ -32,6 +32,7 @@ import { TableComponent } from './table/table.component';
 import { HeatmapComponent } from './home/heatmap/heatmap.component';
 import { LoadingComponent } from './loading/loading.component';
 import { UserdatasetsComponent } from './home/csv/userdatasets/userdatasets.component';
+import { UsermodelsComponent } from './home/hyperparameters/usermodels/usermodels.component';
 
 const icons = {
   envelope,
@@ -64,6 +65,7 @@ const icons = {
     HeatmapComponent,
     LoadingComponent,
     UserdatasetsComponent,
+    UsermodelsComponent,
   ],
   imports: [
     BrowserModule,
