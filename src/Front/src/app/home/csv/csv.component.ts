@@ -36,6 +36,7 @@ export class CsvComponent implements OnInit {
     selectedValue1:any="";
 
     session:any;
+    chosen:any;
 
     currentResult:string;
     
@@ -98,7 +99,9 @@ export class CsvComponent implements OnInit {
 
         this.loadRegressionDataset();
 
+        
         this.session = sessionStorage.getItem('username');
+        this.chosen = false;
     }
 
     constructor(private http: HttpClient, private parametersService: ParametersService, private service: MessageService) {

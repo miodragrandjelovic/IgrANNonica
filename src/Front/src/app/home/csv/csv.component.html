@@ -2,7 +2,19 @@
   
   <!-- ovaj div ce se prikazivati samo ULOGOVANIM korisnicima!-->
   <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
-  
+    <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;">
+      <button style="width:15%;margin-right: 30px; background-color: #212f3c; color:white; height: 50px; border-radius: 20px;">+ New Dataset</button>
+      <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
+      <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your datasets"> <!-- search sa filterom -->
+      <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
+        <img src="assets/images/filter.png" style="height:30px; width: auto;">
+      </button>
+    </div>
+
+    <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px; background-color: #03A9F4;">
+      <!-- ovde ide tabela sa datasetovima korisnika -->
+      
+    </div>
   </div>
 
   <!-- ovo je prikaz izabranog dataseta koji ce se prikazivati SVIM korisnicima -->
@@ -45,7 +57,7 @@
     </div>
 
     <div *ngIf="session"> <!-- ovo ce da se prikazuje ULOGOVANOM -->
-      <div style="width:25%;margin-left: 20px; float:left;text-align: center; padding-top: 50px; padding-bottom: 50px;"><!--this div will be for shown when user chooses dataset -->
+      <div *ngIf="chosen" style="width:25%;margin-left: 20px; float:left;text-align: center; padding-top: 50px; padding-bottom: 50px;"><!--this div will be for shown when user chooses dataset -->
         <div style="width:80%;margin:auto; margin-top: -20px;"> <!-- ovo ce da se prikazuje ulogovanom-->
           <div style="border:#212f3c 1px solid; border-radius: 20px; padding-top: 5px;padding-bottom: 5px; margin-bottom: 10px; height: 45px;">
             Dataset title
