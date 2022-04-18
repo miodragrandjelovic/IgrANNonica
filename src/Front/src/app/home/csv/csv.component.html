@@ -2,11 +2,11 @@
   
   <!-- ovaj div ce se prikazivati samo ULOGOVANIM korisnicima!-->
   <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
-    Ovde ce da ide tabela sacuvanih datasetova
+  
   </div>
 
   <!-- ovo je prikaz izabranog dataseta koji ce se prikazivati SVIM korisnicima -->
-  <div style="background-color: white; padding:10px; border-radius: 4px;margin-bottom: 10px; margin: auto;">
+  <div style="background-color: white; padding:10px; border-radius: 4px;margin-bottom: 10px; margin: auto; padding-top: 20px;">
     <!--
     <div class="mb-3" style="width:50%;margin: auto;">
       <input class="form-control upload" type="file" id="formFile" (change)="fileUpload($event)">
@@ -19,17 +19,19 @@
         <p>Which dataset do you want to use?</p>
         <br>
         <div style="width:fit-content;margin: auto;">
-          <button style="border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float:left; margin-right:30px;"
+          <button class="chooseDataset" style="border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float:left; margin-right:30px;"
             (click)="loadRegressionDataset()">
-            <img src="assets/images/regression.png" width="50px" height="50px">
+            <img src="assets/images/regression.png" width="70px" height="70px">
           </button>
-          <button style="border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float: left;"
+          <button class="chooseDataset" style="border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float: left;"
             (click)="loadClassificationDataset()">
-            <img src="assets/images/classification.png" width="50px" height="50px">
+            <img src="assets/images/classification.png" width="70px" height="70px">
           </button>
           <div class="blanko" style="display:block;clear:left;"></div>
         </div>
-
+        
+        <app-heatmap [result]="currentCorrResult"></app-heatmap>
+      
       </div>
   
       <div style="width:70%; float: left;margin-left: 20px;">

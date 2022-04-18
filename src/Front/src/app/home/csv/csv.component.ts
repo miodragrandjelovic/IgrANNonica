@@ -22,6 +22,7 @@ import { MessageService } from "../home.service";
 export class CsvComponent implements OnInit {    
 
     hidden: boolean;
+    currentCorrResult: any;
 
     showMe: boolean = false;
     showMe2:boolean = false;
@@ -311,6 +312,12 @@ export class CsvComponent implements OnInit {
 
             this.currentResult = result;
         });
+
+        this.http.get<any>('https://localhost:7167/api/Python/preloadKor').subscribe(data =>{
+            console.log("This is cor ",data);
+
+            this.currentCorrResult = data;
+        });
     }
 
     loadClassificationDataset(){   
@@ -324,6 +331,12 @@ export class CsvComponent implements OnInit {
             // sad ovo treba da prosledim o komponenti tabele
 
             this.currentResult = result;
+        });
+
+        this.http.get<any>('https://localhost:7167/api/Python/preloadKorClass').subscribe(data =>{
+            console.log(data);
+
+            this.currentCorrResult = data;
         });
     }
         //---------------------------------------------------------- preload data

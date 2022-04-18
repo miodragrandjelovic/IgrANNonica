@@ -29,6 +29,7 @@ import { HyperparametersComponent } from './home/hyperparameters/hyperparameters
 import { DatasetComponent } from './header/dataset/dataset.component';
 import { GraphicComponent } from './graphic/graphic.component';
 import { TableComponent } from './table/table.component';
+import { HeatmapComponent } from './home/heatmap/heatmap.component';
 
 const icons = {
   envelope,
@@ -55,6 +56,7 @@ const icons = {
     DatasetComponent,
     GraphicComponent,
     TableComponent,
+    HeatmapComponent,
   ],
   imports: [
     BrowserModule,
