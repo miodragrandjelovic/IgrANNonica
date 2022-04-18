@@ -26,7 +26,7 @@ namespace Backend.Controllers
         private readonly UserDbContext _context;
         public static string Username;
         public static string? DirName { get; set; } //Ime foldera 
-
+        public static string url = "http://127.0.0.1:3000";
         public RegistracijaUseraController(UserDbContext context, IConfiguration configuration)
         {
             _context = context;

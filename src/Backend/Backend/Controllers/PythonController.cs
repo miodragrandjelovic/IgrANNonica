@@ -18,7 +18,7 @@ namespace Backend.Controllers
         private readonly HttpClient http = new HttpClient();
         public static string? Username { get; set; } //username trenutno prijavljenog korisnika
         public static string? Name { get; set; } //ime ucitanog csv fajla
-
+        public static string url = "http://127.0.0.1:3000";
         private readonly IConfiguration _configuration;
         private readonly UserDbContext _context;
         public PythonController(UserDbContext context, IConfiguration configuration)
@@ -63,10 +63,12 @@ namespace Backend.Controllers
             var jsoncsva = JsonSerializer.Deserialize<JsonDocument>(csve); //json
             
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/csv";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/csv";
+            var urlcsv = Path.Combine(url, "csv");
+            var response = await http.PostAsync(urlcsv, data);
 
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
+            var urlst = Path.Combine(url, "stats");
+            HttpResponseMessage httpResponse = await http.GetAsync(urlst);
             var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
 
             return Ok(stat);
@@ -80,10 +82,12 @@ namespace Backend.Controllers
             var jsoncsva = JsonSerializer.Deserialize<JsonDocument>(csve); //json
 
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/csv";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/csv";
+            var urlcsv = Path.Combine(url, "csv");
+            var response = await http.PostAsync(urlcsv, data);
 
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/kor");
+            var urlkor = Path.Combine(url, "kor");
+            HttpResponseMessage httpResponse = await http.GetAsync(urlkor);
             var kor = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
             //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
             
@@ -109,10 +113,12 @@ namespace Backend.Controllers
             var jsoncsva = JsonSerializer.Deserialize<JsonDocument>(csve); //json
 
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/csv";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/csv";
+            var urlcsv = Path.Combine(url, "csv");
+            var response = await http.PostAsync(urlcsv, data);
 
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
+            var urlstat = Path.Combine(url, "stats");
+            HttpResponseMessage httpResponse = await http.GetAsync(urlstat);
             var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
 
             return Ok(stat);
@@ -126,10 +132,12 @@ namespace Backend.Controllers
             var jsoncsva = JsonSerializer.Deserialize<JsonDocument>(csve); //json
 
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/csv";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/csv";
+            var urlcsv = Path.Combine(url, "csv");
+            var response = await http.PostAsync(urlcsv, data);
 
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/kor");
+            var urlkor = Path.Combine(url, "kor");
+            HttpResponseMessage httpResponse = await http.GetAsync(urlkor);
             var kor = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
             //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
 
@@ -146,14 +154,17 @@ namespace Backend.Controllers
 
 
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/csv";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/csv";
+            var urlcsv = Path.Combine(url, "csv");
+            var response = await http.PostAsync(urlcsv, data);
 
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
+            var urlstat = Path.Combine(url, "stats");
+            HttpResponseMessage httpResponse = await http.GetAsync(urlstat);
             //var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
             var stat = await httpResponse.Content.ReadAsStringAsync();
 
-            HttpResponseMessage httpResponse1 = await http.GetAsync("http://127.0.0.1:3000/kor");
+            var urlkor = Path.Combine(url, "kor");
+            HttpResponseMessage httpResponse1 = await http.GetAsync(urlkor);
             //var kor = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
             var kor = await httpResponse1.Content.ReadAsStringAsync(); //forma stringa
 
@@ -166,7 +177,8 @@ namespace Backend.Controllers
         [HttpGet("stats")] //Primanje statistickih parametara iz pajtona 
         public async Task<ActionResult<JsonDocument>> GetStat()
         {
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
+            var urlstat = Path.Combine(url, "stats");
+            HttpResponseMessage httpResponse = await http.GetAsync(urlstat);
             var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
             return Ok(stat);
         }
@@ -175,7 +187,8 @@ namespace Backend.Controllers
         [HttpGet("hp")] //Primanje HP iz pajtona 
         public async Task<ActionResult<Hiperparametri>> GetHp()
         {
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/hp");
+            var urlhp = Path.Combine(url, "hp");
+            HttpResponseMessage httpResponse = await http.GetAsync(urlhp);
             var hp = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
             return Ok(hp);
         }
@@ -183,7 +196,8 @@ namespace Backend.Controllers
         [HttpGet("csv")] //Primanje CSV iz pajtona 
         public async Task<ActionResult<JsonDocument>> GetCsv()
         {
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/csv");
+            var urlcsv = Path.Combine(url, "csv");
+            HttpResponseMessage httpResponse = await http.GetAsync(urlcsv);
             var csv = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
             //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
             return Ok(csv);
@@ -192,7 +206,8 @@ namespace Backend.Controllers
         [HttpGet("kor")] //Primanje kor_mat iz pajtona 
         public async Task<ActionResult<JsonDocument>> GetKor()
         {
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/kor");
+            var urlkor = Path.Combine(url, "kor");
+            HttpResponseMessage httpResponse = await http.GetAsync(urlkor);
             var kor = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
             //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
             return Ok(kor);
@@ -207,8 +222,9 @@ namespace Backend.Controllers
             else
             {
                 var data = new StringContent(name, System.Text.Encoding.UTF8, "application/text");
-                var url = "http://127.0.0.1:3000/username";
-                var response = await http.PostAsync(url, data);
+                //var url = "http://127.0.0.1:3000/username";
+                var urluser = Path.Combine(url, "username");
+                var response = await http.PostAsync(urluser, data);
 
                 return Ok(name);
             }
@@ -217,7 +233,8 @@ namespace Backend.Controllers
         [HttpGet("model")] //Primanje Modela iz pajtona 
         public async Task<ActionResult<JsonDocument>> GetModel()
         {
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/model");
+            var urlmodel = Path.Combine(url, "model");
+            HttpResponseMessage httpResponse = await http.GetAsync(urlmodel);
             var model = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
             var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
 
