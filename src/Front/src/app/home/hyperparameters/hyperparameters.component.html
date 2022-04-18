@@ -6,7 +6,7 @@
         Ovde ce da ide tabela sacuvanih datasetova
       </div>
     
-        <div id="top-controls" >
+        <div id="top-controls" style="border-radius:4px;">
 
           <div class="row parametri" style="width:100%;margin:auto;">
             <div class="control epoch">
@@ -34,7 +34,7 @@
                 </select>
               </div>
             </div>
-            <div class="control activation">
+            <div class="control activation" style="display:none;">
               <label for="activations">Activation</label>
               <div class="select">
                 <select [(ngModel)]='activation' class="custom-select" id="activations" formControlName="activation">
@@ -81,7 +81,7 @@
                 </select>
               </div>
             </div>
-            <div class="control encoding">
+            <div class="control encoding" style="display:none;">
               <label for="encoding">Encoding</label>
               <div class="select">
                 <select [(ngModel)]='encodingType' class="custom-select" id="encoding" formControlName="encodingType">
@@ -99,7 +99,7 @@
               </div>
             </div>
 
-            <div class="form-check control" style="padding-bottom:0px;padding-left: 10%;">
+            <div class="form-check control" style="padding-bottom:0px;padding-left: 10%; padding-right: 20px;">
               <button type="submit" class="round-button playButton" ><i-bs width="55" height="55" name="caret-right-fill"></i-bs></button>
             </div>
           </div>

@@ -31,6 +31,7 @@ import { GraphicComponent } from './graphic/graphic.component';
 import { TableComponent } from './table/table.component';
 import { HeatmapComponent } from './home/heatmap/heatmap.component';
 import { LoadingComponent } from './loading/loading.component';
+import { UserdatasetsComponent } from './home/csv/userdatasets/userdatasets.component';
 
 const icons = {
   envelope,
@@ -62,6 +63,7 @@ const icons = {
     TableComponent,
     HeatmapComponent,
     LoadingComponent,
+    UserdatasetsComponent,
   ],
   imports: [
     BrowserModule,

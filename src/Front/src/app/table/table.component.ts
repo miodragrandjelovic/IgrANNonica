@@ -44,7 +44,7 @@ export class TableComponent implements OnChanges {
     //let allLines = JSON.parse(this.result); // parsiramo ceo string koji smo dobili
     //console.log(allLines);
 
-    alert(this.result.length);
+    //alert(this.result.length);
     console.log(typeof(this.result));
 
     this.dataLength = this.result.length;

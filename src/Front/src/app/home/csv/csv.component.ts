@@ -23,11 +23,13 @@ export class CsvComponent implements OnInit {
 
     hidden: boolean;
     currentCorrResult: any;
+    selectedDatasetUser:any;
 
     showMe: boolean = false;
     showMe2:boolean = false;
     showMe3:boolean = false;
-    
+    showMeChosenDataset:boolean = false;
+
     showMeMatrix: boolean = false;
     prikazPreucitano:boolean = false;
     odabrano:boolean=false;
@@ -59,7 +61,7 @@ export class CsvComponent implements OnInit {
     allData: any = [];
     rowsArray: any = [];
     matrix: any = [];
-    itemsPerPage: number = 10;
+    itemsPerPage: number = 15;
     itemPosition: number = 0;
     currentPage: number = 1;
     response: any;
@@ -78,6 +80,9 @@ export class CsvComponent implements OnInit {
     selectedInputs: Array<CheckBox> = [];
     inputsArray: Array<CheckBox> = [];
     sendHp: string = "";
+
+    datasetTitle:string = '';
+    uploadedFile:any = false;
     
     ngOnInit(): void {
         this.parametersService.getShowHp().subscribe(res => {
@@ -102,6 +107,7 @@ export class CsvComponent implements OnInit {
         
         this.session = sessionStorage.getItem('username');
         this.chosen = false;
+
     }
 
     constructor(private http: HttpClient, 
@@ -150,15 +156,18 @@ export class CsvComponent implements OnInit {
 
     fileUpload(files: any) {
         this.prikazPreload=false;
+        this.uploadedFile = true;
 
+        this.chosen = true;
         this.sendHp = '';
         this.showMe2 = true;
         this.showMeMatrix = false;
         this.inputsArray = [];
 
+       
+
         this.flag = 1;
-        if (this.flag)
-            this.showMe=true;
+        
 
         this.dataObject = [];
         this.headingLines = [];
@@ -166,6 +175,7 @@ export class CsvComponent implements OnInit {
         this.rowLinesStatistics = [];
 
         let fileList = (<HTMLInputElement>files.target).files;
+        
         if (fileList && fileList.length > 0) {
             let file : File = fileList[0];
 
@@ -269,10 +279,22 @@ export class CsvComponent implements OnInit {
 
             }
         }
+
     }
 
     changePage() {
         this.rowLines = this.allData.slice(this.itemsPerPage * (this.currentPage - 1),this.itemsPerPage * (this.currentPage - 1) + this.itemsPerPage)
+    }
+
+    addNewDatasetAndPreview()
+    {
+        this.showMeChosenDataset = false;
+        this.showMe = true;
+        document.getElementById("closeModal")?.click();
+        this.datasetTitle = '';
+        this.uploadedFile = false;
+        
+        // treba i da se sacuva dataset!!!!!
     }
 
     korelacionaMatrica() {
@@ -357,9 +379,22 @@ export class CsvComponent implements OnInit {
         });
     }
 
+    
+    catchSelectedDataset($event:any){
+        this.selectedDatasetUser = $event;
+        this.showMe = false;
+        //alert("PRIMIO SAM!");
+        // u selectedDatasetUser se nalazi Dataset koji je korisnik izabrao (njegov sacuvan)
+        console.log("PRIMLJENO ",this.selectedDatasetUser);
+
+        this.showMeChosenDataset = true;
+    }
+
+
     closeResult: string | undefined;
     addNewFile(newFile: any){
       //alert(contentLogin);
+      //this.showMe = false;
       this.modalService.open(newFile, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
       }, (reason) => {
