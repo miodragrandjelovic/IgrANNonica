@@ -82,7 +82,7 @@ export class HeaderComponent implements OnInit {
       this.message = '';
     
       this.toastr.success('Welcome, '+username, 'User login');
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
     }, error =>{
       if(error.status==400)
       {
@@ -122,7 +122,7 @@ export class HeaderComponent implements OnInit {
         this.message='';
         
         this.toastr.success('Welcome, '+username, 'User login');
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       }, error =>{
         if(error.status==400)
         {
@@ -156,6 +156,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openLogin(contentLogin: any) {
+    alert(contentLogin);
     this.isMenuCollapsed = true;
     this.modalService.open(contentLogin, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;

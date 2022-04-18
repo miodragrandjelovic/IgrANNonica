@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { HttpHeaders } from "@angular/common/http";
 import { ParametersService } from "src/app/services/parameters.service";
-
+import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 interface CheckBox {
     id: number,
@@ -22,17 +22,25 @@ import { MessageService } from "../home.service";
 export class CsvComponent implements OnInit {    
 
     hidden: boolean;
+    currentCorrResult: any;
+    selectedDatasetUser:any;
 
     showMe: boolean = false;
     showMe2:boolean = false;
     showMe3:boolean = false;
-    
+    showMeChosenDataset:boolean = false;
+
     showMeMatrix: boolean = false;
     prikazPreucitano:boolean = false;
     odabrano:boolean=false;
 
     selectedValue:any="";
     selectedValue1:any="";
+
+    session:any;
+    chosen:any;
+
+    currentResult:string;
     
     selectChange(event:any){
         this.changeSelection();
@@ -53,7 +61,7 @@ export class CsvComponent implements OnInit {
     allData: any = [];
     rowsArray: any = [];
     matrix: any = [];
-    itemsPerPage: number = 10;
+    itemsPerPage: number = 15;
     itemPosition: number = 0;
     currentPage: number = 1;
     response: any;
@@ -72,6 +80,9 @@ export class CsvComponent implements OnInit {
     selectedInputs: Array<CheckBox> = [];
     inputsArray: Array<CheckBox> = [];
     sendHp: string = "";
+
+    datasetTitle:string = '';
+    uploadedFile:any = false;
     
     ngOnInit(): void {
         this.parametersService.getShowHp().subscribe(res => {
@@ -89,10 +100,20 @@ export class CsvComponent implements OnInit {
                     this.showHp();
                 }
             }
-        })
+        });
+
+        this.loadRegressionDataset();
+
+        
+        this.session = sessionStorage.getItem('username');
+        this.chosen = false;
+
     }
 
-    constructor(private http: HttpClient, private parametersService: ParametersService, private service: MessageService) {
+    constructor(private http: HttpClient, 
+        private parametersService: ParametersService, 
+        private service: MessageService, 
+        private modalService: NgbModal) {
 
     }
 
@@ -135,15 +156,18 @@ export class CsvComponent implements OnInit {
 
     fileUpload(files: any) {
         this.prikazPreload=false;
+        this.uploadedFile = true;
 
+        this.chosen = true;
         this.sendHp = '';
         this.showMe2 = true;
         this.showMeMatrix = false;
         this.inputsArray = [];
 
+       
+
         this.flag = 1;
-        if (this.flag)
-            this.showMe=true;
+        
 
         this.dataObject = [];
         this.headingLines = [];
@@ -151,6 +175,7 @@ export class CsvComponent implements OnInit {
         this.rowLinesStatistics = [];
 
         let fileList = (<HTMLInputElement>files.target).files;
+        
         if (fileList && fileList.length > 0) {
             let file : File = fileList[0];
 
@@ -254,10 +279,22 @@ export class CsvComponent implements OnInit {
 
             }
         }
+
     }
 
     changePage() {
         this.rowLines = this.allData.slice(this.itemsPerPage * (this.currentPage - 1),this.itemsPerPage * (this.currentPage - 1) + this.itemsPerPage)
+    }
+
+    addNewDatasetAndPreview()
+    {
+        this.showMeChosenDataset = false;
+        this.showMe = true;
+        document.getElementById("closeModal")?.click();
+        this.datasetTitle = '';
+        this.uploadedFile = false;
+        
+        // treba i da se sacuva dataset!!!!!
     }
 
     korelacionaMatrica() {
@@ -287,6 +324,92 @@ export class CsvComponent implements OnInit {
             this.headersMatrix.push(headersArray);
         }
 
+
+
+
+
+    loadRegressionDataset(){
+        //alert("UCITAJ REGRESIONI");
+        // treba sa beka da dobijemo podrazumevani regresioni dataset
+        let csvFajl;
+        this.http.get<any>('https://localhost:7167/api/Python/preloadCsv').subscribe(result =>{
+            console.log(result);
+            // result se salje sa beka u json formatu
+            
+            // sad ovo treba da prosledimo komponenti tabele
+            csvFajl = result;
+            this.currentResult = result;
+        });
+
+        /*this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
+                    csvData: csvFajl,
+                    Name: "real estate"
+                });*/
+
+        this.http.get<any>('https://localhost:7167/api/Python/preloadKor').subscribe(data =>{
+            console.log("Dobijamo korelacionu ",data);
+
+            this.currentCorrResult = data;
+        });
+    }
+
+    loadClassificationDataset(){   
+        //alert("UCITAJ KLASIFIKACIONI");
+        // treba sa beka da dobijemo podrazumevani klasifikacioni dataset
+        let csvFajl;
+
+        this.http.get<any>('https://localhost:7167/api/Python/preloadCsvClass').subscribe(result =>{
+            console.log(result);
+            // result se salje sa beka u json formatu
+            csvFajl = result;
+            // sad ovo treba da prosledim o komponenti tabele
+
+            this.currentResult = result;
+        });
+
+        /*this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
+                    csvData: csvFajl,
+                    Name: "mpg"
+                });*/
+
+        this.http.get<any>('https://localhost:7167/api/Python/preloadKorClass').subscribe(data =>{
+            console.log(data);
+
+            this.currentCorrResult = data;
+        });
+    }
+
+    
+    catchSelectedDataset($event:any){
+        this.selectedDatasetUser = $event;
+        this.showMe = false;
+        //alert("PRIMIO SAM!");
+        // u selectedDatasetUser se nalazi Dataset koji je korisnik izabrao (njegov sacuvan)
+        console.log("PRIMLJENO ",this.selectedDatasetUser);
+
+        this.showMeChosenDataset = true;
+    }
+
+
+    closeResult: string | undefined;
+    addNewFile(newFile: any){
+      //alert(contentLogin);
+      //this.showMe = false;
+      this.modalService.open(newFile, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+        this.closeResult = `Closed with: ${result}`;
+      }, (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      });
+    }
+    private getDismissReason(reason: any): string {
+      if (reason === ModalDismissReasons.ESC) {
+        return 'by pressing ESC';
+      } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+        return 'by clicking on a backdrop';
+      } else {
+        return `with: ${reason}`;
+      }
+    }
         //---------------------------------------------------------- preload data
         map:Map<string, string[]>;
         map2:Map<string, string[]>;
@@ -392,6 +515,10 @@ export class CsvComponent implements OnInit {
                 
               });     
         }
+
+
+
+
     }
 
     

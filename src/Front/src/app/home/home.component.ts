@@ -34,8 +34,9 @@ interface RequestHyperparameters{
 })
 
 export class HomeComponent implements OnInit {
-    
-  edited: boolean = false;
+  
+  session: any;
+  edited: boolean = false; 
   value1: number = 10;
   value2: number = 20;
   //dodato za default vrednosti
@@ -72,6 +73,10 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.showCsvData();
     //alert("UCITAO");
+    //proveravamo da li postoji sesija za tog korisnika
+    
+    this.session = sessionStorage.getItem('username');
+    //alert(this.session);
 
     this.hyperparametersForm = new FormGroup({
       'encodingType': new FormControl(null),
@@ -87,6 +92,7 @@ export class HomeComponent implements OnInit {
       'neurons': new FormArray([])
     });
 
+    document.getElementById("loadData")?.click();
   }
 
   // salje se komponenta child-u <app-csv> poruka je 0

@@ -1,12 +1,26 @@
-
-<div id="sredina" [hidden]="!hidden">
-    <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
-
-      <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
-        Ovde ce da ide tabela sacuvanih datasetova
-      </div>
+<div id="sredina" [hidden]="!hidden" style="margin:0px;padding:0px;">
+  <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
     
-        <div id="top-controls" >
+    <!-- ovaj div ce se prikazivati samo ULOGOVANIM korisnicima!-->
+    <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
+      <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;">
+        <button style="width:15%;margin-right: 30px; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; "><img src="assets/images/plus.png" width="30px" height="30px">    New Model</button>
+        <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
+        <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> <!-- search sa filterom -->
+        <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
+          <img src="assets/images/filter.png" style="height:35px; width: auto;">
+        </button>
+      </div>
+
+      <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
+        <!-- ovde ide tabela sa datasetovima korisnika -->
+        
+      <app-usermodels></app-usermodels>
+
+      </div>
+    </div>
+    
+        <div id="top-controls" style="border-radius:4px;">
 
           <div class="row parametri" style="width:100%;margin:auto;">
             <div class="control epoch">
@@ -34,7 +48,7 @@
                 </select>
               </div>
             </div>
-            <div class="control activation">
+            <div class="control activation" style="display:none;">
               <label for="activations">Activation</label>
               <div class="select">
                 <select [(ngModel)]='activation' class="custom-select" id="activations" formControlName="activation">
@@ -81,7 +95,7 @@
                 </select>
               </div>
             </div>
-            <div class="control encoding">
+            <div class="control encoding" style="display:none;">
               <label for="encoding">Encoding</label>
               <div class="select">
                 <select [(ngModel)]='encodingType' class="custom-select" id="encoding" formControlName="encodingType">
@@ -99,7 +113,7 @@
               </div>
             </div>
 
-            <div class="form-check control" style="padding-bottom:0px;padding-left: 10%;">
+            <div class="form-check control" style="padding-bottom:0px;padding-left: 10%; padding-right: 20px;">
               <button type="submit" class="round-button playButton" ><i-bs width="55" height="55" name="caret-right-fill"></i-bs></button>
             </div>
           </div>
