@@ -319,10 +319,10 @@ export class CsvComponent implements OnInit {
             this.currentResult = result;
         });
 
-        this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
+        /*this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
                     csvData: csvFajl,
                     Name: "real estate"
-                });
+                });*/
 
         this.http.get<any>('https://localhost:7167/api/Python/preloadKor').subscribe(data =>{
             console.log("Dobijamo korelacionu ",data);
@@ -345,10 +345,10 @@ export class CsvComponent implements OnInit {
             this.currentResult = result;
         });
 
-        this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
+        /*this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
                     csvData: csvFajl,
                     Name: "mpg"
-                });
+                });*/
 
         this.http.get<any>('https://localhost:7167/api/Python/preloadKorClass').subscribe(data =>{
             console.log(data);
