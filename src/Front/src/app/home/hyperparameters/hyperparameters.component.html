@@ -1,10 +1,24 @@
-
-<div id="sredina" [hidden]="!hidden">
-    <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
-
-      <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
-        Ovde ce da ide tabela sacuvanih datasetova
+<div id="sredina" [hidden]="!hidden" style="margin:0px;padding:0px;">
+  <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
+    
+    <!-- ovaj div ce se prikazivati samo ULOGOVANIM korisnicima!-->
+    <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
+      <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;">
+        <button style="width:15%;margin-right: 30px; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; "><img src="assets/images/plus.png" width="30px" height="30px">    New Dataset</button>
+        <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
+        <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your datasets"> <!-- search sa filterom -->
+        <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
+          <img src="assets/images/filter.png" style="height:35px; width: auto;">
+        </button>
       </div>
+
+      <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
+        <!-- ovde ide tabela sa datasetovima korisnika -->
+        
+        
+
+      </div>
+    </div>
     
         <div id="top-controls" style="border-radius:4px;">
 
