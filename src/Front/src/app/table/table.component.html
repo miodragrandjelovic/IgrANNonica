@@ -5,6 +5,27 @@
             <th *ngFor="let item of header">{{item}}</th>
             <!-- u headeru treba da se kreira za svaku kolonu padajuci meni za izbor features, label i enkodinga ako je potrebno -->
           </tr>
+
+          
+          <tr>
+            <!-- red sa dropom za label -->
+            <th *ngFor="let item of input; let i = index">
+              <select (onchange)="fetchInputsOutputs(this)">
+                <option selected value="{{item+'-input'}}">Input</option>
+                <option value="{{item+'-target'}}">Target</option>
+                <option value="{{item+'-none'}}">None</option>
+              </select>
+            </th>
+
+            <th *ngFor="let item of target">
+              <select (onchange)="fetchInputsOutputs(this)">
+                <option value="{{item+'-input'}}">Input</option>
+                <option selected value="{{item+'-target'}}">Target</option>
+                <option value="{{item+'-none'}}">None</option>
+              </select>
+            </th>
+          </tr>
+
         </thead>
         <tbody>
             <tr *ngFor="let item of rowLines">

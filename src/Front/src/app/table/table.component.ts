@@ -1,4 +1,5 @@
 import { Component, OnChanges, OnInit, SimpleChanges, Input } from '@angular/core';
+import { ParametersService } from '../services/parameters.service';
 
 @Component({
   selector: 'app-table',
@@ -8,7 +9,7 @@ import { Component, OnChanges, OnInit, SimpleChanges, Input } from '@angular/cor
 export class TableComponent implements OnChanges {
 
 
-  constructor() { }
+  constructor(private parametersService: ParametersService){  }
   
   @Input() result: string; // ovo je json 
 
@@ -29,6 +30,9 @@ export class TableComponent implements OnChanges {
   header:any;
   rowLines: any;
   dataLength:any;
+  target:any = [];
+  input:any = [];
+  hp:string;
 
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -46,6 +50,9 @@ export class TableComponent implements OnChanges {
     this.header = [];
     this.rowLines = [];
     this.allData = [];
+    this.input = [];
+    this.target = [];
+    this.hp = '';
     for (var i=0; i< this.result.length; i++)
     {
       if (i == 0){ // ovo je header
@@ -55,6 +62,24 @@ export class TableComponent implements OnChanges {
         {
           this.header.push(headingLine[j]);
         }
+        //input i label
+        for (var j = 0; j<headingLine.length -1 ;j++)
+        {
+          this.input.push(headingLine[j]);
+          // hiperparametri!!!
+          if (j != 0) {
+            this.hp = this.hp.concat("," + headingLine[j]);
+         }
+         else
+         this.hp = this.hp.concat('' + headingLine[j]);
+        }
+
+        this.target.push(this.header[this.header.length-1]);
+        console.log("TARGET "+this.target);
+
+        this.hp = this.hp.concat(",", this.target);
+
+
         //console.log(this.header);
       }
        // ovo su linije
@@ -72,13 +97,21 @@ export class TableComponent implements OnChanges {
     //console.log(this.header);
     //console.log(this.rowLines);
 
+    
+    this.parametersService.setParamsObs(this.hp);
 
   }
 
   ngOnInit(){}
 
+ 
+
   changePage() {
     this.rowLines = this.allData.slice(this.itemsPerPage * (this.currentPage - 1),this.itemsPerPage * (this.currentPage - 1) + this.itemsPerPage)
+  }
+
+  fetchInputsOutputs(selected:any){
+    console.log("SELECTED ", selected);
   }
 }
 

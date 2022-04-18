@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { HttpHeaders } from "@angular/common/http";
 import { ParametersService } from "src/app/services/parameters.service";
-
+import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 interface CheckBox {
     id: number,
@@ -104,7 +104,10 @@ export class CsvComponent implements OnInit {
         this.chosen = false;
     }
 
-    constructor(private http: HttpClient, private parametersService: ParametersService, private service: MessageService) {
+    constructor(private http: HttpClient, 
+        private parametersService: ParametersService, 
+        private service: MessageService, 
+        private modalService: NgbModal) {
 
     }
 
@@ -306,18 +309,23 @@ export class CsvComponent implements OnInit {
     loadRegressionDataset(){
         //alert("UCITAJ REGRESIONI");
         // treba sa beka da dobijemo podrazumevani regresioni dataset
-
+        let csvFajl;
         this.http.get<any>('https://localhost:7167/api/Python/preloadCsv').subscribe(result =>{
             console.log(result);
             // result se salje sa beka u json formatu
             
             // sad ovo treba da prosledimo komponenti tabele
-
+            csvFajl = result;
             this.currentResult = result;
         });
 
+        this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
+                    csvData: csvFajl,
+                    Name: "real estate"
+                });
+
         this.http.get<any>('https://localhost:7167/api/Python/preloadKor').subscribe(data =>{
-            console.log("This is cor ",data);
+            console.log("Dobijamo korelacionu ",data);
 
             this.currentCorrResult = data;
         });
@@ -326,21 +334,46 @@ export class CsvComponent implements OnInit {
     loadClassificationDataset(){   
         //alert("UCITAJ KLASIFIKACIONI");
         // treba sa beka da dobijemo podrazumevani klasifikacioni dataset
+        let csvFajl;
 
         this.http.get<any>('https://localhost:7167/api/Python/preloadCsvClass').subscribe(result =>{
             console.log(result);
             // result se salje sa beka u json formatu
-            
+            csvFajl = result;
             // sad ovo treba da prosledim o komponenti tabele
 
             this.currentResult = result;
         });
+
+        this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
+                    csvData: csvFajl,
+                    Name: "mpg"
+                });
 
         this.http.get<any>('https://localhost:7167/api/Python/preloadKorClass').subscribe(data =>{
             console.log(data);
 
             this.currentCorrResult = data;
         });
+    }
+
+    closeResult: string | undefined;
+    addNewFile(newFile: any){
+      //alert(contentLogin);
+      this.modalService.open(newFile, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+        this.closeResult = `Closed with: ${result}`;
+      }, (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      });
+    }
+    private getDismissReason(reason: any): string {
+      if (reason === ModalDismissReasons.ESC) {
+        return 'by pressing ESC';
+      } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+        return 'by clicking on a backdrop';
+      } else {
+        return `with: ${reason}`;
+      }
     }
         //---------------------------------------------------------- preload data
         map:Map<string, string[]>;

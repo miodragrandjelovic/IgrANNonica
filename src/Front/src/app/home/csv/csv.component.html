@@ -3,7 +3,7 @@
   <!-- ovaj div ce se prikazivati samo ULOGOVANIM korisnicima!-->
   <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;">
-      <button style="width:15%;margin-right: 30px; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; "><img src="assets/images/plus.png" width="30px" height="30px">    New Dataset</button>
+      <button style="width:15%;margin-right: 30px; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; " (click)="addNewFile(newFile)"><img src="assets/images/plus.png" width="30px" height="30px">    New Dataset</button>
       <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
       <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your datasets"> <!-- search sa filterom -->
       <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
@@ -43,6 +43,7 @@
         </div>
         
         <app-heatmap [result]="currentCorrResult"></app-heatmap>
+        
       
       </div>
   
@@ -62,7 +63,7 @@
           <div style="border:#212f3c 1px solid; border-radius: 20px; padding-top: 5px;padding-bottom: 5px; margin-bottom: 10px; height: 45px;">
             Dataset title
           </div>
-          <div style="border:#212f3c 1px solid;border-radius:20px; min-height:150px; margin-bottom: 10px;">
+          <div style="border:#212f3c 1px solid;border-radius:20px; min-height:150px; margin-bottom: 10px; padding: 10px;">
             Dataset description - ovo je hardkodovano a treba da se dobija iz beka i da se dozvoli izmena!!!
           </div>
   
@@ -252,3 +253,48 @@
   -->
   </div>
 </div>
+
+
+
+<ng-template #newFile let-modal style="margin-top:30%;">
+  <div style="width:90%;margin: auto;">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title1" style="width:90%;margin:auto;text-align:center;">Create New Dataset</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="col-lg-7">
+        <div class="row">
+          <input type="text" placeholder="Enter Dataset Title" style="border:#212f3c 1px solid; border-radius: 20px; height: 50px; margin-bottom: 30px;">
+        </div>
+
+        <div class="row" style="height:300px; border:#212f3c 1px solid; border-radius: 20px; margin-bottom: 30px;">
+          <!-- ovde dodajemo fajl!! -->
+          <div style="height: 50%;" class="dropzone"> <!-- drag and drop -->
+            <input type="file" #fileDrop id="fileDropRef">
+            <img src="assets/images/dnd.png" alt="">
+            <h3>Drag and Drop file here</h3>
+            <h3>or</h3>
+            <label for="fileDropRef">Browse For File</label>
+          </div>
+
+          <hr style="width:90%;height:2px;margin:auto;color:#212f3c;">
+          
+          <div style="height: 50%;"> <!-- browse file -->
+            <input class="form-control upload" type="file" id="formFile" (change)="fileUpload($event)">
+          </div>
+        </div>
+
+        <div class="row">
+          <button style="width:40%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px;">
+            Create
+          </button>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</ng-template>
+

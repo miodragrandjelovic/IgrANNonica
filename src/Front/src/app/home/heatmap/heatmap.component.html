@@ -1,1 +1,14 @@
-<p>heatmap works!</p>
+<div>
+    HEATMAP
+    <table>
+        <thead>
+            <th *ngFor="let item of header">{{item}}</th>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let item of rowLines">
+                <td *ngFor="let item1 of item">{{item1}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -156,6 +156,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openLogin(contentLogin: any) {
+    alert(contentLogin);
     this.isMenuCollapsed = true;
     this.modalService.open(contentLogin, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;

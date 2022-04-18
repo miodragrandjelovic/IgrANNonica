@@ -11,3 +11,8 @@ button.chooseDataset:active{
     border:2px solid #212f3c;
     
 }
+
+.modal-dialog{
+    margin-top: 30%;
+}
+
