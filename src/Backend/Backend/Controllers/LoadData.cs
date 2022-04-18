@@ -29,6 +29,16 @@ namespace Backend.Controllers
         public static string? DirName { get; set; } //Ime foldera 
 
         public static string url = "http://127.0.0.1:3000";
+        static String BytesToString(long byteCount)
+        {
+            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; 
+            if (byteCount == 0)
+                return "0" + suf[0];
+            long bytes = Math.Abs(byteCount);
+            int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+            double num = Math.Round(bytes / Math.Pow(1024, place), 1);
+            return (Math.Sign(byteCount) * num).ToString() + suf[place];
+        }
 
         [HttpPost("selectedCsv")] //Otvaranje foldera gde se nalazi izabrani csv
         public async Task<ActionResult<String>> PostSelectedCsv(String name)
@@ -69,6 +79,17 @@ namespace Backend.Controllers
             //var url = "http://127.0.0.1:3000/csv";
             var csvurl = url + "/csv";
             var response = await http.PostAsync(csvurl, data);
+
+           
+            long size = SelectedPaths.Length;
+            var size1 = BytesToString(size);
+            Console.WriteLine("Size of file: " + size1);
+            
+
+            string fileName1 = SelectedPaths;
+            FileInfo fi = new FileInfo(fileName1);
+            DateTime creationTime = fi.CreationTime;
+            Console.WriteLine("Creation time: {0}", creationTime);
             return Ok(resultjson);
         }
 
