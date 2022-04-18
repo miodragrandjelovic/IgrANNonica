@@ -1,5 +1,4 @@
 import { Component, OnChanges, OnInit, SimpleChanges, Input } from '@angular/core';
-import * as csvParse from 'csv-parser';
 
 @Component({
   selector: 'app-table',
