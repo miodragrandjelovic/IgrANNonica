@@ -15,7 +15,7 @@ import { CsvComponent } from './home/csv/csv.component';
 import { NgbAlertModule, NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { fileMinus, filePlus, NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
-import { envelope,telephone,personCircle} from 'ngx-bootstrap-icons';
+import { envelope,telephone,personCircle, caretRightFill, dashCircleFill, plusCircleFill} from 'ngx-bootstrap-icons';
 import { SlojeviNeuroniComponent } from './home/slojevi-neuroni/slojevi-neuroni.component';
 import { MatSliderModule } from '@angular/material/slider'; 
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
@@ -28,13 +28,17 @@ import { SendEmailComponent } from './send-email/send-email.component';
 import { HyperparametersComponent } from './home/hyperparameters/hyperparameters.component';
 import { DatasetComponent } from './header/dataset/dataset.component';
 import { GraphicComponent } from './graphic/graphic.component';
+import { LoadingComponent } from './loading/loading.component';
 
 const icons = {
   envelope,
   telephone,
   fileMinus,
   filePlus,
-  personCircle
+  personCircle,
+  caretRightFill,
+  dashCircleFill,
+  plusCircleFill
 };
 
 @NgModule({
@@ -53,6 +57,7 @@ const icons = {
     HyperparametersComponent,
     DatasetComponent,
     GraphicComponent,
+    LoadingComponent,
   ],
   imports: [
     BrowserModule,

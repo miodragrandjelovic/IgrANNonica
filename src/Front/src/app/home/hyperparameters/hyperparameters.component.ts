@@ -6,6 +6,8 @@ import { ParametersService } from 'src/app/services/parameters.service';
 import { Chart, registerables, LineController, LineElement, PointElement, LinearScale, Title } from 'chart.js'
 import { MessageService } from '../home.service';
 import { GraphicComponent } from '../../graphic/graphic.component';
+import { ToastrService } from 'ngx-toastr';
+import { LoadingService } from 'src/app/loading/loading.service';
 
 
 interface RequestHyperparameters{
@@ -75,6 +77,9 @@ export class HyperparametersComponent implements OnInit {
   //layers:Array<string> = ["5","5","5","5","5"]
   //
 
+  session:any;
+  prikazGrafika=false;
+
   options1: Options = {
     floor: 0,
     ceil: 100,
@@ -88,7 +93,7 @@ export class HyperparametersComponent implements OnInit {
   hyperparametersForm!: FormGroup;
 
 
-  constructor(private http: HttpClient, private parametersService: ParametersService, private service : MessageService) {
+  constructor(private http: HttpClient, public spiner:LoadingService, private parametersService: ParametersService, private service : MessageService) {
     Chart.register(...registerables);
     Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
    } 
@@ -135,6 +140,8 @@ export class HyperparametersComponent implements OnInit {
     });
 
     this.onAddLayer();
+
+    this.session=sessionStorage.getItem('username');
   }
 
   fetchSelectedGraphics() {
@@ -236,6 +243,9 @@ export class HyperparametersComponent implements OnInit {
       this.fetchSelectedGraphics();
       console.log(this.selectedCheckBoxes);
       });
+      
+      this.prikazGrafika=true;
+      this.spiner.showSpiner=true;
     }
 
   onAddLayer() {
