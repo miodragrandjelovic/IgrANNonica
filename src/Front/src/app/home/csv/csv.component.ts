@@ -134,6 +134,7 @@ export class CsvComponent implements OnInit {
     prikazPreload:boolean=true;
 
     fileUpload(files: any) {
+        this.parametersService.setShowGraphic(false);
         this.prikazPreload=false;
 
         this.sendHp = '';
