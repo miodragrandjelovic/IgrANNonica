@@ -35,6 +35,8 @@ export class CsvComponent implements OnInit {
     selectedValue1:any="";
 
     session:any;
+
+    currentResult:string;
     
     selectChange(event:any){
         this.changeSelection();
@@ -92,6 +94,8 @@ export class CsvComponent implements OnInit {
                 }
             }
         });
+
+        this.loadRegressionDataset();
 
         this.session = sessionStorage.getItem('username');
     }
@@ -296,13 +300,31 @@ export class CsvComponent implements OnInit {
 
 
     loadRegressionDataset(){
-        alert("UCITAJ REGRESIONI");
+        //alert("UCITAJ REGRESIONI");
         // treba sa beka da dobijemo podrazumevani regresioni dataset
+
+        this.http.get<any>('https://localhost:7167/api/Python/preloadCsv').subscribe(result =>{
+            console.log(result);
+            // result se salje sa beka u json formatu
+            
+            // sad ovo treba da prosledimo komponenti tabele
+
+            this.currentResult = result;
+        });
     }
 
     loadClassificationDataset(){   
-        alert("UCITAJ KLASIFIKACIONI");
+        //alert("UCITAJ KLASIFIKACIONI");
         // treba sa beka da dobijemo podrazumevani klasifikacioni dataset
+
+        this.http.get<any>('https://localhost:7167/api/Python/preloadCsvClass').subscribe(result =>{
+            console.log(result);
+            // result se salje sa beka u json formatu
+            
+            // sad ovo treba da prosledim o komponenti tabele
+
+            this.currentResult = result;
+        });
     }
         //---------------------------------------------------------- preload data
         map:Map<string, string[]>;

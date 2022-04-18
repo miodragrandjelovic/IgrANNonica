@@ -91,7 +91,6 @@ export class HomeComponent implements OnInit {
       'randomize': new FormControl(0),
       'neurons': new FormArray([])
     });
-
   }
 
   // salje se komponenta child-u <app-csv> poruka je 0

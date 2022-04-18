@@ -28,6 +28,7 @@ import { SendEmailComponent } from './send-email/send-email.component';
 import { HyperparametersComponent } from './home/hyperparameters/hyperparameters.component';
 import { DatasetComponent } from './header/dataset/dataset.component';
 import { GraphicComponent } from './graphic/graphic.component';
+import { TableComponent } from './table/table.component';
 
 const icons = {
   envelope,
@@ -53,6 +54,7 @@ const icons = {
     HyperparametersComponent,
     DatasetComponent,
     GraphicComponent,
+    TableComponent,
   ],
   imports: [
     BrowserModule,
