@@ -8,7 +8,7 @@ import { MessageService } from '../home.service';
 import { GraphicComponent } from '../../graphic/graphic.component';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/loading/loading.service';
-
+import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 interface RequestHyperparameters{
   encodingType: string,
@@ -93,7 +93,7 @@ export class HyperparametersComponent implements OnInit {
   hyperparametersForm!: FormGroup;
 
 
-  constructor(private http: HttpClient, public spiner:LoadingService, private parametersService: ParametersService, private service : MessageService) {
+  constructor(private http: HttpClient, public spiner:LoadingService, private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal) {
     Chart.register(...registerables);
     Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
    } 
@@ -262,4 +262,24 @@ export class HyperparametersComponent implements OnInit {
     console.warn(val)
     this.currentVal=val;
   }
+
+   closeResult: string | undefined;
+   addNewModel(newModel: any){
+      //alert(contentLogin);
+      //this.showMe = false;
+      this.modalService.open(newModel, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+        this.closeResult = `Closed with: ${result}`;
+      }, (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      });
+    }
+    private getDismissReason(reason: any): string {
+      if (reason === ModalDismissReasons.ESC) {
+        return 'by pressing ESC';
+      } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+        return 'by clicking on a backdrop';
+      } else {
+        return `with: ${reason}`;
+      }
+    }
 }

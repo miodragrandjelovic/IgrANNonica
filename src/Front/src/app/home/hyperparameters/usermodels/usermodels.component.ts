@@ -1,5 +1,6 @@
 import { Component, OnInit , Output, EventEmitter} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-usermodels',
@@ -12,7 +13,7 @@ export class UsermodelsComponent implements OnInit {
   @Output() sendResults = new EventEmitter<any>();
   //ovim saljemo nazad ka hyperparamteres komponenti model
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient,private modalService: NgbModal){}
   modelsNames: any;
   selectedModels:any;
 
@@ -36,7 +37,7 @@ export class UsermodelsComponent implements OnInit {
     console.log('ovo je kliknuto za naziv '+this.selectedModels);
     alert(this.selectedModels);
     this.loadThisModel('ime_models');
-}
+  }
 
   loadThisModel(naziv:any){
     return this.http.post<any>('https://localhost:7167/api/LoadData/selectedModel?name='+naziv, {
@@ -78,6 +79,24 @@ export class UsermodelsComponent implements OnInit {
         */
       });
     }
-   
-
+    
+  closeResult: string | undefined;
+  addNewData(newData: any){
+     //alert(contentLogin);
+     //this.showMe = false;
+     this.modalService.open(newData, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+       this.closeResult = `Closed with: ${result}`;
+     }, (reason) => {
+       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+     });
+   }
+   private getDismissReason(reason: any): string {
+     if (reason === ModalDismissReasons.ESC) {
+       return 'by pressing ESC';
+     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+       return 'by clicking on a backdrop';
+     } else {
+       return `with: ${reason}`;
+     }
+   }
   }

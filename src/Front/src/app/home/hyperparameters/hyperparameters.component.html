@@ -1,24 +1,25 @@
 <div id="sredina" [hidden]="!hidden" style="margin:0px;padding:0px;">
+
+  <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
+    <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;">
+      <button style="width:15%;margin-right: 30px; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; " (click)="addNewModel(newModel)" ><img src="assets/images/plus.png" width="30px" height="30px" > Save Model</button>
+      <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
+      <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> <!-- search da moze po imenu modela ili dataseta-->
+      <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
+        <img src="assets/images/filter.png" style="height:35px; width: auto;">
+      </button>
+    </div>
+
+    <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
+      <!-- ovde ide tabela sa datasetovima korisnika -->
+    <app-usermodels></app-usermodels>
+
+    </div>
+  </div>
   <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
     
     <!-- ovaj div ce se prikazivati samo ULOGOVANIM korisnicima!-->
-    <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
-      <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;">
-        <button style="width:15%;margin-right: 30px; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; "><img src="assets/images/plus.png" width="30px" height="30px">    New Model</button>
-        <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
-        <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> <!-- search sa filterom -->
-        <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
-          <img src="assets/images/filter.png" style="height:35px; width: auto;">
-        </button>
-      </div>
-
-      <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
-        <!-- ovde ide tabela sa datasetovima korisnika -->
-        
-      <app-usermodels></app-usermodels>
-
-      </div>
-    </div>
+   
     
         <div id="top-controls" style="border-radius:4px;">
 
@@ -132,19 +133,20 @@
                 <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
               </p>
               </div>
-              <div class="col-6" formArrayName="neurons" style="text-align: center; width: 77%; background-color: #CEECFA;" >
+              <div class="col-6" formArrayName="neurons" style="text-align: center; width: 77%; background-color: #CEECFA;padding: 10px; padding-right: 30px;margin:auto; border-radius: 10px; min-height: 100px;" >
                     <!--<app-slojevi-neuroni></app-slojevi-neuroni> -->
                 
-                      <i-bs  (click)="onAddLayer()"  width="25" height="25" name="plus-circle-fill" style="cursor: pointer;padding: 1%;"></i-bs>
-                         <i-bs width="25" height="25" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
+                      <i-bs  (click)="onAddLayer()"  width="30" height="30" name="plus-circle-fill" style="cursor: pointer;padding: 1%;"></i-bs>
+                         <i-bs width="30" height="30" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
                          <span>br hidden layer</span>
                          
                     <td *ngFor="let neuron of neuronControls; let i = index" style="padding: 2%;">
-                        <i-bs  (click)="onAddLayer()" width="15" height="15" name="plus-circle-fill"  style="cursor: pointer; padding: 2%;"></i-bs>
-                        <i-bs  (click)="onRemoveLayer(i)" width="15" height="15" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
+                        <i-bs  (click)="onAddLayer()" width="20" height="20" name="plus-circle-fill"  style="cursor: pointer; padding: 2%;"></i-bs><!--slojevi i neuroni da se ovako izlistavaju-->
+                        <i-bs  (click)="onRemoveLayer(i)" width="20" height="20" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
                         <br>
-                        <span >br neuron</span>
-                        <input type="text" [formControlName]="i"/>
+                        <p >br neuron</p>
+                        <img src="assets/images/slikaZaNeurone.png" style="height: 30px; border: 2px solid; padding-top: 5px;" class="img-fluid rounded mx-auto d-block">
+                        <input type="text" [formControlName]="i"/> <!--ne treba da ima input-->
                     </td>
                 </div>
             </div>
@@ -158,7 +160,7 @@
                   <p  *ng style="color: white; font-weight: bold; border-radius: 2px; background-color: #212f3c;">Choose Graphics:</p>
                     <div class="checkbox" *ngFor="let item of inputCheckBoxes" >
                       <input  class="form-check-input" type="checkbox" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone: true}" id="item"  checked="" (change)="changeSelection()">
-                      <label for="item" style="color: white;">{{item.label}}</label>
+                      <label for="item" style="color: white;">{{item.label}}</label> <!--odabir koji graf da se pokaze-->
                     </div>
                     
                 </div>
@@ -175,7 +177,7 @@
                   </div>
                 </div>-->
                 <div class="col" style="width:100%;">
-                  <app-loading></app-loading>
+                  <app-loading></app-loading> <!--spiner da se vrti dok se ne prikazu grafici-->
                   <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
                 </div>
             </div>
@@ -191,3 +193,32 @@
       </form>
   
 </div>
+<ng-template #newModel let-modal style="margin-top:30%;">
+  <div style="width:90%;margin: auto;">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title1" style="width:90%;margin:auto;text-align:center;">Save New Model</h4>
+      <button id="closeModal" type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="col-lg-7">
+        <div class="row">
+          <input type="text" placeholder="Enter Model Title" style="border:#212f3c 1px solid; border-radius: 20px; height: 50px; margin-bottom: 30px;">
+        </div>
+
+        <div class="row">
+          <input type="text" style="height:300px; width:100%; border:#212f3c 1px solid; border-radius: 20px; margin-bottom: 30px;">
+          <!-- ovde dodajemo opis!! -->
+        </div>
+            
+        <div class="row">
+          <button style="width:40%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px;"> <!--i ovde da se sacuva taj novi-->
+            Save
+          </button>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</ng-template>
