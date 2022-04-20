@@ -24,7 +24,7 @@ export class TableComponent implements OnChanges {
   allData: any = [];
   //rowsArray: any = [];
   //matrix: any = [];
-  itemsPerPage: number = 15;
+  itemsPerPage: number = 6;
   itemPosition: number = 0;
   currentPage: number = 1;
   //response: any;

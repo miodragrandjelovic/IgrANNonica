@@ -21,20 +21,16 @@ export class HeatmapComponent implements OnChanges {
 
   constructor() { }
 
-  legend: boolean = false;
+  legend: boolean = true;
   showLabels: boolean = false;
   animations: boolean = true;
   xAxis: boolean = true;
   yAxis: boolean = true;
-  //showYAxisLabel: boolean = true;
-  //showXAxisLabel: boolean = true;
-  xAxisLabel: string = 'Country';
-  yAxisLabel: string = 'Year';
   colorScheme: Color = {
     name: 'myScheme',
     selectable: true,
     group: ScaleType.Time,
-    domain: ['#ffffff', '#69add5'],
+    domain: ['#69add5','#ffffff', '#69add5'],
   };
 
   labels:any;
