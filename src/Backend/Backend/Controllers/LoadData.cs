@@ -140,12 +140,13 @@ namespace Backend.Controllers
                 upgradedName = Name.Substring(0, Name.Length - 4);
             //string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
             string CurrentPath = Directory.GetCurrentDirectory();
-            string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
-            string modelDirName = upgradedName + "Model" + indexDir;
-            string pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
+            
 
             if (Username != null)
             {
+                string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
+                string modelDirName = upgradedName + "Model" + indexDir;
+                string pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
                 while (System.IO.Directory.Exists(pathToCreateDir))
                 {
                     indexDir++;
@@ -161,24 +162,13 @@ namespace Backend.Controllers
                 var pathurl = url + "/pathModel";
                 var pathresponse = await http.PostAsync(pathurl, pathdata);
             }
-
+            
             hiper.Username = Username;
             var hiperjson = System.Text.Json.JsonSerializer.Serialize(hiper);
             var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
             //var url = "http://127.0.0.1:3000/hp";
             var hpurl = url + "/hp";
-            var response = await http.PostAsync(hpurl, data); 
-
-            var workbookhp = new Workbook();
-            var worksheethp = workbookhp.Worksheets[0];
-            var layoutOptionshp = new JsonLayoutOptions();
-            layoutOptionshp.ArrayAsTable = true;
-            JsonUtility.ImportData(hiperjson, worksheethp.Cells, 0, 0, layoutOptionshp);
-
-            
-            int index = 1;
-            string hpName = upgradedName + "HP" + index + ".csv";            
-            string pathToCreateHP = System.IO.Path.Combine(path, hpName);
+            var response = await http.PostAsync(hpurl, data);            
 
             //                                                                                  hiperparametri                                                                                
             //---------------------------------------------------------------------------------------------------
@@ -190,6 +180,18 @@ namespace Backend.Controllers
 
             if(Username != null)
             {
+                int index = 1;
+                string hpName = upgradedName + "HP" + index + ".csv";
+                string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
+                string pathToCreateHP = System.IO.Path.Combine(path, hpName);
+
+                var workbookhp = new Workbook();
+                var worksheethp = workbookhp.Worksheets[0];
+                var layoutOptionshp = new JsonLayoutOptions();
+                layoutOptionshp.ArrayAsTable = true;
+                JsonUtility.ImportData(hiperjson, worksheethp.Cells, 0, 0, layoutOptionshp);
+
+
                 var workbook = new Workbook();
                 var worksheet = workbook.Worksheets[0];
                 var layoutOptions = new JsonLayoutOptions();
@@ -199,7 +201,7 @@ namespace Backend.Controllers
                 string modelName = upgradedName + "Model" + index + ".csv";            
                 string pathToCreate = System.IO.Path.Combine(path, modelName);
                 
-                while (System.IO.File.Exists(pathToCreate))
+                while (System.IO.File.Exists(pathToCreateHP))
                 {
                     index++;
                     modelName = upgradedName + "Model" + index + ".csv";
@@ -246,11 +248,11 @@ namespace Backend.Controllers
             string currentPath = Directory.GetCurrentDirectory();
             var upgradedName = name.Substring(0, name.Length - 4);
             //string path = currentPath + @"\Users\" + Username + "\\" + upgradedName;
-            string path = System.IO.Path.Combine(currentPath, "Users", Username, upgradedName);
 
             string pathToCreate = "";
             if (Username != null)
-            { 
+            {
+                string path = System.IO.Path.Combine(currentPath, "Users", Username, upgradedName);
                 if (Directory.Exists(path))
                     Console.WriteLine("File is already in system.");
                 else
