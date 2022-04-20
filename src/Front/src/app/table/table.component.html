@@ -9,23 +9,22 @@
           
           <tr>
             <!-- red sa dropom za label -->
-            <th *ngFor="let item of input; let i = index">
-              <select (onchange)="fetchInputsOutputs(this)">
-                <option selected value="{{item+'-input'}}">Input</option>
-                <option value="{{item+'-target'}}">Target</option>
-                <option value="{{item+'-none'}}">None</option>
+            <th *ngFor="let item of header; let i = index">
+              <!--
+              <select (onselect)="fetchInputsOutputs()" [(ngModel)]="preload[i]">
+                <option value="input">Input</option>
+                <option value="target">Target</option>
+                <option value="none">None</option>
               </select>
-            </th>
+              -->
 
-            <th *ngFor="let item of target">
-              <select (onchange)="fetchInputsOutputs(this)">
-                <option value="{{item+'-input'}}">Input</option>
-                <option selected value="{{item+'-target'}}">Target</option>
-                <option value="{{item+'-none'}}">None</option>
+              <select [ngModel]="preload[i]" (ngModelChange)="fetchInputsOutputs($event, i)">
+                <option value="input">Input</option>
+                <option value="target">Target</option>
+                <option value="none">None</option>
               </select>
             </th>
           </tr>
-
         </thead>
         <tbody>
             <tr *ngFor="let item of rowLines">

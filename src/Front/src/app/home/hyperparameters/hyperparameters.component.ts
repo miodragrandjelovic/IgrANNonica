@@ -122,7 +122,7 @@ export class HyperparametersComponent implements OnInit {
     //this.parametersService.getShowHp().subscribe(res => {this.hidden = res});
     this.parametersService.getParamsObs().subscribe(res => {
       this.hyperparameters = res;
-      console.log("HIPERPARAMETRIIII ",this.hyperparameters);
+      console.log(this.hyperparameters);
     });
 
 
@@ -195,8 +195,6 @@ export class HyperparametersComponent implements OnInit {
     }
 
     this.outputString = this.outputString.concat(this.inputs[this.inputs.length - 1]);
-    console.log(this.inputsString);
-    console.log(this.outputString);
 
     const myreq: RequestHyperparameters = {
       encodingType : this.hyperparametersForm.get('encodingType')?.value,
@@ -218,6 +216,7 @@ export class HyperparametersComponent implements OnInit {
       inputs: this.inputsString,
       output: this.outputString
     } 
+    console.log(myreq);
 
     this.http.post('https://localhost:7167/api/LoadData/hp', myreq).subscribe(result => {
       this.hpResponse = result;

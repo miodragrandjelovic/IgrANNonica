@@ -12,7 +12,8 @@ export class ParametersService {
         return this.params$.asObservable();
     }
     setParamsObs(params: string) {
-        this.params$.next(params);
+      console.log('Setovani hiperparametri: ', params);
+      this.params$.next(params);
     }
 
     getShowHp(): Observable<boolean> {

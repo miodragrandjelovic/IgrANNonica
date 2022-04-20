@@ -1,5 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges, Input } from '@angular/core';
+import { concat } from 'rxjs';
 import { ParametersService } from '../services/parameters.service';
+
 
 @Component({
   selector: 'app-table',
@@ -30,77 +32,62 @@ export class TableComponent implements OnChanges {
   header:any;
   rowLines: any;
   dataLength:any;
-  target:any = [];
-  input:any = [];
+  target:string;
+  inputs:any = [];
+  selected:any = [];
   hp:string;
+  preload:any = [];
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    //alert("Promena Inputa");
-    // dobili smo nov input koji treba da isparsiramo u tabelu
-    //this.headingLines = [];
-    //this.rowLines = [];
-
-    //let allLines = JSON.parse(this.result); // parsiramo ceo string koji smo dobili
-    //console.log(allLines);
-
-    //alert(this.result.length);
-    console.log(typeof(this.result));
 
     this.dataLength = this.result.length;
     this.header = [];
     this.rowLines = [];
     this.allData = [];
-    this.input = [];
-    this.target = [];
+    this.inputs = [];
+    this.selected = [];
+    this.target = '';
     this.hp = '';
-    for (var i=0; i< this.result.length; i++)
-    {
-      if (i == 0){ // ovo je header
+    for (let i = 0; i < this.result.length; i++) {
+      if (i == 0) {
         var headingLine = Object.keys(this.result[i]);
-        //console.log(headingLine);
-        for (var j=0; j<headingLine.length; j++)
-        {
+        for (let j = 0; j < headingLine.length; j++) {
           this.header.push(headingLine[j]);
+          
+            if (j != headingLine.length - 1) {
+              this.preload[j] = 'input'
+              this.inputs.push(headingLine[j]);
+            }
+            else {
+              this.preload[j] = 'target'
+              this.target = headingLine[j];
+            }
         }
-        //input i label
-        for (var j = 0; j<headingLine.length -1 ;j++)
-        {
-          this.input.push(headingLine[j]);
-          // hiperparametri!!!
-          if (j != 0) {
-            this.hp = this.hp.concat("," + headingLine[j]);
-         }
-         else
-         this.hp = this.hp.concat('' + headingLine[j]);
-        }
-
-        this.target.push(this.header[this.header.length-1]);
-        console.log("TARGET "+this.target);
-
-        this.hp = this.hp.concat(",", this.target);
-
-
-        //console.log(this.header);
       }
-       // ovo su linije
-        var line = Object.values(this.result[i]);
-        //console.log(line);
-        var rowLine = [];
-        for (var j = 0 ; j < line.length; j ++)
-        {
+        let line = Object.values(this.result[i]);
+        let rowLine = [];
+        for (let j = 0 ; j < line.length; j ++) {
             rowLine.push(line[j]);
         }
         this.allData.push(rowLine);
         this.rowLines = this.allData.slice(0, this.itemsPerPage);
     }
-
-    //console.log(this.header);
-    //console.log(this.rowLines);
-
     
-    this.parametersService.setParamsObs(this.hp);
+    for (let i = 0; i < this.inputs.length; i++) {
+      if (i != 0) {
+        this.hp = this.hp.concat(',' + this.inputs[i]);
+      }
+      else {
+        this.hp = this.hp.concat(this.inputs[i]);
+      }
+    }
+    this.hp = this.hp.concat(',' + this.target);
+    console.log(this.inputs);
+    console.log(this.target);
+    console.log(this.hp);
 
+    this.parametersService.setParamsObs(this.hp);
   }
 
   ngOnInit(){}
@@ -111,8 +98,34 @@ export class TableComponent implements OnChanges {
     this.rowLines = this.allData.slice(this.itemsPerPage * (this.currentPage - 1),this.itemsPerPage * (this.currentPage - 1) + this.itemsPerPage)
   }
 
-  fetchInputsOutputs(selected:any){
-    console.log("SELECTED ", selected);
+  fetchInputsOutputs(event: any, index: number) {
+    this.target = '';
+    this.inputs = [];
+    this.hp = '';
+    this.preload[index] = event;
+    if(event === 'target') {
+      for(let i = 0; i < this.preload.length; i++){
+        if(i !== index && this.preload[i]==='target') this.preload[i] = 'input';
+      }
+    }
+    for (let i = 0; i < this.preload.length; i++) {
+      if (this.preload[i] === 'input') {
+        this.inputs.push(this.header[i]);
+      }
+      else if (this.preload[i] === 'target')
+        this.target = this.header[i];
+    }
+    for (let i = 0; i < this.inputs.length; i++) {
+      if (i != 0) 
+        this.hp = this.hp.concat(',' + this.inputs[i]);
+      else
+        this.hp = this.hp.concat(this.inputs[i]);
+    }
+    
+    this.hp = this.hp.concat(',' + this.target);
+
+    console.log(this.hp);
+    this.parametersService.setParamsObs(this.hp);
   }
 }
 

@@ -149,7 +149,7 @@ export class CsvComponent implements OnInit {
 
     showHp() {
        // this.parametersService.setShowHp(true);
-        this.parametersService.setParamsObs(this.sendHp);
+       // this.parametersService.setParamsObs(this.hp);
     }
 
     prikazPreload:boolean=true;
