@@ -1,16 +1,15 @@
-<div style="width:100%;height:400px;background-color:peachpuff;margin-top: 50px;">
-    <h3 style="color:#212f3c">HEATMAP</h3>
-    <table>
-        <thead>
-            <tr>
-                <th *ngFor="let item of header">{{item}}</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr *ngFor="let item of rowLines">
-                <td *ngFor="let item1 of item">{{item1}}</td>
-            </tr>
-        </tbody>
-    </table>
+<div style="width:100%;height:400px;margin-top: 50px;">
+    <ngx-charts-heat-map
+    [scheme]="colorScheme"
+    [legend]="legend"
+    [xAxis]="xAxis"
+    [yAxis]="yAxis"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [results]="datasets"
+    (select)="onSelect($event)"
+    (activate)="onActivate($event)"
+    (deactivate)="onDeactivate($event)"
+    >
+</ngx-charts-heat-map>
 </div>

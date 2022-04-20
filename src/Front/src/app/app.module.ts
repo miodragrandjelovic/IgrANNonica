@@ -33,6 +33,7 @@ import { HeatmapComponent } from './home/heatmap/heatmap.component';
 import { LoadingComponent } from './loading/loading.component';
 import { UserdatasetsComponent } from './home/csv/userdatasets/userdatasets.component';
 import { UsermodelsComponent } from './home/hyperparameters/usermodels/usermodels.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 const icons = {
   envelope,
@@ -82,6 +83,7 @@ const icons = {
     ToastrModule.forRoot(),
     NgbPaginationModule,
     NgbAlertModule,
+    NgxChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

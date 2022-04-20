@@ -1,4 +1,16 @@
 import { Component, OnInit ,OnChanges, Input, SimpleChanges} from '@angular/core';
+import { Color, ScaleType } from '@swimlane/ngx-charts';
+
+
+interface DataItem {
+  name: string,
+  value: number
+}
+
+interface Data {
+  name: string,
+  series: DataItem[]
+}
 
 @Component({
   selector: 'app-heatmap',
@@ -9,17 +21,53 @@ export class HeatmapComponent implements OnChanges {
 
   constructor() { }
 
-  header:any;
-  rowLines:any;
+  legend: boolean = false;
+  showLabels: boolean = false;
+  animations: boolean = true;
+  xAxis: boolean = true;
+  yAxis: boolean = true;
+  //showYAxisLabel: boolean = true;
+  //showXAxisLabel: boolean = true;
+  xAxisLabel: string = 'Country';
+  yAxisLabel: string = 'Year';
+  colorScheme: Color = {
+    name: 'myScheme',
+    selectable: true,
+    group: ScaleType.Time,
+    domain: ['#ffffff', '#69add5'],
+  };
 
-  @Input() result: string; // ovo je json korelacione matrice
+  labels:any;
+  datasets: Data [];
+
+  @Input() matrix: string; // ovo je json korelacione matrice
 
   ngOnChanges(changes: SimpleChanges): void {
 
-    console.log("Korelaciona koju dobijamo ", this.result);
-    //console.log("PARSIRANO ",JSON.parse(this.result));
+    this.datasets = [];
+    this.labels = Object.keys(this.matrix);
+    console.log(this.labels);
+    console.log(this.matrix[this.labels[0]][this.labels[0]]);
+    
+    for (let i = 0; i < this.labels.length; i++) {
+      const dataItems:DataItem[] = [];
+      for(let j = this.labels.length - 1; j >= 0; j--){
+        const dataObject:DataItem = { name: this.labels[j], value:parseFloat(this.matrix[this.labels[i]][this.labels[j]]) }
+        dataItems.push(dataObject);
+      }
+      this.datasets.push({ name: this.labels[i], series: dataItems });
+    }
+    console.log(this.datasets);
+  }
+  onSelect(data:any): void {
+    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+  }
+  
+  onActivate(data:any): void {
+    console.log('Activate', JSON.parse(JSON.stringify(data)));
   }
 
-
-
+  onDeactivate(data:any): void {
+    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
+  }
 }
