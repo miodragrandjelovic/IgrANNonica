@@ -1,8 +1,7 @@
 <div id="sredina" [hidden]="!hidden" style="margin:0px;padding:0px;">
-
   <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
-    <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;">
-      <button style="width:15%;margin-right: 30px; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; " (click)="addNewModel(newModel)" ><img src="assets/images/plus.png" width="30px" height="30px" > Save Model</button>
+    <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;margin-left: 10%;">
+      
       <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
       <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> <!-- search da moze po imenu modela ili dataseta-->
       <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
@@ -12,6 +11,7 @@
 
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
       <!-- ovde ide tabela sa datasetovima korisnika -->
+      <div><h1 style="text-align: center;font-family: 'Lucida Console', 'Courier New', monospace;font-size: 25px; ">Your saved models</h1></div>
     <app-usermodels></app-usermodels>
 
     </div>
@@ -109,13 +109,9 @@
 
             <div class="form-check form-switch control randomize">
               <div class="select">
-                <label class="form-check-label" for="flexSwitchCheckDefault">Randomize</label><br>
-                <input class="form-check-input" type="checkbox" [(ngModel)]="randomize" id="flexSwitchCheckDefault" style="margin:11px 15px;" formControlName="randomize">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Shuffle</label><br>
+                <input class="form-check-input" type="checkbox" [(ngModel)]="randomize" id="flexSwitchCheckDefault" style="margin:3px;" formControlName="randomize">
               </div>
-            </div>
-
-            <div class="form-check control" style="padding-bottom:0px;padding-left: 10%; padding-right: 20px;">
-              <button type="submit" class="round-button playButton" ><i-bs width="55" height="55" name="caret-right-fill"></i-bs></button>
             </div>
           </div>
 
@@ -123,7 +119,7 @@
         <div class="container-fluid"> 
           <div class="row" >
               <div class="col-4" style="width:20%; min-width: 170px;">
-              <label for="percTrainData">Train-Test Ratio: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
+              <label for="percTrainData">Train percentage to data: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
               <p class="slider">
                 <ngx-slider class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
               </p>
@@ -150,12 +146,21 @@
                     </td>
                 </div>
             </div>
-        </div>
+           
+              <div class="row" style="margin-top: 30px;">
+                <div class="col form-check" style="margin-left: -13px;">
+                    <button *ngIf="session" class="round-button playButton" style="width:25%; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; " (click)="addNewModel(newModel)" ><img src="assets/images/plus.png" width="25px" height="25px" > Save Model</button>
+                  </div>
+                <div class="col form-check" style="text-align: right;" >
+                  <button class="round-button playButton"style="width:25%; background-color: #212f3c; color:white; height: 50px; border-radius: 20px;" type="submit"><i-bs width="45" height="45" name="caret-right-fill"></i-bs>Train</button>
+                </div>
+              </div>
+
+          </div>
 
         <div class="container-fluid" *ngIf="prikazGrafika"> 
-          
             <div class="row" >
-              <div class="col-4"  style="width:auto; min-width: 170px;display: flex;align-items: center;">
+              <div class="col"  style="width:auto; min-width: 170px;display: flex;align-items: center;">
                 <div class="checkbox-list">
                   <p  *ng style="color: white; font-weight: bold; border-radius: 2px; background-color: #212f3c;">Choose Graphics:</p>
                     <div class="checkbox" *ngFor="let item of inputCheckBoxes" >

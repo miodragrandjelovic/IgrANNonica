@@ -60,7 +60,7 @@ export class HyperparametersComponent implements OnInit {
   outputString: string = "";
   hyperparameters: string;
   hidden: boolean;
-  value1: number = 10;
+  value1: number = 80;
   value2: number = 20;
   value3: any = "";
   //dodato za default vrednosti
@@ -83,11 +83,12 @@ export class HyperparametersComponent implements OnInit {
   options1: Options = {
     floor: 0,
     ceil: 100,
-    //step: 10
+    step: 5
   };
   options2: Options = {
     floor: 0,
-    ceil: 50
+    ceil: 50,
+    step: 5
   };
 
   hyperparametersForm!: FormGroup;
