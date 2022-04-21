@@ -29,7 +29,7 @@ namespace Backend.Controllers
         public static string? DirName { get; set; } //Ime foldera 
 
         public static string url = "http://127.0.0.1:3000";
-        static String BytesToString(long byteCount)
+        static String BytesToString(long byteCount) //proveriti sta ne radi kod ove funkcije
         {
             string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; 
             if (byteCount == 0)
