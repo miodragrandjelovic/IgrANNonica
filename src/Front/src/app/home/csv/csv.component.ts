@@ -41,8 +41,9 @@ export class CsvComponent implements OnInit {
     chosen:any;
 
     currentResult:string;
+    encodingArray: any = [];
     
-    selectChange(event:any){
+    selectChange(event:any) {
         this.changeSelection();
         this.showMe2=true;
         if (this.selectedValue != event.target.value) {
@@ -50,7 +51,7 @@ export class CsvComponent implements OnInit {
             this.sendHp = this.sendHp.concat(',' + this.selectedValue);
         }
     }
-    selectChange1(event:any){
+    selectChange1(event:any) {
         this.odabrano=true;
         this.selectedValue1=event.target.value;
     }
@@ -155,6 +156,7 @@ export class CsvComponent implements OnInit {
     prikazPreload:boolean=true;
 
     fileUpload(files: any) {
+        this.encodingArray = [];
         this.prikazPreload=false;
         this.uploadedFile = true;
 
@@ -192,8 +194,11 @@ export class CsvComponent implements OnInit {
 
                 for (let i = 0; i < this.headers.length; i++) {
                     headersArray.push(data[i]);
+                    this.encodingArray.push(data[i]);
                 }
-                
+
+
+                console.log(this.encodingArray);
                 this.headingLines.push(headersArray);
 
                 this.outputs[0] = headersArray[headersArray.length - 1];
@@ -329,14 +334,8 @@ export class CsvComponent implements OnInit {
 
 
     loadRegressionDataset(){
-        //alert("UCITAJ REGRESIONI");
-        // treba sa beka da dobijemo podrazumevani regresioni dataset
         let csvFajl;
         this.http.get<any>('https://localhost:7167/api/Python/preloadCsv').subscribe(result =>{
-            console.log(result);
-            // result se salje sa beka u json formatu
-            
-            // sad ovo treba da prosledimo komponenti tabele
             csvFajl = result;
             this.currentResult = result;
         });
@@ -354,23 +353,13 @@ export class CsvComponent implements OnInit {
     }
 
     loadClassificationDataset(){   
-        //alert("UCITAJ KLASIFIKACIONI");
-        // treba sa beka da dobijemo podrazumevani klasifikacioni dataset
         let csvFajl;
 
         this.http.get<any>('https://localhost:7167/api/Python/preloadCsvClass').subscribe(result =>{
             console.log(result);
-            // result se salje sa beka u json formatu
             csvFajl = result;
-            // sad ovo treba da prosledim o komponenti tabele
-
             this.currentResult = result;
         });
-
-        /*this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
-                    csvData: csvFajl,
-                    Name: "mpg"
-                });*/
 
         this.http.get<any>('https://localhost:7167/api/Python/preloadKorClass').subscribe(data =>{
             console.log(data);
@@ -445,6 +434,7 @@ export class CsvComponent implements OnInit {
                 }
               } else {
                 var aaa = Object.keys(result[i]);
+                console.log(aaa);
                 for(var j = 0; j < aaa.length; j++) {
                   var array = map.get(aaa[j]);
                   if(array == undefined) array = [];
