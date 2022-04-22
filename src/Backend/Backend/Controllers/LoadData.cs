@@ -132,7 +132,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("hp")] //Slanje HP na pajton
-        public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper)
+        public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper, String modelNames) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva
         {
             int indexDir = 1;
             var upgradedName = "realestate";
@@ -145,6 +145,16 @@ namespace Backend.Controllers
             if (Username != null)
             {
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
+                string modeldirname = upgradedName + modelNames;
+                if (System.IO.Directory.Exists(modeldirname))
+                {
+                    return Ok("Vec postoji model sa tim imenom.");
+                }
+                else
+                {
+                    System.IO.Directory.CreateDirectory(modeldirname);
+                    Console.WriteLine("Directory for new Model created successfully!");
+                }
                 string modelDirName = upgradedName + "Model" + indexDir;
                 string pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
                 while (System.IO.Directory.Exists(pathToCreateDir))
