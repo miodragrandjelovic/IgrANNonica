@@ -35,7 +35,7 @@ export class UsermodelsComponent implements OnInit {
   selectModels(event:any){
     this.selectedModels=event.target.value;
     console.log('ovo je kliknuto za naziv '+this.selectedModels);
-    alert(this.selectedModels);
+    //alert(this.selectedModels);
     this.loadThisModel('ime_models');
   }
 
