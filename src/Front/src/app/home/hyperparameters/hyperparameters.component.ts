@@ -39,6 +39,7 @@ interface CheckBox {
   isChecked: Boolean;
 }
 
+
 @Component({
   selector: 'app-hyperparameters',
   templateUrl: './hyperparameters.component.html',
@@ -101,6 +102,10 @@ export class HyperparametersComponent implements OnInit {
 
   get neuronControls() {
     return (<FormArray>this.hyperparametersForm.get('neurons')).controls;
+   }
+
+   listaNeurona(i:number) {
+    return (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value;
    }
 
   ngOnInit(): void {
@@ -249,23 +254,33 @@ export class HyperparametersComponent implements OnInit {
     }
 
   countLayers=0;
+  counterNeuron = 0;
   onAddLayer() {
     this.countLayers++;
-    const control = new FormControl(0);
+    const control = new FormControl(new FormArray([]));
+
     (<FormArray>this.hyperparametersForm.get('neurons')).push(control);
   }
 
   onRemoveLayer() {
-    this.countLayers--;
-    (<FormArray>this.hyperparametersForm.get('neurons')).removeAt(this.countLayers);
+    if(this.countLayers>0){
+      this.countLayers--;
+      (<FormArray>this.hyperparametersForm.get('neurons')).removeAt(this.countLayers);
+    }
   }
 
-  onAddNeuron(){
-    
+  onAddNeuron(i:number){
+    const control = new FormControl(0);
+    (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.push(control);
+
   }
   onRemoveNeuron(i:number){
-    
-    
+    this.counterNeuron = (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
+    (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.removeAt(this.counterNeuron -1);
+  }
+
+  countNeurons(i:number){
+    return  (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
   }
 
     currentVal=0;

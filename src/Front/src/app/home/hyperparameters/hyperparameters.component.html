@@ -134,25 +134,23 @@
                 
                       <i-bs  (click)="onAddLayer()"  width="30" height="30" name="plus-circle-fill" style="cursor: pointer;padding: 1%;"></i-bs>
                       <i-bs  (click)="onRemoveLayer()" width="30" height="30" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
-                      <span>{{countLayers}} hidden layer</span>
-                         
+                      <span>{{countLayers}} hidden layers</span>
                     <td *ngFor="let neurons of neuronControls; let i = index" style="padding: 2%;">
-                      <tr>
-                        <i-bs  (click)="onAddNeuron()" width="20" height="20" name="plus-circle-fill"  style="cursor: pointer; padding: 2%;"></i-bs><!--slojevi i neuroni da se ovako izlistavaju-->
-                        <i-bs  (click)="onRemoveNeuron(i)" width="20" height="20" name="dash-circle-fill"  style="cursor: pointer;"></i-bs><br>
-                        <p> br neuron</p>
+                      <i-bs  (click)="onAddNeuron(i)" width="20" height="20" name="plus-circle-fill"  style="cursor: pointer; padding: 2%;"></i-bs><!--slojevi i neuroni da se ovako izlistavaju-->
+                      <i-bs  (click)="onRemoveNeuron(i)" width="20" height="20" name="dash-circle-fill"  style="cursor: pointer;"></i-bs><br>
+                      <p>{{countNeurons(i)}} neurons</p>
+                      <tr  *ngFor="let neurons1 of listaNeurona(i); let i = index"> 
                         <img src="assets/images/slikaZaNeurone.png" style="height: 30px; border: 2px solid; padding-top: 5px;" class="img-fluid rounded mx-auto d-block"><br>
-                        <select  class="select" style=" border-radius: 4px; border: 2px solid #34495E;margin-right: 3px;">
-                          <option value="sigmoid">sigmoid</option> 
-                          <option value="linear">linear</option> 
-                          <option value="tanh">tanh</option>
-                          <option value="softmax">softmax</option> 
-                          <option value="softsign">softsign</option> 
-                          <option value="reLU">reLU</option>
-                          <option value="ELUs">ELUs</option> 
-                        </select>
-                        
                       </tr>
+                      <select  class="select" style=" border-radius: 4px; border: 2px solid #34495E;margin-right: 3px;">
+                        <option value="sigmoid">sigmoid</option> 
+                        <option value="linear">linear</option> 
+                        <option value="tanh">tanh</option>
+                        <option value="softmax">softmax</option> 
+                        <option value="softsign">softsign</option> 
+                        <option value="reLU">reLU</option>
+                        <option value="ELUs">ELUs</option> 
+                      </select>
                     </td>
               
                     
