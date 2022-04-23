@@ -83,13 +83,13 @@ namespace Backend.Controllers
            
             long size = SelectedPaths.Length;
             var size1 = BytesToString(size);
-            Console.WriteLine("Size of file: " + size1);
+            //Console.WriteLine("Size of file: " + size1);
             
 
             string fileName1 = SelectedPaths;
             FileInfo fi = new FileInfo(fileName1);
             DateTime creationTime = fi.CreationTime;
-            Console.WriteLine("Creation time: {0}", creationTime);
+           //Console.WriteLine("Creation time: {0}", creationTime);
             return Ok(resultjson);
         }
 
