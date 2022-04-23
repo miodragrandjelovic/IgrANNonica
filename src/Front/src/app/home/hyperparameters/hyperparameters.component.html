@@ -70,20 +70,20 @@
                 </select>
               </div>
             </div>
-            <div class="control regularizationRate">
+            <div class="control regularizationRate" >
               <label for="regularRate">Regularization rate</label>
               <div class="select">
                 <select [(ngModel)]='regularizationRate' class="custom-select" id="regularRate" formControlName="regularizationRate">
-                  <option value="0">0</option>
-                  <option value="0.001">0.001</option>
-                  <option value="0.003">0.003</option>
-                  <option value="0.01">0.01</option>
-                  <option value="0.03">0.03</option>
-                  <option value="0.1">0.1</option>
-                  <option value="0.3">0.3</option>
-                  <option value="1">1</option>
-                  <option value="3">3</option>
-                  <option value="10">10</option>
+                  <option value="0" [disabled]="regularization==='none'">0</option>
+                  <option value="0.001" [disabled]="regularization==='none'">0.001</option>
+                  <option value="0.003" [disabled]="regularization==='none'">0.003</option>
+                  <option value="0.01" [disabled]="regularization==='none'">0.01</option>
+                  <option value="0.03" [disabled]="regularization==='none'">0.03</option>
+                  <option value="0.1" [disabled]="regularization==='none'">0.1</option>
+                  <option value="0.3" [disabled]="regularization==='none'">0.3</option>
+                  <option value="1" [disabled]="regularization==='none'">1</option>
+                  <option value="3" [disabled]="regularization==='none'">3</option>
+                  <option value="10" [disabled]="regularization==='none'">10</option>
                 </select>
               </div>
             </div>
@@ -116,15 +116,15 @@
           </div>
 
         </div>
-        <div class="container-fluid"> 
+        <div class="container-fluid" style="margin-top: 10px;"> 
           <div class="row" >
               <div class="col-4" style="width:20%; min-width: 170px;">
-              <label for="percTrainData">Train percentage to data: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
+              <label for="percTrainData">Train percentage to data: <span class="value"><input type="text" value = "{{value1}}%" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
               <p class="slider">
                 <ngx-slider class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
               </p>
               
-              <label for="batchSize">Batch Size: <span class="value"><input type="text" value = "{{value2}}" (keyup)="onSecondTextInputChange($event)" style="width: 40px;" /></span></label>
+              <label for="batchSize">Batch Size: <span class="value"><input type="text" value = "{{value2}}%" (keyup)="onSecondTextInputChange($event)" style="width: 40px;" /></span></label>
               <p class="slider">
                 <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
               </p>
@@ -133,17 +133,29 @@
                     <!--<app-slojevi-neuroni></app-slojevi-neuroni> -->
                 
                       <i-bs  (click)="onAddLayer()"  width="30" height="30" name="plus-circle-fill" style="cursor: pointer;padding: 1%;"></i-bs>
-                         <i-bs width="30" height="30" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
-                         <span>br hidden layer</span>
+                      <i-bs  (click)="onRemoveLayer()" width="30" height="30" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
+                      <span>{{countLayers}} hidden layer</span>
                          
-                    <td *ngFor="let neuron of neuronControls; let i = index" style="padding: 2%;">
-                        <i-bs  (click)="onAddLayer()" width="20" height="20" name="plus-circle-fill"  style="cursor: pointer; padding: 2%;"></i-bs><!--slojevi i neuroni da se ovako izlistavaju-->
-                        <i-bs  (click)="onRemoveLayer(i)" width="20" height="20" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
-                        <br>
-                        <p >br neuron</p>
-                        <img src="assets/images/slikaZaNeurone.png" style="height: 30px; border: 2px solid; padding-top: 5px;" class="img-fluid rounded mx-auto d-block">
-                        <input type="text" [formControlName]="i"/> <!--ne treba da ima input-->
+                    <td *ngFor="let neurons of neuronControls; let i = index" style="padding: 2%;">
+                      <tr>
+                        <i-bs  (click)="onAddNeuron()" width="20" height="20" name="plus-circle-fill"  style="cursor: pointer; padding: 2%;"></i-bs><!--slojevi i neuroni da se ovako izlistavaju-->
+                        <i-bs  (click)="onRemoveNeuron(i)" width="20" height="20" name="dash-circle-fill"  style="cursor: pointer;"></i-bs><br>
+                        <p> br neuron</p>
+                        <img src="assets/images/slikaZaNeurone.png" style="height: 30px; border: 2px solid; padding-top: 5px;" class="img-fluid rounded mx-auto d-block"><br>
+                        <select  class="select" style=" border-radius: 4px; border: 2px solid #34495E;margin-right: 3px;">
+                          <option value="sigmoid">sigmoid</option> 
+                          <option value="linear">linear</option> 
+                          <option value="tanh">tanh</option>
+                          <option value="softmax">softmax</option> 
+                          <option value="softsign">softsign</option> 
+                          <option value="reLU">reLU</option>
+                          <option value="ELUs">ELUs</option> 
+                        </select>
+                        
+                      </tr>
                     </td>
+              
+                    
                 </div>
             </div>
            

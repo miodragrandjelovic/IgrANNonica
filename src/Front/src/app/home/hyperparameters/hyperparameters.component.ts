@@ -61,7 +61,7 @@ export class HyperparametersComponent implements OnInit {
   hyperparameters: string;
   hidden: boolean;
   value1: number = 80;
-  value2: number = 20;
+  value2: number = 10;
   value3: any = "";
   //dodato za default vrednosti
   lrate: number = 0.00001;
@@ -248,13 +248,24 @@ export class HyperparametersComponent implements OnInit {
       this.spiner.showSpiner=true;
     }
 
+  countLayers=0;
   onAddLayer() {
+    this.countLayers++;
     const control = new FormControl(0);
     (<FormArray>this.hyperparametersForm.get('neurons')).push(control);
   }
 
-  onRemoveLayer(i:number) {
-    (<FormArray>this.hyperparametersForm.get('neurons')).removeAt(i);
+  onRemoveLayer() {
+    this.countLayers--;
+    (<FormArray>this.hyperparametersForm.get('neurons')).removeAt(this.countLayers);
+  }
+
+  onAddNeuron(){
+    
+  }
+  onRemoveNeuron(i:number){
+    
+    
   }
 
     currentVal=0;
