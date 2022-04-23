@@ -131,8 +131,38 @@ namespace Backend.Controllers
 
         }
 
+        [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model
+        public async Task<ActionResult>Post(String modelNames) //Ime modela kako korisnik zeli da ga cuva
+        {
+            if (Username != null)
+            {
+                string CurrentPath = Directory.GetCurrentDirectory();
+                var upgradedName = Name.Substring(0, Name.Length - 4);
+                string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
+                string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
+                if (System.IO.Directory.Exists(modeldirname))
+                {
+                    return Ok("Vec postoji model sa tim imenom.");
+                }
+                else
+                {
+                    System.IO.Directory.CreateDirectory(modeldirname);
+                    Console.WriteLine("Directory for new Model created successfully!");
+                }
+
+                var pathjson = System.Text.Json.JsonSerializer.Serialize(modeldirname);
+                var pathdata = new StringContent(modeldirname, System.Text.Encoding.UTF8, "application/json");
+                //var  = "http://127.0.0.1:3000/pathModel";
+                var pathurl = url + "/pathModel";
+                var pathresponse = await http.PostAsync(pathurl, pathdata);
+                return Ok(modeldirname);
+            }
+            else
+                return Ok("Korisnik nije ulogovan.");
+        }
+
         [HttpPost("hp")] //Slanje HP na pajton
-        public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper, String modelNames) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva
+        public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper, String modelNames) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
         {
             int indexDir = 1;
             var upgradedName = "realestate";
@@ -145,7 +175,8 @@ namespace Backend.Controllers
             if (Username != null)
             {
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
-                string modeldirname = upgradedName + modelNames;
+                string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
+                //string modeldirname = upgradedName + modelNames;
                 if (System.IO.Directory.Exists(modeldirname))
                 {
                     return Ok("Vec postoji model sa tim imenom.");
