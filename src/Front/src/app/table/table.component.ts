@@ -83,10 +83,6 @@ export class TableComponent implements OnChanges {
       }
     }
     this.hp = this.hp.concat(',' + this.target);
-    console.log(this.inputs);
-    console.log(this.target);
-    console.log(this.hp);
-
     this.parametersService.setParamsObs(this.hp);
   }
 
@@ -123,8 +119,6 @@ export class TableComponent implements OnChanges {
     }
     
     this.hp = this.hp.concat(',' + this.target);
-
-    console.log(this.hp);
     this.parametersService.setParamsObs(this.hp);
   }
 }

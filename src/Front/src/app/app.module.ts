@@ -34,6 +34,7 @@ import { LoadingComponent } from './loading/loading.component';
 import { UserdatasetsComponent } from './home/csv/userdatasets/userdatasets.component';
 import { UsermodelsComponent } from './home/hyperparameters/usermodels/usermodels.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { EncodingComponent } from './encoding/encoding.component';
 
 const icons = {
   envelope,
@@ -67,6 +68,7 @@ const icons = {
     LoadingComponent,
     UserdatasetsComponent,
     UsermodelsComponent,
+    EncodingComponent,
   ],
   imports: [
     BrowserModule,

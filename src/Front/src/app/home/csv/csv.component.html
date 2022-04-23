@@ -49,13 +49,15 @@
       
       </div>
   
-      <div style="width:70%; float: left;margin-left: 20px;">
+      <div style="width:50%; float: left;margin-left: 20px;">
         
         <!-- ovde treba da se nalazi tabela dataseta koji korisnik izabere! -->
         <!-- korisnik moze da bira tabelu koja se dobija sa beka (jedna od dve ponudjene) kada nije ulogovan -->
         
         <app-table [result]="currentResult"></app-table>
-      
+      </div>
+      <div style="width:20%;margin-left: 20px; float:left;text-align: center; padding-top: 50px; padding-bottom: 50px">
+        <app-encoding [input]="currentResult"></app-encoding>
       </div>
     </div>
 
