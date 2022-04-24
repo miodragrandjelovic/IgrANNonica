@@ -1,6 +1,6 @@
 
 #slikaPocetna{
-  height: 100vh;
+  height: 100%;
   position: relative;
 }
   #tekstPocetna{
@@ -13,8 +13,9 @@
     /*font-variant:small-caps;*/
 
   }
+  
   #slikaPocetna img{
     width: 100%;
-    height: 100%;
+    height: 50%;
     position: relative;
   }

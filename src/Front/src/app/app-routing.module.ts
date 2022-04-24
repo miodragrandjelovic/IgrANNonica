@@ -15,7 +15,8 @@ import{DatasetComponent} from './header/dataset/dataset.component';
 
 const routes: Routes = [
   {path:'', component:NavigationComponent},
-  {path:'home', component:HomeComponent},
+  {path:'home', component:NavigationComponent},
+  {path:'lab',component:HomeComponent},
   {path:'about',component:AboutComponent},
   {path:'profile',component:ProfileComponent,
   canActivate:[AuthGuardService]},
