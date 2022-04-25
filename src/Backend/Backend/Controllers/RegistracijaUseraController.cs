@@ -13,6 +13,8 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity;
+using System.Text;
 //DODATI REFRESH TOKEN
 namespace Backend.Controllers
 {
@@ -22,13 +24,15 @@ namespace Backend.Controllers
     {
 
         public static User user = new User();
+        private readonly UserManager<ApplicationUser> _userManager;//
         private readonly IConfiguration _configuration;
         private readonly UserDbContext _context;
         public static string Username;
         public static string? DirName { get; set; } //Ime foldera 
         public static string url = "http://127.0.0.1:3000";
-        public RegistracijaUseraController(UserDbContext context, IConfiguration configuration)
+        public RegistracijaUseraController(UserDbContext context, IConfiguration configuration, UserManager<ApplicationUser> userManager)//
         {
+            _userManager = userManager;//
             _context = context;
             _configuration = configuration;
         }
@@ -305,6 +309,9 @@ namespace Backend.Controllers
             LoadData.Username = Username;
             PythonController.Username = Username;
             string token1 = CreateToken(user);
+            var refreshToken = GenerateRefreshToken();
+            _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+
             var jtoken = new
             {
                 Token = token1
@@ -397,7 +404,7 @@ namespace Backend.Controllers
             });
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [Route("revoke/{username}")]
         public async Task<IActionResult> Revoke(string username)
@@ -411,7 +418,7 @@ namespace Backend.Controllers
             return NoContent();
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [Route("revoke-all")]
         public async Task<IActionResult> RevokeAll()
