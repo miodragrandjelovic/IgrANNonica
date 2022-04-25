@@ -15,7 +15,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
-//DODATI REFRESH TOKEN
+
 namespace Backend.Controllers
 {
     [Route("api/[controller]")]
@@ -66,7 +66,7 @@ namespace Backend.Controllers
             {
                 return BadRequest("Niste ulogovani.");
             }
-            if(DirName == "name")
+            if(DirName == "name") //brise se ceo direktorijum od izabranog csv-a sa sve modelima i hiperparametrima
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
                 //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName;
@@ -78,7 +78,7 @@ namespace Backend.Controllers
                 }
                 return Ok("Uspesno uklonjen csv folder sa svim modelima i hiperparametrima." + pathToDelete);
             }
-            else
+            else //brisanje samo csv fajla modeli i hiperparametri ostaju
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
                 //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + DirName + ".csv";
