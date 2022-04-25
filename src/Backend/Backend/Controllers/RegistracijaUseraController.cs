@@ -30,9 +30,8 @@ namespace Backend.Controllers
         public static string Username;
         public static string? DirName { get; set; } //Ime foldera 
         public static string url = "http://127.0.0.1:3000";
-        public RegistracijaUseraController(UserDbContext context, IConfiguration configuration, UserManager<ApplicationUser> userManager)//
+        public RegistracijaUseraController(UserDbContext context, IConfiguration configuration)//
         {
-            _userManager = userManager;//
             _context = context;
             _configuration = configuration;
         }
@@ -308,9 +307,16 @@ namespace Backend.Controllers
             Username = request.Username;
             LoadData.Username = Username;
             PythonController.Username = Username;
+
             string token1 = CreateToken(user);
             var refreshToken = GenerateRefreshToken();
             _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
+
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
             var jtoken = new
             {
@@ -384,7 +390,7 @@ namespace Backend.Controllers
             #pragma warning restore CS8602 // Dereference of a possibly null reference.
             #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _context.RegistrovaniUseri.SingleOrDefaultAsync(x => x.Username == username);
 
             if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
             {
@@ -395,7 +401,8 @@ namespace Backend.Controllers
             var newRefreshToken = GenerateRefreshToken();
 
             user.RefreshToken = newRefreshToken;
-            await _userManager.UpdateAsync(user);
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
             return new ObjectResult(new
             {
@@ -409,11 +416,12 @@ namespace Backend.Controllers
         [Route("revoke/{username}")]
         public async Task<IActionResult> Revoke(string username)
         {
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _context.RegistrovaniUseri.SingleOrDefaultAsync(x => x.Username == username);
             if (user == null) return BadRequest("Invalid user name");
 
             user.RefreshToken = null;
-            await _userManager.UpdateAsync(user);
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -423,11 +431,12 @@ namespace Backend.Controllers
         [Route("revoke-all")]
         public async Task<IActionResult> RevokeAll()
         {
-            var users = _userManager.Users.ToList();
+            var users = _context.RegistrovaniUseri.ToList();
             foreach (var user in users)
             {
                 user.RefreshToken = null;
-                await _userManager.UpdateAsync(user);
+                _context.Entry(user).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
             }
 
             return NoContent();

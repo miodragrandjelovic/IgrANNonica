@@ -5,9 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Configuration;
 using System.Text;
+using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
 
 var builder = WebApplication.CreateBuilder(args);
-
+ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -22,16 +23,8 @@ builder.Services.AddDbContext<UserDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("ConnectionStr"));
 });
 
-var app = builder.Build();
 
-app.UseCors(options =>
-options.WithOrigins("http://localhost:4200")  //************
-.AllowAnyMethod()
-.AllowAnyHeader());
 //
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -41,22 +34,30 @@ builder.Services.AddAuthentication(options =>
 })
 
 .AddJwtBearer(options =>
- {
-     options.SaveToken = true;
-     options.RequireHttpsMetadata = false;
-     options.TokenValidationParameters = new TokenValidationParameters()
-     {
-         ValidateIssuer = true,
-         ValidateAudience = true,
-         ValidateLifetime = true,
-         ValidateIssuerSigningKey = true,
-         ClockSkew = TimeSpan.Zero,
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero,
 
-         ValidAudience = configuration["JWT:ValidAudience"],
-         ValidIssuer = configuration["JWT:ValidIssuer"],
-         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
-     };
- });
+        ValidAudience = configuration["JWT:ValidAudience"],
+        ValidIssuer = configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
+    };
+});
+
+var app = builder.Build();
+
+app.UseCors(options =>
+options.WithOrigins("http://localhost:4200")  //************
+.AllowAnyMethod()
+.AllowAnyHeader());
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
