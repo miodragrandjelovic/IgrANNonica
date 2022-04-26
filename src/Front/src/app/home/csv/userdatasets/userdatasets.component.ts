@@ -34,7 +34,7 @@ export class UserdatasetsComponent implements OnInit {
   selectDataset(event:any){
     this.selectedDataset=event.target.value;
     console.log('ovo je kliknuto za naziv '+this.selectedDataset);
-    alert(this.selectedDataset);
+    //alert(this.selectedDataset);
     this.loadThisDataset('churn');
 }
 

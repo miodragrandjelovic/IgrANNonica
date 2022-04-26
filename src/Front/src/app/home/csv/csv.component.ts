@@ -30,6 +30,8 @@ export class CsvComponent implements OnInit {
     showMe3:boolean = false;
     showMeChosenDataset:boolean = false;
 
+    preloadedDataset:number;
+
     showMeMatrix: boolean = false;
     prikazPreucitano:boolean = false;
     odabrano:boolean=false;
@@ -335,6 +337,9 @@ export class CsvComponent implements OnInit {
 
     loadRegressionDataset(){
         let csvFajl;
+        
+        this.preloadedDataset=0;
+
         this.http.get<any>('https://localhost:7167/api/Python/preloadCsv').subscribe(result =>{
             csvFajl = result;
             this.currentResult = result;
@@ -354,6 +359,8 @@ export class CsvComponent implements OnInit {
 
     loadClassificationDataset(){   
         let csvFajl;
+        
+        this.preloadedDataset=1;
 
         this.http.get<any>('https://localhost:7167/api/Python/preloadCsvClass').subscribe(result =>{
             console.log(result);
