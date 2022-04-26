@@ -1,8 +1,7 @@
 <div id="sredina" [hidden]="!hidden" style="margin:0px;padding:0px;">
-
   <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
-    <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;">
-      <button style="width:15%;margin-right: 30px; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; " (click)="addNewModel(newModel)" ><img src="assets/images/plus.png" width="30px" height="30px" > Save Model</button>
+    <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;margin-left: 10%;">
+      
       <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
       <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> <!-- search da moze po imenu modela ili dataseta-->
       <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
@@ -12,6 +11,7 @@
 
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
       <!-- ovde ide tabela sa datasetovima korisnika -->
+      <div><h1 style="text-align: center;font-family: 'Lucida Console', 'Courier New', monospace;font-size: 25px; ">Your saved models</h1></div>
     <app-usermodels></app-usermodels>
 
     </div>
@@ -70,20 +70,20 @@
                 </select>
               </div>
             </div>
-            <div class="control regularizationRate">
+            <div class="control regularizationRate" >
               <label for="regularRate">Regularization rate</label>
               <div class="select">
                 <select [(ngModel)]='regularizationRate' class="custom-select" id="regularRate" formControlName="regularizationRate">
-                  <option value="0">0</option>
-                  <option value="0.001">0.001</option>
-                  <option value="0.003">0.003</option>
-                  <option value="0.01">0.01</option>
-                  <option value="0.03">0.03</option>
-                  <option value="0.1">0.1</option>
-                  <option value="0.3">0.3</option>
-                  <option value="1">1</option>
-                  <option value="3">3</option>
-                  <option value="10">10</option>
+                  <option value="0" [disabled]="regularization==='none'">0</option>
+                  <option value="0.001" [disabled]="regularization==='none'">0.001</option>
+                  <option value="0.003" [disabled]="regularization==='none'">0.003</option>
+                  <option value="0.01" [disabled]="regularization==='none'">0.01</option>
+                  <option value="0.03" [disabled]="regularization==='none'">0.03</option>
+                  <option value="0.1" [disabled]="regularization==='none'">0.1</option>
+                  <option value="0.3" [disabled]="regularization==='none'">0.3</option>
+                  <option value="1" [disabled]="regularization==='none'">1</option>
+                  <option value="3" [disabled]="regularization==='none'">3</option>
+                  <option value="10" [disabled]="regularization==='none'">10</option>
                 </select>
               </div>
             </div>
@@ -109,51 +109,68 @@
 
             <div class="form-check form-switch control randomize">
               <div class="select">
-                <label class="form-check-label" for="flexSwitchCheckDefault">Randomize</label><br>
-                <input class="form-check-input" type="checkbox" [(ngModel)]="randomize" id="flexSwitchCheckDefault" style="margin:11px 15px;" formControlName="randomize">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Shuffle</label><br>
+                <input class="form-check-input" type="checkbox" [(ngModel)]="randomize" id="flexSwitchCheckDefault" style="margin:3px;" formControlName="randomize">
               </div>
-            </div>
-
-            <div class="form-check control" style="padding-bottom:0px;padding-left: 10%; padding-right: 20px;">
-              <button type="submit" class="round-button playButton" ><i-bs width="55" height="55" name="caret-right-fill"></i-bs></button>
             </div>
           </div>
 
         </div>
-        <div class="container-fluid"> 
+        <div class="container-fluid" style="margin-top: 10px;"> 
           <div class="row" >
               <div class="col-4" style="width:20%; min-width: 170px;">
-              <label for="percTrainData">Train-Test Ratio: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
-              <p class="slider">
-                <ngx-slider class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
-              </p>
-              
-              <label for="batchSize">Batch Size: <span class="value"><input type="text" value = "{{value2}}" (keyup)="onSecondTextInputChange($event)" style="width: 40px;" /></span></label>
-              <p class="slider">
-                <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
-              </p>
-              </div>
-              <div class="col-6" formArrayName="neurons" style="text-align: center; width: 77%; background-color: #CEECFA;padding: 10px; padding-right: 30px;margin:auto; border-radius: 10px; min-height: 100px;" >
-                    <!--<app-slojevi-neuroni></app-slojevi-neuroni> -->
+                <label for="percTrainData">Train percentage to data: <span class="value"><input type="text" value = "{{value1}}%" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
+                <p class="slider">
+                  <ngx-slider class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
+                </p>
                 
+                <label for="batchSize">Batch Size: <span class="value"><input type="text" value = "{{value2}}%" (keyup)="onSecondTextInputChange($event)" style="width: 40px;" /></span></label>
+                <p class="slider">
+                  <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
+                </p>
+              </div>
+              <div class="col-6" formArrayName="neurons" style="text-align: center; width: 77%; overflow:auto; background-color: #CEECFA;padding: 10px; padding-right: 30px;margin:auto; border-radius: 10px; min-height: 100px;" >
+                    <!--<app-slojevi-neuroni></app-slojevi-neuroni> -->
                       <i-bs  (click)="onAddLayer()"  width="30" height="30" name="plus-circle-fill" style="cursor: pointer;padding: 1%;"></i-bs>
-                         <i-bs width="30" height="30" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
-                         <span>br hidden layer</span>
-                         
-                    <td *ngFor="let neuron of neuronControls; let i = index" style="padding: 2%;">
-                        <i-bs  (click)="onAddLayer()" width="20" height="20" name="plus-circle-fill"  style="cursor: pointer; padding: 2%;"></i-bs><!--slojevi i neuroni da se ovako izlistavaju-->
-                        <i-bs  (click)="onRemoveLayer(i)" width="20" height="20" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
-                        <br>
-                        <p >br neuron</p>
-                        <img src="assets/images/slikaZaNeurone.png" style="height: 30px; border: 2px solid; padding-top: 5px;" class="img-fluid rounded mx-auto d-block">
-                        <input type="text" [formControlName]="i"/> <!--ne treba da ima input-->
-                    </td>
+                      <i-bs  (click)="onRemoveLayer()" width="30" height="30" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
+                      <span> {{countLayers}} hidden layers</span>
+                    <div style="margin: auto; width: fit-content;">
+                      <td *ngFor="let neurons of neuronControls; let i = index" style="padding: 2%;">
+                        <span style="font-size: 12px;">layer {{i+1}}</span><br>
+                        <i-bs  (click)="onAddNeuron(i)" width="20" height="20" name="plus-circle-fill"  style="cursor: pointer; padding: 2%;"></i-bs><!--slojevi i neuroni da se ovako izlistavaju-->
+                        <i-bs  (click)="onRemoveNeuron(i)" width="20" height="20" name="dash-circle-fill"  style="cursor: pointer;"></i-bs><br>
+                        <p style="font-size: 12px;">{{countNeurons(i)}} neurons</p>
+                        <select  class="select" data-toggle="tooltip" data-placement="top" title="Activation Functions" style=" border-radius: 4px; border: 2px solid #34495E;margin-right: 3px;margin-bottom: 5px;">
+                          <option value="sigmoid">sigmoid</option> 
+                          <option value="linear">linear</option> 
+                          <option value="tanh">tanh</option>
+                          <option value="softmax">softmax</option> 
+                          <option value="softsign">softsign</option> 
+                          <option value="reLU">reLU</option>
+                          <option value="ELUs">ELUs</option> 
+                        </select>
+                        <tr  *ngFor="let neuron of listaNeurona(i); let i = index" style="display: flex;"> 
+                          <div style="margin-left: 25px;height: 30px;width: 30px; background-color: #34495E; border-radius: 50%; border: 2px solid;margin-top: 5px;"><br>
+                          </div>
+                       <!--  <img src="assets/images/slikaZaNeurone.png" style="margin-left: 25px;height: 30px; border: 2px solid;margin-top: 5px;" class="img-fluid rounded mx-auto d-block"><br>
+                       --> </tr>
+                      </td>
+                    </div>
+              </div>
+           </div>
+           
+              <div class="row" style="margin-top: 30px;">
+                <div class="col form-check" style="margin-left: -13px;">
+                    <button *ngIf="session" class="round-button playButton" style="width:25%; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; " (click)="addNewModel(newModel)" ><img src="assets/images/plus.png" width="25px" height="25px" > Save Model</button>
+                  </div>
+                <div class="col form-check" style="text-align: right;" >
+                  <button class="round-button playButton"style="width:25%; background-color: #212f3c; color:white; height: 50px; border-radius: 20px;" type="submit"><i-bs width="45" height="45" name="caret-right-fill"></i-bs>Train</button>
                 </div>
-            </div>
-        </div>
+              </div>
 
-        <div class="container-fluid" *ngIf="prikazGrafika"> 
-          
+          </div>
+
+        <div class="container-fluid" *ngIf="prikazGrafika" > 
             <div class="row" >
               <div class="col-4"  style="width:auto; min-width: 170px;display: flex;align-items: center;">
                 <div class="checkbox-list">
@@ -162,7 +179,6 @@
                       <input  class="form-check-input" type="checkbox" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone: true}" id="item"  checked="" (change)="changeSelection()">
                       <label for="item" style="color: white;">{{item.label}}</label> <!--odabir koji graf da se pokaze-->
                     </div>
-                    
                 </div>
              </div>
             
