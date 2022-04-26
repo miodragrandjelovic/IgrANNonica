@@ -31,14 +31,17 @@ export class UserdatasetsComponent implements OnInit {
         this.selectedDataset = '';
   }
 
-  selectDataset(event:any){
-    this.selectedDataset=event.target.value;
+  selectChange(event:any){
+    this.selectedDataset=event.target.id;
+    //alert("NAZIV JE "+ this.selectedDataset);
     console.log('ovo je kliknuto za naziv '+this.selectedDataset);
     //alert(this.selectedDataset);
-    this.loadThisDataset('churn');
+    this.loadThisDataset(this.selectedDataset);
 }
 
   loadThisDataset(naziv:any){
+
+    // !! POSLE OVOG ZATEVA, POTREBNO JE PROSLEDITI I ZAHTEV ZA KORELACIONU MATRICU!!!
     return this.http.post<any>('https://localhost:7167/api/LoadData/selectedCsv?name='+naziv, {
         name: naziv
       }).subscribe(selectedDatasetUser=>{
