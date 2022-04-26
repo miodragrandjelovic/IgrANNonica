@@ -13,8 +13,8 @@
         </div>
 
         <div style="float:right; margin-top:40px;"> <!-- ovaj div ce da ima dugmice -->
-            <a id="{{item}}" style="background:transparent; border: none;cursor:pointer;" (click)="selectChange($event)" (change)="this.selectedDataset=item.selectedDataset">
-                <img src="assets/images/eye.png" width="30px" height="30px">
+            <a style="background:transparent; border: none;cursor:pointer;" (click)="selectChange($event)" (change)="this.selectedDataset=item.selectedDataset">
+                <img id="{{item}}" src="assets/images/eye.png" width="30px" height="30px">
             </a>
 
             <button style="background:transparent; border: none;margin-left: 50px; margin-right: 20px;">
