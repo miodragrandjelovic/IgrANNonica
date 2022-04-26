@@ -30,7 +30,7 @@ class Data():
         self.data = fn.load_data(features, label, self.data)
     
 
-    def Misa(self, columns,enc_types,num_cat_col,type,features,label,ratio,randomize):
+    def Misa(self, columns,enc_types,num_cat_col,type,features,label,ratio, val_test,randomize):
 
         self.data = fn.load_data(features, label, self.data)
         X, y = fn.feature_and_label(self.data, label)
@@ -47,7 +47,7 @@ class Data():
             y=np_utils.to_categorical(y)
             
 
-        (self.X_train,self.X_val, self.X_test, self.y_train,self.y_val, self.y_test) = fn.split_data(X, y, ratio, randomize)
+        (self.X_train,self.X_val, self.X_test, self.y_train,self.y_val, self.y_test) = fn.split_data(X, y, ratio, val_test, randomize)
 
 
         if(type == "classification"):
@@ -81,7 +81,7 @@ class Data():
         # first take out the values that do not impact the model
 #        fn.filter_data(self.data)
 
-    def splitData(self, label, ratio, randomize, activation_function):
+    def splitData(self, label, ratio, randomize, val_test):
         
         self.data=fn.normalize(self.data)
         
@@ -92,7 +92,7 @@ class Data():
         #y = fn.normalize(y, activation_function)
 
         # split test and train data 
-        (self.X_train, self.X_test, self.y_train, self.y_test) = fn.split_data(X, y, ratio, randomize)
+        (self.X_train, self.X_test, self.y_train, self.y_test) = fn.split_data(X, y, ratio, val_test, randomize)
 
         # now, shape all data
         #fn.scale_data(self.X_train, self.X_test, self.y_train, self.y_test)

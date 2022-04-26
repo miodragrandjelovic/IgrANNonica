@@ -77,16 +77,17 @@ def normalize(df):
 
     
 
-def split_data(X, y, ratio, randomize):
+def split_data(X, y, ratio,val_test, randomize):
     # ratio je npr 20, a nama treba 0.2
     ratio = ratio / 100
+    val_test=val_test / 100
     if(randomize==False):
         (X_train, X_rem, y_train, y_rem) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
-        (X_val, X_test, y_val, y_test) = train_test_split(X_rem, y_rem, test_size = 0.5, random_state=5)
+        (X_val, X_test, y_val, y_test) = train_test_split(X_rem, y_rem, test_size = 1-val_test, random_state=5)
 
     else:
         (X_train, X_rem, y_train, y_rem) = train_test_split(X, y, test_size = 1-ratio)
-        (X_val, X_test, y_val, y_test) = train_test_split(X_rem, y_rem, test_size = 0.5)
+        (X_val, X_test, y_val, y_test) = train_test_split(X_rem, y_rem, test_size = 1-val_test)
     return (X_train,X_val, X_test, y_train,y_val, y_test)
 
 def filter_data(data):

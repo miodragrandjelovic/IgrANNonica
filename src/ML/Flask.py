@@ -140,7 +140,7 @@ def treniraj():
         ly.append(hiperp['NeuronsLvl'+str(i+1)])
    # print("Hidden layer neurons are ", ly)
     
-    stats.createModel(train=df,features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'], activation_function_list=hiperp['Activation'],hidden_layers_n=hiperp['Layers'],
+    stats.createModel(train=df,features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'],val_test=hiperp['Val_test'], activation_function_list=hiperp['Activation'],hidden_layers_n=hiperp['Layers'],
      hidden_layer_neurons_list=ly, columns=hiperp['Columns'],enc_types=hiperp['Enc_types'],num_cat_col=hiperp['Num_cat_col'], randomize=hiperp['Randomize'],
         batch_size=hiperp['BatchSize'], learning_rate=hiperp['LearningRate'], regularization=hiperp['Regularization'] ,regularization_rate=hiperp['RegularizationRate'])
 
