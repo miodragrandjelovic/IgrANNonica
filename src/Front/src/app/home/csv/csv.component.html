@@ -29,17 +29,17 @@
 
     <div *ngIf="!session"><!-- ovo ce da se prikazuje NEULOGOVANOM-->
       <div style="width:25%;margin-left: 20px; float:left;text-align: center; padding-top: 50px; padding-bottom: 50px;"><!--this div will be for choosing regression or class dataset, and onInit regression will be chosen-->
-        <h3 style="color:#212f3c;">Choose Dataset</h3>
+        <h3 style="color:#212f3c; font-weight: bold;">Choose Dataset</h3>
         <p>Which dataset do you want to use?</p>
         <br>
         <div style="width:fit-content;margin: auto;">
-          <button class="chooseDataset" style="border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float:left; margin-right:30px;"
-            (click)="loadRegressionDataset()">
-            <img src="assets/images/regression.png" width="70px" height="70px">
+          <button class="chooseDataset" style="border-radius:10px;border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float:left; margin-right:30px;"
+            (click)="loadRegressionDataset()" [style.border]="preloadedDataset==0 ? '2px solid #03a9f4' : '1px solid #03a9f4'">
+            <img src="assets/images/regression.png" width="70px" height="70px" style="border-radius:10px;">
           </button>
-          <button class="chooseDataset" style="border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float: left;"
-            (click)="loadClassificationDataset()">
-            <img src="assets/images/classification.png" width="70px" height="70px">
+          <button class="chooseDataset" style="border-radius:10px;border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float: left;"
+            (click)="loadClassificationDataset()" [style.border]="preloadedDataset==1 ? '2px solid #03a9f4' : '1px solid #03a9f4'">
+            <img src="assets/images/classification.png" width="70px" height="70px" style="border-radius:10px;">
           </button>
           <div class="blanko" style="display:block;clear:left;"></div>
         </div>
@@ -48,16 +48,19 @@
         
       
       </div>
-  
-      <div style="width:50%; float: left;margin-left: 20px;">
+      
+      <div style="width:40%;height:500px;float: left; padding-top: 50px; margin-left: 10px; border:#CEECFA solid 2px; border-radius: 5px; text-align: center;">Ovde ide statistika</div>
+
+      <div style="width:28.5%;margin-left: 20px; float:left;text-align: center; padding-top: 50px; padding-bottom: 50px; overflow-x: auto; border: #CEECFA 2px solid; border-radius: 5px;">
+        <app-encoding [input]="currentResult"></app-encoding>
+      </div>
+
+      <div style="width:70%; float: left; margin-top: 20px; margin-left: 10px;">
         
         <!-- ovde treba da se nalazi tabela dataseta koji korisnik izabere! -->
         <!-- korisnik moze da bira tabelu koja se dobija sa beka (jedna od dve ponudjene) kada nije ulogovan -->
         
         <app-table [result]="currentResult"></app-table>
-      </div>
-      <div style="width:20%;margin-left: 20px; float:left;text-align: center; padding-top: 50px; padding-bottom: 50px">
-        <app-encoding [input]="currentResult"></app-encoding>
       </div>
     </div>
 

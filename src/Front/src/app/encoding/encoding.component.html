@@ -1,28 +1,38 @@
-<table>
-    <thead>
-        <th>Columns</th>
-        <th>Numeric/Categorical</th>
-        <th>Encoding Type</th>
-    </thead>
-    <tbody>
-        <tr *ngFor="let head of headers; let i = index">
-            <td>{{ head }}</td>
-            <td>
-                <select [ngModel]="selected[i]" (ngModelChange)="changeType($event, i)">
-                    <option value="categorical">Categorical</option>
-                    <option value="numerical">Numerical</option>
-                  </select>
-            </td>
-            <td>
-                <select *ngIf="selected[i] == 'categorical'" name="" id="" [ngModel]="selectedEncodings[i]" (ngModelChange)="changeEncoding($event, i)">
-                    <option value="one hot">One hot</option>
-                    <option value="label">Label</option>
-                    <option value="binary">Binary</option>
-                </select>
-                <select *ngIf="selected[i] !== 'categorical'" name="" id="">
-                    <option value=""></option>
-                </select>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div style="width:100%; margin: auto;">
+    <div style="width:100%;text-align:center;font-size: 25px; font-weight: bold;margin-bottom: 15px;">Choose Inputs and Target</div>
+    <table style="width: 100px;margin: auto;">
+        <thead>
+            <th>Columns</th>
+            <th>Numeric/Categorical</th>
+            <th>Encoding Type</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let head of headers; let i = index">
+                <td>{{ head }}</td>
+                <td>
+                    <select class="form-select" [ngModel]="selected[i]" (ngModelChange)="changeType($event, i)">
+                        <option value="categorical">Categorical</option>
+                        <option value="numerical">Numerical</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-select" [attr.disabled]="selected[i] != 'categorical' ? 'disabled' : null" name="" id="" [ngModel]="selectedEncodings[i]" (ngModelChange)="changeEncoding($event, i)">
+                        <option value="one hot">One hot</option>
+                        <option value="label">Label</option>
+                        <option value="binary">Binary</option>
+                    </select>
+                    <!--
+                    <select class="form-select" *ngIf="selected[i] == 'categorical'" name="" id="" [ngModel]="selectedEncodings[i]" (ngModelChange)="changeEncoding($event, i)">
+                        <option value="one hot">One hot</option>
+                        <option value="label">Label</option>
+                        <option value="binary">Binary</option>
+                    </select>
+                    <select class="form-select" *ngIf="selected[i] !== 'categorical'" name="" id="">
+                        <option value=""></option>
+                    </select>
+                    -->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

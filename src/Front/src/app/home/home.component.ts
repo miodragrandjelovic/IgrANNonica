@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
   
   session: any;
   edited: boolean = false; 
+  currentActive:number;
 
   constructor(private http: HttpClient, private service: MessageService) { }
 
@@ -28,11 +29,13 @@ export class HomeComponent implements OnInit {
   // salje se komponenta child-u <app-csv> poruka je 0
   showCsvData(){
     this.service.sayMessage(0);
+    this.currentActive = 0;
   }
 
   // salje se komponenta childu <app-hyperparameters> - poruka je 1
   showHyperp(){
     this.service.sayMessage(1);
+    this.currentActive = 1;
   }
 
 

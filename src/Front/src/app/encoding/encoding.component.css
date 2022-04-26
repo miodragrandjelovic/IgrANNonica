@@ -1,0 +1,14 @@
+.form-select{
+    width: fit-content;
+}
+
+td, th{
+    font-size: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+select:disabled{
+    background-color: #CEECFA;
+}

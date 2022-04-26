@@ -1,5 +1,6 @@
-<div class="container-table" style="overflow-x:scroll;">
-    <table class="table">
+<div class="container-table" style="overflow-x:auto; border: #CEECFA 2px solid;border-radius: 5px;">
+    <div style="width:100%;text-align:center;font-weight: bold;font-size: 25px;background-color: #CEECFA; border-top-left-radius: 3px; border-top-right-radius: 3px;">Dataset</div>
+    <table class="table table-hover table-sm">
         <thead>
           <tr>
             <th *ngFor="let item of header">{{item}}</th>
@@ -18,7 +19,7 @@
               </select>
               -->
 
-              <select [ngModel]="preload[i]" (ngModelChange)="fetchInputsOutputs($event, i)">
+              <select class="form-select" [ngModel]="preload[i]" (ngModelChange)="fetchInputsOutputs($event, i)">
                 <option value="input">Input</option>
                 <option value="target">Target</option>
                 <option value="none">None</option>
