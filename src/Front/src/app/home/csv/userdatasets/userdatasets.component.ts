@@ -27,13 +27,17 @@ export class UserdatasetsComponent implements OnInit {
     this.datasetsNames = [];
     this.datasetsFilteredNames = [];
 
-    this.http.get<any>('https://localhost:7167/api/Python/savedCsvs').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
+    this.http.get<any>('https://localhost:7167/api/Python/savedCsvs').subscribe(result => {  
             console.log(result);
             this.copyPaste=result;
             console.log(this.copyPaste);
+            /*
             this.copyPaste.push("prva1");
             this.copyPaste.push("prva2");
             this.copyPaste.push("prva3");
+            this.copyPaste.push("prva4");
+            this.copyPaste.push("prva5");
+            */
             this.datasetsNames = this.copyPaste;
         });
 
