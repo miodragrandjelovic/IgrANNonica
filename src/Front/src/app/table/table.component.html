@@ -1,6 +1,6 @@
 <div class="container-table" style="overflow-x:auto; border: #CEECFA 2px solid;border-radius: 5px;">
     <div style="width:100%;text-align:center;font-weight: bold;font-size: 25px;background-color: #CEECFA; border-top-left-radius: 3px; border-top-right-radius: 3px;">Dataset</div>
-    <table class="table table-hover table-sm">
+    <table class="table table-hover">
         <thead>
           <tr>
             <th *ngFor="let item of header">{{item}}</th>
@@ -28,9 +28,11 @@
           </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of rowLines">
-                <td *ngFor="let item1 of item">{{item1}}</td>
-            </tr>
+              <tr *ngFor="let item of rowLines">
+                
+                  <td *ngFor="let item1 of item">{{item1}}</td>
+                
+              </tr>
         </tbody>
       </table>
       <div class="d-flex justify-content-between p-2">
