@@ -39,8 +39,44 @@ namespace Backend.Controllers
                 return BadRequest("Niste ulogovani.");
             }
             string[] subdirs = Directory.GetDirectories(SelectedPath).Select(Path.GetFileName).ToArray();
+            var len = subdirs.Length;
+            string[] velicine = new string[len]; //niz sa velicinama csv fajlova
+            string[] datumi = new string[len]; //niz sa datumima kreiranja csv fajlova
+            CsvInfo[] alldata = new CsvInfo[len];
+            for (int i = 0; i < len; i++)
+            {
+                var fileName = subdirs[i] + ".csv";
+                var SelectedPaths = System.IO.Path.Combine(SelectedPath, subdirs[i], fileName);
+                long size = SelectedPaths.Length;
+                FileInfo FileVol = new FileInfo(SelectedPaths);
+                string fileLength = FileVol.Length.ToString();
+                string length = string.Empty;
+                if (FileVol.Length >= (1 << 10))
+                {
+                    length = string.Format("{0}Kb", FileVol.Length >> 10);
+                    velicine[i] = length;
+                }
+                else
+                    velicine[i] = "1Kb";
 
-            return Ok(subdirs);
+                string fileName1 = SelectedPaths;
+                FileInfo fi = new FileInfo(fileName1);
+                DateTime creationTime = fi.CreationTime;
+                datumi[i] = creationTime.ToString();
+            }
+            string vracam = string.Empty;
+            for(int i = 0; i < len; i++)
+            {
+                CsvInfo csinf = new CsvInfo();
+
+                csinf.Name = subdirs[i];
+                csinf.Size = velicine[i];
+                csinf.Date = datumi[i];
+
+                alldata[i] = csinf;
+            }
+
+            return Ok(alldata);
         }
 
 
