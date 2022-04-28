@@ -26,9 +26,12 @@ interface RequestHyperparameters{
   neuronsLvl5: number,
   ratio: number,
   batchSize: number,
+  valAndTest:number,
   randomize: boolean,
   inputs: string,
-  output: string
+  output: string,
+  activationFunctions:Array<any>,
+  numberOfNeurons:Array<any>,
 }
 
 interface CheckBox {
@@ -63,7 +66,7 @@ export class HyperparametersComponent implements OnInit {
   hidden: boolean;
   value1: number = 80;
   value2: number = 10;
-  value3: any = "";
+  value3: number = 50;
   //dodato za default vrednosti
   lrate: number = 0.00001;
   activation: string = "sigmoid";
@@ -77,6 +80,7 @@ export class HyperparametersComponent implements OnInit {
   ctx: any;
   //layers:Array<string> = ["5","5","5","5","5"]
   //
+  activationFunctions:Array<any>=[];
 
   session:any;
   prikazGrafika=false;
@@ -89,6 +93,11 @@ export class HyperparametersComponent implements OnInit {
   options2: Options = {
     floor: 0,
     ceil: 50,
+    step: 5
+  };
+  options3: Options = {
+    floor: 0,
+    ceil: 100,
     step: 5
   };
 
@@ -120,10 +129,10 @@ export class HyperparametersComponent implements OnInit {
       'problemType': new FormControl(null),
       'ratio': new FormControl(0),
       'batchSize': new FormControl(0),
+      'valAndTest' : new FormControl(0),
       'randomize': new FormControl(0),
       'neurons': new FormArray([]),
     });
-
 
     //this.parametersService.getShowHp().subscribe(res => {this.hidden = res});
     this.parametersService.getParamsObs().subscribe(res => {
@@ -168,12 +177,16 @@ export class HyperparametersComponent implements OnInit {
   onSecondTextInputChange(event:any){
     this.value2 = event.target.value;
   }
+  onThirdTextInputChange(event:any){
+    this.value3 = event.target.value;
+  }
 
   showCsv() {
     this.parametersService.setShowHp(false);
   }
 
   onSubmitHyperparameters() {
+
     this.inputsString = '';
     this.outputString = '';
     const layers = (<FormArray>this.hyperparametersForm.get('neurons')).controls.length;
@@ -202,6 +215,11 @@ export class HyperparametersComponent implements OnInit {
 
     this.outputString = this.outputString.concat(this.inputs[this.inputs.length - 1]);
 
+   // console.log('br slojeva: '+this.countLayers);
+  //  console.log('aktivacione funkc: '+this.activacioneFunkc);
+    this.countAllNeurons();
+  //  console.log('niz br neurona: '+this.neuronsLength);
+
     const myreq: RequestHyperparameters = {
       encodingType : this.hyperparametersForm.get('encodingType')?.value,
       learningRate : Number(this.hyperparametersForm.get('learningRate')?.value),
@@ -210,7 +228,7 @@ export class HyperparametersComponent implements OnInit {
       regularization: this.hyperparametersForm.get('regularization')?.value,
       regularizationRate: Number(this.hyperparametersForm.get('regularizationRate')?.value),
       problemType: this.hyperparametersForm.get('problemType')?.value,
-      layers: layers,
+      layers: this.countLayers,
       neuronsLvl1: Number(neuron1),
       neuronsLvl2: Number(neuron2),
       neuronsLvl3: Number(neuron3),
@@ -219,8 +237,11 @@ export class HyperparametersComponent implements OnInit {
       ratio: this.hyperparametersForm.get('ratio')?.value,
       batchSize: this.hyperparametersForm.get('batchSize')?.value,
       randomize: this.hyperparametersForm.get('randomize')?.value,
+      valAndTest: this.hyperparametersForm.get('valAndTest')?.value,
       inputs: this.inputsString,
-      output: this.outputString
+      output: this.outputString,
+      activationFunctions:this.activacioneFunkc,
+      numberOfNeurons:this.neuronsLength,
     } 
     console.log(myreq);
 
@@ -244,7 +265,7 @@ export class HyperparametersComponent implements OnInit {
         console.log(object);
         this.inputCheckBoxes.push(object);
       }
-
+    
       this.fetchSelectedGraphics();
       console.log(this.selectedCheckBoxes);
       });
@@ -257,22 +278,37 @@ export class HyperparametersComponent implements OnInit {
   counterNeuron = 0;
   onAddLayer() {
     this.countLayers++;
+    this.activacioneFunkc.push('sigmoid');
     const control = new FormControl(new FormArray([]));
-
     (<FormArray>this.hyperparametersForm.get('neurons')).push(control);
   }
 
   onRemoveLayer() {
-    if(this.countLayers>0){
+    if(this.countLayers>1){
       this.countLayers--;
+      this.activacioneFunkc.pop();
       (<FormArray>this.hyperparametersForm.get('neurons')).removeAt(this.countLayers);
     }
   }
 
-  onAddNeuron(i:number){
-    const control = new FormControl(0);
-    (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.push(control);
+  activacioneFunkc:Array<string>=[];
+  ActivationFuncChange(data:any, i:number)
+  {
+    this.activacioneFunkc[i]=data.target.value;
+  }
 
+  neuronsLength:Array<number>=[]; 
+  countAllNeurons(){
+    for(let i=0;i<this.countLayers;i++){
+      this.neuronsLength.push((<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length+1);
+    }
+  }
+
+  onAddNeuron(i:number){
+    if(this.countLayers<7){
+      const control = new FormControl(0);
+      (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.push(control);
+    }
   }
   onRemoveNeuron(i:number){
     this.counterNeuron = (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
