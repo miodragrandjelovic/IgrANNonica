@@ -4,15 +4,17 @@ namespace Backend.Models
 {
     public class Hiperparametri
     {
-        public string EncodingType { get; set; } = string.Empty;
+        //public string EncodingType { get; set; } = string.Empty;
         public float LearningRate { get; set; }
-        public string Activation { get; set; } = string.Empty;
+        //public string Activation { get; set; } = string.Empty;
         public int Epoch { get; set; }
         public string Regularization { get; set; } = string.Empty;
         public float RegularizationRate { get; set; }
         public string ProblemType { get; set; } = string.Empty;
         public int Layers { get; set; }
-        public int NeuronsLvl1 { get; set; }
+        public List<int> Neurons { get; set; }
+        public List<string> Activations { get; set; }
+        /*public int NeuronsLvl1 { get; set; }
         public int NeuronsLvl2 { get; set; }
         public int NeuronsLvl3 { get; set; }
         public int NeuronsLvl4 { get; set; }
@@ -25,7 +27,7 @@ namespace Backend.Models
         public string Activation4 { get; set; } = string.Empty;
         public string Activation5 { get; set; } = string.Empty;
         public string Activation6 { get; set; } = string.Empty;
-        public string Activation7 { get; set; } = string.Empty;
+        public string Activation7 { get; set; } = string.Empty;*/
 
         public List<string> ColumNames { get; set; }
         public List<string> Encodings { get; set; }
@@ -36,7 +38,7 @@ namespace Backend.Models
 
         public bool Randomize { get; set; }
 
-
+        public int Val_test_perc { get; set; }
         public string Inputs { get; set; } = string.Empty;
         public string Output { get; set; } = string.Empty;
 

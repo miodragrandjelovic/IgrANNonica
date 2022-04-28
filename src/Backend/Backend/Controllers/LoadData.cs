@@ -267,7 +267,7 @@ namespace Backend.Controllers
             }
             else
                 Console.WriteLine("Niste ulogovani.");
-            return Ok("model");
+            return Ok(hiperjson);//model se vraca
         }
 
         [HttpPost("csv")] //Slanje CSV na pajton
