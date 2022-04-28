@@ -12,8 +12,8 @@ namespace Backend.Models
         public float RegularizationRate { get; set; }
         public string ProblemType { get; set; } = string.Empty;
         public int Layers { get; set; }
-        public List<int> Neurons { get; set; }
-        public List<string> Activations { get; set; }
+        public List<int> NumberOfNeurons { get; set; }
+        public List<string> ActivationFunctions { get; set; }
         /*public int NeuronsLvl1 { get; set; }
         public int NeuronsLvl2 { get; set; }
         public int NeuronsLvl3 { get; set; }
@@ -38,7 +38,7 @@ namespace Backend.Models
 
         public bool Randomize { get; set; }
 
-        public int Val_test_perc { get; set; }
+        public int ValAndTest { get; set; }
         public string Inputs { get; set; } = string.Empty;
         public string Output { get; set; } = string.Empty;
 
