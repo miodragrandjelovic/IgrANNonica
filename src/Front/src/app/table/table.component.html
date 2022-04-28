@@ -1,7 +1,7 @@
 <div class="container-table" style="overflow-x:auto; border: #CEECFA 2px solid;border-radius: 5px;">
-    <div style="width:100%;text-align:center;font-weight: bold;font-size: 25px;background-color: #CEECFA; border-top-left-radius: 3px; border-top-right-radius: 3px;">Dataset</div>
-    <table class="table table-hover table-sm">
-        <thead>
+    <table class="table table-hover">
+      <caption style="caption-side: top;width:100%;text-align:left;font-weight: bold;font-size: 25px;background-color: #CEECFA; border-top-left-radius: 3px; border-top-right-radius: 3px;padding-left: 20px;color:black;">Dataset</caption>  
+      <thead>
           <tr>
             <th *ngFor="let item of header">{{item}}</th>
             <!-- u headeru treba da se kreira za svaku kolonu padajuci meni za izbor features, label i enkodinga ako je potrebno -->
@@ -28,9 +28,11 @@
           </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of rowLines">
-                <td *ngFor="let item1 of item">{{item1}}</td>
-            </tr>
+              <tr *ngFor="let item of rowLines" (click)="showAndHide($event)">
+                <td *ngFor="let item1 of item">
+                  <div>{{item1}}</div>
+                </td>
+              </tr>
         </tbody>
       </table>
       <div class="d-flex justify-content-between p-2">

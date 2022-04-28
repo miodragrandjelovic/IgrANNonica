@@ -12,7 +12,19 @@ td, th{
     padding-right: 10px;
 }
 
-
 select:disabled{
     background-color: #CEECFA;
 }
+
+td div{
+    max-height: 29px;
+    overflow: hidden;
+}
+
+
+tr:hover td div{
+    max-height: fit-content;
+    overflow: hidden;
+}
+
+

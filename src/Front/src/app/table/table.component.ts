@@ -84,10 +84,34 @@ export class TableComponent implements OnChanges {
     }
     this.hp = this.hp.concat(',' + this.target);
     this.parametersService.setParamsObs(this.hp);
+
+    this.scrollToTable();
+
   }
 
   ngOnInit(){}
 
+  scrollToTable() {
+    var elementUlog: any;
+    var elementNeulog: any;
+    var element: any;
+    elementUlog = document.getElementById("prikazTabeleUlogovanog");
+    elementNeulog = document.getElementById("prikazTabeleNeulogovanog");
+    
+    if (elementUlog){
+      //alert("prikaz ulog");
+      element = elementUlog;
+
+      const y = element.getBoundingClientRect().top + window.scrollY;
+      window.scroll({
+        top: y,
+        behavior: 'smooth'
+      });
+    }
+    else{
+      //alert("prikaz neulog");
+    }
+  }
  
 
   changePage() {
@@ -120,6 +144,29 @@ export class TableComponent implements OnChanges {
     
     this.hp = this.hp.concat(',' + this.target);
     this.parametersService.setParamsObs(this.hp);
+  }
+
+
+  showAll(event:any)
+  {/*
+    alert("event id "+event.target.id);
+    var objectList = event.target.querySelectorAll("td"); // selekt svih divova u tom redu
+    alert("Imamo "+objectList.length);
+    for (let i = 0; i < objectList.length; i++)
+    {
+      alert("DIV "+objectList[i].innerHTML);
+      objectList[i].style.backgroundColor = "red";
+    }*/
+  }
+
+  hideAll(event:any)
+  {
+    
+  }
+
+  showAndHide(event:any)
+  {
+    alert("event "+event.target);
   }
 }
 
