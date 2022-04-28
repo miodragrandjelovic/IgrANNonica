@@ -40,6 +40,7 @@ namespace Backend.Controllers
             return (Math.Sign(byteCount) * num).ToString() + suf[place];
         }
 
+
         [HttpPost("selectedCsv")] //Otvaranje foldera gde se nalazi izabrani csv
         public async Task<ActionResult<String>> PostSelectedCsv(String name)
         {
@@ -216,9 +217,9 @@ namespace Backend.Controllers
             //                                                                                  model
             var modelurl = url + "/model";
             HttpResponseMessage httpResponse = await http.GetAsync(modelurl);
-            var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
-            var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
-
+            //var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
+            //var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
+            var dataModel = ""; //mora ovako dok se ne popravi primanje hiperparametara na ML delu
             if(Username != null)
             {
                 int index = 1;
@@ -266,7 +267,7 @@ namespace Backend.Controllers
             }
             else
                 Console.WriteLine("Niste ulogovani.");
-            return Ok(model);
+            return Ok("model");
         }
 
         [HttpPost("csv")] //Slanje CSV na pajton

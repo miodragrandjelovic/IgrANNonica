@@ -17,6 +17,20 @@ namespace Backend.Models
         public int NeuronsLvl3 { get; set; }
         public int NeuronsLvl4 { get; set; }
         public int NeuronsLvl5 { get; set; }
+        public int NeuronsLvl6 { get; set; }
+        public int NeuronsLvl7 { get; set; }
+        public string Activation1 { get; set; } = string.Empty;
+        public string Activation2 { get; set; } = string.Empty;
+        public string Activation3 { get; set; } = string.Empty;
+        public string Activation4 { get; set; } = string.Empty;
+        public string Activation5 { get; set; } = string.Empty;
+        public string Activation6 { get; set; } = string.Empty;
+        public string Activation7 { get; set; } = string.Empty;
+
+        public List<string> ColumNames { get; set; }
+        public List<string> Encodings { get; set; }
+        public List<string> CatNum { get; set; }
+
         public int Ratio { get; set; }
         public int BatchSize { get; set; }
 
