@@ -1,7 +1,7 @@
 
 <!--///////////////////NAVBAR////////////////-->
 
-<nav class="navbar navbar-expand-lg navbar-dark" role="navigation">
+<nav class="navbar navbar-expand-lg navbar-dark" role="navigation" style="height: 15vh;">
   <div class="container-fluid">
     <!--<a class="navbar-brand" href="#"></a> sta je ovo?? -->
     <a href="#" style="width:fit-content;"><img id="logo" class="rounded float-start img-fluid navbar-logo" src="assets/images/logo_igrannonica_blank.png"></a>
@@ -16,7 +16,7 @@
         </li>
 
         <li id="labPage" class="nav-item" (click)="onSelect('labPage')">
-          <a class="nav-link active" aria-current="page"  [routerLink]="['/lab']" [style.color]="selectedIndex==='labPage' ? '#03A9F4' : ''">LAB</a>
+          <a class="nav-link active" aria-current="page"  [routerLink]="['/lab']" [style.color]="selectedIndex==='labPage' ? '#03A9F4' : ''">Lab</a>
         </li>
 
         <li id="aboutPage" class="nav-item" (click)="onSelect('aboutPage')">
