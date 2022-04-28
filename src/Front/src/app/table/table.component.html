@@ -1,5 +1,5 @@
 <div class="container-table" style="overflow-x:auto; border: #CEECFA 2px solid;border-radius: 5px;">
-    <div style="width:100%;text-align:center;font-weight: bold;font-size: 25px;background-color: #CEECFA; border-top-left-radius: 3px; border-top-right-radius: 3px;">Dataset</div>
+    <div style="text-align:center;font-weight: bold;font-size: 25px;background-color: #CEECFA; border-top-left-radius: 3px; border-top-right-radius: 3px;">Dataset</div>
     <table class="table table-hover">
         <thead>
           <tr>
@@ -28,10 +28,10 @@
           </tr>
         </thead>
         <tbody>
-              <tr *ngFor="let item of rowLines">
-                
-                  <td *ngFor="let item1 of item">{{item1}}</td>
-                
+              <tr *ngFor="let item of rowLines" (click)="showAndHide($event)">
+                <td *ngFor="let item1 of item">
+                  <div>{{item1}}</div>
+                </td>
               </tr>
         </tbody>
       </table>

@@ -145,5 +145,28 @@ export class TableComponent implements OnChanges {
     this.hp = this.hp.concat(',' + this.target);
     this.parametersService.setParamsObs(this.hp);
   }
+
+
+  showAll(event:any)
+  {/*
+    alert("event id "+event.target.id);
+    var objectList = event.target.querySelectorAll("td"); // selekt svih divova u tom redu
+    alert("Imamo "+objectList.length);
+    for (let i = 0; i < objectList.length; i++)
+    {
+      alert("DIV "+objectList[i].innerHTML);
+      objectList[i].style.backgroundColor = "red";
+    }*/
+  }
+
+  hideAll(event:any)
+  {
+    
+  }
+
+  showAndHide(event:any)
+  {
+    alert("event "+event.target);
+  }
 }
 
