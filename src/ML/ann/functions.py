@@ -11,6 +11,7 @@ import category_encoders as ce
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.feature_selection import VarianceThreshold
 
 from tensorflow import keras
@@ -69,11 +70,17 @@ def feature_and_label(data, label):
 
     return data,y
 
-def normalize(df):
-    #print(df)
-    for (columnName,columnData) in df.iteritems():
-        df[str(columnName)]=columnData/columnData.max()
+def normalize(df):  #ceo dodat
+    global scaler
+    sc=MinMaxScaler()
+    scaler=sc
+    df=scaler.fit_transform(df)
+
     return df
+    #print(df)
+    #for (columnName,columnData) in df.iteritems():
+        #df[str(columnName)]=columnData/columnData.max()
+    #return df
 
     
 
@@ -301,9 +308,9 @@ def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_l
     # input layer
     #if (hidden_layers_n > 0):
     if(type=="regression"):
-        model.add(units=10,input_shape=(len(X_train.columns)))
+        model.add(units=len(X_train.columns),input_shape=(len(X_train.columns)))   #unitsi menjani
     else:
-        model.add(units=10,input_dim=X.shape[1])
+        model.add(units=X.shape[1],input_dim=X.shape[1])                            #unitsi menjani
     #else:
     #if(type=="regression"):
      #   model.add(Dense(units=1, input_shape=(len(X_train.columns))))
@@ -311,13 +318,13 @@ def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_l
      #       model.add(Dense(units=1, input_dim=X.shape[1]))
 
     # hidden layers
-    if (hidden_layers_n > 0):
-        for i in range(hidden_layers_n):
-            if(regularization=="L1"):
-                model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function_list[i],kernel_regularizer=tf.keras.regularizers.l1(l=reg_rate)))
-            elif(regularization=="L2"):
+    #if (hidden_layers_n > 0):
+    for i in range(hidden_layers_n):
+        if(regularization=="L1"):
+            model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function_list[i],kernel_regularizer=tf.keras.regularizers.l1(l=reg_rate)))
+        elif(regularization=="L2"):
                 model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function_list[i],kernel_regularizer=tf.keras.regularizers.l2(l=reg_rate)))
-            else:
+        else:
                 model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function_list[i]))
 
     if(type=="regression"):
@@ -371,6 +378,8 @@ def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_
         label=label.tolist()
 
     else:
+        pred=scaler.inverse_transform(pred)             #dodato
+        label=scaler.inverse_transform(label)           #dodato
         label=y_test.to_numpy(dtype ='float32')
         label=label.tolist()
 
