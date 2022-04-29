@@ -368,7 +368,7 @@ export class CsvComponent implements OnInit {
 
             this.currentCorrResult = data;
         });
-        this.http.get<any>('https://localhost:7167/api/Python/preloadStat').subscribe(result => {
+        this.http.get<any>('https://localhost:7167/api/Python/preloadStatClass').subscribe(result => {
             this.currentStatsResult = result;
         });
     }
