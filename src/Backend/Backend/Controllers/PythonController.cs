@@ -63,6 +63,24 @@ namespace Backend.Controllers
                 FileInfo fi = new FileInfo(fileName1);
                 DateTime creationTime = fi.CreationTime;
                 datumi[i] = creationTime.ToString();
+
+                string path1 = System.IO.Path.Combine(CurrentPath, "Users", Username, subdirs[i]);
+                string names = subdirs[i] + "1" + ".csv";
+                string pathToDelete = System.IO.Path.Combine(path1, names);
+                if (System.IO.File.Exists(pathToDelete))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(pathToDelete);
+                        Console.WriteLine("File " + names + " deleted successfully!");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("{0} Exception thrown file in use. Eventualy it will be deleted.", ex);
+                    }
+                }
+                else
+                    continue;
             }
             string vracam = string.Empty;
             for(int i = 0; i < len; i++)
@@ -108,6 +126,23 @@ namespace Backend.Controllers
                     dates.Add(dt);
                     csvs.Add(subdirs[i]);
                 }
+                string path1 = System.IO.Path.Combine(CurrentPath, "Users", Username, subdirs[i]);
+                string names = subdirs[i] + "1" + ".csv";
+                string pathToDelete = System.IO.Path.Combine(path1, names);
+                if (System.IO.File.Exists(pathToDelete))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(pathToDelete);
+                        Console.WriteLine("File " + names + " deleted successfully!");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("{0} Exception thrown file in use. Eventualy it will be deleted.", ex);
+                    }
+                }
+                else
+                    continue;
             }
             
             var len = models.Count;

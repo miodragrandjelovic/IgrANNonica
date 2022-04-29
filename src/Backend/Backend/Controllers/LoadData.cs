@@ -138,36 +138,27 @@ namespace Backend.Controllers
         public async Task<ActionResult<JsonDocument>> PostModelForCompare(String dirname, String modelname)
         {
             string CurrentPath = Directory.GetCurrentDirectory();
-            //string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
             string fileName = modelname + ".csv";
-            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, dirname, fileName);
+            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, dirname, modelname, fileName);
 
-            if (!System.IO.Directory.Exists(SelectedPath))
+            if (!System.IO.File.Exists(SelectedPath))
             {
-                return BadRequest("Ne postoji dati model.");
+                return BadRequest("Ne postoji dati model. " + SelectedPath);
             }
             else if (Username == null)
             {
                 return BadRequest("Niste ulogovani.");
             }
            
-
-            //string SelectedPaths = CurrentPath + @"\Users\" + Username + "\\" + name + "\\" + fileName;
-            string SelectedPaths = Path.Combine(CurrentPath, "Users", Username, dirname, fileName);
-            /*var reader = new StreamReader(SelectedPaths);
-            var csv = new CsvHelper.CsvReader(reader, CultureInfo.InvariantCulture);
-            List<JsonDocument> cList = csv.GetRecords<JsonDocument>().ToList();*/
-
-            var csvTable = new DataTable();
-            using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPaths)), true))
+            var modelTable = new DataTable();
+            using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPath)), true))
             {
-                csvTable.Load(csvReader);
+                modelTable.Load(csvReader);
             }
-            //csvTable.Rows.RemoveAt(csvTable.Rows.Count - 1);
             string result = string.Empty;
-            result = JsonConvert.SerializeObject(csvTable);
+            result = JsonConvert.SerializeObject(modelTable);
 
-            var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); //json
+            var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); 
 
             return Ok(resultjson);
         }
@@ -305,7 +296,7 @@ namespace Backend.Controllers
                 while ((line = file.ReadLine()) != null)
                 {
                     lines.Add(line);
-                    Console.WriteLine(line);
+                    //Console.WriteLine(line);
                 }
 
                 lines.RemoveAll(l => l.Contains("Evaluation Only."));
@@ -387,7 +378,7 @@ namespace Backend.Controllers
                     while ((line = file.ReadLine()) != null)
                     {
                         lines.Add(line);
-                        Console.WriteLine(line);
+                        //Console.WriteLine(line);
                     }
 
                     lines.RemoveAll(l => l.Contains("Evaluation Only."));
