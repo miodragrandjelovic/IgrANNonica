@@ -135,24 +135,41 @@ namespace Backend.Controllers
 
         //za poredjenje dva modela
         [HttpPost("modelForCompare")] //Vracanje vrednosti izabranog modela kako bi mogle da se prikazu na grafiku i uporede.
-        public async Task<ActionResult<JsonDocument>> PostModelForCompare(String name)
+        public async Task<ActionResult<JsonDocument>> PostModelForCompare(String dirname, String modelname)
         {
-            if (Username == null)
+            string CurrentPath = Directory.GetCurrentDirectory();
+            //string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
+            string fileName = modelname + ".csv";
+            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, dirname, fileName);
+
+            if (!System.IO.Directory.Exists(SelectedPath))
+            {
+                return BadRequest("Ne postoji dati model.");
+            }
+            else if (Username == null)
             {
                 return BadRequest("Niste ulogovani.");
             }
-            string CurrentPath = Directory.GetCurrentDirectory();
-            //string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
-            string fileName = name + ".csv";
-            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, DirName, name, fileName);
+           
 
-            var modelName = name;
-            var data = new StringContent(modelName, System.Text.Encoding.UTF8, "application/text");
-            //var url = "http://127.0.0.1:3000/savedModel";
-            var modelurl = url + "/savedModel";
-            var response = await http.PostAsync(modelurl, data);
-            return Ok(SelectedPath);
+            //string SelectedPaths = CurrentPath + @"\Users\" + Username + "\\" + name + "\\" + fileName;
+            string SelectedPaths = Path.Combine(CurrentPath, "Users", Username, dirname, fileName);
+            /*var reader = new StreamReader(SelectedPaths);
+            var csv = new CsvHelper.CsvReader(reader, CultureInfo.InvariantCulture);
+            List<JsonDocument> cList = csv.GetRecords<JsonDocument>().ToList();*/
 
+            var csvTable = new DataTable();
+            using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPaths)), true))
+            {
+                csvTable.Load(csvReader);
+            }
+            //csvTable.Rows.RemoveAt(csvTable.Rows.Count - 1);
+            string result = string.Empty;
+            result = JsonConvert.SerializeObject(csvTable);
+
+            var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); //json
+
+            return Ok(resultjson);
         }
 
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model
@@ -265,7 +282,7 @@ namespace Backend.Controllers
                 JsonUtility.ImportData(dataModel, worksheet.Cells, 0, 0, layoutOptions);
 
                 //string modelName = modelNames + "Model" + index + ".csv";
-                string modelName = modelNames + ".csv";
+                string modelName = "deleteme.csv";
                 string pathToCreate = System.IO.Path.Combine(path, modelName);
                 
                 while (System.IO.File.Exists(pathToCreateHP))
@@ -279,6 +296,26 @@ namespace Backend.Controllers
                
                 workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
+
+
+                List<String> lines = new List<string>();
+                string line;
+                System.IO.StreamReader file = new System.IO.StreamReader(pathToCreate);
+
+                while ((line = file.ReadLine()) != null)
+                {
+                    lines.Add(line);
+                    Console.WriteLine(line);
+                }
+
+                lines.RemoveAll(l => l.Contains("Evaluation Only."));
+
+                string model = modelNames + ".csv";
+                string pathToCreate12 = System.IO.Path.Combine(path, model);
+                using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(pathToCreate12))
+                {
+                    outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
+                }
 
                 //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
                 string path1 = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
