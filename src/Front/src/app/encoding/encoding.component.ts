@@ -1,5 +1,6 @@
 import { Component, OnInit ,OnChanges, Input, SimpleChanges} from '@angular/core';
 import { select } from 'd3-selection';
+import { ParametersService } from '../services/parameters.service';
 
 @Component({
   selector: 'app-encoding',
@@ -14,21 +15,25 @@ export class EncodingComponent implements OnInit, OnChanges {
   encodings: any;
   selected: any;
   selectedEncodings: any;
+  inputs: any;
   
 
-  constructor() { }
+  constructor(private parametersService: ParametersService) { }
 
   ngOnInit(): void {
+    this.parametersService.getInputs().subscribe( res => {
+      this.inputs = res;
+      if(this.inputs) this.load();
+    });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-
+  load() {
     this.selected = [];
     this.selectedEncodings = [];
     this.headers = [];
-    this.headers = Object.keys(this.input[0]);
-    for (let i = 0; i < this.headers.length; i++) {
-      if (isNaN(this.input[0][this.headers[i]])) {
+    this.headers = this.inputs;
+    for (let i = 0; i < this.inputs.length; i++) {
+      if (isNaN(this.input[0][this.inputs[i]])) {
         this.selected.push('categorical');
         this.selectedEncodings.push('one hot');
       }
@@ -37,24 +42,22 @@ export class EncodingComponent implements OnInit, OnChanges {
         this.selectedEncodings.push('');
       }
     }
-    console.log(this.selected);
-    console.log(this.selectedEncodings);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.load()
   }
 
   changeType(option: string, index: number) {
     this.selected[index] = option;
-    console.log(this.selected);
     if (option == 'categorical')
       this.selectedEncodings[index] = 'one hot';
     else
       this.selectedEncodings[index] = '';
-    console.log(this.selectedEncodings);
   }
 
   changeEncoding(value:string, index:number) {
     this.selectedEncodings[index] = value;
-    console.log(this.selected)
-    console.log(this.selectedEncodings);
   }
 
 }

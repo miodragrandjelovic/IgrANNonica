@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class ParametersService {
   private params$: BehaviorSubject<string> = new BehaviorSubject('');
   private showHp$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private inputs$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
     getParamsObs(): Observable<string> {
         return this.params$.asObservable();
@@ -21,6 +22,13 @@ export class ParametersService {
     }
     setShowHp(value: boolean) {
       this.showHp$.next(value);
+    }
+
+    getInputs(): Observable<string[]> {
+      return this.inputs$.asObservable();
+    }
+    setInputs(value: string[]) {
+      this.inputs$.next(value);
     }
 
   constructor() { }

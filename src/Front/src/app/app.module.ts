@@ -35,6 +35,9 @@ import { UserdatasetsComponent } from './home/csv/userdatasets/userdatasets.comp
 import { UsermodelsComponent } from './home/hyperparameters/usermodels/usermodels.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { EncodingComponent } from './encoding/encoding.component';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import { StatisticsComponent } from './statistics/statistics.component';
 
 const icons = {
   envelope,
@@ -69,6 +72,7 @@ const icons = {
     UserdatasetsComponent,
     UsermodelsComponent,
     EncodingComponent,
+    StatisticsComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,7 +89,9 @@ const icons = {
     ToastrModule.forRoot(),
     NgbPaginationModule,
     NgbAlertModule,
-    NgxChartsModule
+    NgxChartsModule,
+    MatButtonModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

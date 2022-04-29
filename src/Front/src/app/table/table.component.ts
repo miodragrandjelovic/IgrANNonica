@@ -1,3 +1,4 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Component, OnChanges, OnInit, SimpleChanges, Input } from '@angular/core';
 import { concat } from 'rxjs';
 import { ParametersService } from '../services/parameters.service';
@@ -11,7 +12,7 @@ import { ParametersService } from '../services/parameters.service';
 export class TableComponent implements OnChanges {
 
 
-  constructor(private parametersService: ParametersService){  }
+  constructor(private parametersService: ParametersService, private liveAnouncer: LiveAnnouncer){  }
   
   @Input() result: string; // ovo je json 
 
@@ -40,6 +41,7 @@ export class TableComponent implements OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('IZMENJENO');
 
     this.dataLength = this.result.length;
     this.header = [];
@@ -85,11 +87,14 @@ export class TableComponent implements OnChanges {
     this.hp = this.hp.concat(',' + this.target);
     this.parametersService.setParamsObs(this.hp);
 
-    this.scrollToTable();
+    this.parametersService.setInputs(this.inputs);
 
+    this.scrollToTable();
   }
 
-  ngOnInit(){}
+  ngOnInit(){
+    this.parametersService.setInputs(this.inputs);
+  }
 
   scrollToTable() {
     var elementUlog: any;
@@ -144,6 +149,7 @@ export class TableComponent implements OnChanges {
     
     this.hp = this.hp.concat(',' + this.target);
     this.parametersService.setParamsObs(this.hp);
+    this.parametersService.setInputs(this.inputs);
   }
 
 
@@ -168,5 +174,33 @@ export class TableComponent implements OnChanges {
   {
     alert("event "+event.target);
   }
+
+  sortTableAsc(item: any) {
+    for(let i = 0; i < this.allData.length - 1; i++){
+      for (let j = i + 1; j < this.allData.length; j++) {
+        if (this.allData[i][item] > this.allData[j][item]) {
+          const t = this.allData[i];
+          this.allData[i] = this.allData[j];
+          this.allData[j] = t;
+        }
+      }
+    }
+    this.changePage();
+  }
+
+  sortTableDesc(item: any) {
+    for(let i = 0; i < this.allData.length - 1; i++){
+      for (let j = i + 1; j < this.allData.length; j++) {
+        if (this.allData[i][item] < this.allData[j][item]) {
+          const t = this.allData[i];
+          this.allData[i] = this.allData[j];
+          this.allData[j] = t;
+        }
+      }
+    }
+    this.changePage();
+  }
+
+
 }
 
