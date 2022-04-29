@@ -158,19 +158,6 @@ export class CsvComponent implements OnInit {
     prikazPreload:boolean=true;
 
     fileUpload(files: any) {
-        this.encodingArray = [];
-        this.prikazPreload=false;
-        this.uploadedFile = true;
-
-        this.chosen = true;
-        this.sendHp = '';
-        this.showMe2 = true;
-        this.showMeMatrix = false;
-        this.inputsArray = [];
-
-       
-
-        this.flag = 1;
         
 
         this.dataObject = [];

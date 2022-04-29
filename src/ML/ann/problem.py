@@ -30,12 +30,12 @@ class Data():
         self.data = fn.load_data(features, label, self.data)
     
 
-    def Misa(self, encode_type,type,features,label,ratio,randomize):
+    def Misa(self, columns,enc_types,num_cat_col,type,features,label,ratio, val_test,randomize):
 
         self.data = fn.load_data(features, label, self.data)
         X, y = fn.feature_and_label(self.data, label)
-        X=fn.encode_data(X, encode_type)
-
+        X=fn.encode_data(X, columns,enc_types)
+        X=fn.num_to_cat(X,num_cat_col)
         if (type == "regression"):
             X=fn.normalize(X)
             y=pd.DataFrame(y)
@@ -47,7 +47,7 @@ class Data():
             y=np_utils.to_categorical(y)
             
 
-        (self.X_train,self.X_val, self.X_test, self.y_train,self.y_val, self.y_test) = fn.split_data(X, y, ratio, randomize)
+        (self.X_train,self.X_val, self.X_test, self.y_train,self.y_val, self.y_test) = fn.split_data(X, y, ratio, val_test, randomize)
 
 
         if(type == "classification"):
@@ -81,7 +81,7 @@ class Data():
         # first take out the values that do not impact the model
 #        fn.filter_data(self.data)
 
-    def splitData(self, label, ratio, randomize, activation_function):
+    def splitData(self, label, ratio, randomize, val_test):
         
         self.data=fn.normalize(self.data)
         
@@ -92,7 +92,7 @@ class Data():
         #y = fn.normalize(y, activation_function)
 
         # split test and train data 
-        (self.X_train, self.X_test, self.y_train, self.y_test) = fn.split_data(X, y, ratio, randomize)
+        (self.X_train, self.X_test, self.y_train, self.y_test) = fn.split_data(X, y, ratio, val_test, randomize)
 
         # now, shape all data
         #fn.scale_data(self.X_train, self.X_test, self.y_train, self.y_test)
@@ -107,9 +107,9 @@ class Model():
         self.regularization = regularization
         self.regularization_rate = regularization_rate
 
-    def makeModel(self, type, activation_function, hidden_layers_n, hidden_layer_neurons_list,regularization,reg_rate):
+    def makeModel(self, type, activation_function_list, hidden_layers_n, hidden_layer_neurons_list,regularization,reg_rate):
         # make model
-        self.model = fn.regression(self.data.X,self.data.y,type,self.data.X_train,self.data.y_train,hidden_layers_n, hidden_layer_neurons_list,activation_function,regularization,reg_rate)
+        self.model = fn.regression(self.data.X,self.data.y,type,self.data.X_train,self.data.y_train,hidden_layers_n, hidden_layer_neurons_list,activation_function_list,regularization,reg_rate)
               
     def compileModel(self, type,learning_rate):
         #compile the model

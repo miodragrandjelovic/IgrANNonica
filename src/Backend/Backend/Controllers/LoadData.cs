@@ -28,13 +28,26 @@ namespace Backend.Controllers
         public static string? Username { get; set; } //Ulogovan korisnik
         public static string? DirName { get; set; } //Ime foldera 
 
+        public static string url = "http://127.0.0.1:3000";
+        static String BytesToString(long byteCount)
+        {
+            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; 
+            if (byteCount == 0)
+                return "0" + suf[0];
+            long bytes = Math.Abs(byteCount);
+            int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+            double num = Math.Round(bytes / Math.Pow(1024, place), 1);
+            return (Math.Sign(byteCount) * num).ToString() + suf[place];
+        }
+
         [HttpPost("selectedCsv")] //Otvaranje foldera gde se nalazi izabrani csv
         public async Task<ActionResult<String>> PostSelectedCsv(String name)
         {
             string fileName = name + ".csv";
             string CurrentPath = Directory.GetCurrentDirectory();
-            string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + name;
-            if(!System.IO.Directory.Exists(SelectedPath))
+            //string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + name;
+            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, name);
+            if (!System.IO.Directory.Exists(SelectedPath))
             {
                 return BadRequest("Ne postoji dati fajl.");
             }
@@ -45,7 +58,8 @@ namespace Backend.Controllers
 
             string[] files = Directory.GetFiles(SelectedPath).Select(Path.GetFileName).ToArray();
 
-            string SelectedPaths = CurrentPath + @"\Users\" + Username + "\\" + name + "\\" + fileName;
+            //string SelectedPaths = CurrentPath + @"\Users\" + Username + "\\" + name + "\\" + fileName;
+            string SelectedPaths = Path.Combine(CurrentPath, "Users", Username, name, fileName);
             /*var reader = new StreamReader(SelectedPaths);
             var csv = new CsvHelper.CsvReader(reader, CultureInfo.InvariantCulture);
             List<JsonDocument> cList = csv.GetRecords<JsonDocument>().ToList();*/
@@ -62,8 +76,20 @@ namespace Backend.Controllers
             var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); //json
 
             var data = new StringContent(result, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/csv";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/csv";
+            var csvurl = url + "/csv";
+            var response = await http.PostAsync(csvurl, data);
+
+           
+            long size = SelectedPaths.Length;
+            var size1 = BytesToString(size);
+            Console.WriteLine("Size of file: " + size1);
+            
+
+            string fileName1 = SelectedPaths;
+            FileInfo fi = new FileInfo(fileName1);
+            DateTime creationTime = fi.CreationTime;
+            Console.WriteLine("Creation time: {0}", creationTime);
             return Ok(resultjson);
         }
 
@@ -71,9 +97,11 @@ namespace Backend.Controllers
         public async Task<ActionResult<String>> PostSavedModels(String name)
         {
             DirName = name;
+            RegistracijaUseraController.DirName = name;
             string CsvName = name;
             string CurrentPath = Directory.GetCurrentDirectory();
-            string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + CsvName;
+            //string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + CsvName;
+            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, CsvName);
             if (Username == null)
             {
                 return BadRequest("Niste ulogovani.");
@@ -91,12 +119,14 @@ namespace Backend.Controllers
                 return BadRequest("Niste ulogovani.");
             }
             string CurrentPath = Directory.GetCurrentDirectory();
-            string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
+            //string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
+            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, DirName, name);
 
             var modelName = name;
             var data = new StringContent(modelName, System.Text.Encoding.UTF8, "application/text");
-            var url = "http://127.0.0.1:3000/savedModel";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/savedModel";
+            var modelurl = url + "/savedModel";
+            var response = await http.PostAsync(modelurl, data);
             return Ok(SelectedPath);
 
         }
@@ -108,54 +138,60 @@ namespace Backend.Controllers
             var upgradedName = "realestate";
             if(Name != null)
                 upgradedName = Name.Substring(0, Name.Length - 4);
-            string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
-            string modelDirName = upgradedName + "Model" + indexDir;
-            string pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
+            //string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
+            string CurrentPath = Directory.GetCurrentDirectory();
+            
 
             if (Username != null)
             {
+                string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
+                string modelDirName = upgradedName + "Model" + indexDir;
+                string pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
                 while (System.IO.Directory.Exists(pathToCreateDir))
                 {
                     indexDir++;
                     modelDirName = upgradedName + "Model" + indexDir;
-                    pathToCreateDir = path + modelDirName;
+                    pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
                 }
                 System.IO.Directory.CreateDirectory(pathToCreateDir);
                 Console.WriteLine("Directory for new Model created successfully!");
 
                 var pathjson = System.Text.Json.JsonSerializer.Serialize(pathToCreateDir);
                 var pathdata = new StringContent(pathToCreateDir, System.Text.Encoding.UTF8, "application/json");
-                var pathurl = "http://127.0.0.1:3000/pathModel";
+                //var  = "http://127.0.0.1:3000/pathModel";
+                var pathurl = url + "/pathModel";
                 var pathresponse = await http.PostAsync(pathurl, pathdata);
             }
-
+            
             hiper.Username = Username;
             var hiperjson = System.Text.Json.JsonSerializer.Serialize(hiper);
             var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/hp";
-            var response = await http.PostAsync(url, data);
-
-            var workbookhp = new Workbook();
-            var worksheethp = workbookhp.Worksheets[0];
-            var layoutOptionshp = new JsonLayoutOptions();
-            layoutOptionshp.ArrayAsTable = true;
-            JsonUtility.ImportData(hiperjson, worksheethp.Cells, 0, 0, layoutOptionshp);
-
-            
-            int index = 1;
-            string hpName = upgradedName + "HP" + index + ".csv";            
-            string pathToCreateHP = System.IO.Path.Combine(path, hpName);
+            //var url = "http://127.0.0.1:3000/hp";
+            var hpurl = url + "/hp";
+            var response = await http.PostAsync(hpurl, data);            
 
             //                                                                                  hiperparametri                                                                                
             //---------------------------------------------------------------------------------------------------
             //                                                                                  model
-
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/model");
+            var modelurl = url + "/model";
+            HttpResponseMessage httpResponse = await http.GetAsync(modelurl);
             var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
             var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
 
             if(Username != null)
             {
+                int index = 1;
+                string hpName = upgradedName + "HP" + index + ".csv";
+                string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
+                string pathToCreateHP = System.IO.Path.Combine(path, hpName);
+
+                var workbookhp = new Workbook();
+                var worksheethp = workbookhp.Worksheets[0];
+                var layoutOptionshp = new JsonLayoutOptions();
+                layoutOptionshp.ArrayAsTable = true;
+                JsonUtility.ImportData(hiperjson, worksheethp.Cells, 0, 0, layoutOptionshp);
+
+
                 var workbook = new Workbook();
                 var worksheet = workbook.Worksheets[0];
                 var layoutOptions = new JsonLayoutOptions();
@@ -165,19 +201,20 @@ namespace Backend.Controllers
                 string modelName = upgradedName + "Model" + index + ".csv";            
                 string pathToCreate = System.IO.Path.Combine(path, modelName);
                 
-                while (System.IO.File.Exists(pathToCreate))
+                while (System.IO.File.Exists(pathToCreateHP))
                 {
                     index++;
                     modelName = upgradedName + "Model" + index + ".csv";
                     hpName = upgradedName + "HP" + index + ".csv";
-                    pathToCreate = path + modelName;
-                    pathToCreateHP = path + hpName;
+                    pathToCreate = System.IO.Path.Combine(path, modelName);
+                    pathToCreateHP = System.IO.Path.Combine(path, hpName);
                 }
                
                 //workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
 
-                string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
+                //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
+                string path1 = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
                 string names = upgradedName + "1" + ".csv";
                 string pathToDelete = System.IO.Path.Combine(path1, names);
                 if (System.IO.File.Exists(pathToDelete))
@@ -200,19 +237,22 @@ namespace Backend.Controllers
             Name = cs.Name;
             PythonController.Name = cs.Name;
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/csv";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/csv";
+            var urlcsv = url + "/csv";
+            var response = await http.PostAsync(urlcsv, data);
 
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/stats");
+            var statsurl = url + "/stats";
+            HttpResponseMessage httpResponse = await http.GetAsync(statsurl);
             var stat = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
 
             string currentPath = Directory.GetCurrentDirectory();
             var upgradedName = name.Substring(0, name.Length - 4);
-            string path = currentPath + @"\Users\" + Username + "\\" + upgradedName;
+            //string path = currentPath + @"\Users\" + Username + "\\" + upgradedName;
 
-
-            if(Username != null)
+            string pathToCreate = "";
+            if (Username != null)
             {
+                string path = System.IO.Path.Combine(currentPath, "Users", Username, upgradedName);
                 if (Directory.Exists(path))
                     Console.WriteLine("File is already in system.");
                 else
@@ -228,7 +268,7 @@ namespace Backend.Controllers
 
                     //string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
                     string names = upgradedName + "1" + ".csv";
-                    string pathToCreate = System.IO.Path.Combine(path, names); 
+                    pathToCreate = System.IO.Path.Combine(path, names); 
                     //if(!System.IO.Directory.Exists(path))
                     //{
                     //    return BadRequest("Niste registrovani/ulogovani."+path);
@@ -247,21 +287,23 @@ namespace Backend.Controllers
                     }
 
                     lines.RemoveAll(l => l.Contains("Evaluation Only."));
-                    /*if(System.IO.File.Exists(pathToCreate))
-                    {
-                        System.IO.File.Delete(pathToCreate);
-                    }*/
-            
-            
+
                     string pathToCreate12 = System.IO.Path.Combine(path, name);
                     using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(pathToCreate12))
                     {
                         outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
                     }
+
+                    /*if (System.IO.File.Exists(pathToCreate))
+                    {
+                        System.IO.File.Delete(pathToCreate);
+                    }*/
                 }
             }
             else
                 Console.WriteLine("Niste ulogovani.");
+
+            //System.IO.File.Delete(pathToCreate);
             return Ok(stat);
         }
 
@@ -274,10 +316,12 @@ namespace Backend.Controllers
             Name = cs.Name;
             PythonController.Name = cs.Name;
             var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/predictionCsv"; //slanje csv-a za prediktovanje na pajton
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/predictionCsv"; //slanje csv-a za prediktovanje na pajton
+            var urlpred = url + "/predictionCsv";
+            var response = await http.PostAsync(urlpred, data);
 
-            HttpResponseMessage httpResponse = await http.GetAsync("http://127.0.0.1:3000/prediction"); //rezultati predikcije
+            var predurl = url + "/prediction";
+            HttpResponseMessage httpResponse = await http.GetAsync(predurl); //rezultati predikcije
             var predikcija = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
 
             return Ok(predikcija);
@@ -288,8 +332,9 @@ namespace Backend.Controllers
         {
             var statjson = System.Text.Json.JsonSerializer.Serialize(stat);
             var data = new StringContent(statjson, System.Text.Encoding.UTF8, "application/json");
-            var url = "http://127.0.0.1:3000/stats";
-            var response = await http.PostAsync(url, data);
+            //var url = "http://127.0.0.1:3000/stats";
+            var urlst = url + "/stats";
+            var response = await http.PostAsync(urlst, data);
             return Ok(statjson);
         }
 
