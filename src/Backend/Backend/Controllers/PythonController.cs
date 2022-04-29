@@ -79,6 +79,53 @@ namespace Backend.Controllers
             return Ok(alldata);
         }
 
+        [HttpGet("savedModels")] //Vracanje imena svih sacuvanih modela.
+        public async Task<ActionResult<Modelinfo>> GetSavedModels()
+        {
+            string CurrentPath = Directory.GetCurrentDirectory();
+            //string SelectedPath = CurrentPath + @"\Users\" + Username;
+            string SelectedPath = System.IO.Path.Combine(CurrentPath, "Users", Username);
+            if (Username == null)
+            {
+                return BadRequest("Niste ulogovani.");
+            }
+            string[] subdirs = Directory.GetDirectories(SelectedPath).Select(Path.GetFileName).ToArray();
+            
+            List<string> models = new List<string>();
+            List<string> dates = new List<string>();
+            List<string> csvs = new List<string>();
+
+            for (int i = 0; i < subdirs.Length; i++)
+            {
+                string pathing = System.IO.Path.Combine(SelectedPath, subdirs[i]); 
+                string[] pomModel = Directory.GetDirectories(pathing).Select(Path.GetFileName).ToArray();
+                string[] pomDates = new string[subdirs.Length]; //niz sa datumima kreiranja modela
+                for (int j = 0; j < pomModel.Length; j++)
+                {
+                    models.Add(pomModel[j]);
+                    string pathings = System.IO.Path.Combine(pathing, pomModel[j]);
+                    string dt = Directory.GetCreationTime(pathings).ToString();
+                    dates.Add(dt);
+                    csvs.Add(subdirs[i]);
+                }
+            }
+            
+            var len = models.Count;
+            Modelinfo[] alldata = new Modelinfo[len];
+
+            for (int i = 0; i < len; i++)
+            {
+                Modelinfo modinfo = new Modelinfo();
+
+                modinfo.Name = models[i];
+                modinfo.Date = dates[i];
+                modinfo.FromCsv = csvs[i];
+
+                alldata[i] = modinfo;
+            }
+
+            return Ok(alldata);
+        }
 
         [HttpGet("preloadCsv")] //Vracanje ucitanog csv fajla iz baze.
         public async Task<ActionResult<IEnumerable<Realestate>>> GetPreloadCsv()
