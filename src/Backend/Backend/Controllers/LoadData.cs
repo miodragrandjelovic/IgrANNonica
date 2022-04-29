@@ -112,7 +112,8 @@ namespace Backend.Controllers
             return Ok(subdirs);
         }
 
-        [HttpPost("selectedModel")] //Vracanje imena izabranog modela.
+        //predikcija
+        [HttpPost("selectedModel")] //Vracanje imena izabranog modela. Tacnije putanje to je bitno zbog predikcije da znaju na ML-u koji model je korisnik izabrao
         public async Task<ActionResult<JsonDocument>> PostSelectedModel(String name)
         {
             if (Username == null)
@@ -122,6 +123,28 @@ namespace Backend.Controllers
             string CurrentPath = Directory.GetCurrentDirectory();
             //string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
             string SelectedPath = Path.Combine(CurrentPath, "Users", Username, DirName, name);
+
+            var modelName = name;
+            var data = new StringContent(modelName, System.Text.Encoding.UTF8, "application/text");
+            //var url = "http://127.0.0.1:3000/savedModel";
+            var modelurl = url + "/savedModel";
+            var response = await http.PostAsync(modelurl, data);
+            return Ok(SelectedPath);
+
+        }
+
+        //za poredjenje dva modela
+        [HttpPost("modelForCompare")] //Vracanje vrednosti izabranog modela kako bi mogle da se prikazu na grafiku i uporede.
+        public async Task<ActionResult<JsonDocument>> PostModelForCompare(String name)
+        {
+            if (Username == null)
+            {
+                return BadRequest("Niste ulogovani.");
+            }
+            string CurrentPath = Directory.GetCurrentDirectory();
+            //string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
+            string fileName = name + ".csv";
+            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, DirName, name, fileName);
 
             var modelName = name;
             var data = new StringContent(modelName, System.Text.Encoding.UTF8, "application/text");
@@ -223,8 +246,9 @@ namespace Backend.Controllers
             if(Username != null)
             {
                 int index = 1;
-                string hpName = upgradedName + "HP" + index + ".csv";
-                string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
+                //string hpName = modelNames + "HP" + index + ".csv";
+                string hpName = modelNames + "HP.csv";
+                string path = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
                 string pathToCreateHP = System.IO.Path.Combine(path, hpName);
 
                 var workbookhp = new Workbook();
@@ -240,19 +264,20 @@ namespace Backend.Controllers
                 layoutOptions.ArrayAsTable = true;
                 JsonUtility.ImportData(dataModel, worksheet.Cells, 0, 0, layoutOptions);
 
-                string modelName = upgradedName + "Model" + index + ".csv";            
+                //string modelName = modelNames + "Model" + index + ".csv";
+                string modelName = modelNames + ".csv";
                 string pathToCreate = System.IO.Path.Combine(path, modelName);
                 
                 while (System.IO.File.Exists(pathToCreateHP))
                 {
                     index++;
-                    modelName = upgradedName + "Model" + index + ".csv";
-                    hpName = upgradedName + "HP" + index + ".csv";
+                    modelName = modelNames + "Model" + index + ".csv";
+                    hpName = modelNames + "HP" + index + ".csv";
                     pathToCreate = System.IO.Path.Combine(path, modelName);
                     pathToCreateHP = System.IO.Path.Combine(path, hpName);
                 }
                
-                //workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
+                workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
 
                 //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
