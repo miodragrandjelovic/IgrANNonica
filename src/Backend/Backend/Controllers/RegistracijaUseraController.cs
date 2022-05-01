@@ -13,7 +13,9 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Newtonsoft.Json;
-//DODATI REFRESH TOKEN
+using Microsoft.AspNetCore.Identity;
+using System.Text;
+
 namespace Backend.Controllers
 {
     [Route("api/[controller]")]
@@ -22,12 +24,13 @@ namespace Backend.Controllers
     {
 
         public static User user = new User();
+        private readonly UserManager<ApplicationUser> _userManager;//
         private readonly IConfiguration _configuration;
         private readonly UserDbContext _context;
         public static string Username;
         public static string? DirName { get; set; } //Ime foldera 
         public static string url = "http://127.0.0.1:3000";
-        public RegistracijaUseraController(UserDbContext context, IConfiguration configuration)
+        public RegistracijaUseraController(UserDbContext context, IConfiguration configuration)//
         {
             _context = context;
             _configuration = configuration;
@@ -63,7 +66,7 @@ namespace Backend.Controllers
             {
                 return BadRequest("Niste ulogovani.");
             }
-            if(DirName == "name")
+            if(DirName == "name") //brise se ceo direktorijum od izabranog csv-a sa sve modelima i hiperparametrima
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
                 //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName;
@@ -75,7 +78,7 @@ namespace Backend.Controllers
                 }
                 return Ok("Uspesno uklonjen csv folder sa svim modelima i hiperparametrima." + pathToDelete);
             }
-            else
+            else //brisanje samo csv fajla modeli i hiperparametri ostaju
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
                 //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + DirName + ".csv";
@@ -304,7 +307,17 @@ namespace Backend.Controllers
             Username = request.Username;
             LoadData.Username = Username;
             PythonController.Username = Username;
+
             string token1 = CreateToken(user);
+            var refreshToken = GenerateRefreshToken();
+            _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
+
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
             var jtoken = new
             {
                 Token = token1
@@ -352,6 +365,148 @@ namespace Backend.Controllers
 
             return jwt;
         }
+
+        [HttpPost]
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
+        {
+            if (tokenModel is null)
+            {
+                return BadRequest("Invalid client request");
+            }
+
+            string? accessToken = tokenModel.AccessToken;
+            string? refreshToken = tokenModel.RefreshToken;
+
+            var principal = GetPrincipalFromExpiredToken(accessToken);
+            if (principal == null)
+            {
+                return BadRequest("Invalid access token or refresh token");
+            }
+
+            #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            #pragma warning disable CS8602 // Dereference of a possibly null reference.
+            string username = principal.Identity.Name;
+            #pragma warning restore CS8602 // Dereference of a possibly null reference.
+            #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
+            var user = await _context.RegistrovaniUseri.SingleOrDefaultAsync(x => x.Username == username);
+
+            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                return BadRequest("Invalid access token or refresh token");
+            }
+
+            var newAccessToken = CreateToken(principal.Claims.ToList());
+            var newRefreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return new ObjectResult(new
+            {
+                accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+                refreshToken = newRefreshToken
+            });
+        }
+
+        //[Authorize]
+        [HttpPost]
+        [Route("revoke/{username}")]
+        public async Task<IActionResult> Revoke(string username)
+        {
+            var user = await _context.RegistrovaniUseri.SingleOrDefaultAsync(x => x.Username == username);
+            if (user == null) return BadRequest("Invalid user name");
+
+            user.RefreshToken = null;
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        //[Authorize]
+        [HttpPost]
+        [Route("revoke-all")]
+        public async Task<IActionResult> RevokeAll()
+        {
+            var users = _context.RegistrovaniUseri.ToList();
+            foreach (var user in users)
+            {
+                user.RefreshToken = null;
+                _context.Entry(user).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+
+            return NoContent();
+        }
+
+        private JwtSecurityToken CreateToken(List<Claim> authClaims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JWT:ValidIssuer"],
+                audience: _configuration["JWT:ValidAudience"],
+                expires: DateTime.Now.AddMinutes(tokenValidityInMinutes),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                );
+
+            return token;
+        }
+
+        private static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+            if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
+
+        }
+        /*public void ReadJWTs(string token) //ako se pri svakom pozivanju funkcije prosledi i jwt koji je korisnik to trazio onda bi nam trebalo ovako nesto
+        {
+            var stream = token;
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            var tokenS = jsonToken as JwtSecurityToken;
+
+            var username = tokenS.Claims.First(claim => claim.Type == "name").Value;
+        }*/
+        [HttpPost("jwt")] //dobijanje trenutnog ulogovanog usera a ne jedinog(poslednjeg) ulogovanog kao do sad
+        public async Task<ActionResult<string>> ReadJWT(String token)
+        {
+            var stream = token;
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            var tokenS = jsonToken as JwtSecurityToken;
+
+            var username = tokenS.Claims.First(claim => claim.Type == "name").Value;
+
+            return Ok(username);
+        }
+
 
     }
 }
