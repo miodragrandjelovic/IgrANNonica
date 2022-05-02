@@ -1,11 +1,12 @@
-<div class="row" style="max-height:400px; overflow-y:scroll;">
-    <div class="row " *ngFor="let item of datasetsNames" style="height:50px; border-top: 1px solid #212f3c;">
-        <div class="col-md-auto" style="margin-top:10px; float:left">
-            <img src="assets/images/datasetRandom.jpg" height="20px" width="auto">
+<div class="container-fluid" >
+    <div class="row" *ngFor="let item of datasetsNames">
+        
+        <div id="slicica" class="col-sm-auto">
+            <img src="assets/images/datasetRandom.jpg" height="30px" width="30px">
         </div>
 
-        <div class="col-1" style=" float:left;margin-top:5px; ">
-            <h3 style="margin-bottom:0px;">
+        <div class="col-sm-auto text-left">
+            <h3>
                 {{item}}
             </h3> 
         </div>
@@ -14,7 +15,7 @@
             <div>Last Modified:</div>
         </div>
         <div class="col">
-            <div style="float:right; margin-right: 5px; margin-top:5px;" >  
+            <div>  
                 <button class="btn btn-primary" type="button" >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                         <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
@@ -23,7 +24,7 @@
                     Download
                 </button>
             </div>
-            <div style="float:right; margin-right: 5px; margin-top:5px;">
+            <div>
                 <button class="btn btn-outline-danger" type="button">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
