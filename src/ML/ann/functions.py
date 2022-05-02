@@ -260,6 +260,26 @@ def encode_data(df, encoding):
 
     return (df)
 
+def fill_na_values(df, columns, typeFill):
+    for i in range(columns.lenght):
+        fill = typeFill[i]
+        if (fill == 'mean'):
+            colMean = df[columns[i]].mean(skipna=True)
+            df[columns[i]].fillna(value=colMean, inplace=True)
+        elif (fill == 'median'):
+            colMedian = df[columns[i]].median(skipna=True)
+            df[columns[i]].fillna(value=colMedian, inplace=True)
+        elif (fill == 'min'):
+            colMin = df[columns[i]].min(skipna=True)
+            df[columns[i]].fillna(value=colMin, inplace=True)
+        elif (fill == 'max'):
+            colMax = df[columns[i]].min(skipna=True)
+            df[columns[i]].fillna(value=colMax, inplace=True)
+        elif (fill == 'delete'):
+            df.drop(columns[i], inplace=True, axis=1)
+        elif (fill == 'top'):
+            colMode = df[columns[i]].mode[0]
+            df[columns[i]].fillna(value=colMode, inplace=True)
 
 def scale_data(X_train, X_test, y_train, y_test):
     #print("Before scaling: ")
