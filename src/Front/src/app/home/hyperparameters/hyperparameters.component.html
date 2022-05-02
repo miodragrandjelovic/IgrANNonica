@@ -11,7 +11,7 @@
 
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
       <!-- ovde ide tabela sa datasetovima korisnika -->
-      <div><h1 style="text-align: center;font-family: 'Lucida Console', 'Courier New', monospace;font-size: 25px; ">Your saved models</h1></div>
+      <div><h1 style="text-align: center;font-size: 25px; font-weight: bold;">Your saved models</h1></div>
     <app-usermodels></app-usermodels>
 
     </div>
@@ -148,7 +148,7 @@
                         <i-bs  (click)="onRemoveNeuron(i)" width="20" height="20" name="dash-circle-fill"  style="cursor: pointer;"></i-bs><br>
                         <p style="font-size: 12px;">{{countNeurons(i)+1}} neurons</p>
                           <div class="select">
-                            <select  class="custom-select" (change)="ActivationFuncChange($event,i)" placement="start" ngbTooltip="Activation Functions" style=" border-radius: 4px; border: 2px solid #34495E;margin-right: 3px;margin-bottom: 5px;">
+                            <select  class="form-select form-select-sm" (change)="ActivationFuncChange($event,i)" placement="start" ngbTooltip="Activation Functions" style=" border-radius: 4px; border: 2px solid #34495E;margin-right: 3px;margin-bottom: 5px;">
                               <option value="sigmoid">sigmoid</option> 
                               <option value="linear">linear</option> 
                               <option value="tanh">tanh</option>
@@ -171,17 +171,26 @@
            </div>
            
               <div class="row" style="margin-top: 30px;">
-                <div class="col form-check" style="margin-left: -13px;">
+                <!--<div class="col form-check" style="margin-left: -13px;">
                     <button *ngIf="session" class="round-button playButton" style="width:25%;text-align: center; background-color: #212f3c; color:white; height: auto; border-radius: 20px; " (click)="addNewModel(newModel)" ><img src="assets/images/plus.png" width="33px" height="33px"> <span style="font-size: 75%;"> Save Model</span></button>
+                  </div>-->
+                  <div class="col">
+                    <div *ngIf="session" style="width: 35%;">
+                      <span style="font-weight: bold;">Name it and save it.</span>
+                      <div class="input-group input-group-sm mb-3" placement="end" ngbTooltip="If you want to save this model, you have to name it.">
+                        <span class="input-group-text" style="background-color: #CEECFA;">Model name</span>
+                        <input type="text" class="form-control" type="text" [(ngModel)]="modelName" id="modelName" formControlName="modelName">
+                      </div>
+                    </div>
                   </div>
-                <div class="col form-check" style="text-align: right;">
+                <div class="col form-check" style="text-align: right; padding-top: 27px;">
                   <button class="round-button playButton"style="width:25%;text-align: center; background-color: #212f3c; color:white; height:auto; border-radius: 20px;" type="submit"><i-bs width="33" height="33" name="caret-right-fill"></i-bs><span style="font-size: 75%;">Train</span></button>
                 </div>
               </div>
 
           </div>
 
-        <div class="container-fluid" *ngIf="prikazGrafika" > 
+        <div class="container-fluid" *ngIf="prikazGrafika" style="margin-top: 10px;" > 
             <div class="row" >
               <div class="col-4"  style="width:auto; min-width: 170px;display: flex;align-items: center;">
                 <div class="checkbox-list">
