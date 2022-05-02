@@ -32,6 +32,7 @@ interface RequestHyperparameters{
   output: string,
   activationFunctions:Array<any>,
   numberOfNeurons:Array<any>,
+  modelName:string,
 }
 
 interface CheckBox {
@@ -78,6 +79,8 @@ export class HyperparametersComponent implements OnInit {
   randomize: boolean = false;
   hpResponse: any;
   ctx: any;
+  showGraphic: boolean;
+  modelName="";
   //layers:Array<string> = ["5","5","5","5","5"]
   //
   activationFunctions:Array<any>=[];
@@ -132,13 +135,18 @@ export class HyperparametersComponent implements OnInit {
       'valAndTest' : new FormControl(0),
       'randomize': new FormControl(0),
       'neurons': new FormArray([]),
+      'modelName':new FormControl(null),
     });
 
     //this.parametersService.getShowHp().subscribe(res => {this.hidden = res});
     this.parametersService.getParamsObs().subscribe(res => {
       this.hyperparameters = res;
-      console.log(this.hyperparameters);
     });
+
+    this.parametersService.getShowGraphic().subscribe(res => {
+      console.log(res);
+      this.showGraphic = res;
+    })
 
 
     this.service.messageSubject.subscribe({
@@ -167,7 +175,6 @@ export class HyperparametersComponent implements OnInit {
 
   changeSelection() {
     this.fetchSelectedGraphics();
-    console.log(this.selectedCheckBoxes);
   }
 
   onFirstTextInputChange(event:any){
@@ -242,12 +249,15 @@ export class HyperparametersComponent implements OnInit {
       output: this.outputString,
       activationFunctions:this.activacioneFunkc,
       numberOfNeurons:this.neuronsLength,
+      modelName:this.hyperparametersForm.get('modelName')?.value,
     } 
     console.log(myreq);
 
     this.http.post('https://localhost:7167/api/LoadData/hp', myreq).subscribe(result => {
+      this.inputCheckBoxes = [];
+      this.selectedCheckBoxes = [];
+      this.properties = [];
       this.hpResponse = result;
-      console.log(this.hpResponse);
       this.properties = Object.keys(this.hpResponse);
       for (let i = 0; i < this.properties.length; i++) {
         if (this.properties[i] == 'label' || this.properties[i] == 'eveluate')
@@ -262,7 +272,6 @@ export class HyperparametersComponent implements OnInit {
           valuesVal: this.hpResponse[str],  
           isChecked: true
         }
-        console.log(object);
         this.inputCheckBoxes.push(object);
       }
     
@@ -277,10 +286,12 @@ export class HyperparametersComponent implements OnInit {
   countLayers=0;
   counterNeuron = 0;
   onAddLayer() {
-    this.countLayers++;
-    this.activacioneFunkc.push('sigmoid');
-    const control = new FormControl(new FormArray([]));
-    (<FormArray>this.hyperparametersForm.get('neurons')).push(control);
+    if(this.countLayers<7){
+      this.countLayers++;
+      this.activacioneFunkc.push('sigmoid');
+      const control = new FormControl(new FormArray([]));
+      (<FormArray>this.hyperparametersForm.get('neurons')).push(control);
+    }
   }
 
   onRemoveLayer() {
@@ -305,10 +316,9 @@ export class HyperparametersComponent implements OnInit {
   }
 
   onAddNeuron(i:number){
-    if(this.countLayers<7){
-      const control = new FormControl(0);
-      (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.push(control);
-    }
+    const control = new FormControl(0);
+    (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.push(control);
+    
   }
   onRemoveNeuron(i:number){
     this.counterNeuron = (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;

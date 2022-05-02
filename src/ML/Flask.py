@@ -135,19 +135,19 @@ def treniraj():
     stats = Statistics(type=hiperp['ProblemType'])
 
     # ly ce biti lista broja neurona za svaki skriveni sloj koji je prosledjen
-    ly = []
-    for i in range(hiperp['Layers']):
-        ly.append(hiperp['NeuronsLvl'+str(i+1)])
+  #  ly = []
+   # for i in range(hiperp['Layers']):
+    #    ly.append(hiperp['NeuronsLvl'+str(i+1)])
    # print("Hidden layer neurons are ", ly)
     
-    stats.createModel(train=df,features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'], activation_function=hiperp['Activation'],hidden_layers_n=hiperp['Layers'], hidden_layer_neurons_list=ly, encode_type=hiperp['EncodingType'], randomize=hiperp['Randomize'],
+    stats.createModel(train=df,features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'],val_test=hiperp['ValAndTest'], activation_function_list=hiperp['ActivationFunctions'],hidden_layers_n=hiperp['Layers'],
+     hidden_layer_neurons_list=hiperp['NumberOfNeurons'], columns=hiperp['ColumNames'],enc_types=hiperp['Encodings'],num_cat_col=hiperp['CatNum'], randomize=hiperp['Randomize'],
         batch_size=hiperp['BatchSize'], learning_rate=hiperp['LearningRate'], regularization=hiperp['Regularization'] ,regularization_rate=hiperp['RegularizationRate'])
 
     # u objektu stats, u promenljivoj stats se nalaze statisticki podaci kroz epohe, u vidu dictionary-ja
     # npr. "Accuracy":[...]
     
     return jsonify(stats.stats)
-    
 
 @app.route("/prediction", methods=['GET']) #Slanje predikcije na bek
 def  getPrediction():
