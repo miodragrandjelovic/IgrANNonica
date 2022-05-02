@@ -19,19 +19,16 @@ interface RequestHyperparameters{
   regularizationRate: number,
   problemType: string,
   layers: number,
-  neuronsLvl1: number,
-  neuronsLvl2: number,
-  neuronsLvl3: number,
-  neuronsLvl4: number,
-  neuronsLvl5: number,
   ratio: number,
   batchSize: number,
   valAndTest:number,
   randomize: boolean,
   inputs: string,
   output: string,
-  activationFunctions:Array<any>,
-  numberOfNeurons:Array<any>,
+  activations:Array<any>,
+  neurons:Array<any>,
+  encodings: Array<any>,
+  catNum: Array<any>
 }
 
 interface CheckBox {
@@ -79,6 +76,8 @@ export class HyperparametersComponent implements OnInit {
   hpResponse: any;
   ctx: any;
   showGraphic: boolean;
+  catNum: Array<string> = [];
+  encodings: Array<string> = [];
   //layers:Array<string> = ["5","5","5","5","5"]
   //
   activationFunctions:Array<any>=[];
@@ -140,12 +139,6 @@ export class HyperparametersComponent implements OnInit {
       this.hyperparameters = res;
     });
 
-    this.parametersService.getShowGraphic().subscribe(res => {
-      console.log(res);
-      this.showGraphic = res;
-    })
-
-
     this.service.messageSubject.subscribe({
       next: x => {
         if (x == 0)
@@ -162,6 +155,15 @@ export class HyperparametersComponent implements OnInit {
     this.onAddLayer();
 
     this.session=sessionStorage.getItem('username');
+    this.parametersService.getCatNum().subscribe(res => {
+      this.catNum = res;
+    });
+    this.parametersService.getEncodings().subscribe(res => {
+      this.encodings = res;
+    });
+
+    console.log(this.catNum);
+    console.log(this.encodings);
   }
 
   fetchSelectedGraphics() {
@@ -224,6 +226,16 @@ export class HyperparametersComponent implements OnInit {
     this.countAllNeurons();
   //  console.log('niz br neurona: '+this.neuronsLength);
 
+  this.parametersService.getCatNum().subscribe(res => {
+    this.catNum = res;
+  });
+  this.parametersService.getEncodings().subscribe(res => {
+    this.encodings = res;
+  });
+
+  console.log(this.catNum);
+  console.log(this.encodings);
+
     const myreq: RequestHyperparameters = {
       encodingType : this.hyperparametersForm.get('encodingType')?.value,
       learningRate : Number(this.hyperparametersForm.get('learningRate')?.value),
@@ -233,19 +245,16 @@ export class HyperparametersComponent implements OnInit {
       regularizationRate: Number(this.hyperparametersForm.get('regularizationRate')?.value),
       problemType: this.hyperparametersForm.get('problemType')?.value,
       layers: this.countLayers,
-      neuronsLvl1: Number(neuron1),
-      neuronsLvl2: Number(neuron2),
-      neuronsLvl3: Number(neuron3),
-      neuronsLvl4: Number(neuron4),
-      neuronsLvl5: Number(neuron5),
       ratio: this.hyperparametersForm.get('ratio')?.value,
       batchSize: this.hyperparametersForm.get('batchSize')?.value,
       randomize: this.hyperparametersForm.get('randomize')?.value,
       valAndTest: this.hyperparametersForm.get('valAndTest')?.value,
       inputs: this.inputsString,
       output: this.outputString,
-      activationFunctions:this.activacioneFunkc,
-      numberOfNeurons:this.neuronsLength,
+      activations:this.activacioneFunkc,
+      neurons:this.neuronsLength,
+      catNum: this.catNum,
+      encodings: this.encodings
     } 
     console.log(myreq);
 
@@ -316,8 +325,8 @@ export class HyperparametersComponent implements OnInit {
     }
   }
   onRemoveNeuron(i:number){
-    this.counterNeuron = (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
     (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.removeAt(this.counterNeuron -1);
+    this.counterNeuron = (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
   }
 
   countNeurons(i:number){

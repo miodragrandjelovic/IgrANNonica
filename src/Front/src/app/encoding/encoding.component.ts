@@ -42,6 +42,8 @@ export class EncodingComponent implements OnInit, OnChanges {
         this.selectedEncodings.push('');
       }
     }
+    this.parametersService.setEncodings(this.selectedEncodings);
+    this.parametersService.setCatNum(this.selected);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -54,10 +56,13 @@ export class EncodingComponent implements OnInit, OnChanges {
       this.selectedEncodings[index] = 'one hot';
     else
       this.selectedEncodings[index] = '';
+      this.parametersService.setCatNum(this.selected);
+      this.parametersService.setEncodings(this.selectedEncodings);
   }
 
   changeEncoding(value:string, index:number) {
     this.selectedEncodings[index] = value;
+    this.parametersService.setEncodings(this.selectedEncodings);
   }
 
 }
