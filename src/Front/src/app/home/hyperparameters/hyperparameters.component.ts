@@ -78,6 +78,7 @@ export class HyperparametersComponent implements OnInit {
   randomize: boolean = false;
   hpResponse: any;
   ctx: any;
+  showGraphic: boolean;
   //layers:Array<string> = ["5","5","5","5","5"]
   //
   activationFunctions:Array<any>=[];
@@ -137,8 +138,12 @@ export class HyperparametersComponent implements OnInit {
     //this.parametersService.getShowHp().subscribe(res => {this.hidden = res});
     this.parametersService.getParamsObs().subscribe(res => {
       this.hyperparameters = res;
-      console.log(this.hyperparameters);
     });
+
+    this.parametersService.getShowGraphic().subscribe(res => {
+      console.log(res);
+      this.showGraphic = res;
+    })
 
 
     this.service.messageSubject.subscribe({
@@ -167,7 +172,6 @@ export class HyperparametersComponent implements OnInit {
 
   changeSelection() {
     this.fetchSelectedGraphics();
-    console.log(this.selectedCheckBoxes);
   }
 
   onFirstTextInputChange(event:any){
@@ -246,8 +250,10 @@ export class HyperparametersComponent implements OnInit {
     console.log(myreq);
 
     this.http.post('https://localhost:7167/api/LoadData/hp', myreq).subscribe(result => {
+      this.inputCheckBoxes = [];
+      this.selectedCheckBoxes = [];
+      this.properties = [];
       this.hpResponse = result;
-      console.log(this.hpResponse);
       this.properties = Object.keys(this.hpResponse);
       for (let i = 0; i < this.properties.length; i++) {
         if (this.properties[i] == 'label' || this.properties[i] == 'eveluate')
@@ -262,7 +268,6 @@ export class HyperparametersComponent implements OnInit {
           valuesVal: this.hpResponse[str],  
           isChecked: true
         }
-        console.log(object);
         this.inputCheckBoxes.push(object);
       }
     

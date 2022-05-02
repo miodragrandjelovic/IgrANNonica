@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Chart, registerables, LineController, LineElement, PointElement, LinearScale, Title } from 'chart.js'
 import { LoadingService } from '../loading/loading.service';
 
@@ -7,17 +7,17 @@ import { LoadingService } from '../loading/loading.service';
   templateUrl: './graphic.component.html',
   styleUrls: ['./graphic.component.css']
 })
-export class GraphicComponent implements OnInit {
+export class GraphicComponent implements OnInit, OnDestroy {
 
   @Input() selected: any = [];
   ctx: any;
+  chart: any;
   hpX: Array<string> = [];
   charts: any = [];
   @Input() id: number;
   constructor(public spiner:LoadingService) { }
 
   ngOnInit(): void {
-    console.log('selected:', this.selected);
   }
 
   ngAfterViewInit(): void {
@@ -25,12 +25,13 @@ export class GraphicComponent implements OnInit {
     this.spiner.showSpiner=false;
   }
 
+  ngOnDestroy(): void {
+    let el = document.getElementById(this.id+'');
+    el?.remove();
+  }
+
 
   loadGraphic(str: string, hpY: Array<number>, hpY1: Array<number>) {
-
-    console.log(str);
-    console.log(hpY);
-    console.log(hpY1);
 
     this.hpX = [];
     for (let i = 0; i < hpY.length; i++) {
@@ -38,12 +39,9 @@ export class GraphicComponent implements OnInit {
       hpY[i] = parseFloat(hpY[i].toFixed(5));
       hpY1[i] = parseFloat(hpY1[i].toFixed(5));
     }
-    console.log(hpY);
-    console.log(hpY1);
-    console.log(`ID GRAPH: ${this.id}`)
+
     this.ctx = document.getElementById(`${this.id}`) as HTMLCanvasElement;
-    console.log(this.ctx)
-      let chart = new Chart(this.ctx, {
+      this.chart = new Chart(this.ctx, {
         type: 'line',
         data: {
           labels: this.hpX,
@@ -64,11 +62,25 @@ export class GraphicComponent implements OnInit {
             }]
           },
         options: {
+          animation: {
+            duration: 0
+          },
           responsive: true,
           scales: {
+            x: {
+              display: true,
+              title: {
+                display: true,
+                text: 'Epochs'
+              }
+            },
             y: {
               display: true,
               position: 'left',
+              title: {
+                display: true,
+                text: 'Value'
+              }
             },
             y1: {
               display: true,
@@ -77,7 +89,7 @@ export class GraphicComponent implements OnInit {
           }
         }
       });
-      return chart;
+      return this.chart;
   }
 
 }
