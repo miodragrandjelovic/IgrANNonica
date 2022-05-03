@@ -1,42 +1,9 @@
 .container-fluid {
     max-height:400px;
-    overflow-y:scroll;
-    width: 100%;
 }
 
-.row {
-    height:auto; 
+.row { 
     border-top: 1px solid #212f3c;
 }
 
-#slicica {
-    padding-top:10px;
-    float:left;
-    display: flex;
-    justify-content: left;
-}
-.col-sm-auto {
-    float:left;
-    display: flex;
-    justify-content: left;
-
-}
-
-.col-5 div {
-    height: 50%;
-}
-
-.col {
-    width: 42%;
-    padding-bottom:5px;
-    padding-top:10px; 
-}
-.col div {
-    float:right;
-    margin-bottom:5px;
-    margin-right: 5px;
-}
-.col div button {
-    width: 120px;
-}
 
