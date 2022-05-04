@@ -162,7 +162,32 @@ namespace Backend.Controllers
 
             return Ok(resultjson);
         }
+        
+        [HttpPost("publicModels")] //Vracanje vrednosti izabranog javnog modela kako bi mogle da se prikazu na grafiku i uporede.
+        public async Task<ActionResult<JsonDocument>> PostPublicModels(String userName, String modelname) //username je FromCsv a modelname je name
+        {
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string publicFolder = modelname + "(" + userName + ")";
+            string fileName = modelname +"("+ userName +")"+ ".csv";
+            string SelectedPath = Path.Combine(CurrentPath, "Users", "publicProblems", publicFolder, fileName);
 
+            if (!System.IO.File.Exists(SelectedPath))
+            {
+                return BadRequest("Ne postoji dati model. " + SelectedPath);
+            }
+
+            var modelTable = new DataTable();
+            using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPath)), true))
+            {
+                modelTable.Load(csvReader);
+            }
+            string result = string.Empty;
+            result = JsonConvert.SerializeObject(modelTable);
+
+            var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result);
+
+            return Ok(resultjson);
+        }
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model
         public async Task<ActionResult>Post(String modelNames) //Ime modela kako korisnik zeli da ga cuva
         {
@@ -194,7 +219,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("hp")] //Slanje HP na pajton
-        public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper, String modelNames) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
+        public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper, String modelNames, Boolean publicModel) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
         {
             int indexDir = 1;
             var upgradedName = "realestate";
@@ -216,6 +241,12 @@ namespace Backend.Controllers
                 else
                 {
                     System.IO.Directory.CreateDirectory(modeldirname);
+                    if(publicModel)
+                    {
+                        string publicName = modelNames + "(" + Username + ")";
+                        string publicPath = Path.Combine(CurrentPath, "Users", "publicProblems", publicName);
+                        System.IO.Directory.CreateDirectory(publicPath);
+                    }   
                     Console.WriteLine("Directory for new Model created successfully!");
                 }
                 /*string modelDirName = upgradedName + "Model" + indexDir;
@@ -288,7 +319,6 @@ namespace Backend.Controllers
                 workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
 
-
                 List<String> lines = new List<string>();
                 string line;
                 System.IO.StreamReader file = new System.IO.StreamReader(pathToCreate);
@@ -302,10 +332,38 @@ namespace Backend.Controllers
                 lines.RemoveAll(l => l.Contains("Evaluation Only."));
 
                 string model = modelNames + ".csv";
+                string publicName = modelNames + "(" + Username + ")";
+                string pblmod = publicName + ".csv";
                 string pathToCreate12 = System.IO.Path.Combine(path, model);
+                string publicPathModel = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, pblmod);
                 using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(pathToCreate12))
                 {
                     outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
+                }
+                if(publicModel)
+                {
+                    using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(publicPathModel))
+                    {
+                        outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
+                    }
+
+                    List<String> lines1 = new List<string>();
+                    string line1;
+                    System.IO.StreamReader file1 = new System.IO.StreamReader(pathToCreateHP);
+
+                    while ((line1 = file1.ReadLine()) != null)
+                    {
+                        lines1.Add(line1);
+                    }
+
+                    lines1.RemoveAll(l1 => l1.Contains("Evaluation Only."));
+
+                    string pblhp = publicName + "HP.csv";
+                    string publicPathHp = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, pblhp);
+                    using (System.IO.StreamWriter outfile1 = new System.IO.StreamWriter(publicPathHp))
+                    {
+                        outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
+                    }
                 }
 
                 //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
