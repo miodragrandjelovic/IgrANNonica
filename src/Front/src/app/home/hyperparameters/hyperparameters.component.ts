@@ -23,8 +23,8 @@ interface RequestHyperparameters {
   randomize: boolean,
   inputs: string,
   output: string,
-  activations:Array<any>,
-  neurons:Array<any>,
+  activationFunctions:Array<any>,
+  numberOfNeurons:Array<any>,
   encodings: Array<any>,
   catNum: Array<any>,
   missingValues: Array<any>,
@@ -265,8 +265,8 @@ export class HyperparametersComponent implements OnInit {
       valAndTest: this.hyperparametersForm.get('valAndTest')?.value,
       inputs: this.inputsString,
       output: this.outputString,
-      activations:this.activacioneFunkc,
-      neurons:this.neuronsLength,
+      activationFunctions:this.activacioneFunkc,
+      numberOfNeurons:this.neuronsLength,
       catNum: this.catNum,
       encodings: this.encodings,
       missingValues: this.missingValues,
@@ -274,7 +274,7 @@ export class HyperparametersComponent implements OnInit {
     } 
     console.log(myreq);
 
-    this.http.post('https://localhost:7167/api/LoadData/hp', myreq).subscribe(result => {
+    this.http.post('https://localhost:7167/api/LoadData/hpNeprijavljen', myreq).subscribe(result => {
       this.inputCheckBoxes = [];
       this.selectedCheckBoxes = [];
       this.properties = [];
