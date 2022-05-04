@@ -40,6 +40,7 @@ namespace Backend.Controllers
             return (Math.Sign(byteCount) * num).ToString() + suf[place];
         }
 
+
         [HttpPost("selectedCsv")] //Otvaranje foldera gde se nalazi izabrani csv
         public async Task<ActionResult<String>> PostSelectedCsv(String name)
         {
@@ -111,7 +112,8 @@ namespace Backend.Controllers
             return Ok(subdirs);
         }
 
-        [HttpPost("selectedModel")] //Vracanje imena izabranog modela.
+        //predikcija
+        [HttpPost("selectedModel")] //Vracanje imena izabranog modela. Tacnije putanje to je bitno zbog predikcije da znaju na ML-u koji model je korisnik izabrao
         public async Task<ActionResult<JsonDocument>> PostSelectedModel(String name)
         {
             if (Username == null)
@@ -129,6 +131,36 @@ namespace Backend.Controllers
             var response = await http.PostAsync(modelurl, data);
             return Ok(SelectedPath);
 
+        }
+
+        //za poredjenje dva modela
+        [HttpPost("modelForCompare")] //Vracanje vrednosti izabranog modela kako bi mogle da se prikazu na grafiku i uporede.
+        public async Task<ActionResult<JsonDocument>> PostModelForCompare(String dirname, String modelname)
+        {
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string fileName = modelname + ".csv";
+            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, dirname, modelname, fileName);
+
+            if (!System.IO.File.Exists(SelectedPath))
+            {
+                return BadRequest("Ne postoji dati model. " + SelectedPath);
+            }
+            else if (Username == null)
+            {
+                return BadRequest("Niste ulogovani.");
+            }
+           
+            var modelTable = new DataTable();
+            using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPath)), true))
+            {
+                modelTable.Load(csvReader);
+            }
+            string result = string.Empty;
+            result = JsonConvert.SerializeObject(modelTable);
+
+            var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); 
+
+            return Ok(resultjson);
         }
 
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model
@@ -162,7 +194,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("hp")] //Slanje HP na pajton
-        public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper)//, String modelNames) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
+        public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper, String modelNames) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
         {
             int indexDir = 1;
             var upgradedName = "realestate";
@@ -175,7 +207,7 @@ namespace Backend.Controllers
             if (Username != null)
             {
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
-                /*string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames); //kada se prosledjuje ime zajedno sa hiperparametrima i uvek cuva
+                string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames); //kada se prosledjuje ime zajedno sa hiperparametrima i uvek cuva
                 //string modeldirname = upgradedName + modelNames;
                 if (System.IO.Directory.Exists(modeldirname))
                 {
@@ -185,8 +217,8 @@ namespace Backend.Controllers
                 {
                     System.IO.Directory.CreateDirectory(modeldirname);
                     Console.WriteLine("Directory for new Model created successfully!");
-                }*/
-                string modelDirName = upgradedName + "Model" + indexDir;
+                }
+                /*string modelDirName = upgradedName + "Model" + indexDir;
                 string pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
                 while (System.IO.Directory.Exists(pathToCreateDir))
                 {
@@ -195,10 +227,10 @@ namespace Backend.Controllers
                     pathToCreateDir = System.IO.Path.Combine(path, modelDirName);
                 }
                 System.IO.Directory.CreateDirectory(pathToCreateDir);
-                Console.WriteLine("Directory for new Model created successfully!");
+                Console.WriteLine("Directory for new Model created successfully!");*/
 
-                var pathjson = System.Text.Json.JsonSerializer.Serialize(pathToCreateDir);
-                var pathdata = new StringContent(pathToCreateDir, System.Text.Encoding.UTF8, "application/json");
+                var pathjson = System.Text.Json.JsonSerializer.Serialize(modeldirname);
+                var pathdata = new StringContent(modeldirname, System.Text.Encoding.UTF8, "application/json");
                 //var  = "http://127.0.0.1:3000/pathModel";
                 var pathurl = url + "/pathModel";
                 var pathresponse = await http.PostAsync(pathurl, pathdata);
@@ -216,14 +248,15 @@ namespace Backend.Controllers
             //                                                                                  model
             var modelurl = url + "/model";
             HttpResponseMessage httpResponse = await http.GetAsync(modelurl);
-            var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
-            var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
-
+            //var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
+            //var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
+            var dataModel = ""; //mora ovako dok se ne popravi primanje hiperparametara na ML delu
             if(Username != null)
             {
                 int index = 1;
-                string hpName = upgradedName + "HP" + index + ".csv";
-                string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
+                //string hpName = modelNames + "HP" + index + ".csv";
+                string hpName = modelNames + "HP.csv";
+                string path = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
                 string pathToCreateHP = System.IO.Path.Combine(path, hpName);
 
                 var workbookhp = new Workbook();
@@ -239,20 +272,41 @@ namespace Backend.Controllers
                 layoutOptions.ArrayAsTable = true;
                 JsonUtility.ImportData(dataModel, worksheet.Cells, 0, 0, layoutOptions);
 
-                string modelName = upgradedName + "Model" + index + ".csv";            
+                //string modelName = modelNames + "Model" + index + ".csv";
+                string modelName = "deleteme.csv";
                 string pathToCreate = System.IO.Path.Combine(path, modelName);
                 
                 while (System.IO.File.Exists(pathToCreateHP))
                 {
                     index++;
-                    modelName = upgradedName + "Model" + index + ".csv";
-                    hpName = upgradedName + "HP" + index + ".csv";
+                    modelName = modelNames + "Model" + index + ".csv";
+                    hpName = modelNames + "HP" + index + ".csv";
                     pathToCreate = System.IO.Path.Combine(path, modelName);
                     pathToCreateHP = System.IO.Path.Combine(path, hpName);
                 }
                
-                //workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
+                workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
+
+
+                List<String> lines = new List<string>();
+                string line;
+                System.IO.StreamReader file = new System.IO.StreamReader(pathToCreate);
+
+                while ((line = file.ReadLine()) != null)
+                {
+                    lines.Add(line);
+                    //Console.WriteLine(line);
+                }
+
+                lines.RemoveAll(l => l.Contains("Evaluation Only."));
+
+                string model = modelNames + ".csv";
+                string pathToCreate12 = System.IO.Path.Combine(path, model);
+                using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(pathToCreate12))
+                {
+                    outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
+                }
 
                 //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
                 string path1 = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
@@ -266,7 +320,7 @@ namespace Backend.Controllers
             }
             else
                 Console.WriteLine("Niste ulogovani.");
-            return Ok(model);
+            return Ok(hiperjson);//model se vraca
         }
 
         [HttpPost("csv")] //Slanje CSV na pajton
@@ -324,7 +378,7 @@ namespace Backend.Controllers
                     while ((line = file.ReadLine()) != null)
                     {
                         lines.Add(line);
-                        Console.WriteLine(line);
+                        //Console.WriteLine(line);
                     }
 
                     lines.RemoveAll(l => l.Contains("Evaluation Only."));

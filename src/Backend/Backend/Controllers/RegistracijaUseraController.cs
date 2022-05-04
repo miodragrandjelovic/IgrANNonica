@@ -485,7 +485,7 @@ namespace Backend.Controllers
             return principal;
 
         }
-        public void ReadJWTs(string token) //ako se pri svakom pozivanju funkcije prosledi i jwt koji je korisnik to trazio onda bi nam trebalo ovako nesto
+        /*public void ReadJWTs(string token) //ako se pri svakom pozivanju funkcije prosledi i jwt koji je korisnik to trazio onda bi nam trebalo ovako nesto
         {
             var stream = token;
             var handler = new JwtSecurityTokenHandler();
@@ -493,7 +493,7 @@ namespace Backend.Controllers
             var tokenS = jsonToken as JwtSecurityToken;
 
             var username = tokenS.Claims.First(claim => claim.Type == "name").Value;
-        }
+        }*/
         [HttpPost("jwt")] //dobijanje trenutnog ulogovanog usera a ne jedinog(poslednjeg) ulogovanog kao do sad
         public async Task<ActionResult<string>> ReadJWT(String token)
         {
