@@ -15,20 +15,50 @@ export class UserdatasetsComponent implements OnInit {
   constructor(private http: HttpClient){}
   datasetsNames: any;
   selectedDataset:any;
-
+  datasetsFilteredNames : any = [];
+  copyPaste:any = [];
   ngOnInit(): void {
     this.getDatasets();
   }
 
   getDatasets()
   {
-    this.http.get<any>('https://localhost:7167/api/Python/savedCsvs').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
+    this.copyPaste = [];
+    this.datasetsNames = [];
+    this.datasetsFilteredNames = [];
+
+    this.http.get<any>('https://localhost:7167/api/Python/savedCsvs').subscribe(result => {  
             console.log(result);
-            this.datasetsNames=result;
-            console.log(this.datasetsNames);
+            this.copyPaste=result;
+            console.log(this.copyPaste);
+           /*
+            this.copyPaste.push("prva1");
+            this.copyPaste.push("prva2");
+            this.copyPaste.push("prva3");
+            this.copyPaste.push("prva4");
+            this.copyPaste.push("prva5");
+            this.copyPaste.push("prva5");
+ 
+            */
+            this.datasetsNames = this.copyPaste;
         });
 
+      
         this.selectedDataset = '';
+  }
+//////////////
+  searchDatasets(name:any){
+    this.datasetsFilteredNames = [];
+    this.datasetsNames = this.copyPaste;
+    if(name != ""){
+    for (var index = 0; index < this.datasetsNames.length; index++) {
+      if(this.datasetsNames[index].indexOf(name.toLowerCase()) !== -1){
+        this.datasetsFilteredNames.push(this.datasetsNames[index]);
+      }  
+    }
+
+    this.datasetsNames = this.datasetsFilteredNames;
+   }
   }
 
   selectChange(event:any){

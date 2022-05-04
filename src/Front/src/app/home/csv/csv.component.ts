@@ -1,8 +1,10 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { HttpHeaders } from "@angular/common/http";
 import { ParametersService } from "src/app/services/parameters.service";
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
+
 
 interface CheckBox {
     id: number,
@@ -12,6 +14,7 @@ interface CheckBox {
 import { PreloadCsv, PreloadStatistic } from "src/app/_model/preload.model";
 import { Observable } from "rxjs";
 import { MessageService } from "../home.service";
+import { UserdatasetsComponent } from "./userdatasets/userdatasets.component";
 
 @Component({
     selector: 'app-csv',
@@ -20,6 +23,10 @@ import { MessageService } from "../home.service";
 
 
 export class CsvComponent implements OnInit {    
+
+    @ViewChild(UserdatasetsComponent) child: any; //pozivamo komponentu userDatasets da bi pristupili njenim metodama
+    //zato sto ne radi poziv iz konstuktora
+
 
     hidden: boolean;
     currentCorrResult: any;
@@ -79,6 +86,8 @@ export class CsvComponent implements OnInit {
 
     headers: any;
 
+    searchInputField: any ;
+
     outputs: Array<CheckBox> = [];
     selectedInputs: Array<CheckBox> = [];
     inputsArray: Array<CheckBox> = [];
@@ -113,14 +122,20 @@ export class CsvComponent implements OnInit {
 
     }
 
+
+
+
+
     constructor(private http: HttpClient, 
         private parametersService: ParametersService, 
         private service: MessageService, 
         private modalService: NgbModal) {
-
     }
-
-
+/////////
+    searchDatasets(){
+        //poziva searchDatasets iz UserDatasets
+        this.child.searchDatasets(this.searchInputField);
+    }
 
     fetchSelectedItems() {
         this.selectedInputs = this.inputsArray.filter((value, index) => {
