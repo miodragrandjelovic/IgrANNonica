@@ -167,9 +167,12 @@ namespace Backend.Controllers
         {
             var loadedCsv = await _context.Realestate.ToListAsync(); //lista/json
             string jsoncsv = JsonSerializer.Serialize(loadedCsv); //string
-            
+            string csve = jsoncsv;
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+            var urlcsv = url + "/csv";
+            var response = await http.PostAsync(urlcsv, data);
 
-            return Ok(loadedCsv);
+            return Ok(csve);
         }
 
 
@@ -217,9 +220,12 @@ namespace Backend.Controllers
         {
             var loadedCsv = await _context.Mpg.ToListAsync(); //lista/json
             string jsoncsv = JsonSerializer.Serialize(loadedCsv); //string
+            string csve = jsoncsv;
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+            var urlcsv = url + "/csv";
+            var response = await http.PostAsync(urlcsv, data);
 
-
-            return Ok(loadedCsv);
+            return Ok(csve);
         }
 
 
