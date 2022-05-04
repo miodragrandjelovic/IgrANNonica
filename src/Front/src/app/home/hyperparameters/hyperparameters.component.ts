@@ -10,10 +10,8 @@ import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/loading/loading.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
-interface RequestHyperparameters{
-  encodingType: string,
+interface RequestHyperparameters {
   learningRate: number,
-  activation: string,
   epoch: number,
   regularization: string,
   regularizationRate: number,
@@ -28,7 +26,9 @@ interface RequestHyperparameters{
   activations:Array<any>,
   neurons:Array<any>,
   encodings: Array<any>,
-  catNum: Array<any>
+  catNum: Array<any>,
+  missingValues: Array<any>,
+  columNames: Array<any>
 }
 
 interface CheckBox {
@@ -78,6 +78,8 @@ export class HyperparametersComponent implements OnInit {
   showGraphic: boolean;
   catNum: Array<string> = [];
   encodings: Array<string> = [];
+  columNames: Array<string> = [];
+  missingValues: Array<string> = [];
   //layers:Array<string> = ["5","5","5","5","5"]
   //
   activationFunctions:Array<any>=[];
@@ -156,15 +158,19 @@ export class HyperparametersComponent implements OnInit {
     this.onAddLayer();
 
     this.session=sessionStorage.getItem('username');
+
     this.parametersService.getCatNum().subscribe(res => {
       this.catNum = res;
     });
     this.parametersService.getEncodings().subscribe(res => {
       this.encodings = res;
     });
-
-    console.log(this.catNum);
-    console.log(this.encodings);
+    this.parametersService.getColumNames().subscribe(res => {
+      this.columNames = res;
+    });
+    this.parametersService.getMissingValues().subscribe(res => {
+      this.missingValues = res;
+    });
   }
 
   fetchSelectedGraphics() {
@@ -233,14 +239,21 @@ export class HyperparametersComponent implements OnInit {
   this.parametersService.getEncodings().subscribe(res => {
     this.encodings = res;
   });
+  this.parametersService.getColumNames().subscribe(res => {
+    this.columNames = res;
+  });
+
+  this.parametersService.getMissingValues().subscribe(res => {
+    this.missingValues = res;
+  });
 
   console.log(this.catNum);
+  console.log(this.columNames);
   console.log(this.encodings);
+  console.log(this.missingValues);
 
     const myreq: RequestHyperparameters = {
-      encodingType : this.hyperparametersForm.get('encodingType')?.value,
       learningRate : Number(this.hyperparametersForm.get('learningRate')?.value),
-      activation : this.hyperparametersForm.get('activation')?.value,
       epoch: this.hyperparametersForm.get('epoch')?.value,
       regularization: this.hyperparametersForm.get('regularization')?.value,
       regularizationRate: Number(this.hyperparametersForm.get('regularizationRate')?.value),
@@ -255,7 +268,9 @@ export class HyperparametersComponent implements OnInit {
       activations:this.activacioneFunkc,
       neurons:this.neuronsLength,
       catNum: this.catNum,
-      encodings: this.encodings
+      encodings: this.encodings,
+      missingValues: this.missingValues,
+      columNames: this.columNames
     } 
     console.log(myreq);
 

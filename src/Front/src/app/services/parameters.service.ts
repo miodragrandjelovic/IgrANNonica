@@ -10,6 +10,8 @@ export class ParametersService {
   private inputs$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   private catNum$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   private encodings$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  private columNames$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  private missingValues$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
     getParamsObs(): Observable<string> {
         return this.params$.asObservable();
@@ -46,6 +48,20 @@ export class ParametersService {
     }
     setEncodings(value: string[]) {
       this.encodings$.next(value);
+    }
+
+    getColumNames(): Observable<string[]> {
+      return this.columNames$.asObservable();
+    }
+    setColumNames(value: string[]) {
+      this.columNames$.next(value);
+    }
+
+    getMissingValues(): Observable<string[]> {
+      return this.missingValues$.asObservable();
+    }
+    setMissingValues(value: string[]) {
+      this.missingValues$.next(value);
     }
 
   constructor() { }
