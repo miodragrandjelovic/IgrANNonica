@@ -339,11 +339,11 @@ namespace Backend.Controllers
             //                                                                                  model
             var modelurl = url + "/model";
             HttpResponseMessage httpResponse = await http.GetAsync(modelurl);
-            //var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
-            //var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
-            var dataModel = ""; //mora ovako dok se ne popravi primanje hiperparametara na ML delu
+            var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
+            var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
+            //var dataModel = ""; //mora ovako dok se ne popravi primanje hiperparametara na ML delu
 
-            return Ok(hiperjson);//model se vraca ali dok se ne popravi na ML-u to mora ovako
+            return Ok(model);//model se vraca ali dok se ne popravi na ML-u to mora ovako
         }
 
         [HttpPost("csv")] //Slanje CSV na pajton
