@@ -323,6 +323,29 @@ namespace Backend.Controllers
             return Ok(hiperjson);//model se vraca
         }
 
+
+        [HttpPost("hpNeprijavljen")] //Slanje HP na pajton za neprijavljenog korisnika
+        public async Task<ActionResult<Hiperparametri>> PostHp([FromBody] Hiperparametri hiper) 
+        {
+            hiper.Username = "unknown";
+            var hiperjson = System.Text.Json.JsonSerializer.Serialize(hiper);
+            var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
+            //var url = "http://127.0.0.1:3000/hp";
+            var hpurl = url + "/hp";
+            var response = await http.PostAsync(hpurl, data);
+
+            //                                                                                  hiperparametri                                                                                
+            //---------------------------------------------------------------------------------------------------
+            //                                                                                  model
+            var modelurl = url + "/model";
+            HttpResponseMessage httpResponse = await http.GetAsync(modelurl);
+            var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
+            var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
+            //var dataModel = ""; //mora ovako dok se ne popravi primanje hiperparametara na ML delu
+
+            return Ok(model);//model se vraca ali dok se ne popravi na ML-u to mora ovako
+        }
+
         [HttpPost("csv")] //Slanje CSV na pajton
         //[Obsolete]
         public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad cs)

@@ -10,13 +10,13 @@
             <tr *ngFor="let head of headers; let i = index">
                 <td>{{ head }}</td>
                 <td>
-                    <select class="form-select" [ngModel]="selected[i]" (ngModelChange)="changeType($event, i)">
+                    <select class="form-select" [ngModel]="selected[i]" [attr.disabled]="startArrayType[i] ? 'disabled' : null" (ngModelChange)="changeType($event, i)">
                         <option value="categorical">Categorical</option>
                         <option value="numerical">Numerical</option>
                     </select>
                 </td>
                 <td>
-                    <select class="form-select" [attr.disabled]="selected[i] != 'categorical' ? 'disabled' : null" name="" id="" [ngModel]="selectedEncodings[i]" (ngModelChange)="changeEncoding($event, i)">
+                    <select class="form-select" [attr.disabled]="startArray[i] != 'categorical' ? 'disabled' : null" name="" id="" [ngModel]="encodings[i]" (ngModelChange)="changeEncoding($event, i)">
                         <option value="one hot">One hot</option>
                         <option value="label">Label</option>
                         <option value="binary">Binary</option>
@@ -31,6 +31,17 @@
                         <option value=""></option>
                     </select>
                     -->
+                </td>
+                <td>
+                    <select class="form-select" [ngModel]="missingValues[i]" *ngIf="selected[i] == 'categorical'" (ngModelChange)="changeMissingValues($event, i)">
+                        <option value="top">Top</option>
+                        <option value="delete">Delete</option>
+                    </select>
+                    <select class="form-select" [ngModel]="missingValues[i]" *ngIf="selected[i] == 'numerical'" (ngModelChange)="changeMissingValues($event, i)">
+                        <option value="mean">Mean</option>
+                        <option value="median">Median</option>
+                        <option value="delete">Delete</option>
+                    </select>
                 </td>
             </tr>
         </tbody>
