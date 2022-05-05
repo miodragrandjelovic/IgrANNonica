@@ -389,9 +389,12 @@ export class CsvComponent implements OnInit {
         });
     }
 
-    
+    selectedKor:any;
+    selectedStat:any;
     catchSelectedDataset($event:any){
-        this.selectedDatasetUser = $event;
+        this.selectedDatasetUser = $event.dataset;
+        this.selectedKor=$event.kor;
+        this.selectedStat=$event.stat;
         this.showMe = false;
         //alert("PRIMIO SAM!");
         // u selectedDatasetUser se nalazi Dataset koji je korisnik izabrao (njegov sacuvan)

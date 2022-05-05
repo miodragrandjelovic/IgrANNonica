@@ -331,6 +331,7 @@ export class HyperparametersComponent implements OnInit {
 
   neuronsLength:Array<number>=[]; 
   countAllNeurons(){
+    this.neuronsLength=[];
     for(let i=0;i<this.countLayers;i++){
       this.neuronsLength.push((<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length+1);
     }

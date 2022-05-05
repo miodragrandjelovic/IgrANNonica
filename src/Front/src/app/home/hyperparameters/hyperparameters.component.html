@@ -11,7 +11,7 @@
 
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
       <!-- ovde ide tabela sa datasetovima korisnika -->
-      <div><h1 style="text-align: center;font-size: 25px; font-weight: bold;">Your saved models</h1></div>
+      <p class="fw-bold fs-1">Your models:</p>
     <app-usermodels></app-usermodels>
 
     </div>
@@ -153,9 +153,7 @@
                               <option value="linear">linear</option> 
                               <option value="tanh">tanh</option>
                               <option value="softmax">softmax</option> 
-                              <option value="softsign">softsign</option> 
-                              <option value="reLU">reLU</option>
-                              <option value="ELUs">ELUs</option> 
+                              <option value="relu">reLU</option> 
                             </select> 
                         </div>
                         <div style="margin-left: 25px;height: 30px;width: 30px; background-color: #34495E; border-radius: 50%; border: 2px solid;margin-top: 5px;"><br>
@@ -174,17 +172,18 @@
                 <!--<div class="col form-check" style="margin-left: -13px;">
                     <button *ngIf="session" class="round-button playButton" style="width:25%;text-align: center; background-color: #212f3c; color:white; height: auto; border-radius: 20px; " (click)="addNewModel(newModel)" ><img src="assets/images/plus.png" width="33px" height="33px"> <span style="font-size: 75%;"> Save Model</span></button>
                   </div>-->
+                  <!--
                   <div class="col">
                     <div *ngIf="session" style="width: 35%;">
                       <span style="font-weight: bold;">Name it and save it.</span>
                       <div class="input-group input-group-sm mb-3" placement="end" ngbTooltip="If you want to save this model, you have to name it.">
                         <span class="input-group-text" style="background-color: #CEECFA;">Model name</span>
-                        <!-- <input type="text" class="form-control" type="text" [(ngModel)]="modelName" id="modelName" formControlName="modelName"> -->
+                         <input type="text" class="form-control" type="text" [(ngModel)]="modelName" id="modelName" formControlName="modelName"> 
                       </div>
                     </div>
-                  </div>
+                  </div>-->
                 <div class="col form-check" style="text-align: right; padding-top: 27px;">
-                  <button class="round-button playButton"style="width:25%;text-align: center; background-color: #212f3c; color:white; height:auto; border-radius: 20px;" type="submit"><i-bs width="33" height="33" name="caret-right-fill"></i-bs><span style="font-size: 75%;">Train</span></button>
+                  <button class="round-button playButton"style="width:10%;text-align: center; background-color: #212f3c; color:white; height:auto; border-radius: 20px;" type="submit"><i-bs width="33" height="33" name="caret-right-fill"></i-bs><span style="font-size: 75%;">Train</span></button>
                 </div>
               </div>
 
