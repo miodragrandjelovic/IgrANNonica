@@ -80,6 +80,7 @@ export class HyperparametersComponent implements OnInit {
   encodings: Array<string> = [];
   columNames: Array<string> = [];
   missingValues: Array<string> = [];
+  eveluate: any;
   //layers:Array<string> = ["5","5","5","5","5"]
   //
   activationFunctions:Array<any>=[];
@@ -281,10 +282,14 @@ export class HyperparametersComponent implements OnInit {
       this.hpResponse = result;
       this.properties = Object.keys(this.hpResponse);
       for (let i = 0; i < this.properties.length; i++) {
-        if (this.properties[i] == 'label' || this.properties[i] == 'eveluate')
+        if (this.properties[i] == 'label')
           continue;
         if (this.properties[i] == 'pred')
           break;
+        if (this.properties[i] == 'eveluate') {
+          this.eveluate = this.hpResponse[this.properties[i]];
+          console.log(this.eveluate);
+        }
         const str = 'val' + this.properties[i];
         let object: CheckBox = {
           id: i + 1,
@@ -302,6 +307,7 @@ export class HyperparametersComponent implements OnInit {
       
       this.prikazGrafika=true;
       this.spiner.showSpiner=true;
+      console.log(this.spiner.showSpiner);
     }
 
   countLayers=0;

@@ -316,7 +316,7 @@ export class CsvComponent implements OnInit {
         document.getElementById("closeModal")?.click();
         this.datasetTitle = '';
         this.uploadedFile = false;
-        
+        this.parametersService.setDatasets();
         // treba i da se sacuva dataset!!!!!
     }
 

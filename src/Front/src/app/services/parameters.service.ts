@@ -12,6 +12,7 @@ export class ParametersService {
   private encodings$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   private columNames$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   private missingValues$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  private datasets$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     getParamsObs(): Observable<string> {
         return this.params$.asObservable();
@@ -62,6 +63,13 @@ export class ParametersService {
     }
     setMissingValues(value: string[]) {
       this.missingValues$.next(value);
+    }
+
+    getDatasets() {
+      return this.datasets$.asObservable();
+    }
+    setDatasets() {
+      this.datasets$.next(true);
     }
 
   constructor() { }

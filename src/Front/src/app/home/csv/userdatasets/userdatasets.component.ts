@@ -1,5 +1,6 @@
 import { Component, OnInit , Output, EventEmitter} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ParametersService } from 'src/app/services/parameters.service';
 
 interface zapamceniDatasetovi {
   name: String,
@@ -20,13 +21,16 @@ export class UserdatasetsComponent implements OnInit {
   //ovim saljemo nazad ka csv komponenti dataset 
   zapamceniDatasetovi: any;
   
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient, private parametersService: ParametersService){}
   datasetsNames: any;
   selectedDataset:any;
   datasetsFilteredNames : any = [];
   copyPaste:any = [];
   ngOnInit(): void {
     this.getDatasets();
+    this.parametersService.getDatasets().subscribe(res => {
+      this.getDatasets();
+    });
   }
 
   getDatasets()
