@@ -37,7 +37,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("model")]//Ukloniti model iz foldera za odredjeni Username.
-        public async Task<IActionResult> DeleteModel(string name)
+        public async Task<IActionResult> DeleteModel(string name) //primati i dirName ako se izlistavaju svi odjednom a ne prvo po csv-ovima po kojima su kreirani
         {
             //string pathToDelete = System.IO.Path.Combine(path1, names);
 
@@ -55,6 +55,14 @@ namespace Backend.Controllers
                 {
                     System.IO.Directory.Delete(pathToDelete, true);
                 }
+
+                string publicName = name + "(" + Username + ")";
+                string publicPath = Path.Combine(CurrentPath, "Users", "publicProblems", publicName);
+                if (System.IO.Directory.Exists(publicPath))
+                {
+                    System.IO.Directory.Delete(publicPath, true);
+                }
+
                 return Ok("Uspesno uklonjen model." + pathToDelete);
             }
             
@@ -125,6 +133,19 @@ namespace Backend.Controllers
             await _context.SaveChangesAsync();
 
             string CurrentPath = Directory.GetCurrentDirectory();
+            string publicName = "(" + username + ")";
+            string publicPath = System.IO.Path.Combine(CurrentPath, "Users", "publicProblems");
+            string[] subdirs = Directory.GetDirectories(publicPath).Select(Path.GetFileName).ToArray();
+
+            for (int i = 0; i < subdirs.Length; i++)
+            {
+                if (subdirs[i].Contains(publicName))
+                {
+                    string pathDelete = Path.Combine(CurrentPath, "Users", "publicProblems", subdirs[i]);
+                    System.IO.Directory.Delete(pathDelete, true);
+                }
+            }
+
             //string pathToDelete = CurrentPath + @"\Users\" + username;
             string pathToDelete = Path.Combine(CurrentPath, "Users", username);
 
