@@ -48,7 +48,7 @@ def post_csv():
     df=data
     global csvdata
     csvdata = cs
-    return csvdata
+    return jsonify(csvdata)
 
 @app.route("/csv", methods=['GET']) #Slanje CSV na bek
 def  getCsv():

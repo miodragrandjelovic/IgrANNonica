@@ -21,12 +21,16 @@ y = pom.pop("hwy")
 y.columns = "hwy"
 
 cat = pom.select_dtypes(include='O').keys()
+cat.values
 pom=pd.get_dummies(pom,columns=cat)
 pom
 
 y=pd.DataFrame(y)
-y=pd.get_dummies(y)
+#y=pd.get_dummies(y)
 y
+
+
+
 
 
 for (columnName,columnData) in pom.iteritems():
@@ -35,6 +39,16 @@ for (columnName,columnData) in pom.iteritems():
 y=y/y.max()
 
 X_train, X_test, y_train, y_test = train_test_split(pom, y, test_size = 0.2)
+
+from sklearn.preprocessing import MinMaxScaler
+
+scaler=MinMaxScaler()
+
+X_train=scaler.fit_transform(X_train)
+X_test=scaler.fit_transform(X_test)
+y_train=scaler.fit_transform(y_train)
+y_test=scaler.fit_transform(y_test)
+
 
 model=None
 
@@ -45,7 +59,8 @@ normalizer = layers.Normalization(axis=-1)
 normalizer.adapt(X_train)
 model.add(normalizer)
 """
-len(X_train.columns)
+len(pom.columns)
+
 
 model.add(layers.Dense(units=32,input_shape=(len(X_train.columns),)))
 model.add(layers.Dense(units=32,activation='relu'))
