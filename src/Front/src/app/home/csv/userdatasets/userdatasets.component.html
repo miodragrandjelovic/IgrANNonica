@@ -1,5 +1,6 @@
 <div class="container-fluid w-100 overflow-auto" >
-    <div class="row py-1 align-items-center justify-content-center border-top border-dark" *ngFor="let item of datasetsNames">
+    <div class="row py-1 align-items-center justify-content-center border-top border-dark" *ngFor="let item of zapamceniDatasetovi"
+    style=" border-top: 1px solid #212f3c; cursor:pointer;">  
         
         <div class="col-sm-auto py-2" >
             <img class="align-items-center justify-content-center " src="assets/images/datasetRandom.jpg" height="30px" width="30px" >
@@ -7,12 +8,12 @@
 
         <div class="col-sm-auto " >
             <h3 class="">
-                {{item}}
+                {{item.name}}
             </h3> 
         </div>
         <div class="col-5">
-            <div class="h-50">Size:</div>
-            <div class="h-50">Last Modified:</div>
+            <div class="h-50">Size: {{item.size}}</div>
+            <div class="h-50">Last Modified: {{item.date}}</div>
         </div>
         <div class="col " >
             <div class="float-end">  
@@ -32,6 +33,11 @@
                     </svg>
                     Delete
                 </button>
+            </div>
+            <div class="float-end">  
+                <a style="background:transparent; border: none;cursor:pointer;padding-right: 10px;" (click)="selectChange($event)" (change)="this.selectedDataset=item.selectedDataset">
+                    <img id="{{item.name}}" src="assets/images/eye.png" width="30px" height="30px" style="margin-top: 5px;">
+                </a>
             </div>
         </div>
   

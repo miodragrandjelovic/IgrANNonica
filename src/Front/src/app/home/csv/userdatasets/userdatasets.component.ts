@@ -1,6 +1,13 @@
 import { Component, OnInit , Output, EventEmitter} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+interface zapamceniDatasetovi {
+  name: String,
+  size: number,
+  date: Date
+}
+
+
 @Component({
   selector: 'app-userdatasets',
   templateUrl: './userdatasets.component.html',
@@ -9,9 +16,10 @@ import { HttpClient } from '@angular/common/http';
 
 export class UserdatasetsComponent implements OnInit {
 
-  @Output() sendResults = new EventEmitter<any>();
+  @Output() sendResults = new EventEmitter<{dataset:any,kor:any,stat:any}>();
   //ovim saljemo nazad ka csv komponenti dataset 
-
+  zapamceniDatasetovi: any;
+  
   constructor(private http: HttpClient){}
   datasetsNames: any;
   selectedDataset:any;
@@ -26,7 +34,7 @@ export class UserdatasetsComponent implements OnInit {
     this.copyPaste = [];
     this.datasetsNames = [];
     this.datasetsFilteredNames = [];
-
+  
     this.http.get<any>('https://localhost:7167/api/Python/savedCsvs').subscribe(result => {  
             console.log(result);
             this.copyPaste=result;
@@ -41,6 +49,7 @@ export class UserdatasetsComponent implements OnInit {
  
             */
             this.datasetsNames = this.copyPaste;
+            this.zapamceniDatasetovi=result;
         });
 
       
@@ -77,6 +86,17 @@ export class UserdatasetsComponent implements OnInit {
       }).subscribe(selectedDatasetUser=>{
         
         console.log(selectedDatasetUser);
+        this.http.get<any>('https://localhost:7167/api/Python/kor').subscribe(data =>{
+            console.log('ovo je za kor: '+data);
+          
+          this.http.get<any>('https://localhost:7167/api/Python/stats').subscribe(result =>{
+            console.log('ovo je za stat: '+result);
+           
+            this.sendResults.emit({dataset:selectedDatasetUser,kor:data,stat:result});
+          });
+          
+        });
+
         //alert("SALJEMO RES");
 
         this.sendResults.emit(selectedDatasetUser);

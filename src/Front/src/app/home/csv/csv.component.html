@@ -92,11 +92,12 @@
           style="border-radius:15px; border:#212f3c 1px solid; background-color: #03A9F4; width: 40%; float:right; color:white; font-weight: bold; height: 35px;">Save</button>
       </div>
       
-      <app-heatmap [matrix]="currentCorrResult"></app-heatmap>
+      <app-heatmap [matrix]="selectedKor"></app-heatmap>
     
     </div>
 
-    <div style="width:40%;height:500px;float: left; padding-top: 50px; margin-left: 10px; border:#CEECFA solid 2px; border-radius: 5px; text-align: center;">Ovde ide statistika</div>
+    <div style="overflow-x: auto; width:40%;height:500px;float: left; padding-top: 50px; margin-left: 10px; border:#CEECFA solid 2px; border-radius: 5px; text-align: center;">
+      <app-statistics [result]="selectedStat"></app-statistics></div>
 
     <div style="width:28.5%;margin-left: 20px; float:left;text-align: center; padding-top: 50px; padding-bottom: 50px; overflow-x: auto; border: #CEECFA 2px solid; border-radius: 5px;">
       <app-encoding [input]="selectedDatasetUser"></app-encoding>
