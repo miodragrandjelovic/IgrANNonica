@@ -4,9 +4,9 @@
       <thead>
           <tr>
             <th *ngFor="let item of header; let i = index">
-              {{item}}
-              <button (click)="sortTableAsc(i)">sort Asc</button>
-              <button (click)="sortTableDesc(i)">sort Desc</button>
+              {{item}}<br>
+              <button type="button" class="btn btn-outline-primary" (click)="sortTableAsc(i)" style="margin-bottom: 3px;width: 100%;">sort Asc</button>
+              <button type="button" class="btn btn-outline-primary" (click)="sortTableDesc(i)" style="width: 100%;">sort Desc</button>
             </th>
           </tr>
 
