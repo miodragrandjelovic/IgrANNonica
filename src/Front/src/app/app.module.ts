@@ -39,6 +39,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { BarplotComponent } from './barplot/barplot.component';
+import { PredictionComponent } from './prediction/prediction.component';
 
 const icons = {
   envelope,
@@ -75,6 +76,7 @@ const icons = {
     EncodingComponent,
     StatisticsComponent,
     BarplotComponent,
+    PredictionComponent,
   ],
   imports: [
     BrowserModule,
