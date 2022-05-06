@@ -30,9 +30,12 @@ class Data():
         self.data = fn.load_data(features, label, self.data)
     
 
-    def Misa(self, columns,enc_types,num_cat_col,type,features,label,ratio, val_test,randomize):
-
+    def Misa(self, columns,enc_types,num_cat_col,type,features,label,ratio, val_test,randomize, missing_values):
+        
         self.data = fn.load_data(features, label, self.data)
+        # popunjavanje nedostajucih vrednosti
+        print("DOSLI SMO DO POPUNJAVANJA NEDOSTAJUCIH")
+        self.data = fn.fill_na_values(self.data, missing_values)
         X, y = fn.feature_and_label(self.data, label)
         X=fn.encode_data(X, columns,enc_types)
         X=fn.num_to_cat(X,num_cat_col)
