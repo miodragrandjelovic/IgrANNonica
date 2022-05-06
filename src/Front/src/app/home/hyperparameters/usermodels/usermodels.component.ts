@@ -1,7 +1,7 @@
 import { Component, OnInit , Output, EventEmitter} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
-
+import * as myUrls from 'src/app/urls';
 @Component({
   selector: 'app-usermodels',
   templateUrl: './usermodels.component.html',
@@ -14,6 +14,7 @@ export class UsermodelsComponent implements OnInit {
   //ovim saljemo nazad ka hyperparamteres komponenti model
 
   constructor(private http: HttpClient,private modalService: NgbModal){}
+  public url = myUrls.url;
   modelsNames: any;
   selectedModels:any;
 
@@ -23,7 +24,7 @@ export class UsermodelsComponent implements OnInit {
 
   getModels()
   {
-    this.http.get<any>('https://localhost:7167/api/Python/savedModels').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
+    this.http.get<any>(this.url + '/api/Python/savedModels').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
             console.log(result);
             this.modelsNames=result;
             console.log(this.modelsNames);
@@ -40,7 +41,7 @@ export class UsermodelsComponent implements OnInit {
   }
 
   loadThisModel(naziv:any){
-    return this.http.post<any>('https://localhost:7167/api/LoadData/selectedModel?name='+naziv, {
+    return this.http.post<any>(this.url + '/api/LoadData/selectedModel?name='+naziv, {
         name: naziv
       }).subscribe(selectedModelUser=>{
         
