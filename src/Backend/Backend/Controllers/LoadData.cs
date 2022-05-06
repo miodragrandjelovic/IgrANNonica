@@ -330,7 +330,7 @@ namespace Backend.Controllers
                 }
 
                 lines.RemoveAll(l => l.Contains("Evaluation Only."));
-
+                
                 string model = modelNames + ".csv";
                 string publicName = modelNames + "(" + Username + ")";
                 string pblmod = publicName + ".csv";
@@ -364,6 +364,7 @@ namespace Backend.Controllers
                     {
                         outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
                     }
+                    file1.Close();
                 }
 
                 //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
@@ -374,7 +375,8 @@ namespace Backend.Controllers
                 {
                     //System.IO.File.Delete(pathToDelete);
                 }
-
+                file.Close();
+                
             }
             else
                 Console.WriteLine("Niste ulogovani.");
@@ -474,6 +476,7 @@ namespace Backend.Controllers
                     {
                         System.IO.File.Delete(pathToCreate);
                     }*/
+                    file.Close();
                 }
             }
             else
