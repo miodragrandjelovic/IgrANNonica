@@ -399,8 +399,8 @@ def compile_model(model, type, y,lr):
     # regression: mse(Mean squared error)
 
     # also, there are multiple metrics that user can choose from
-    reg_metrics = ['mae','mse','RootMeanSquaredError', 'mean_absolute_percentage_error']
-    class_metrics=['accuracy','AUC','Precision','Recall', 'TruePositives', 'TrueNegatives', 'FalsePositives','FalseNegatives']
+    reg_metrics = ['mae','mse','RootMeanSquaredError']
+    class_metrics=['accuracy','AUC','Precision','Recall']
     
     if (type == 'regression'):
         met = reg_metrics

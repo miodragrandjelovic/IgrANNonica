@@ -21,7 +21,7 @@ class Data():
         self.y_val=None
         self.y=None
         self.X=None
-        self.eveluate=None
+        self.evaluate=None
         self.pred=None
         self.label=None
 
@@ -130,7 +130,7 @@ class Model():
 
     def trainModel(self,type,epochs, batch_size):
         # train our model
-        self.pred,self.label,self.eveluate,self.history = fn.train_model(self.model,type, self.data.X_train, self.data.y_train, epochs, batch_size,self.data.X_val,self.data.y_val, self.data.X_test, self.data.y_test)
+        self.pred,self.label,self.evaluate,self.history = fn.train_model(self.model,type, self.data.X_train, self.data.y_train, epochs, batch_size,self.data.X_val,self.data.y_val, self.data.X_test, self.data.y_test)
         
 
     def defMetrics(self, type):
@@ -143,7 +143,7 @@ class Model():
         self.hist['valLoss'] = self.history.history['val_loss']
         self.hist['pred']=self.pred
         self.hist['label']=self.label
-        self.hist['eveluate']=self.eveluate
+        self.hist['evaluate']=self.evaluate
         if (type == "regression"):
             self.hist['MAE'] = self.history.history['mae']
             self.hist['MSE'] = self.history.history['mse']
@@ -162,141 +162,18 @@ class Model():
             self.hist['AUC'] = self.history.history['auc']      
             self.hist['Precision'] = self.history.history['precision']
             self.hist['Recall'] = self.history.history['recall']
-            self.hist['TruePositives'] = self.history.history['true_positives']
-            self.hist['TrueNegatives'] = self.history.history['true_negatives']
-            self.hist['FalsePositives'] = self.history.history['false_positives']
-            self.hist['FalseNegatives'] = self.history.history['false_negatives']
-            self.hist['TrueNegatives'] = self.history.history['true_negatives']
+            #self.hist['TruePositives'] = self.history.history['true_positives']
+            #self.hist['TrueNegatives'] = self.history.history['true_negatives']
+            #self.hist['FalsePositives'] = self.history.history['false_positives']
+            #self.hist['FalseNegatives'] = self.history.history['false_negatives']
+            #self.hist['TrueNegatives'] = self.history.history['true_negatives']
             self.hist['valAccuracy'] = self.history.history['val_accuracy']  
             self.hist['valAUC'] = self.history.history['val_auc']
             self.hist['valPrecision'] = self.history.history['val_precision']
             self.hist['valRecall'] = self.history.history['val_recall']
-            self.hist['valTruePositives'] = self.history.history['val_true_positives']
-            self.hist['valTrueNegatives'] = self.history.history['val_true_negatives']
-            self.hist['valFalsePositives'] = self.history.history['val_false_positives']
-            self.hist['valFalseNegatives'] = self.history.history['val_false_negatives']
-            self.hist['valTrueNegatives'] = self.history.history['val_true_negatives']
+            #self.hist['valTruePositives'] = self.history.history['val_true_positives']
+            #self.hist['valTrueNegatives'] = self.history.history['val_true_negatives']
+            #self.hist['valFalsePositives'] = self.history.history['val_false_positives']
+            #self.hist['valFalseNegatives'] = self.history.history['val_false_negatives']
+            #self.hist['valTrueNegatives'] = self.history.history['val_true_negatives']
         
-
-    def plotResults(self, epochs, type):
-        # print("The test accuracy is {}, and loss is {}".format(history.history['accuracy'], history.history['loss']))
-        epoch_range = range(1, epochs+1)
-        
-        plt.plot(epoch_range, self.history.history['loss'])
-        plt.plot(epoch_range, self.history.history['val_loss'])
-        plt.title("Model loss")
-        plt.ylabel("Loss")
-        plt.xlabel("Epoch")
-        plt.legend(['Train', 'Val'], loc='upper left')
-        plt.show()
-
-        if (type == "regression"):
-            plt.plot(epoch_range, self.history.history['mae'])
-            plt.plot(epoch_range, self.history.history['val_mae'])
-            plt.title("Model MAE")
-            plt.ylabel("MAE")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-
-            plt.plot(epoch_range, self.history.history['mse'])
-            plt.plot(epoch_range, self.history.history['val_mse'])
-            plt.title("Model MSE")
-            plt.ylabel("MSE")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-
-            
-            plt.plot(epoch_range, self.history.history['root_mean_squared_error'])
-            plt.plot(epoch_range, self.history.history['val_root_mean_squared_error'])
-            plt.title("Model RMSE")
-            plt.ylabel("RMSE")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-
-            plt.plot(epoch_range, self.history.history['mean_absolute_percentage_error'])
-            plt.plot(epoch_range, self.history.history['val_mean_absolute_percentage_error'])
-            plt.title("Model MAPE")
-            plt.ylabel("MAPE")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-
-            plt.plot(epoch_range, self.history.history['cosine_similarity'])
-            plt.plot(epoch_range, self.history.history['val_cosine_similarity'])
-            plt.title("Model Cosine Proximity")
-            plt.ylabel("Cosine")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-
-        if (type == "classification"):
-            plt.plot(epoch_range, self.history.history['accuracy'])
-            plt.plot(epoch_range, self.history.history['val_accuracy'])
-            plt.title("Model accuracy")
-            plt.ylabel("Accuracy")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-                
-            plt.plot(epoch_range, self.history.history['auc'])
-            plt.plot(epoch_range, self.history.history['val_auc'])
-            plt.title("Model AUC")
-            plt.ylabel("AUC")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-
-            plt.plot(epoch_range, self.history.history['precision'])
-            plt.plot(epoch_range, self.history.history['val_precision'])
-            plt.title("Model Precision")
-            plt.ylabel("Precision")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-
-            plt.plot(epoch_range, self.history.history['recall'])
-            plt.plot(epoch_range, self.history.history['val_recall'])
-            plt.title("Model Recall")
-            plt.ylabel("Recall")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-
-            plt.plot(epoch_range, self.history.history['true_positives'])
-            plt.plot(epoch_range, self.history.history['val_true_positives'])
-            plt.title("Model TP")
-            plt.ylabel("TP")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-
-            plt.plot(epoch_range, self.history.history['true_negatives'])
-            plt.plot(epoch_range, self.history.history['val_true_negatives'])
-            plt.title("Model TN")
-            plt.ylabel("TN")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-
-            plt.plot(epoch_range, self.history.history['false_positives'])
-            plt.plot(epoch_range, self.history.history['val_false_positives'])
-            plt.title("Model FP")
-            plt.ylabel("FP")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-
-            plt.plot(epoch_range, self.history.history['false_negatives'])
-            plt.plot(epoch_range, self.history.history['val_false_negatives'])
-            plt.title("Model FN")
-            plt.ylabel("FN")
-            plt.xlabel("Epoch")
-            plt.legend(['Train', 'Val'], loc='upper left')
-            plt.show()
-
-
-
-
