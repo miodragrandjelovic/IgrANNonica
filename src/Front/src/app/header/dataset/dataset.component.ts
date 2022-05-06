@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs';
 import { CsvComponent } from 'src/app/home/csv/csv.component';
 import { DatasetService } from './dataset.service';
-
+import { Urls } from 'src/app/urls';
 @Component({
   selector: 'app-dataset',
   templateUrl: './dataset.component.html',
@@ -18,10 +18,11 @@ export class DatasetComponent implements OnInit {
 
   constructor(private http: HttpClient,
     private datasets:DatasetService) { }
+  private url:Urls
 
   ngOnInit(): void {
          
-        this.http.get<any>('https://localhost:7167/api/Python/savedCsvs').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
+        this.http.get<any>(this.url + '/api/Python/savedCsvs').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
             console.log(result);
             this.datasetsNames=result;
             console.log(this.datasetsNames);
@@ -68,7 +69,7 @@ export class DatasetComponent implements OnInit {
     
   posaljiNaziv(naziv:any){
 
-    return this.http.post<any>('https://localhost:7167/api/LoadData/selectedCsv?name='+naziv, {
+    return this.http.post<any>(this.url + '/api/LoadData/selectedCsv?name='+naziv, {
         name: naziv
       }).subscribe(result=>{
         

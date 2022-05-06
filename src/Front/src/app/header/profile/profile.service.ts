@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs";
 import { User } from 'src/app/_model/user.model';
-
+import { Urls } from 'src/app/urls';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +11,11 @@ export class ProfileService {
 
   constructor(private http: HttpClient) { }
 
+  public url:Urls
+  
   updateProfile(user:User) : Observable<User> {
-    return this.http.put<User>('https://localhost:7167/api/RegistracijaUsera/username', {
+    console.log(this.url)
+    return this.http.put<User>(this.url + '/api/RegistracijaUsera/username', {
         userId: user.userId,
         firstname: user.firstName,
         lastname: user.lastName,

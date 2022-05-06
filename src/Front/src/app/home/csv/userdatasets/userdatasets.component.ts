@@ -1,12 +1,13 @@
 import { Component, OnInit , Output, EventEmitter} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ParametersService } from 'src/app/services/parameters.service';
-
+import { Urls } from 'src/app/urls';
 interface zapamceniDatasetovi {
   name: String,
   size: number,
   date: Date
 }
+
 
 
 @Component({
@@ -22,6 +23,7 @@ export class UserdatasetsComponent implements OnInit {
   zapamceniDatasetovi: any;
   
   constructor(private http: HttpClient, private parametersService: ParametersService){}
+  private url:Urls
   datasetsNames: any;
   selectedDataset:any;
   datasetsFilteredNames : any = [];
@@ -39,7 +41,7 @@ export class UserdatasetsComponent implements OnInit {
     this.datasetsNames = [];
     this.datasetsFilteredNames = [];
   
-    this.http.get<any>('https://localhost:7167/api/Python/savedCsvs').subscribe(result => {  
+    this.http.get<any>(this.url + '/api/Python/savedCsvs').subscribe(result => {  
             console.log(result);
             this.copyPaste=result;
             console.log(this.copyPaste);
@@ -85,15 +87,15 @@ export class UserdatasetsComponent implements OnInit {
   loadThisDataset(naziv:any){
 
     // !! POSLE OVOG ZATEVA, POTREBNO JE PROSLEDITI I ZAHTEV ZA KORELACIONU MATRICU!!!
-    return this.http.post<any>('https://localhost:7167/api/LoadData/selectedCsv?name='+naziv, {
+    return this.http.post<any>(this.url + '/api/LoadData/selectedCsv?name='+naziv, {
         name: naziv
       }).subscribe(selectedDatasetUser=>{
         
         console.log(selectedDatasetUser);
-        this.http.get<any>('https://localhost:7167/api/Python/kor').subscribe(data =>{
+        this.http.get<any>(this.url + '/api/Python/kor').subscribe(data =>{
             console.log('ovo je za kor: '+data);
           
-          this.http.get<any>('https://localhost:7167/api/Python/stats').subscribe(result =>{
+          this.http.get<any>(this.url + '/api/Python/stats').subscribe(result =>{
             console.log('ovo je za stat: '+result);
            
             this.sendResults.emit({dataset:selectedDatasetUser,kor:data,stat:result});
