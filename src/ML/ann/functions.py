@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder, StandardScaler, scale
+from sqlalchemy import column
 
 
 import tensorflow as tf
@@ -251,7 +252,9 @@ def encode_data(df, columns,enc_types):
         print("---")
 
     for i in range (len(columns)):
-        if(enc_types[i]=='one hot'):
+        if (columns[i] not in df.columns):
+            continue
+        elif(enc_types[i]=='one hot'):
             df=pd.get_dummies(df,columns=[columns[i]])
         elif (enc_types[i]=='label'):
             lb=LabelEncoder()
@@ -264,26 +267,42 @@ def encode_data(df, columns,enc_types):
     print("Encode data prosao")
     return (df)
 
-def fill_na_values(df, columns, typeFill):
-    for i in range(columns.lenght):
-        fill = typeFill[i]
-        if (fill == 'mean'):
-            colMean = df[columns[i]].mean(skipna=True)
-            df[columns[i]].fillna(value=colMean, inplace=True)
-        elif (fill == 'median'):
-            colMedian = df[columns[i]].median(skipna=True)
-            df[columns[i]].fillna(value=colMedian, inplace=True)
-        elif (fill == 'min'):
-            colMin = df[columns[i]].min(skipna=True)
-            df[columns[i]].fillna(value=colMin, inplace=True)
-        elif (fill == 'max'):
-            colMax = df[columns[i]].min(skipna=True)
-            df[columns[i]].fillna(value=colMax, inplace=True)
-        elif (fill == 'delete'):
-            df.drop(columns[i], inplace=True, axis=1)
-        elif (fill == 'top'):
-            colMode = df[columns[i]].mode[0]
-            df[columns[i]].fillna(value=colMode, inplace=True)
+def fill_na_values(df, missing):
+    print("DATAFRAME BEFORE FILLING MISSING VALUES: ")
+    print(df.head())
+    i = 0 
+    columnLength = len(df.columns)
+    # print("column length is ", columnLength)
+
+    for columnName in df.columns:
+        filltype = missing[i]
+
+        if (filltype == 'mean'):
+            colMean = df[columnName].mean(skipna=True)
+            df[columnName].fillna(value=colMean, inplace=True)
+        elif (filltype == 'median'):
+            colMedian = df[columnName].median(skipna=True)
+            df[columnName].fillna(value=colMedian, inplace=True)
+        elif (filltype == 'min'):
+            colMin = df[columnName].min(skipna=True)
+            df[columnName].fillna(value=colMin, inplace=True)
+        elif (filltype == 'max'):
+            colMax = df[columnName].min(skipna=True)
+            df[columnName].fillna(value=colMax, inplace=True)
+        elif (filltype == 'delete'):
+            df.drop(columnName, inplace=True, axis=1)
+        elif (filltype == 'top'):
+            colMode = df.mode()[columnName][0]
+            df[columnName].fillna(value=colMode, inplace=True)
+        
+        i = i+1
+        if (i == columnLength-1):
+            break
+
+    print("DATAFRAME AFTER FILLING MISSING VALUES: ")
+    print(df.head())
+    return df
+   
 
 def num_to_cat (df,num_cat_col):
     print("num to cat")

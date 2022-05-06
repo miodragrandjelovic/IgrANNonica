@@ -142,7 +142,7 @@ def treniraj():
     
     stats.createModel(train=df,features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'],val_test=hiperp['ValAndTest'], activation_function_list=hiperp['ActivationFunctions'],hidden_layers_n=hiperp['Layers'],
      hidden_layer_neurons_list=hiperp['NumberOfNeurons'], columns=hiperp['ColumNames'],enc_types=hiperp['Encodings'],num_cat_col=hiperp['CatNum'], randomize=hiperp['Randomize'],
-        batch_size=hiperp['BatchSize'], learning_rate=hiperp['LearningRate'], regularization=hiperp['Regularization'] ,regularization_rate=hiperp['RegularizationRate'])
+        batch_size=hiperp['BatchSize'], learning_rate=hiperp['LearningRate'], regularization=hiperp['Regularization'] ,regularization_rate=hiperp['RegularizationRate'], missing_values=hiperp['MissingValues'])
 
     # u objektu stats, u promenljivoj stats se nalaze statisticki podaci kroz epohe, u vidu dictionary-ja
     # npr. "Accuracy":[...]
