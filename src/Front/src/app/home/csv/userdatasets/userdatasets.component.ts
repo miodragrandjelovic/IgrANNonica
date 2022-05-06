@@ -1,5 +1,13 @@
 import { Component, OnInit , Output, EventEmitter} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ParametersService } from 'src/app/services/parameters.service';
+
+interface zapamceniDatasetovi {
+  name: String,
+  size: number,
+  date: Date
+}
+
 
 @Component({
   selector: 'app-userdatasets',
@@ -9,26 +17,61 @@ import { HttpClient } from '@angular/common/http';
 
 export class UserdatasetsComponent implements OnInit {
 
-  @Output() sendResults = new EventEmitter<any>();
+  @Output() sendResults = new EventEmitter<{dataset:any,kor:any,stat:any}>();
   //ovim saljemo nazad ka csv komponenti dataset 
-
-  constructor(private http: HttpClient){}
+  zapamceniDatasetovi: any;
+  
+  constructor(private http: HttpClient, private parametersService: ParametersService){}
   datasetsNames: any;
   selectedDataset:any;
-
+  datasetsFilteredNames : any = [];
+  copyPaste:any = [];
   ngOnInit(): void {
     this.getDatasets();
+    this.parametersService.getDatasets().subscribe(res => {
+      this.getDatasets();
+    });
   }
 
   getDatasets()
   {
-    this.http.get<any>('https://localhost:7167/api/Python/savedCsvs').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
+    this.copyPaste = [];
+    this.datasetsNames = [];
+    this.datasetsFilteredNames = [];
+  
+    this.http.get<any>('https://localhost:7167/api/Python/savedCsvs').subscribe(result => {  
             console.log(result);
-            this.datasetsNames=result;
-            console.log(this.datasetsNames);
+            this.copyPaste=result;
+            console.log(this.copyPaste);
+           /*
+            this.copyPaste.push("prva1");
+            this.copyPaste.push("prva2");
+            this.copyPaste.push("prva3");
+            this.copyPaste.push("prva4");
+            this.copyPaste.push("prva5");
+            this.copyPaste.push("prva5");
+ 
+            */
+            this.datasetsNames = this.copyPaste;
+            this.zapamceniDatasetovi=result;
         });
 
+      
         this.selectedDataset = '';
+  }
+//////////////
+  searchDatasets(name:any){
+    this.datasetsFilteredNames = [];
+    this.datasetsNames = this.copyPaste;
+    if(name != ""){
+    for (var index = 0; index < this.datasetsNames.length; index++) {
+      if(this.datasetsNames[index].indexOf(name.toLowerCase()) !== -1){
+        this.datasetsFilteredNames.push(this.datasetsNames[index]);
+      }  
+    }
+
+    this.datasetsNames = this.datasetsFilteredNames;
+   }
   }
 
   selectChange(event:any){
@@ -47,6 +90,17 @@ export class UserdatasetsComponent implements OnInit {
       }).subscribe(selectedDatasetUser=>{
         
         console.log(selectedDatasetUser);
+        this.http.get<any>('https://localhost:7167/api/Python/kor').subscribe(data =>{
+            console.log('ovo je za kor: '+data);
+          
+          this.http.get<any>('https://localhost:7167/api/Python/stats').subscribe(result =>{
+            console.log('ovo je za stat: '+result);
+           
+            this.sendResults.emit({dataset:selectedDatasetUser,kor:data,stat:result});
+          });
+          
+        });
+
         //alert("SALJEMO RES");
 
         this.sendResults.emit(selectedDatasetUser);

@@ -71,7 +71,9 @@ namespace Backend.Controllers
                 {
                     try
                     {
-                        System.IO.File.Delete(pathToDelete);
+                        var fi2 = new FileInfo(pathToDelete);
+                        fi2.Delete();
+                        //System.IO.File.Delete(pathToDelete);
                         Console.WriteLine("File " + names + " deleted successfully!");
                     }
                     catch (Exception ex)
@@ -97,7 +99,7 @@ namespace Backend.Controllers
             return Ok(alldata);
         }
 
-        [HttpGet("savedModels")] //Vracanje imena svih sacuvanih modela.
+        [HttpGet("savedModels")] //Vracanje informacija od svih sacuvanih modela.
         public async Task<ActionResult<Modelinfo>> GetSavedModels()
         {
             string CurrentPath = Directory.GetCurrentDirectory();
@@ -133,7 +135,9 @@ namespace Backend.Controllers
                 {
                     try
                     {
-                        System.IO.File.Delete(pathToDelete);
+                        var fi2 = new FileInfo(pathToDelete);
+                        fi2.Delete();
+                        //System.IO.File.Delete(pathToDelete);
                         Console.WriteLine("File " + names + " deleted successfully!");
                     }
                     catch (Exception ex)
@@ -162,14 +166,57 @@ namespace Backend.Controllers
             return Ok(alldata);
         }
 
+        [HttpGet("publicModels")] //Vracanje informacija od svih javnih modela.
+        public async Task<ActionResult<Modelinfo>> GetPublicModels()
+        {
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string SelectedPath = System.IO.Path.Combine(CurrentPath, "Users", "publicProblems");
+
+            string[] subdirs = Directory.GetDirectories(SelectedPath).Select(Path.GetFileName).ToArray();
+
+            List<string> models = new List<string>();
+            List<string> dates = new List<string>();
+            List<string> users = new List<string>();
+
+            for (int i = 0; i < subdirs.Length; i++)
+            {
+                int position1 = subdirs[i].IndexOf("(");
+                int position2 = subdirs[i].IndexOf(")");
+                string modelName = subdirs[i].Substring(0,position1);
+                string userName = subdirs[i].Substring(position1+1, position2-position1-1); //startindex + 1, endindex - startindex - 1
+                string pathing = System.IO.Path.Combine(SelectedPath, subdirs[i]);
+                models.Add(modelName);
+                string dt = Directory.GetCreationTime(pathing).ToString();
+                dates.Add(dt);
+                users.Add(userName); //stavljamo ime korisnika koji je napravio taj model
+            }
+            var len = models.Count;
+            Modelinfo[] alldata = new Modelinfo[len];
+
+            for (int i = 0; i < len; i++)
+            {
+                Modelinfo modinfo = new Modelinfo();
+
+                modinfo.Name = models[i];
+                modinfo.Date = dates[i];
+                modinfo.FromCsv = users[i]; //da li staviti iz kog csv-a je kreirani model ili koji korisnik ga je kreirao?!
+
+                alldata[i] = modinfo;
+            }
+            return Ok(alldata);
+        }
+
         [HttpGet("preloadCsv")] //Vracanje ucitanog csv fajla iz baze.
         public async Task<ActionResult<IEnumerable<Realestate>>> GetPreloadCsv()
         {
             var loadedCsv = await _context.Realestate.ToListAsync(); //lista/json
             string jsoncsv = JsonSerializer.Serialize(loadedCsv); //string
-            
+            string csve = jsoncsv;
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+            var urlcsv = url + "/csv";
+            var response = await http.PostAsync(urlcsv, data);
 
-            return Ok(loadedCsv);
+            return Ok(csve);
         }
 
 
@@ -217,9 +264,12 @@ namespace Backend.Controllers
         {
             var loadedCsv = await _context.Mpg.ToListAsync(); //lista/json
             string jsoncsv = JsonSerializer.Serialize(loadedCsv); //string
+            string csve = jsoncsv;
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+            var urlcsv = url + "/csv";
+            var response = await http.PostAsync(urlcsv, data);
 
-
-            return Ok(loadedCsv);
+            return Ok(csve);
         }
 
 

@@ -3,22 +3,17 @@
   <!-- ovaj div ce se prikazivati samo ULOGOVANIM korisnicima!-->
   <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;">
-      <button
-        style="width:15%;margin-right: 30px; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; "
-        (click)="addNewFile(newFile)"><img src="assets/images/plus.png" width="30px" height="30px"> New Dataset</button>
-      <img src="assets/images/search.png"
-        style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
-      <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;"
-        placeholder="Search your datasets"> <!-- search sa filterom -->
-      <button
-        style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
+      <button style="width:15%;margin-right: 30px; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; " (click)="addNewFile(newFile)"><img src="assets/images/plus.png" width="30px" height="30px">    New Dataset</button>
+      <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
+      <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your datasets" [(ngModel)]="searchInputField" (keyup)="searchDatasets()"> <!-- search sa filterom -->
+      <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
         <img src="assets/images/filter.png" style="height:35px; width: auto;">
       </button>
     </div>
 
-    <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
+    <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 150px;">
       <!-- ovde ide tabela sa datasetovima korisnika -->
-      
+      <p class="fw-bold fs-1">Your datasets:</p>
       <app-userdatasets (sendResults)="catchSelectedDataset($event)" ></app-userdatasets>
 
     </div>
@@ -54,7 +49,9 @@
       
       </div>
       
-      <div style="width:40%;height:500px;float: left; padding-top: 50px; margin-left: 10px; border:#CEECFA solid 2px; border-radius: 5px; text-align: center;">Ovde ide statistika</div>
+      <div style="overflow-x: auto; width:40%;height:500px;float: left; margin-left: 10px; border:#CEECFA solid 2px; border-radius: 5px; text-align: center;">
+        <app-statistics [result]="currentStatsResult"></app-statistics>
+      </div>
 
       <div style="width:28.5%;margin-left: 20px; float:left;text-align: center; padding-top: 50px; padding-bottom: 50px; overflow-x: auto; border: #CEECFA 2px solid; border-radius: 5px;">
         <app-encoding [input]="currentResult"></app-encoding>
@@ -95,11 +92,12 @@
           style="border-radius:15px; border:#212f3c 1px solid; background-color: #03A9F4; width: 40%; float:right; color:white; font-weight: bold; height: 35px;">Save</button>
       </div>
       
-      <app-heatmap [matrix]="currentCorrResult"></app-heatmap>
+      <app-heatmap [matrix]="selectedKor"></app-heatmap>
     
     </div>
 
-    <div style="width:40%;height:500px;float: left; padding-top: 50px; margin-left: 10px; border:#CEECFA solid 2px; border-radius: 5px; text-align: center;">Ovde ide statistika</div>
+    <div style="overflow-x: auto; width:40%;height:500px;float: left; margin-left: 10px; border:#CEECFA solid 2px; border-radius: 5px; text-align: center;">
+      <app-statistics [result]="selectedStat"></app-statistics></div>
 
     <div style="width:28.5%;margin-left: 20px; float:left;text-align: center; padding-top: 50px; padding-bottom: 50px; overflow-x: auto; border: #CEECFA 2px solid; border-radius: 5px;">
       <app-encoding [input]="selectedDatasetUser"></app-encoding>
@@ -153,4 +151,3 @@
     </div>
   </div>
 </ng-template>
-

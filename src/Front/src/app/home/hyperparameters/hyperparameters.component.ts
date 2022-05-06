@@ -10,20 +10,13 @@ import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/loading/loading.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
-interface RequestHyperparameters{
-  encodingType: string,
+interface RequestHyperparameters {
   learningRate: number,
-  activation: string,
   epoch: number,
   regularization: string,
   regularizationRate: number,
   problemType: string,
   layers: number,
-  neuronsLvl1: number,
-  neuronsLvl2: number,
-  neuronsLvl3: number,
-  neuronsLvl4: number,
-  neuronsLvl5: number,
   ratio: number,
   batchSize: number,
   valAndTest:number,
@@ -32,7 +25,10 @@ interface RequestHyperparameters{
   output: string,
   activationFunctions:Array<any>,
   numberOfNeurons:Array<any>,
-  modelName:string,
+  encodings: Array<any>,
+  catNum: Array<any>,
+  missingValues: Array<any>,
+  columNames: Array<any>
 }
 
 interface CheckBox {
@@ -80,7 +76,11 @@ export class HyperparametersComponent implements OnInit {
   hpResponse: any;
   ctx: any;
   showGraphic: boolean;
-  modelName="";
+  catNum: Array<string> = [];
+  encodings: Array<string> = [];
+  columNames: Array<string> = [];
+  missingValues: Array<string> = [];
+  eveluate: any;
   //layers:Array<string> = ["5","5","5","5","5"]
   //
   activationFunctions:Array<any>=[];
@@ -143,12 +143,6 @@ export class HyperparametersComponent implements OnInit {
       this.hyperparameters = res;
     });
 
-    this.parametersService.getShowGraphic().subscribe(res => {
-      console.log(res);
-      this.showGraphic = res;
-    })
-
-
     this.service.messageSubject.subscribe({
       next: x => {
         if (x == 0)
@@ -165,6 +159,19 @@ export class HyperparametersComponent implements OnInit {
     this.onAddLayer();
 
     this.session=sessionStorage.getItem('username');
+
+    this.parametersService.getCatNum().subscribe(res => {
+      this.catNum = res;
+    });
+    this.parametersService.getEncodings().subscribe(res => {
+      this.encodings = res;
+    });
+    this.parametersService.getColumNames().subscribe(res => {
+      this.columNames = res;
+    });
+    this.parametersService.getMissingValues().subscribe(res => {
+      this.missingValues = res;
+    });
   }
 
   fetchSelectedGraphics() {
@@ -227,20 +234,32 @@ export class HyperparametersComponent implements OnInit {
     this.countAllNeurons();
   //  console.log('niz br neurona: '+this.neuronsLength);
 
+  this.parametersService.getCatNum().subscribe(res => {
+    this.catNum = res;
+  });
+  this.parametersService.getEncodings().subscribe(res => {
+    this.encodings = res;
+  });
+  this.parametersService.getColumNames().subscribe(res => {
+    this.columNames = res;
+  });
+
+  this.parametersService.getMissingValues().subscribe(res => {
+    this.missingValues = res;
+  });
+
+  console.log(this.catNum);
+  console.log(this.columNames);
+  console.log(this.encodings);
+  console.log(this.missingValues);
+
     const myreq: RequestHyperparameters = {
-      encodingType : this.hyperparametersForm.get('encodingType')?.value,
       learningRate : Number(this.hyperparametersForm.get('learningRate')?.value),
-      activation : this.hyperparametersForm.get('activation')?.value,
       epoch: this.hyperparametersForm.get('epoch')?.value,
       regularization: this.hyperparametersForm.get('regularization')?.value,
       regularizationRate: Number(this.hyperparametersForm.get('regularizationRate')?.value),
       problemType: this.hyperparametersForm.get('problemType')?.value,
       layers: this.countLayers,
-      neuronsLvl1: Number(neuron1),
-      neuronsLvl2: Number(neuron2),
-      neuronsLvl3: Number(neuron3),
-      neuronsLvl4: Number(neuron4),
-      neuronsLvl5: Number(neuron5),
       ratio: this.hyperparametersForm.get('ratio')?.value,
       batchSize: this.hyperparametersForm.get('batchSize')?.value,
       randomize: this.hyperparametersForm.get('randomize')?.value,
@@ -249,21 +268,28 @@ export class HyperparametersComponent implements OnInit {
       output: this.outputString,
       activationFunctions:this.activacioneFunkc,
       numberOfNeurons:this.neuronsLength,
-      modelName:this.hyperparametersForm.get('modelName')?.value,
+      catNum: this.catNum,
+      encodings: this.encodings,
+      missingValues: this.missingValues,
+      columNames: this.columNames
     } 
     console.log(myreq);
 
-    this.http.post('https://localhost:7167/api/LoadData/hp', myreq).subscribe(result => {
+    this.http.post('https://localhost:7167/api/LoadData/hpNeprijavljen', myreq).subscribe(result => {
       this.inputCheckBoxes = [];
       this.selectedCheckBoxes = [];
       this.properties = [];
       this.hpResponse = result;
       this.properties = Object.keys(this.hpResponse);
       for (let i = 0; i < this.properties.length; i++) {
-        if (this.properties[i] == 'label' || this.properties[i] == 'eveluate')
+        if (this.properties[i] == 'label')
           continue;
         if (this.properties[i] == 'pred')
           break;
+        if (this.properties[i] == 'eveluate') {
+          this.eveluate = this.hpResponse[this.properties[i]];
+          console.log(this.eveluate);
+        }
         const str = 'val' + this.properties[i];
         let object: CheckBox = {
           id: i + 1,
@@ -281,6 +307,7 @@ export class HyperparametersComponent implements OnInit {
       
       this.prikazGrafika=true;
       this.spiner.showSpiner=true;
+      console.log(this.spiner.showSpiner);
     }
 
   countLayers=0;
@@ -310,6 +337,7 @@ export class HyperparametersComponent implements OnInit {
 
   neuronsLength:Array<number>=[]; 
   countAllNeurons(){
+    this.neuronsLength=[];
     for(let i=0;i<this.countLayers;i++){
       this.neuronsLength.push((<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length+1);
     }
@@ -321,8 +349,8 @@ export class HyperparametersComponent implements OnInit {
     
   }
   onRemoveNeuron(i:number){
-    this.counterNeuron = (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
     (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.removeAt(this.counterNeuron -1);
+    this.counterNeuron = (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
   }
 
   countNeurons(i:number){

@@ -36,10 +36,10 @@ class Data():
         X, y = fn.feature_and_label(self.data, label)
         X=fn.encode_data(X, columns,enc_types)
         X=fn.num_to_cat(X,num_cat_col)
+
+
         if (type == "regression"):
-            X=fn.normalize(X)
-            y=pd.DataFrame(y)
-            y=fn.normalize(y)
+            y=pd.DataFrame(y)            
 
         else:
             lb=LabelEncoder()
@@ -49,14 +49,24 @@ class Data():
 
         (self.X_train,self.X_val, self.X_test, self.y_train,self.y_val, self.y_test) = fn.split_data(X, y, ratio, val_test, randomize)
 
+        self.X=X
+        self.y=y
 
         if(type == "classification"):
             scaler=StandardScaler()
             self.X_train=scaler.fit_transform(self.X_train)
             self.X_val=scaler.fit_transform(self.X_val)
             self.X_test=scaler.fit_transform(self.X_test)
-            self.X=X
-            self.y=y
+        
+        else:
+            self.X_train=fn.normalize(self.X_train)
+            self.X_val=fn.normalize(self.X_val)
+            self.X_test=fn.normalize(self.X_test)
+
+            self.y_train=fn.normalize(self.y_train)
+            self.y_val=fn.normalize(self.y_val)
+            self.y_test=fn.normalize(self.y_test)
+            
 
 
 
@@ -138,8 +148,8 @@ class Model():
             self.hist['valMAE'] = self.history.history['val_mae']
             self.hist['valMSE'] = self.history.history['val_mse']
             self.hist['valRMSE'] = self.history.history['val_root_mean_squared_error']        
-            self.hist["MAPE"] = self.history.history['mean_absolute_percentage_error']
-            self.hist["valMAPE"] = self.history.history['val_mean_absolute_percentage_error']
+           # self.hist["MAPE"] = self.history.history['mean_absolute_percentage_error']
+           # self.hist["valMAPE"] = self.history.history['val_mean_absolute_percentage_error']
           #  self.hist["Cosine"] = self.history.history['cosine_similarity']
           #  self.hist["valCosine"] = self.history.history['val_cosine_similarity']
 

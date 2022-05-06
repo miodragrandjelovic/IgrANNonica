@@ -1,4 +1,5 @@
 from gc import callbacks
+from unicodedata import category
 import pandas as pd
 import numpy as np
 from sklearn.feature_selection import VarianceThreshold
@@ -67,7 +68,6 @@ def feature_and_label(data, label):
 
     #print("DATA y ISSS")
     #print(y.head())
-
     return data,y
 
 def normalize(df):  #ceo dodat
@@ -75,12 +75,11 @@ def normalize(df):  #ceo dodat
     sc=MinMaxScaler()
     scaler=sc
     df=scaler.fit_transform(df)
-
-    return df
-    #print(df)
+    
     #for (columnName,columnData) in df.iteritems():
-        #df[str(columnName)]=columnData/columnData.max()
-    #return df
+    #    df[str(columnName)]=columnData/columnData.max()
+    
+    return df
 
     
 
@@ -88,6 +87,9 @@ def split_data(X, y, ratio,val_test, randomize):
     # ratio je npr 20, a nama treba 0.2
     ratio = ratio / 100
     val_test=val_test / 100
+    print("Split data usao")
+    print(X)
+    print(y)
     if(randomize==False):
         (X_train, X_rem, y_train, y_rem) = train_test_split(X, y, test_size = 1-ratio, random_state=5)
         (X_val, X_test, y_val, y_test) = train_test_split(X_rem, y_rem, test_size = 1-val_test, random_state=5)
@@ -95,6 +97,8 @@ def split_data(X, y, ratio,val_test, randomize):
     else:
         (X_train, X_rem, y_train, y_rem) = train_test_split(X, y, test_size = 1-ratio)
         (X_val, X_test, y_val, y_test) = train_test_split(X_rem, y_rem, test_size = 1-val_test)
+    
+    print("prosao split")
     return (X_train,X_val, X_test, y_train,y_val, y_test)
 
 def filter_data(data):
@@ -240,16 +244,24 @@ def encode_data(df, columns,enc_types):
         #print("ENCODING ORDINAL ENCODER")
         #df = binary_encoding(df)
 
+    print("Encode data")
     for i in range (len(columns)):
-        if(enc_types[i]=='onehot'):
-            df=pd.get_dummies(df,columns=columns[i])
+        print(enc_types[i])
+        print(columns[i])
+        print("---")
+
+    for i in range (len(columns)):
+        if(enc_types[i]=='one hot'):
+            df=pd.get_dummies(df,columns=[columns[i]])
         elif (enc_types[i]=='label'):
             lb=LabelEncoder()
-            df[columns[i]]=lb.fit_transform(df[columns[i]])
-        elif (enc_types[i]=='ordinal'):
-            encoder=ce.BinaryEncoder(cols=columns[i])
+            df[columns[i]]=lb.fit_transform(df[str(columns[i])])
+        elif (enc_types[i]=='binary'):
+            encoder=ce.BinaryEncoder(cols=[columns[i]])
             df=encoder.fit_transform(df)
 
+    print(df)
+    print("Encode data prosao")
     return (df)
 
 def fill_na_values(df, columns, typeFill):
@@ -274,8 +286,12 @@ def fill_na_values(df, columns, typeFill):
             df[columns[i]].fillna(value=colMode, inplace=True)
 
 def num_to_cat (df,num_cat_col):
+    print("num to cat")
     for i in range (len(num_cat_col)):
-        df[num_cat_col[i]]=np_utils.to_categorical(df[num_cat_col[i]])
+        df[num_cat_col[i]] = df[num_cat_col[i]].astype('category')
+        print(df[num_cat_col[i]].dtypes)
+    print("num to cat prosao")
+    return df
 
 
 
@@ -327,10 +343,10 @@ def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_l
     
     # input layer
     #if (hidden_layers_n > 0):
-    if(type=="regression"):
-        model.add(units=len(X_train.columns),input_shape=(len(X_train.columns)))   #unitsi menjani
-    else:
-        model.add(units=X.shape[1],input_dim=X.shape[1])                            #unitsi menjani
+    #if(type=="regression"):
+        #model.add(Dense(units=len(X_train.columns),input_shape=len(X_train.columns)))   #unitsi menjani
+    #else:
+    model.add(Dense(units=X.shape[1],input_dim=X.shape[1]))                      #unitsi menjani
     #else:
     #if(type=="regression"):
      #   model.add(Dense(units=1, input_shape=(len(X_train.columns))))
@@ -348,7 +364,7 @@ def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_l
                 model.add(Dense(hidden_layer_neurons_list[i], activation=activation_function_list[i]))
 
     if(type=="regression"):
-        model.add(Dense(len(y_train.columns), activation=activation_function_list[len(activation_function_list)-1]))
+        model.add(Dense(y.shape[1], activation='sigmoid'))
     else:
         model.add(Dense(y.shape[1], activation='softmax'))
 
@@ -398,10 +414,12 @@ def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_
         label=label.tolist()
 
     else:
-        pred=scaler.inverse_transform(pred)             #dodato
+        pred=scaler.inverse_transform(pred)
+        label=y_test             #dodato
         label=scaler.inverse_transform(label)           #dodato
-        label=y_test.to_numpy(dtype ='float32')
+        #label=y_test.to_numpy(dtype ='float32')
         label=label.tolist()
+
 
     pred=pred.tolist()
     ev=model.evaluate(X_test,y_test)

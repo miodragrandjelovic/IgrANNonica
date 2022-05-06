@@ -43,4 +43,12 @@ export class PrijavaService {
     {
        return this.http.get<User>('https://localhost:7167/api/RegistracijaUsera/username?username='+username);
     }
+
+    logout()
+    {
+        this.http.get<any>('https://localhost:7167/api/RegistracijaUsera/logout').subscribe(result => { 
+        console.log(result);
+        });
+    }
+    
 }

@@ -1,7 +1,7 @@
 
 <!--///////////////////NAVBAR////////////////-->
 
-<nav class="navbar navbar-expand-lg navbar-dark" role="navigation">
+<nav class="navbar navbar-expand-lg navbar-dark" role="navigation" style="height: 15vh;">
   <div class="container-fluid">
     <!--<a class="navbar-brand" href="#"></a> sta je ovo?? -->
     <a href="#" style="width:fit-content;"><img id="logo" class="rounded float-start img-fluid navbar-logo" src="assets/images/logo_igrannonica_blank.png"></a>
@@ -14,12 +14,15 @@
         <li id="homePage" class="nav-item" (click)="onSelect('homePage')">
           <a class="nav-link active" aria-current="page"  [routerLink]="['/home']" [style.color]="selectedIndex==='homePage' ? '#03A9F4' : ''">Home</a>
         </li>
+
+        <li id="labPage" class="nav-item" (click)="onSelect('labPage')">
+          <a class="nav-link active" aria-current="page"  [routerLink]="['/lab']" [style.color]="selectedIndex==='labPage' ? '#03A9F4' : ''">Lab</a>
+        </li>
+
         <li id="aboutPage" class="nav-item" (click)="onSelect('aboutPage')">
           <a class="nav-link active" aria-current="page"  [routerLink]="['/about']" [style.color]="selectedIndex==='aboutPage' ? '#03A9F4' : ''">Learn More</a>
         </li>
-        <li id="infoPage" class="nav-item" (click)="onSelect('infoPage')">
-          <a class="nav-link active" aria-current="page" [routerLink]="['/informations']" [style.color]="selectedIndex==='infoPage' ? '#03A9F4' : ''">About Us</a>
-        </li>
+
 
         <li ngbDropdown class="nav-item dropdown">
           <a ngbDropdownToggle *ngIf="session"  class="nav-link dropdown-toggle"  data-bs-toggle="dropdown" aria-current="page" style="cursor: pointer;" [style.color] = "selectedIndex==='myProfile' ? '#03A9F4' : ''"><i-bs name="person-circle" width="25" height="25" [style.color] = "selectedIndex==='myProfile' ? '#03A9F4' : ''"></i-bs> {{loggedUser}}</a>

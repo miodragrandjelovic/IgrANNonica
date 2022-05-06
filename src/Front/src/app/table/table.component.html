@@ -1,24 +1,18 @@
 <div class="container-table" style="overflow-x:auto; border: #CEECFA 2px solid;border-radius: 5px;">
-    <table class="table table-hover">
+  <table class="table table-hover">
       <caption style="caption-side: top;width:100%;text-align:left;font-weight: bold;font-size: 25px;background-color: #CEECFA; border-top-left-radius: 3px; border-top-right-radius: 3px;padding-left: 20px;color:black;">Dataset</caption>  
       <thead>
           <tr>
-            <th *ngFor="let item of header">{{item}}</th>
-            <!-- u headeru treba da se kreira za svaku kolonu padajuci meni za izbor features, label i enkodinga ako je potrebno -->
+            <th *ngFor="let item of header; let i = index">
+              {{item}}<br>
+              <button type="button" class="btn btn-outline-primary" (click)="sortTableAsc(i)" style="margin-bottom: 3px;width: 100%;">sort Asc</button>
+              <button type="button" class="btn btn-outline-primary" (click)="sortTableDesc(i)" style="width: 100%;">sort Desc</button>
+            </th>
           </tr>
 
           
           <tr>
-            <!-- red sa dropom za label -->
             <th *ngFor="let item of header; let i = index">
-              <!--
-              <select (onselect)="fetchInputsOutputs()" [(ngModel)]="preload[i]">
-                <option value="input">Input</option>
-                <option value="target">Target</option>
-                <option value="none">None</option>
-              </select>
-              -->
-
               <select class="form-select" [ngModel]="preload[i]" (ngModelChange)="fetchInputsOutputs($event, i)">
                 <option value="input">Input</option>
                 <option value="target">Target</option>
@@ -39,4 +33,6 @@
         <ngb-pagination [boundaryLinks]="true" [maxSize]="15" [collectionSize]="dataLength" [(page)]="currentPage" [pageSize]="itemsPerPage" (pageChange)="changePage()">
         </ngb-pagination>
       </div>
+      
+
 </div>

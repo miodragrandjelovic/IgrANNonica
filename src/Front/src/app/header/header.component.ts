@@ -187,6 +187,7 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/']);
     this.selectedIndex = "";
     this.isMenuCollapsed = true;
+    this.prijavaService.logout();
   }
 
 
