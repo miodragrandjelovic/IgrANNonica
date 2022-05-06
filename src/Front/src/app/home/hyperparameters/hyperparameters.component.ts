@@ -81,6 +81,8 @@ export class HyperparametersComponent implements OnInit {
   columNames: Array<string> = [];
   missingValues: Array<string> = [];
   eveluate: any;
+  label: any;
+  pred: any;
   //layers:Array<string> = ["5","5","5","5","5"]
   //
   activationFunctions:Array<any>=[];
@@ -280,15 +282,21 @@ export class HyperparametersComponent implements OnInit {
       this.selectedCheckBoxes = [];
       this.properties = [];
       this.hpResponse = result;
+      console.log(this.hpResponse);
       this.properties = Object.keys(this.hpResponse);
       for (let i = 0; i < this.properties.length; i++) {
-        if (this.properties[i] == 'label')
-          continue;
-        if (this.properties[i] == 'pred')
+        if (this.properties[i] == 'label') {
+            this.label = this.hpResponse[this.properties[i]];
+            continue;
+        }
+        if (this.properties[i] == 'pred') {
+          this.pred = this.hpResponse[this.properties[i]];
           break;
+        }
         if (this.properties[i] == 'eveluate') {
           this.eveluate = this.hpResponse[this.properties[i]];
           console.log(this.eveluate);
+          continue;
         }
         const str = 'val' + this.properties[i];
         let object: CheckBox = {

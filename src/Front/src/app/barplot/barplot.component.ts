@@ -15,16 +15,16 @@ export class BarplotComponent implements OnInit, OnChanges {
   chart: any;
   ctx: any;
 
-  constructor(public spiner:LoadingService) { }
+  constructor(private spiner: LoadingService) { }
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
-    this.spiner.showSpiner=false;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.spiner.showSpiner);
     console.log(this.evaluate);
     this.hpX = [];
     this.hpY = [];
