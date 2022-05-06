@@ -1,7 +1,7 @@
 import { Component, OnInit , Output, EventEmitter} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ParametersService } from 'src/app/services/parameters.service';
-import { Urls } from 'src/app/urls';
+import * as myUrls from 'src/app/urls';
 interface zapamceniDatasetovi {
   name: String,
   size: number,
@@ -23,7 +23,7 @@ export class UserdatasetsComponent implements OnInit {
   zapamceniDatasetovi: any;
   
   constructor(private http: HttpClient, private parametersService: ParametersService){}
-  private url:Urls
+  public url = myUrls.url;
   datasetsNames: any;
   selectedDataset:any;
   datasetsFilteredNames : any = [];

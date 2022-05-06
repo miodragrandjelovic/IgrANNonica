@@ -4,7 +4,6 @@ import { ToastrService } from 'ngx-toastr';
 import { PrijavaService } from 'src/app/prijava/prijava.service';
 import { User } from 'src/app/_model/user.model';
 import { ProfileService } from './profile.service';
-import { Urls } from 'src/app/urls';
 
 @Component({
   selector: 'app-profile',
@@ -13,7 +12,6 @@ import { Urls } from 'src/app/urls';
 })
 export class ProfileComponent implements OnInit {
 
-  public url:Urls
   ulogovanUser: User=new User();
   constructor(private prijavaService: PrijavaService,
     private profilService: ProfileService,
@@ -36,7 +34,7 @@ export class ProfileComponent implements OnInit {
       console.log(data);
       this.toastr.success('Updated successfully', 'Users update');
     }, error=>{
-      console.log(this.url.url);
+      console.log('Update error');
     });
   }
 

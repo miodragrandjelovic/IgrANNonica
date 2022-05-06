@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs';
 import { CsvComponent } from 'src/app/home/csv/csv.component';
 import { DatasetService } from './dataset.service';
-import { Urls } from 'src/app/urls';
+import * as myUrls from 'src/app/urls';
 @Component({
   selector: 'app-dataset',
   templateUrl: './dataset.component.html',
@@ -18,7 +18,7 @@ export class DatasetComponent implements OnInit {
 
   constructor(private http: HttpClient,
     private datasets:DatasetService) { }
-  private url:Urls
+    public url = myUrls.url;
 
   ngOnInit(): void {
          
