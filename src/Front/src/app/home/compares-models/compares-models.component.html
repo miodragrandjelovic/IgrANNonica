@@ -1,0 +1,37 @@
+<div [hidden]="this.hidden"  style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
+    <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;margin-left: 10%;">
+      
+        <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
+        <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> <!-- search da moze po imenu modela ili dataseta-->
+        <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
+          <img src="assets/images/filter.png" style="height:35px; width: auto;">
+        </button>
+    </div>
+    <div class="row" style="padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
+        <div class="col-6">
+          <p class="fw-bold fs-1" >Your models:</p>
+          
+          <div style="max-height:400px;">
+            <div *ngFor="let model of models" class="row py-1 border-top border-dark" >
+                <div class="col-sm-auto float-start d-flex justify-content-start" >
+                    <img class="m-auto"  src="assets/images/datasetRandom.jpg" height="40px" width="40px">
+                </div>    
+                <div class="col float-start d-flex justify-content-start text-left">
+                    <h3  class="">
+                        {{model}}
+                    </h3>
+                </div>
+                <div class="col">
+                  <button style="width:120px ;" type="button" class="btn btn-primary float-end my-1">
+                    Choose
+                  </button>
+                </div>
+            </div>
+          </div>   
+        </div>
+        <div class="col-6" >
+          
+        </div> 
+    </div>
+     
+</div>

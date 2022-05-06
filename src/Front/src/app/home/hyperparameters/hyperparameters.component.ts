@@ -60,7 +60,7 @@ export class HyperparametersComponent implements OnInit {
   inputsString: string;
   outputString: string = "";
   hyperparameters: string;
-  hidden: boolean;
+  hidden: boolean=true;
   value1: number = 80;
   value2: number = 10;
   value3: number = 50;
@@ -147,7 +147,7 @@ export class HyperparametersComponent implements OnInit {
 
     this.service.messageSubject.subscribe({
       next: x => {
-        if (x == 0)
+        if (x == 1)
         {
           this.hidden = false;
           //alert("IM HIDDEN");

@@ -40,6 +40,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { BarplotComponent } from './barplot/barplot.component';
 import { PredictionComponent } from './prediction/prediction.component';
+import { ComparesModelsComponent } from './home/compares-models/compares-models.component';
 
 const icons = {
   envelope,
@@ -77,6 +78,7 @@ const icons = {
     StatisticsComponent,
     BarplotComponent,
     PredictionComponent,
+    ComparesModelsComponent,
   ],
   imports: [
     BrowserModule,

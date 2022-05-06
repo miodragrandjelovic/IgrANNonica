@@ -6,12 +6,14 @@
       <div class="btn-group" role="group" aria-label="navigationToggle" style="background-color: transparent;" style="width:100%;">
         <button id="loadData" type="button" class="no_border" style="margin:1px; border-radius: 5px;" (click)="showCsvData()" [style.border]="currentActive==0 ? '3px solid #03a9f4' : 'none'">Load Data</button>
         <button id="trainModel" type="button" class="no_border" style="margin:1px; border-radius: 5px;" (click)="showHyperp()" [style.border]="currentActive==1 ? '3px solid #03a9f4' : 'none'">Train Model</button>
+        <button *ngIf="session" id="comparesModels" type="button" class="no_border" style="margin:1px; border-radius: 5px;" (click)="showComapreModels()" [style.border]="currentActive==2 ? '3px solid #03a9f4' : 'none'">Comapre Models</button>
       </div>
     </div>
 
     <div>
       <app-csv></app-csv>
       <app-hyperparameters></app-hyperparameters>
+      <app-compares-models></app-compares-models>
     </div>
   </div>
 </div>
