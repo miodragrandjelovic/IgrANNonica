@@ -2,5 +2,9 @@
     max-height:400px;
 }
 
+.row:hover{
+    background-color: #a9e4ff;
+}
+
 
 

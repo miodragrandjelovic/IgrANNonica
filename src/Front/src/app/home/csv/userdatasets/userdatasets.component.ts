@@ -76,7 +76,7 @@ export class UserdatasetsComponent implements OnInit {
 
   selectChange(event:any){
     this.selectedDataset=event.target.id;
-    //alert("NAZIV JE "+ this.selectedDataset);
+    alert("NAZIV JE "+ this.selectedDataset);
     console.log('ovo je kliknuto za naziv '+this.selectedDataset);
     //alert(this.selectedDataset);
     this.loadThisDataset(this.selectedDataset);

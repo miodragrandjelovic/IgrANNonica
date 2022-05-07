@@ -1,21 +1,22 @@
 <div class="container-fluid w-100 overflow-auto" >
     <div class="row py-1 align-items-center justify-content-center border-top border-dark" *ngFor="let item of zapamceniDatasetovi"
-    style=" border-top: 1px solid #212f3c; cursor:pointer;">  
+    style=" border-top: 1px solid #212f3c; cursor:pointer;"
+    id="{{item.name}}" (click)="selectChange($event)" (change)="this.selectedDataset=item.selectedDataset">  
         
-        <div class="col-sm-auto py-2" >
-            <img class="align-items-center justify-content-center " src="assets/images/datasetRandom.jpg" height="30px" width="30px" >
+        <div id="{{item.name}}" class="col-sm-auto py-2" >
+            <img id="{{item.name}}" class="align-items-center justify-content-center " src="assets/images/datasetRandom.jpg" height="30px" width="30px" >
         </div>
 
-        <div class="col-sm-auto " >
-            <h3 class="">
+        <div id="{{item.name}}" class="col-sm-auto " >
+            <h3 id="{{item.name}}" class="">
                 {{item.name}}
             </h3> 
         </div>
-        <div class="col-5">
-            <div class="h-50">Size: {{item.size}}</div>
-            <div class="h-50">Last Modified: {{item.date}}</div>
+        <div id="{{item.name}}" class="col-5">
+            <div id="{{item.name}}" class="h-50">Size: {{item.size}}</div>
+            <div id="{{item.name}}" class="h-50">Last Modified: {{item.date}}</div>
         </div>
-        <div class="col " >
+        <div class="col">
             <div class="float-end">  
                 <button class="btn btn-primary my-1 me-1 " type="button" >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
@@ -34,11 +35,11 @@
                     Delete
                 </button>
             </div>
-            <div class="float-end">  
+            <!--<div class="float-end">  
                 <a style="background:transparent; border: none;cursor:pointer;padding-right: 10px;" (click)="selectChange($event)" (change)="this.selectedDataset=item.selectedDataset">
                     <img id="{{item.name}}" src="assets/images/eye.png" width="30px" height="30px" style="margin-top: 5px;">
                 </a>
-            </div>
+            </div>-->
         </div>
   
         <!-- ovaj div ce da ima dugmice -->
