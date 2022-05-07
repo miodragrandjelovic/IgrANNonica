@@ -23,6 +23,7 @@ from keras.losses import MeanSquaredError, BinaryCrossentropy, CategoricalCrosse
 
 from keras.callbacks import Callback
 from keras.utils import np_utils
+import keras.backend as K
 
 
 class epochResults(Callback):
@@ -391,6 +392,33 @@ def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_l
     return model
 
 
+#def f1_score(y_true, y_pred): #taken from old keras source code
+#    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+#    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+#    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+#    precision = true_positives / (predicted_positives + K.epsilon())
+#    recall = true_positives / (possible_positives + K.epsilon())
+#    f1_val = 2*(precision*recall)/(precision+recall+K.epsilon())
+#    return f1_val
+def recall_m(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    recall = true_positives / (possible_positives + 
+    K.epsilon())
+    return recall
+
+def precision_m(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon())
+    return precision
+
+def f1_score(y_true, y_pred):
+    precision = precision_m(y_true, y_pred)
+    recall = recall_m(y_true, y_pred)
+    return 2*((precision*recall)/(precision+recall+K.epsilon()))
+
+
 def compile_model(model, type, y,lr):
     # these are the best options for linear regression!!
     # common loss functions for 
@@ -400,7 +428,7 @@ def compile_model(model, type, y,lr):
 
     # also, there are multiple metrics that user can choose from
     reg_metrics = ['mae','mse','RootMeanSquaredError']
-    class_metrics=['accuracy','AUC','Precision','Recall']
+    class_metrics=['accuracy','AUC','Precision','Recall',f1_score]
     
     if (type == 'regression'):
         met = reg_metrics
