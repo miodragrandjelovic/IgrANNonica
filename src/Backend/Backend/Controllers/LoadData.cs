@@ -340,7 +340,10 @@ namespace Backend.Controllers
                 {
                     outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
                 }
-                if(publicModel)
+
+                //modeldirname sacuvati i ona 3 niza kao txt fajl unutar ovog foldera
+
+                if (publicModel)
                 {
                     using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(publicPathModel))
                     {
@@ -365,6 +368,19 @@ namespace Backend.Controllers
                         outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
                     }
                     file1.Close();
+                    //ColumNames Encodings CatNum
+
+                    string ColumnNames = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "ColumnNames.txt");
+                    List<string> ColumnlinesTxt = hiper.ColumNames;
+                    System.IO.File.WriteAllLines(ColumnNames, ColumnlinesTxt);
+
+                    string Encodings = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "Encodings.txt");
+                    List<string> EncodingslinesTxt = hiper.Encodings;
+                    System.IO.File.WriteAllLines(Encodings, EncodingslinesTxt);
+
+                    string CatNum = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "CatNum.txt");
+                    List<string> CatNumlinesTxt = hiper.CatNum;
+                    System.IO.File.WriteAllLines(CatNum, CatNumlinesTxt);
                 }
 
                 //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
