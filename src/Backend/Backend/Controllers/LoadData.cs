@@ -342,6 +342,19 @@ namespace Backend.Controllers
                 }
 
                 //modeldirname sacuvati i ona 3 niza kao txt fajl unutar ovog foldera
+                string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
+
+                string ColumnNamespath = Path.Combine(modeldirname, "ColumnNames.txt");
+                List<string> ColumnLinesTxt = hiper.ColumNames;
+                System.IO.File.WriteAllLines(ColumnNamespath, ColumnLinesTxt);
+
+                string Encodingspath = Path.Combine(modeldirname, "Encodings.txt");
+                List<string> EncodingsLinesTxt = hiper.Encodings;
+                System.IO.File.WriteAllLines(Encodingspath, EncodingsLinesTxt);
+
+                string CatNumpath = Path.Combine(modeldirname, "CatNum.txt");
+                List<string> CatNumLinesTxt = hiper.CatNum;
+                System.IO.File.WriteAllLines(CatNumpath, CatNumLinesTxt);
 
                 if (publicModel)
                 {
@@ -385,13 +398,13 @@ namespace Backend.Controllers
 
                 //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
                 string path1 = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
-                string names = upgradedName + "1" + ".csv";
+                string names = "deleteme.csv";
                 string pathToDelete = System.IO.Path.Combine(path1, names);
-                if (System.IO.File.Exists(pathToDelete))
-                {
-                    //System.IO.File.Delete(pathToDelete);
-                }
                 file.Close();
+                if (System.IO.File.Exists(pathToCreate))
+                {
+                    System.IO.File.Delete(pathToCreate);
+                }
                 
             }
             else
