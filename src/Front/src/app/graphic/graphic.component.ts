@@ -73,6 +73,9 @@ export class GraphicComponent implements OnInit, OnDestroy {
               title: {
                 display: true,
                 text: 'Epochs'
+              },
+              ticks:{
+                autoSkip:false,
               }
             },
             y: {
