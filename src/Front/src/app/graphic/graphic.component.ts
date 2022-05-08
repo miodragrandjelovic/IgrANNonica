@@ -66,6 +66,7 @@ export class GraphicComponent implements OnInit, OnDestroy {
             duration: 0
           },
           responsive: true,
+          maintainAspectRatio:false,
           scales: {
             x: {
               display: true,
