@@ -1,5 +1,5 @@
 <div [hidden]="this.hidden"  style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
-    <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;margin-left: 10%;">
+    <div class="row w-100 mt-0 px-1" style="padding: 10px; padding-left: 10%; padding-right: 10%;margin-left: 10%;">
       
         <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
         <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> <!-- search da moze po imenu modela ili dataseta-->
@@ -7,30 +7,60 @@
           <img src="assets/images/filter.png" style="height:35px; width: auto;">
         </button>
     </div>
-    <div class="row" style="padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
-        <div class="col-6">
+    <div class="row h-auto m-auto" style=" padding: 10px; padding-left: 30px; padding-right: 30px;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
+        <div class="col-8 border border-dark rounded-2">
           <p class="fw-bold fs-1" >Your models:</p>
           
-          <div style="max-height:400px;">
-            <div *ngFor="let model of models" class="row py-1 border-top border-dark" >
+          <div class="container-fluid w-100 overflow-auto" style="max-height:300px;">
+            <div id={{model.name}} *ngFor="let model of this.Modelss" class="row py-1 border-top border-dark" >
                 <div class="col-sm-auto float-start d-flex justify-content-start" >
                     <img class="m-auto"  src="assets/images/datasetRandom.jpg" height="40px" width="40px">
                 </div>    
                 <div class="col float-start d-flex justify-content-start text-left">
-                    <h3  class="">
-                        {{model}}
+                    <h3  class="fw-bold my-auto">
+                        {{model.name}}
                     </h3>
                 </div>
-                <div class="col">
-                  <button style="width:120px ;" type="button" class="btn btn-primary float-end my-1">
+                <div class="col  d-flex justify-content-start text-left">
+                  <h4 class="my-auto">Train on dataset: </h4> <h4 class="fw-bold m-auto">{{model.fromCsv}}</h4>
+                </div>
+                <div class="col my-auto">
+                  <button *ngIf="daliJeUkljucen(model.name)" style="width:120px;" type="button" class="btn btn-primary float-end my-1"  (click)="Izaberi(model.name)">
                     Choose
+                  </button>
+                  <button *ngIf="!daliJeUkljucen(model.name)" style="width:120px;" type="button" class="btn btn-secondary float-end my-1"  (click)="Izbaci(model.name)">
+                    NoChose
                   </button>
                 </div>
             </div>
-          </div>   
+          </div>  
         </div>
-        <div class="col-6" >
-          
+
+        <div class="col-4 text-center" >
+          <p class="fw-bold fs-3" >Choose two models and comapre them</p>    
+          <div style="height: 300px;" class="m-0">
+            <div class="row p-0 h-25" >
+              <div class="input-group m-auto">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="">First:</span>
+                </div>
+                <input type="text" class="form-control" [value]=" this.chooseModels[0] ? this.chooseModels[0] :'' ">
+              </div>
+            </div>
+            <div class="row p-0 h-25">
+              <div class="input-group m-auto">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="">Second:</span>
+                </div>
+                <input type="text" class="form-control" [value]="this.chooseModels[1] ? this.chooseModels[1]:''">
+              </div>
+            </div>
+            <div class="row d-grid my-2 ps-2" >
+              <button class="btn btn-outline-secondary  ">
+                <p class="fw-bold " >COMPARE</p>
+              </button>
+            </div>
+          </div>
         </div> 
     </div>
      
