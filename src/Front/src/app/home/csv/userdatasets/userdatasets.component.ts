@@ -85,14 +85,13 @@ export class UserdatasetsComponent implements OnInit {
   downloadDataset(event:any){
     this.selectedDataset=event.target.id;
     alert("DOWNLOAD DATASET "+ this.selectedDataset);
-    
-    
+    event.stopPropagation();
   }
 
   deleteDataset(event:any){
     this.selectedDataset=event.target.id;
     alert("DELETE DATSET "+ this.selectedDataset);
-    
+    event.stopPropagation();
   }
 
   loadThisDataset(naziv:any){

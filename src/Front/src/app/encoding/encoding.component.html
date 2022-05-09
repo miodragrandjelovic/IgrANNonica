@@ -40,6 +40,8 @@
                     <select class="form-select" [ngModel]="missingValues[i]" *ngIf="selected[i] == 'numerical'" (ngModelChange)="changeMissingValues($event, i)">
                         <option value="mean">Mean</option>
                         <option value="median">Median</option>
+                        <option value="min">Minimum</option>
+                        <option value="max">Maximum</option>
                         <option value="delete">Delete</option>
                     </select>
                 </td>

@@ -1,19 +1,20 @@
 <div class="container-fluid w-100 overflow-auto" >
     <div class="row py-1 align-items-center justify-content-center border-top border-dark" *ngFor="let item of zapamceniDatasetovi"
     style=" border-top: 1px solid #212f3c; cursor:pointer;"
-    id="{{item.name}}">  
+    id="{{item.name}}"
+    (click)="selectChange($event)" (change)="this.selectedDataset=item.selectedDataset">  
         
-        <div id="{{item.name}}" class="col-sm-auto py-2" (click)="selectChange($event)" (change)="this.selectedDataset=item.selectedDataset">
+        <div id="{{item.name}}" class="col-sm-auto py-2" >
             <img id="{{item.name}}" class="align-items-center justify-content-center " src="assets/images/datasetRandom.jpg" height="30px" width="30px" >
         </div>
 
-        <div id="{{item.name}}" class="col-sm-auto" (click)="selectChange($event)" (change)="this.selectedDataset=item.selectedDataset">
+        <div id="{{item.name}}" class="col-sm-auto">
             <h3 id="{{item.name}}" class="">
                 {{item.name}}
             </h3> 
         </div>
 
-        <div id="{{item.name}}" class="col-5" (click)="selectChange($event)" (change)="this.selectedDataset=item.selectedDataset">
+        <div id="{{item.name}}" class="col-5">
             <div id="{{item.name}}" class="h-50">Size: {{item.size}}</div>
             <div id="{{item.name}}" class="h-50">Last Modified: {{item.date}}</div>
         </div>
