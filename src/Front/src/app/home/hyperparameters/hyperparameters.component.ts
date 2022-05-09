@@ -9,7 +9,7 @@ import { GraphicComponent } from '../../graphic/graphic.component';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/loading/loading.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
-
+import * as myUrls from 'src/app/urls';
 interface RequestHyperparameters {
   learningRate: number,
   epoch: number,
@@ -113,7 +113,7 @@ export class HyperparametersComponent implements OnInit {
     Chart.register(...registerables);
     Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
    } 
-
+  public url = myUrls.url;
   get neuronControls() {
     return (<FormArray>this.hyperparametersForm.get('neurons')).controls;
    }
@@ -277,7 +277,7 @@ export class HyperparametersComponent implements OnInit {
     } 
     console.log(myreq);
 
-    this.http.post('https://localhost:7167/api/LoadData/hpNeprijavljen', myreq).subscribe(result => {
+    this.http.post(this.url + '/api/LoadData/hpNeprijavljen', myreq).subscribe(result => {
       this.inputCheckBoxes = [];
       this.selectedCheckBoxes = [];
       this.properties = [];

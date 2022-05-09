@@ -330,7 +330,7 @@ namespace Backend.Controllers
                 }
 
                 lines.RemoveAll(l => l.Contains("Evaluation Only."));
-
+                
                 string model = modelNames + ".csv";
                 string publicName = modelNames + "(" + Username + ")";
                 string pblmod = publicName + ".csv";
@@ -340,7 +340,23 @@ namespace Backend.Controllers
                 {
                     outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
                 }
-                if(publicModel)
+
+                //modeldirname sacuvati i ona 3 niza kao txt fajl unutar ovog foldera
+                string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
+
+                string ColumnNamespath = Path.Combine(modeldirname, "ColumnNames.txt");
+                List<string> ColumnLinesTxt = hiper.ColumNames;
+                System.IO.File.WriteAllLines(ColumnNamespath, ColumnLinesTxt);
+
+                string Encodingspath = Path.Combine(modeldirname, "Encodings.txt");
+                List<string> EncodingsLinesTxt = hiper.Encodings;
+                System.IO.File.WriteAllLines(Encodingspath, EncodingsLinesTxt);
+
+                string CatNumpath = Path.Combine(modeldirname, "CatNum.txt");
+                List<string> CatNumLinesTxt = hiper.CatNum;
+                System.IO.File.WriteAllLines(CatNumpath, CatNumLinesTxt);
+
+                if (publicModel)
                 {
                     using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(publicPathModel))
                     {
@@ -364,17 +380,32 @@ namespace Backend.Controllers
                     {
                         outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
                     }
+                    file1.Close();
+                    //ColumNames Encodings CatNum
+
+                    string ColumnNames = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "ColumnNames.txt");
+                    List<string> ColumnlinesTxt = hiper.ColumNames;
+                    System.IO.File.WriteAllLines(ColumnNames, ColumnlinesTxt);
+
+                    string Encodings = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "Encodings.txt");
+                    List<string> EncodingslinesTxt = hiper.Encodings;
+                    System.IO.File.WriteAllLines(Encodings, EncodingslinesTxt);
+
+                    string CatNum = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "CatNum.txt");
+                    List<string> CatNumlinesTxt = hiper.CatNum;
+                    System.IO.File.WriteAllLines(CatNum, CatNumlinesTxt);
                 }
 
                 //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
                 string path1 = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
-                string names = upgradedName + "1" + ".csv";
+                string names = "deleteme.csv";
                 string pathToDelete = System.IO.Path.Combine(path1, names);
-                if (System.IO.File.Exists(pathToDelete))
+                file.Close();
+                if (System.IO.File.Exists(pathToCreate))
                 {
-                    //System.IO.File.Delete(pathToDelete);
+                    System.IO.File.Delete(pathToCreate);
                 }
-
+                
             }
             else
                 Console.WriteLine("Niste ulogovani.");
@@ -474,6 +505,7 @@ namespace Backend.Controllers
                     {
                         System.IO.File.Delete(pathToCreate);
                     }*/
+                    file.Close();
                 }
             }
             else
