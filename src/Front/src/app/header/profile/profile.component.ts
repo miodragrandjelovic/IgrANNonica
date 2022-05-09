@@ -12,12 +12,11 @@ import { ProfileService } from './profile.service';
 })
 export class ProfileComponent implements OnInit {
 
-
   ulogovanUser: User=new User();
   constructor(private prijavaService: PrijavaService,
     private profilService: ProfileService,
     private toastr:ToastrService) { }
-
+  
   ngOnInit(): void {
     this.prijavaService.getUserByUsername(sessionStorage.getItem("username")).subscribe(data=>{
       this.ulogovanUser=data;
