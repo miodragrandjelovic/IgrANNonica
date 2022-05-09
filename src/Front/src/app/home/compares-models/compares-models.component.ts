@@ -12,6 +12,10 @@ interface Buut{
   name:String,
   ukljucen:Boolean
 } 
+interface ModelsForC{
+  dirname1:String;
+  modelname1:String
+}
 
 @Component({
   selector: 'app-compares-models',
@@ -24,7 +28,11 @@ export class ComparesModelsComponent implements OnInit {
   constructor(private service : MessageService,private http: HttpClient) {  }
   
   Modelss:Models[]=[];
-  chooseModels:String[]=[];
+  copyModels:Models[]=[];
+  modelsFilteredNames:Models[]=[];
+  searchInputField: any ;
+
+  chooseModels:ModelsForC[]=[];
   changeButt:Buut[]=[];
   butt:Buut;
   ngOnInit(): void {
@@ -51,7 +59,7 @@ export class ComparesModelsComponent implements OnInit {
     this.http.get<any>('https://localhost:7167/api/Python/savedModels').subscribe(result => {  
           console.log(result);
           this.Modelss=result;
-          
+          this.copyModels=result;
           for(var i of this.Modelss)
           {
             this.butt={name:i.name,ukljucen:true};
@@ -61,19 +69,18 @@ export class ComparesModelsComponent implements OnInit {
         }); 
   }
 
-  Izaberi(model1:String)
+  Izaberi(model1:Models)
   {
     
     if(this.chooseModels.length<2)
     {
-      this.chooseModels.push(model1);
+      this.chooseModels.push({dirname1:model1.fromCsv,modelname1:model1.name});
 
       for(var i of this.changeButt)
       {
-        if(i.name==model1)
+        if(i.name==model1.name)
           i.ukljucen=false;
       }
-        console.log(this.changeButt);
       console.log(this.chooseModels);
     }
     else
@@ -82,14 +89,14 @@ export class ComparesModelsComponent implements OnInit {
     }
   
   }
-  Izbaci(model1:String)
+  Izbaci(model1:Models)
   {
      this.chooseModels.forEach((element,index)=>{
-       if(element==model1) this.chooseModels.splice(index,1);
+       if(element.modelname1==model1.name) this.chooseModels.splice(index,1);
      });
      for(var i of this.changeButt)
       {
-        if(i.name==model1)
+        if(i.name==model1.name)
           i.ukljucen=true;
       }
     console.log(this.chooseModels);
@@ -103,6 +110,47 @@ export class ComparesModelsComponent implements OnInit {
         return i.ukljucen;
     }
     return true;
+  }
+
+  CompareModels1()
+  {
+    if(this.chooseModels.length!=2)
+    {
+      alert("Nisi izabrao 2 modela");
+    }
+    else
+    {
+        this.http.post<any>('https://localhost:7167/api/LoadData/modelForCompare?dirname='+this.chooseModels[0].dirname1+";modelname="+this.chooseModels[0].modelname1,{
+          dirname:this.chooseModels[0].dirname1,
+          modelname:this.chooseModels[0].modelname1
+        }).subscribe(result1 => {  
+          console.log(result1);
+          
+        }); 
+      
+        this.http.post<any>('https://localhost:7167/api/LoadData/modelForCompare?dirname='+this.chooseModels[1].dirname1+";modelname="+this.chooseModels[1].modelname1,{
+          dirname:this.chooseModels[1].dirname1,
+          modelname:this.chooseModels[1].modelname1
+        }).subscribe(result2 => {  
+          console.log(result2);
+          
+        }); 
+         
+    }
+  }
+  searchDatasets()
+  {
+    this.modelsFilteredNames = [];
+    this.Modelss = this.copyModels;
+    if( this.searchInputField != ""){
+    for (var index = 0; index < this.Modelss.length; index++) {
+      if(this.Modelss[index].name.indexOf(this.searchInputField.toLowerCase()) !== -1){
+        this.modelsFilteredNames.push(this.Modelss[index]);
+      }  
+    }
+
+    this.Modelss = this.modelsFilteredNames;
+   }
   }
 
 }
