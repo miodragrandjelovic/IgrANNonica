@@ -82,6 +82,18 @@ export class UserdatasetsComponent implements OnInit {
     this.loadThisDataset(this.selectedDataset);
 }
 
+  downloadDataset(event:any){
+    this.selectedDataset=event.target.id;
+    alert("DOWNLOAD DATASET "+ this.selectedDataset);
+    event.stopPropagation();
+  }
+
+  deleteDataset(event:any){
+    this.selectedDataset=event.target.id;
+    alert("DELETE DATSET "+ this.selectedDataset);
+    event.stopPropagation();
+  }
+
   loadThisDataset(naziv:any){
 
     // !! POSLE OVOG ZATEVA, POTREBNO JE PROSLEDITI I ZAHTEV ZA KORELACIONU MATRICU!!!
