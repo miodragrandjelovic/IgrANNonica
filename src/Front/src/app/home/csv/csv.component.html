@@ -143,9 +143,24 @@
         </div>
             
         <div class="row">
-          <button style="width:40%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px;" [disabled]="!uploadedFile" (click)="addNewDatasetAndPreview()">
+          <button style="width:40%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px;margin:auto;" [disabled]="!uploadedFile" (click)="addNewDatasetAndPreview()">
             Create
           </button>
+
+          <div class="form-check form-switch" style="width:fit-content;margin:auto;">
+              <label class="form-check-label" for="flexPrivatePublic">Private</label>
+              <input class="form-check-input" type="checkbox" id="flexPrivatePublic" [(ngModel)]="privateOrPublic">
+          </div>
+
+          <!--
+          <div class="form-check form-switch control randomize">
+            <div class="select">
+              <label class="form-check-label" for="flexSwitchCheckDefault">Shuffle</label><br>
+              <input class="form-check-input" type="checkbox" [(ngModel)]="randomize" id="flexSwitchCheckDefault" style="margin:3px;" formControlName="randomize">
+            </div>
+          </div>
+          -->
+
         </div>
       </div>
     </div>

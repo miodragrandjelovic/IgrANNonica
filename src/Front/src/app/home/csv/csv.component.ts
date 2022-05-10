@@ -28,6 +28,7 @@ export class CsvComponent implements OnInit {
     @ViewChild(UserdatasetsComponent) child: any; //pozivamo komponentu userDatasets da bi pristupili njenim metodama
     //zato sto ne radi poziv iz konstuktora
 
+    privateOrPublic: boolean = false;
 
     hidden: boolean;
     currentCorrResult: any;
