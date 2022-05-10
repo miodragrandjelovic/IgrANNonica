@@ -149,9 +149,9 @@ def treniraj():
     
     return jsonify(stats.stats)
 
-@app.route("/prediction", methods=['GET']) #Slanje predikcije na bek
-def  getPrediction():
-    return pr.predikcija(savedModel,predictdf)
+#@app.route("/prediction", methods=['GET']) #Slanje predikcije na bek
+#def  getPrediction():
+#    return pr.predikcija(path,origcsv,predcsv,type,columns,encodings,num_cat,output)   ### odkomentarisati kad se odradi na frontu i backu
 
 #if(__name__=="main"):
 app.run(port = 3000)
