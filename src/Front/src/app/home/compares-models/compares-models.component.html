@@ -66,5 +66,20 @@
           </div>
         </div> 
     </div>
-     
+    
+    <div *ngIf="table" class="row" >
+      <div class="col-6 py-3 px-2  text-center">
+        <h2 class="fw-bold my-2">{{this.chooseModels[0].modelname1}}</h2>
+        <app-barplot class="w-100 px-4" style="height: 200px; width: 100%;" [evaluate]="eveluate1"></app-barplot>
+        <app-prediction class="w-100 px-4" style="height: 200px;" [pred]="pred1" [label]="label1"></app-prediction>
+        <app-graphic class="w-100 px-4" style="height: 200px;" *ngFor="let item of inputCheckBoxes1; let i = index" [id]="i" [selected]="item"></app-graphic>
+      </div>
+      <div class="col-6 p-3 px-2 text-center">
+        <h2 class="fw-bold my-2">{{this.chooseModels[1].modelname1}}</h2>
+        <app-barplot class="w-100 " style="height: 200px; width: 100%;" [evaluate]="eveluate2"></app-barplot>
+        <app-prediction class="w-100 p-2" style="height: 200px;" [pred]="pred2" [label]="label2 "></app-prediction>
+        <app-graphic class="w-100 p-2" style="height: 200px;" *ngFor="let item of inputCheckBoxes2; let i2 = index" [id]="i2+7" [selected]="item"></app-graphic>
+      </div>
+
+    </div>
 </div>
