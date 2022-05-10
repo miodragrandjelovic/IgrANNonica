@@ -70,7 +70,9 @@ export class PredictionComponent implements OnInit, OnChanges {
           y1: {
             position: right
           }
-        }
+        },
+        responsive: true,
+        maintainAspectRatio:false,
       }
     });
   }
