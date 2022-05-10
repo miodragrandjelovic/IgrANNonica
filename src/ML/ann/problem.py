@@ -128,9 +128,9 @@ class Model():
         #compile the model
         fn.compile_model(self.model, type, self.data.y,learning_rate)
 
-    def trainModel(self,type,epochs, batch_size):
+    def trainModel(self,type,epochs, batch_size,path):
         # train our model
-        self.pred,self.label,self.evaluate,self.history = fn.train_model(self.model,type, self.data.X_train, self.data.y_train, epochs, batch_size,self.data.X_val,self.data.y_val, self.data.X_test, self.data.y_test)
+        self.pred,self.label,self.evaluate,self.history = fn.train_model(self.model,type, self.data.X_train, self.data.y_train, epochs, batch_size,self.data.X_val,self.data.y_val, self.data.X_test, self.data.y_test,path)
         
 
     def defMetrics(self, type):
