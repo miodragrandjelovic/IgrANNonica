@@ -25,5 +25,20 @@ export class ProfileService {
      });
  }
 
+ 
+ get(){
+  return sessionStorage.getItem('username');
+  
+}
+
+user:any=false;
+deleteAccount() 
+{
+  this.user=this.get();
+  this.http.delete<any>(this.url +'/api/RegistracijaUsera/username?username='+this.user).subscribe(result => { 
+    console.log(result);
+   });
+}
+
 
 }
