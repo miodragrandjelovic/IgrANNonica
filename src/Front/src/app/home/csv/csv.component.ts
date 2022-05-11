@@ -464,10 +464,11 @@ export class CsvComponent implements OnInit {
                 this.rowLines = this.rowsArray.slice(0, this.itemsPerPage);
                 this.allData = this.rowsArray;
                 //alert("Now saving dataset under name "+fileName);
-                this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
+                
+                // privatePublic lepo kupi vrednost, ali iz nekog razloga na beku je false...
+                this.http.post<any>('https://localhost:7167/api/LoadData/csv?publicData='+privatePublic, {
                     csvData: JSON.stringify(this.dataObject),
-                    Name: fileName,
-                    publicData : privatePublic
+                    Name: fileName
                 }).subscribe(result => {
                     for(let i = 0; i < this.headers.length; i++){
                         const currentRow = [this.headers[i],
