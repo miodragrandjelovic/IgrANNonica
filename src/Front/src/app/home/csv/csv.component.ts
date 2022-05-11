@@ -28,7 +28,7 @@ export class CsvComponent implements OnInit {
     @ViewChild(UserdatasetsComponent) child: any; //pozivamo komponentu userDatasets da bi pristupili njenim metodama
     //zato sto ne radi poziv iz konstuktora
 
-    onemogucenaPredaja:boolean = true;
+    
     
     privateOrPublic: boolean = false;
 
@@ -178,10 +178,16 @@ export class CsvComponent implements OnInit {
 
     userUploadedFile:any;
 
+    onemogucenaPredaja:boolean = true;
+    onemogucenoIme: boolean = true;
+
+    onemoguceno:boolean = true;
+
     fileUpload(files:any)
     {
         this.userUploadedFile = files;
         this.onemogucenaPredaja = false;
+        
 
         let fileList = (<HTMLInputElement>files.target).files;
         
@@ -193,11 +199,30 @@ export class CsvComponent implements OnInit {
             //alert("Naziv je -"+defFileName+"-");
             //set filename
             this.datasetTitle = defFileName;
+            this.onemogucenoIme = false;
 
+            
+            this.changeButtonEnable();
         }
 
         
     }
+
+    
+
+    checkButtonEnable()
+    {
+        //alert("Provera");
+        if (this.datasetTitle == "") this.onemogucenoIme = true;
+        else this.onemogucenoIme = false;  
+
+        this.changeButtonEnable();
+    }  
+    
+    changeButtonEnable(){
+        this.onemoguceno = this.onemogucenoIme || this.onemogucenaPredaja;
+    }
+
 
     fileUploaddddd(files: any) {
         this.encodingArray = [];
@@ -486,6 +511,9 @@ export class CsvComponent implements OnInit {
         this.datasetTitle = '';
         this.privateOrPublic = false;
         this.uploadedFile = false;
+        this.onemogucenaPredaja = true;
+        this.onemogucenoIme = true;
+        this.changeButtonEnable();
         this.parametersService.setDatasets();
         // treba i da se sacuva dataset!!!!!
     }
@@ -584,7 +612,7 @@ export class CsvComponent implements OnInit {
       //this.showMe = false;
       this.modalService.open(newFile, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
-        alert("Zatvoreno1");
+        //alert("Zatvoreno1");
       }, (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         this.datasetTitle = "";
