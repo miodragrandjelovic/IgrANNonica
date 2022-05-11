@@ -188,6 +188,7 @@ namespace Backend.Controllers
 
             return Ok(resultjson);
         }
+        /*
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model kao i cuvanje povratne vrednosti modela
         public async Task<ActionResult>Post(String modelNames, Boolean publicModel) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
         {
@@ -346,7 +347,7 @@ namespace Backend.Controllers
             }
             else
                 return Ok("Korisnik nije ulogovan.");
-        }
+        }*/
 
         [HttpPost("hp")] //Slanje HP na pajton
         public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper, String modelNames, Boolean publicModel) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
@@ -567,7 +568,7 @@ namespace Backend.Controllers
 
         [HttpPost("csv")] //Slanje CSV na pajton
         //[Obsolete]
-        public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad cs)
+        public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad cs, Boolean publicData)
         {
             string name = cs.Name;
             string csve = cs.CsvData;
@@ -589,7 +590,10 @@ namespace Backend.Controllers
             string pathToCreate = "";
             if (Username != null)
             {
-                string path = System.IO.Path.Combine(currentPath, "Users", Username, upgradedName);
+                string path = System.IO.Path.Combine(currentPath, "Users", Username, name);
+                string publicPath = System.IO.Path.Combine(currentPath, "Users", "publicDatasets", name);
+                string publicName = name + ".csv";
+                string publicCreate = System.IO.Path.Combine(publicPath, publicName);
                 if (Directory.Exists(path))
                     Console.WriteLine("File is already in system.");
                 else
@@ -604,14 +608,10 @@ namespace Backend.Controllers
                     JsonUtility.ImportData(csve, worksheet.Cells, 0, 0, layoutOptions);
 
                     //string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
-                    string names = upgradedName + "1" + ".csv";
+                    string names = name + "1" + ".csv";
                     pathToCreate = System.IO.Path.Combine(path, names); 
-                    //if(!System.IO.Directory.Exists(path))
-                    //{
-                    //    return BadRequest("Niste registrovani/ulogovani."+path);
-                   // }
-                 //   else
-                        workbook.Save(pathToCreate, SaveFormat.CSV);
+
+                    workbook.Save(pathToCreate, SaveFormat.CSV);
             
                     List<String> lines = new List<string>();
                     string line;
@@ -625,17 +625,31 @@ namespace Backend.Controllers
 
                     lines.RemoveAll(l => l.Contains("Evaluation Only."));
 
-                    string pathToCreate12 = System.IO.Path.Combine(path, name);
+                    string pathToCreate12 = System.IO.Path.Combine(path, name + ".csv");
                     using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(pathToCreate12))
                     {
                         outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
                     }
 
-                    /*if (System.IO.File.Exists(pathToCreate))
+                    if(publicData)
                     {
-                        System.IO.File.Delete(pathToCreate);
-                    }*/
+                        if (Directory.Exists(publicPath))
+                            Console.WriteLine("There is already public dataset with that name.");
+                        else
+                        {
+                            System.IO.Directory.CreateDirectory(publicPath);
+                            Console.WriteLine("Directory for '{0}' created successfully!", name);
+                            //cuvanje dataseta na putanji publicPath i kreirati folder po imenu csv-a?
+                            using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(publicCreate))
+                            {
+                                outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
+                            }
+                        }
+                    }
+
+
                     file.Close();
+                    System.IO.File.Delete(pathToCreate);
                 }
             }
             else
