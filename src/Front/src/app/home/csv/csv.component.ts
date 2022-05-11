@@ -188,8 +188,12 @@ export class CsvComponent implements OnInit {
         if (fileList && fileList.length > 0) {
             let file : File = fileList[0];
 
+            let defFileName = file.name;
+            defFileName = defFileName.replace(".csv","");
+            //alert("Naziv je -"+defFileName+"-");
             //set filename
-            this.datasetTitle = file.name;
+            this.datasetTitle = defFileName;
+
         }
 
         
