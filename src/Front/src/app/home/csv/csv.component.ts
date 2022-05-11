@@ -30,7 +30,7 @@ export class CsvComponent implements OnInit {
 
     
     
-    privateOrPublic: boolean = false;
+    privateOrPublic: boolean ;
 
     hidden: boolean;
     currentCorrResult: any;
@@ -496,11 +496,7 @@ export class CsvComponent implements OnInit {
     addNewDatasetAndPreview()
     {
         // treba da se pokupi vrednost i prosledi 
-        var pp;
-        if (this.privateOrPublic == false) pp = "false";
-        else pp = "true"; 
-        //alert(this.datasetTitle + " " + pp);
-
+        
         // fja za slanje na bek
         this.sendNewFile(this.datasetTitle, this.privateOrPublic);
 
@@ -510,7 +506,7 @@ export class CsvComponent implements OnInit {
         this.showMe = true;
         document.getElementById("closeModal")?.click();
         this.datasetTitle = '';
-        this.privateOrPublic = false;
+        //this.privateOrPublic = false;
         this.uploadedFile = false;
         this.onemogucenaPredaja = true;
         this.onemogucenoIme = true;
@@ -617,7 +613,7 @@ export class CsvComponent implements OnInit {
       }, (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         this.datasetTitle = "";
-        this.privateOrPublic = false;
+        //this.privateOrPublic = false;
     });
     }
     private getDismissReason(reason: any): string {
