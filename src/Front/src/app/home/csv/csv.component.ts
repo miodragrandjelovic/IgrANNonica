@@ -223,7 +223,7 @@ export class CsvComponent implements OnInit {
         this.onemoguceno = this.onemogucenoIme || this.onemogucenaPredaja;
     }
 
-
+    /*
     fileUploaddddd(files: any) {
         this.encodingArray = [];
         this.prikazPreload=false;
@@ -355,7 +355,8 @@ export class CsvComponent implements OnInit {
         }
 
     }
-
+    */
+   
     changePage() {
         this.rowLines = this.allData.slice(this.itemsPerPage * (this.currentPage - 1),this.itemsPerPage * (this.currentPage - 1) + this.itemsPerPage)
     }
