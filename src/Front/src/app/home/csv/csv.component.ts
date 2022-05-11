@@ -28,6 +28,8 @@ export class CsvComponent implements OnInit {
     @ViewChild(UserdatasetsComponent) child: any; //pozivamo komponentu userDatasets da bi pristupili njenim metodama
     //zato sto ne radi poziv iz konstuktora
 
+    onemogucenaPredaja:boolean = true;
+    
     privateOrPublic: boolean = false;
 
     hidden: boolean;
@@ -179,6 +181,18 @@ export class CsvComponent implements OnInit {
     fileUpload(files:any)
     {
         this.userUploadedFile = files;
+        this.onemogucenaPredaja = false;
+
+        let fileList = (<HTMLInputElement>files.target).files;
+        
+        if (fileList && fileList.length > 0) {
+            let file : File = fileList[0];
+
+            //set filename
+            this.datasetTitle = file.name;
+        }
+
+        
     }
 
     fileUploaddddd(files: any) {
@@ -419,10 +433,11 @@ export class CsvComponent implements OnInit {
                 }
                 this.rowLines = this.rowsArray.slice(0, this.itemsPerPage);
                 this.allData = this.rowsArray;
-                alert("Now saving dataset under name "+fileName);
+                //alert("Now saving dataset under name "+fileName);
                 this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
                     csvData: JSON.stringify(this.dataObject),
-                    Name: fileName
+                    Name: fileName,
+                    publicData : privatePublic
                 }).subscribe(result => {
                     for(let i = 0; i < this.headers.length; i++){
                         const currentRow = [this.headers[i],
@@ -459,12 +474,13 @@ export class CsvComponent implements OnInit {
         // fja za slanje na bek
         this.sendNewFile(this.datasetTitle, this.privateOrPublic);
 
-        alert("Uspesno slanje!");
+        //alert("Uspesno slanje!");
         //podesavnja za sl put
         this.showMeChosenDataset = false;
         this.showMe = true;
         document.getElementById("closeModal")?.click();
         this.datasetTitle = '';
+        this.privateOrPublic = false;
         this.uploadedFile = false;
         this.parametersService.setDatasets();
         // treba i da se sacuva dataset!!!!!
@@ -564,9 +580,12 @@ export class CsvComponent implements OnInit {
       //this.showMe = false;
       this.modalService.open(newFile, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
+        alert("Zatvoreno1");
       }, (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      });
+        this.datasetTitle = "";
+        this.privateOrPublic = false;
+    });
     }
     private getDismissReason(reason: any): string {
       if (reason === ModalDismissReasons.ESC) {

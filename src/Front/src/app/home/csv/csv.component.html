@@ -129,7 +129,7 @@
     <div class="modal-body">
       <div class="col-lg-7">
         <div class="row">
-          <input type="text" placeholder="Enter Dataset Title"  [(ngModel)]="datasetTitle" style="border:#212f3c 1px solid; border-radius: 20px; height: 50px; margin-bottom: 30px;">
+          <input id="uploadedFileName" type="text" placeholder="Enter Dataset Title"  [(ngModel)]="datasetTitle" style="border:#212f3c 1px solid; border-radius: 20px; height: 50px; margin-bottom: 30px;">
         </div>
 
         <!-- ovde dodajemo fajl -->
@@ -143,7 +143,8 @@
         </div>
             
         <div class="row">
-          <button style="width:40%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px;margin:auto;" (click)="addNewDatasetAndPreview()">
+          <button style="width:40%;height: 40px ;background-color: #212f3c ;color:white; 
+          border-radius:20px;margin:auto;" (click)="addNewDatasetAndPreview()" [disabled]="onemogucenaPredaja">
             Create
           </button>
 
