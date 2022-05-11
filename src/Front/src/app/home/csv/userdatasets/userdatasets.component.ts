@@ -64,15 +64,15 @@ export class UserdatasetsComponent implements OnInit {
 //////////////
   searchDatasets(name:any){
     this.datasetsFilteredNames = [];
-    this.datasetsNames = this.copyPaste;
+    this.zapamceniDatasetovi = this.copyPaste;
     if(name != ""){
-    for (var index = 0; index < this.datasetsNames.length; index++) {
-      if(this.datasetsNames[index].indexOf(name.toLowerCase()) !== -1){
-        this.datasetsFilteredNames.push(this.datasetsNames[index]);
+    for (var index = 0; index < this.zapamceniDatasetovi.length; index++) {
+      if(this.zapamceniDatasetovi[index].name.indexOf(name.toLowerCase()) !== -1){
+        this.datasetsFilteredNames.push(this.zapamceniDatasetovi[index]);
       }  
     }
 
-    this.datasetsNames = this.datasetsFilteredNames;
+    this.zapamceniDatasetovi = this.datasetsFilteredNames;
    }
   }
 
