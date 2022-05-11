@@ -8,9 +8,14 @@ import { LoadingService } from './loading.service';
 })
 export class LoadingComponent implements OnInit {
 
+  show: boolean = false;
+
   constructor(public spiner:LoadingService) { }
 
   ngOnInit(): void {
+    this.spiner.getShowSpinner().subscribe(newValue => {
+      this.show = newValue;
+    });
   }
 
 }

@@ -89,6 +89,7 @@ export class HyperparametersComponent implements OnInit {
 
   session:any;
   prikazGrafika=false;
+  show: boolean = false;
 
   options1: Options = {
     floor: 0,
@@ -123,6 +124,9 @@ export class HyperparametersComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.spiner.getShowSpinner().subscribe(newValue => {
+      this.show = newValue;
+    });
     this.inputs = [];
     this.hyperparametersForm = new FormGroup({
       'encodingType': new FormControl(null),
@@ -231,10 +235,7 @@ export class HyperparametersComponent implements OnInit {
 
     this.outputString = this.outputString.concat(this.inputs[this.inputs.length - 1]);
 
-   // console.log('br slojeva: '+this.countLayers);
-  //  console.log('aktivacione funkc: '+this.activacioneFunkc);
     this.countAllNeurons();
-  //  console.log('niz br neurona: '+this.neuronsLength);
 
   this.parametersService.getCatNum().subscribe(res => {
     this.catNum = res;
@@ -249,11 +250,6 @@ export class HyperparametersComponent implements OnInit {
   this.parametersService.getMissingValues().subscribe(res => {
     this.missingValues = res;
   });
-
-  console.log(this.catNum);
-  console.log(this.columNames);
-  console.log(this.encodings);
-  console.log(this.missingValues);
 
     const myreq: RequestHyperparameters = {
       learningRate : Number(this.hyperparametersForm.get('learningRate')?.value),
@@ -275,14 +271,13 @@ export class HyperparametersComponent implements OnInit {
       missingValues: this.missingValues,
       columNames: this.columNames
     } 
-    console.log(myreq);
 
     this.http.post(this.url + '/api/LoadData/hpNeprijavljen', myreq).subscribe(result => {
+      console.log(result);
       this.inputCheckBoxes = [];
       this.selectedCheckBoxes = [];
       this.properties = [];
       this.hpResponse = result;
-      console.log(this.hpResponse);
       this.properties = Object.keys(this.hpResponse);
       for (let i = 0; i < this.properties.length; i++) {
         if (this.properties[i] == 'label') {
@@ -293,9 +288,8 @@ export class HyperparametersComponent implements OnInit {
           this.pred = this.hpResponse[this.properties[i]];
           break;
         }
-        if (this.properties[i] == 'eveluate') {
+        if (this.properties[i] == 'evaluate') {
           this.eveluate = this.hpResponse[this.properties[i]];
-          console.log(this.eveluate);
           continue;
         }
         const str = 'val' + this.properties[i];
@@ -307,15 +301,15 @@ export class HyperparametersComponent implements OnInit {
           isChecked: true
         }
         this.inputCheckBoxes.push(object);
+        console.log(this.inputCheckBoxes);
       }
     
       this.fetchSelectedGraphics();
-      console.log(this.selectedCheckBoxes);
       });
       
       this.prikazGrafika=true;
-      this.spiner.showSpiner=true;
-      console.log(this.spiner.showSpiner);
+      this.spiner.setShowSpinner(true);
+
     }
 
   countLayers=0;

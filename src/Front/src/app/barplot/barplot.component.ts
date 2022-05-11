@@ -21,31 +21,27 @@ export class BarplotComponent implements OnInit, OnChanges {
   }
 
   ngAfterViewInit(): void {
+    this.spiner.setShowSpinner(false);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.spiner.showSpiner);
-    console.log(this.evaluate);
     this.hpX = [];
     this.hpY = [];
     this.hpX = Object.keys(this.evaluate);
-    console.log(this.hpX);
     for (let i = 0; i < this.hpX.length; i++) {
       this.hpY.push(this.evaluate[this.hpX[i]]);
     }
-    console.log(this.hpY);
     this.loadBarplot();
   }
 
   loadBarplot() {
-    this.hpY[2] = 0.3;
     this.ctx = document.getElementById('id') as HTMLCanvasElement;
     this.chart = new Chart(this.ctx, {
       type: 'bar',
       data: {
         labels: this.hpX,
         datasets:  [{
-          label: 'Eveluate Barplot',
+          label: 'Evaluate Barplot',
           data: this.hpY,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',

@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { left, right } from '@popperjs/core';
 import { Chart } from 'chart.js';
 import { NumberValue } from 'd3-scale';
+import { LoadingService } from '../loading/loading.service';
 
 @Component({
   selector: 'app-prediction',
@@ -21,10 +22,14 @@ export class PredictionComponent implements OnInit, OnChanges {
   min: number;
   max: number;
 
-  constructor() { }
+  constructor(private spiner: LoadingService) { }
 
   ngOnInit(): void {
     
+  }
+
+  ngAfterViewInit(): void {
+    this.spiner.setShowSpinner(false);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -42,6 +47,8 @@ export class PredictionComponent implements OnInit, OnChanges {
     this.min = Math.min(0, ...this.predArray, ...this.labelArray);
     this.max = Math.max(...this.predArray, ...this.labelArray);
     let step = (this.max - this.min) / 10; 
+    console.log(data);
+    console.log(data1);
 
     this.ctx = document.getElementById('pred') as HTMLCanvasElement;
     this.chart = new Chart(this.ctx, {

@@ -1,5 +1,5 @@
-<div class="container" *ngIf="spiner.showSpiner"
-style="position: relative;background-color: white;height: 140px; z-index: 100; background-color: red;">
+<div [hidden]="!show" class="container" 
+style="position: relative;background-color: white;height: 140px;">
       <div><h1 id="treningUToku" style="text-align: center;font-size: 25px; font-weight: bold; ">Training in progress!</h1></div>
       <div id="loader" style="margin-top: 40px;">
         <div class="dot"></div>

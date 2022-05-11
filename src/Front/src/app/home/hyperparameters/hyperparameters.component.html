@@ -169,19 +169,6 @@
            </div>
            
               <div class="row" style="margin-top: 30px;">
-                <!--<div class="col form-check" style="margin-left: -13px;">
-                    <button *ngIf="session" class="round-button playButton" style="width:25%;text-align: center; background-color: #212f3c; color:white; height: auto; border-radius: 20px; " (click)="addNewModel(newModel)" ><img src="assets/images/plus.png" width="33px" height="33px"> <span style="font-size: 75%;"> Save Model</span></button>
-                  </div>-->
-                  <!--
-                  <div class="col">
-                    <div *ngIf="session" style="width: 35%;">
-                      <span style="font-weight: bold;">Name it and save it.</span>
-                      <div class="input-group input-group-sm mb-3" placement="end" ngbTooltip="If you want to save this model, you have to name it.">
-                        <span class="input-group-text" style="background-color: #CEECFA;">Model name</span>
-                         <input type="text" class="form-control" type="text" [(ngModel)]="modelName" id="modelName" formControlName="modelName"> 
-                      </div>
-                    </div>
-                  </div>-->
                 <div class="col form-check" style="text-align: right; padding-top: 27px;">
                   <button class="round-button playButton"style="width:10%;text-align: center; background-color: #212f3c; color:white; height:auto; border-radius: 20px;" type="submit"><i-bs width="33" height="33" name="caret-right-fill"></i-bs><span style="font-size: 75%;">Train</span></button>
                 </div>
@@ -189,19 +176,8 @@
 
           </div>
 
-        <div class="container-fluid" *ngIf="prikazGrafika" style="margin-top: 10px;" >
-            <div class="row" >
-              <!-- <div class="col-4"  style="width:auto; min-width: 170px;display: flex;align-items: center;">
-                <div class="checkbox-list">
-                  <p  *ng style="color: white; font-weight: bold; border-radius: 2px; background-color: #212f3c;">Choose Graphics:</p>
-                    <div class="checkbox" *ngFor="let item of inputCheckBoxes" >
-                      <input  class="form-check-input" type="checkbox" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone: true}" id="item"  checked="" (change)="changeSelection()">
-                      <label for="item" style="color: white;">{{item.label}}</label>
-                    </div>
-                </div>
-             </div> -->
-            
-             
+        <div class="container-fluid" style="margin-top: 10px;" *ngIf="prikazGrafika">
+            <div class="row">
                 <div class="col-4" style="width:20%; min-width: 170px;">
                   <div class="form-check" style="padding-left: 0px; padding-bottom: 5px;">
                       <p  *ng style="color: white; font-weight: bold; border-radius: 2px; background-color: #212f3c;">Choose Graphics:</p>
@@ -213,20 +189,14 @@
                 </div>
                 <div class="col" style="width:100%;">
                   <app-loading></app-loading>
-                  <app-barplot [evaluate]="eveluate"></app-barplot>
-                  <app-prediction [pred]="pred" [label]="label"></app-prediction>
-                  <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
+                  <div [hidden]="show">
+                    <app-barplot [evaluate]="eveluate"></app-barplot>
+                    <app-prediction [pred]="pred" [label]="label"></app-prediction>
+                    <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
+                  </div>
                 </div>
             </div>
         </div>
-          
-          <!--
-          <div class="control d-grid gap-2 d-md-flex justify-content-md-end">
-              <button type="button" class="btn btn-primary btn-lg" (click)="showCsv()"> CSV </button>
-              <button type="submit" class="btn btn-primary btn-lg">Treniraj Model</button>
-          </div>
-          <button type="button" class="btn btn-primary btn-lg" style="position: absolute;left: 50%;" (click)="showCsv()"> CSV </button>-->
-     
       </form>
   
 </div>
@@ -245,7 +215,6 @@
 
         <div class="row">
           <input type="text" style="height:300px; width:100%; border:#212f3c 1px solid; border-radius: 20px; margin-bottom: 30px;">
-          <!-- ovde dodajemo opis!! -->
         </div>
             
         <div class="row">
