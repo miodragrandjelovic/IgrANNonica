@@ -545,6 +545,7 @@ namespace Backend.Controllers
                 hiper.Username = Username;
             hp = hiper;
             var hiperjson = System.Text.Json.JsonSerializer.Serialize(hiper);
+            hiperJ = hiperjson;
             var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
             //var url = "http://127.0.0.1:3000/hp";
             var hpurl = url + "/hp";
@@ -558,7 +559,7 @@ namespace Backend.Controllers
             var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
             var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
             //var dataModel = ""; //mora ovako dok se ne popravi primanje hiperparametara na ML delu
-
+            modelSave = dataModel;
             return Ok(model);//model se vraca ali dok se ne popravi na ML-u to mora ovako
         }
 
