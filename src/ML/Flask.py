@@ -6,6 +6,7 @@ import pandas as pd
 from ann.py import *
 
 import ann.prediction as pr
+from ann.functions import save_model
 
 #from ann.linear import *
 
@@ -118,6 +119,13 @@ def statistika():
 def kor_matrica():
     return df.corr().to_json()
 
+
+@app.route("/savemodel",methods=["POST"]) #cuvanje modela
+def save_model():
+    path=request.get_data()
+    save_model(path)
+
+
 @app.route("/model",methods=['GET']) #Parsovanje u df
 def treniraj():
  
@@ -140,14 +148,15 @@ def treniraj():
     #    ly.append(hiperp['NeuronsLvl'+str(i+1)])
    # print("Hidden layer neurons are ", ly)
 
-    try:
-        pathmodel
-    except NameError:
-        print("well, it WASN'T defined after all!")
-        pathmodel=None
+    #try:
+        #pathmodel
+    #except NameError:
+        #print("well, it WASN'T defined after all!")
+        #pathmodel=None
 
-    finally:
-        stats.createModel(train=df,features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'],val_test=hiperp['ValAndTest'], activation_function_list=hiperp['ActivationFunctions'],hidden_layers_n=hiperp['Layers'],
+    #finally:
+    pathmodel=None
+    stats.createModel(train=df,features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'],val_test=hiperp['ValAndTest'], activation_function_list=hiperp['ActivationFunctions'],hidden_layers_n=hiperp['Layers'],
         hidden_layer_neurons_list=hiperp['NumberOfNeurons'], columns=hiperp['ColumNames'],enc_types=hiperp['Encodings'],num_cat_col=hiperp['CatNum'], randomize=hiperp['Randomize'],
         batch_size=hiperp['BatchSize'], learning_rate=hiperp['LearningRate'], regularization=hiperp['Regularization'] ,regularization_rate=hiperp['RegularizationRate'], missing_values=hiperp['MissingValues'],path=pathmodel)
 

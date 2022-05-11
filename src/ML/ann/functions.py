@@ -346,6 +346,7 @@ def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_l
     # type nam ukazuje koji je tip problema kojim se bavimo   !!!!!!!!!!!!!
 
     #print("SHAPE OF X TRAIN DATASET ", X_train.shape[0], " and ", X_train.shape[1])
+    global model
     model=None
     model = Sequential()
 
@@ -452,8 +453,8 @@ def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_
 
     fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, callbacks=[call] ,validation_data = (X_val, y_val), verbose=2)
 
-    if(path!=None):
-        model.save(str(path))
+    #if(path!=None):
+    #    model.save(str(path))
 
     pred = model.predict(X_test) 
     if(type=="classification"):
@@ -491,6 +492,12 @@ def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_
     yield label
     yield dict(zip(model.metrics_names, ev))
     yield fit # VALIDATION DATA=(X_VAL, Y_VAL) 
+
+
+
+def save_model(path):
+    model.save(str(path))
+
 
 
 
