@@ -94,7 +94,7 @@ model.add(layers.Dense(64, activation='tanh'))
 model.add(layers.Dense(32, activation='tanh'))
 model.add(layers.Dense(units=y.shape[1], activation='softmax'))
 # Compile model
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy','AUC',f1_score])
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy','AUC'])
 
 model.fit(X_train,y_train,batch_size=15,epochs=10, validation_data = (X_valid, y_valid),verbose=1)
 
@@ -114,7 +114,10 @@ def f1_score(y_true, y_pred): #taken from old keras source code
 pred = model.predict(X_test) 
 ev=model.evaluate(X_test,y_test)
 
-pred = np.argmax(pred, axis = 1) 
+pred = np.argmax(pred, axis = 1)
+
+type(pred)
+
 label = np.argmax(y_test,axis = 1) 
 
 pred=pd.Series(pred)

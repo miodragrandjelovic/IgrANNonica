@@ -459,16 +459,29 @@ def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_
     if(type=="classification"):
         pred = np.argmax(pred, axis = 1)
         label = np.argmax(y_test,axis = 1)
-        label=label.tolist()
+        
 
     else:
-        pred=scaler.inverse_transform(pred)
-        label=y_test             #dodato
-        label=scaler.inverse_transform(label)           #dodato
+        label2=y_test             #dodato
+        label2=scaler.inverse_transform(label2)#dodato
+        pred2=scaler.inverse_transform(pred)
+        
+                   
         #label=y_test.to_numpy(dtype ='float32')
-        label=label.tolist()
+        label=[]
+        for i in range (len(label2)):
+            label.append(label2[i][0])
+            
+
+        pred=[]
+        for i in range (len(pred2)):
+            pred.append(pred2[i][0])
+
+        label=np.array(label)
+        pred=np.array(pred)
 
 
+    label=label.tolist()
     pred=pred.tolist()
     ev=model.evaluate(X_test,y_test)
     
