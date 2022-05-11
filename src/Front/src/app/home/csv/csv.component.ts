@@ -30,7 +30,7 @@ export class CsvComponent implements OnInit {
 
     
     
-    privateOrPublic: boolean ;
+    privateOrPublic: boolean = false ;
 
     hidden: boolean;
     currentCorrResult: any;
@@ -507,7 +507,7 @@ export class CsvComponent implements OnInit {
         this.showMe = true;
         document.getElementById("closeModal")?.click();
         this.datasetTitle = '';
-        //this.privateOrPublic = false;
+        this.privateOrPublic = false;
         this.uploadedFile = false;
         this.onemogucenaPredaja = true;
         this.onemogucenoIme = true;
@@ -614,7 +614,7 @@ export class CsvComponent implements OnInit {
       }, (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         this.datasetTitle = "";
-        //this.privateOrPublic = false;
+        this.privateOrPublic = false;
     });
     }
     private getDismissReason(reason: any): string {
