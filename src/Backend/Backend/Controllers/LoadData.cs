@@ -581,7 +581,7 @@ namespace Backend.Controllers
             var stat = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
 
             string currentPath = Directory.GetCurrentDirectory();
-            var upgradedName = name.Substring(0, name.Length - 4);
+            //var upgradedName = name.Substring(0, name.Length - 4);
             //string path = currentPath + @"\Users\" + Username + "\\" + upgradedName;
 
             string pathToCreate = "";
