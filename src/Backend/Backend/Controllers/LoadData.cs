@@ -188,15 +188,17 @@ namespace Backend.Controllers
 
             return Ok(resultjson);
         }
-        [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model
-        public async Task<ActionResult>Post(String modelNames) //Ime modela kako korisnik zeli da ga cuva
+        /*
+        [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model kao i cuvanje povratne vrednosti modela
+        public async Task<ActionResult>Post(String modelNames, Boolean publicModel) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
         {
             if (Username != null)
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
                 var upgradedName = Name.Substring(0, Name.Length - 4);
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
-                string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
+                string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames); //kada se prosledjuje ime zajedno sa hiperparametrima i uvek cuva
+                //string modeldirname = upgradedName + modelNames;
                 if (System.IO.Directory.Exists(modeldirname))
                 {
                     return Ok("Vec postoji model sa tim imenom.");
@@ -204,6 +206,12 @@ namespace Backend.Controllers
                 else
                 {
                     System.IO.Directory.CreateDirectory(modeldirname);
+                    if (publicModel)
+                    {
+                        string publicName = modelNames + "(" + Username + ")";
+                        string publicPath = Path.Combine(CurrentPath, "Users", "publicProblems", publicName);
+                        System.IO.Directory.CreateDirectory(publicPath);
+                    }
                     Console.WriteLine("Directory for new Model created successfully!");
                 }
 
@@ -212,11 +220,134 @@ namespace Backend.Controllers
                 //var  = "http://127.0.0.1:3000/pathModel";
                 var pathurl = url + "/pathModel";
                 var pathresponse = await http.PostAsync(pathurl, pathdata);
+
+                int index = 1;
+                //string hpName = modelNames + "HP" + index + ".csv";
+                string hpName = modelNames + "HP.csv";
+                string path = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
+                string pathToCreateHP = System.IO.Path.Combine(path, hpName);
+
+                var workbookhp = new Workbook();
+                var worksheethp = workbookhp.Worksheets[0];
+                var layoutOptionshp = new JsonLayoutOptions();
+                layoutOptionshp.ArrayAsTable = true;
+                JsonUtility.ImportData(hiperjson, worksheethp.Cells, 0, 0, layoutOptionshp);
+
+
+                var workbook = new Workbook();
+                var worksheet = workbook.Worksheets[0];
+                var layoutOptions = new JsonLayoutOptions();
+                layoutOptions.ArrayAsTable = true;
+                JsonUtility.ImportData(dataModel, worksheet.Cells, 0, 0, layoutOptions);
+
+                //string modelName = modelNames + "Model" + index + ".csv";
+                string modelName = "deleteme.csv";
+                string pathToCreate = System.IO.Path.Combine(path, modelName);
+                
+                while (System.IO.File.Exists(pathToCreateHP))
+                {
+                    index++;
+                    modelName = modelNames + "Model" + index + ".csv";
+                    hpName = modelNames + "HP" + index + ".csv";
+                    pathToCreate = System.IO.Path.Combine(path, modelName);
+                    pathToCreateHP = System.IO.Path.Combine(path, hpName);
+                }
+               
+                workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
+                workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
+
+                List<String> lines = new List<string>();
+                string line;
+                System.IO.StreamReader file = new System.IO.StreamReader(pathToCreate);
+
+                while ((line = file.ReadLine()) != null)
+                {
+                    lines.Add(line);
+                    //Console.WriteLine(line);
+                }
+
+                lines.RemoveAll(l => l.Contains("Evaluation Only."));
+                
+                string model = modelNames + ".csv";
+                string publicName = modelNames + "(" + Username + ")";
+                string pblmod = publicName + ".csv";
+                string pathToCreate12 = System.IO.Path.Combine(path, model);
+                string publicPathModel = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, pblmod);
+                using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(pathToCreate12))
+                {
+                    outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
+                }
+
+                //modeldirname sacuvati i ona 3 niza kao txt fajl unutar ovog foldera
+                string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
+
+                string ColumnNamespath = Path.Combine(modeldirname, "ColumnNames.txt");
+                List<string> ColumnLinesTxt = hiper.ColumNames;
+                System.IO.File.WriteAllLines(ColumnNamespath, ColumnLinesTxt);
+
+                string Encodingspath = Path.Combine(modeldirname, "Encodings.txt");
+                List<string> EncodingsLinesTxt = hiper.Encodings;
+                System.IO.File.WriteAllLines(Encodingspath, EncodingsLinesTxt);
+
+                string CatNumpath = Path.Combine(modeldirname, "CatNum.txt");
+                List<string> CatNumLinesTxt = hiper.CatNum;
+                System.IO.File.WriteAllLines(CatNumpath, CatNumLinesTxt);
+
+                if (publicModel)
+                {
+                    using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(publicPathModel))
+                    {
+                        outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
+                    }
+
+                    List<String> lines1 = new List<string>();
+                    string line1;
+                    System.IO.StreamReader file1 = new System.IO.StreamReader(pathToCreateHP);
+
+                    while ((line1 = file1.ReadLine()) != null)
+                    {
+                        lines1.Add(line1);
+                    }
+
+                    lines1.RemoveAll(l1 => l1.Contains("Evaluation Only."));
+
+                    string pblhp = publicName + "HP.csv";
+                    string publicPathHp = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, pblhp);
+                    using (System.IO.StreamWriter outfile1 = new System.IO.StreamWriter(publicPathHp))
+                    {
+                        outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
+                    }
+                    file1.Close();
+                    //ColumNames Encodings CatNum
+
+                    string ColumnNames = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "ColumnNames.txt");
+                    List<string> ColumnlinesTxt = hiper.ColumNames;
+                    System.IO.File.WriteAllLines(ColumnNames, ColumnlinesTxt);
+
+                    string Encodings = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "Encodings.txt");
+                    List<string> EncodingslinesTxt = hiper.Encodings;
+                    System.IO.File.WriteAllLines(Encodings, EncodingslinesTxt);
+
+                    string CatNum = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "CatNum.txt");
+                    List<string> CatNumlinesTxt = hiper.CatNum;
+                    System.IO.File.WriteAllLines(CatNum, CatNumlinesTxt);
+                }
+
+                //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
+                string path1 = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
+                string names = "deleteme.csv";
+                string pathToDelete = System.IO.Path.Combine(path1, names);
+                file.Close();
+                if (System.IO.File.Exists(pathToCreate))
+                {
+                    System.IO.File.Delete(pathToCreate);
+                }
+
                 return Ok(modeldirname);
             }
             else
                 return Ok("Korisnik nije ulogovan.");
-        }
+        }*/
 
         [HttpPost("hp")] //Slanje HP na pajton
         public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper, String modelNames, Boolean publicModel) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
@@ -437,7 +568,7 @@ namespace Backend.Controllers
 
         [HttpPost("csv")] //Slanje CSV na pajton
         //[Obsolete]
-        public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad cs)
+        public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad cs, Boolean publicData)
         {
             string name = cs.Name;
             string csve = cs.CsvData;
@@ -453,13 +584,16 @@ namespace Backend.Controllers
             var stat = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
 
             string currentPath = Directory.GetCurrentDirectory();
-            var upgradedName = name.Substring(0, name.Length - 4);
+            //var upgradedName = name.Substring(0, name.Length - 4);
             //string path = currentPath + @"\Users\" + Username + "\\" + upgradedName;
 
             string pathToCreate = "";
             if (Username != null)
             {
-                string path = System.IO.Path.Combine(currentPath, "Users", Username, upgradedName);
+                string path = System.IO.Path.Combine(currentPath, "Users", Username, name);
+                string publicPath = System.IO.Path.Combine(currentPath, "Users", "publicDatasets", name);
+                string publicName = name + ".csv";
+                string publicCreate = System.IO.Path.Combine(publicPath, publicName);
                 if (Directory.Exists(path))
                     Console.WriteLine("File is already in system.");
                 else
@@ -474,14 +608,10 @@ namespace Backend.Controllers
                     JsonUtility.ImportData(csve, worksheet.Cells, 0, 0, layoutOptions);
 
                     //string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
-                    string names = upgradedName + "1" + ".csv";
+                    string names = name + "1" + ".csv";
                     pathToCreate = System.IO.Path.Combine(path, names); 
-                    //if(!System.IO.Directory.Exists(path))
-                    //{
-                    //    return BadRequest("Niste registrovani/ulogovani."+path);
-                   // }
-                 //   else
-                        workbook.Save(pathToCreate, SaveFormat.CSV);
+
+                    workbook.Save(pathToCreate, SaveFormat.CSV);
             
                     List<String> lines = new List<string>();
                     string line;
@@ -495,17 +625,31 @@ namespace Backend.Controllers
 
                     lines.RemoveAll(l => l.Contains("Evaluation Only."));
 
-                    string pathToCreate12 = System.IO.Path.Combine(path, name);
+                    string pathToCreate12 = System.IO.Path.Combine(path, name + ".csv");
                     using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(pathToCreate12))
                     {
                         outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
                     }
 
-                    /*if (System.IO.File.Exists(pathToCreate))
+                    if(publicData)
                     {
-                        System.IO.File.Delete(pathToCreate);
-                    }*/
+                        if (Directory.Exists(publicPath))
+                            Console.WriteLine("There is already public dataset with that name.");
+                        else
+                        {
+                            System.IO.Directory.CreateDirectory(publicPath);
+                            Console.WriteLine("Directory for '{0}' created successfully!", name);
+                            //cuvanje dataseta na putanji publicPath i kreirati folder po imenu csv-a?
+                            using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(publicCreate))
+                            {
+                                outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
+                            }
+                        }
+                    }
+
+
                     file.Close();
+                    System.IO.File.Delete(pathToCreate);
                 }
             }
             else
