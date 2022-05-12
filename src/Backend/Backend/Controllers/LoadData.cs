@@ -99,6 +99,46 @@ namespace Backend.Controllers
             return Ok(resultjson);
         }
 
+        [HttpPost("publicCsv")] //Otvaranje foldera gde se nalazi izabrani csv
+        public async Task<ActionResult<String>> PostPublicCsv(String name)
+        {
+            string fileName = name + ".csv";
+            string CurrentPath = Directory.GetCurrentDirectory();
+            //string SelectedPath = CurrentPath + @"\Users\" + Username + "\\" + name;
+            string SelectedPath = Path.Combine(CurrentPath, "Users", "publicDatasets", name);
+            if (!System.IO.Directory.Exists(SelectedPath))
+            {
+                return BadRequest("Ne postoji dati fajl.");
+            }
+            
+            string[] files = Directory.GetFiles(SelectedPath).Select(Path.GetFileName).ToArray();
+
+            //string SelectedPaths = CurrentPath + @"\Users\" + Username + "\\" + name + "\\" + fileName;
+            string SelectedPaths = Path.Combine(CurrentPath, "Users", "publicDatasets", name, fileName);
+            /*var reader = new StreamReader(SelectedPaths);
+            var csv = new CsvHelper.CsvReader(reader, CultureInfo.InvariantCulture);
+            List<JsonDocument> cList = csv.GetRecords<JsonDocument>().ToList();*/
+
+            var csvTable = new DataTable();
+            using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPaths)), true))
+            {
+                csvTable.Load(csvReader);
+            }
+            //csvTable.Rows.RemoveAt(csvTable.Rows.Count - 1);
+            string result = string.Empty;
+            result = JsonConvert.SerializeObject(csvTable);
+
+            var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); //json
+
+            var data = new StringContent(result, System.Text.Encoding.UTF8, "application/json");
+            //var url = "http://127.0.0.1:3000/csv";
+            var csvurl = url + "/csv";
+            var response = await http.PostAsync(csvurl, data);
+
+            Name = name;
+            return Ok(resultjson);
+        }
+
         [HttpPost("savedModels")] //Vracanje imena sacuvanih Modela.
         public async Task<ActionResult<String>> PostSavedModels(String name)
         {
