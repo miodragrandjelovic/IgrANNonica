@@ -20,7 +20,7 @@ export class UserdatasetsComponent implements OnInit {
 
   @Output() sendResults = new EventEmitter<{dataset:any,kor:any,stat:any}>();
   //ovim saljemo nazad ka csv komponenti dataset 
-  zapamceniDatasetovi: any;
+  zapamceniDatasetovi: any= [];
   
   constructor(private http: HttpClient, private parametersService: ParametersService){}
   public url = myUrls.url;
@@ -40,7 +40,7 @@ export class UserdatasetsComponent implements OnInit {
     this.copyPaste = [];
     this.datasetsNames = [];
     this.datasetsFilteredNames = [];
-  
+    
     this.http.get<any>(this.url + '/api/Python/savedCsvs').subscribe(result => {  
             console.log(result);
             this.copyPaste=result;
@@ -55,10 +55,15 @@ export class UserdatasetsComponent implements OnInit {
  
             */
             this.datasetsNames = this.copyPaste;
-            this.zapamceniDatasetovi=result;
+            
+
+            this.http.get<any>(this.url + '/api/Python/publicDatasets').subscribe(result2 => {  
+              this.copyPaste.concat(result);
+              this.datasetsNames.concat(result);              
+              this.zapamceniDatasetovi = result.concat(result2);
+            });
         });
 
-      
         this.selectedDataset = '';
   }
 //////////////
@@ -83,6 +88,18 @@ export class UserdatasetsComponent implements OnInit {
     //alert(this.selectedDataset);
     this.loadThisDataset(this.selectedDataset);
 }
+
+  downloadDataset(event:any){
+    this.selectedDataset=event.target.id;
+    alert("DOWNLOAD DATASET "+ this.selectedDataset);
+    event.stopPropagation();
+  }
+
+  deleteDataset(event:any){
+    this.selectedDataset=event.target.id;
+    alert("DELETE DATSET "+ this.selectedDataset);
+    event.stopPropagation();
+  }
 
   loadThisDataset(naziv:any){
 

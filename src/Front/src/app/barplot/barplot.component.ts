@@ -64,6 +64,10 @@ export class BarplotComponent implements OnInit, OnChanges {
           borderWidth: 1
         }]
 
+      },
+      options:{
+        responsive: true,
+        maintainAspectRatio:false,
       }
     })
   }

@@ -28,6 +28,9 @@ export class CsvComponent implements OnInit {
     @ViewChild(UserdatasetsComponent) child: any; //pozivamo komponentu userDatasets da bi pristupili njenim metodama
     //zato sto ne radi poziv iz konstuktora
 
+    
+    
+    privateOrPublic: boolean = false ;
 
     hidden: boolean;
     currentCorrResult: any;
@@ -173,7 +176,55 @@ export class CsvComponent implements OnInit {
 
     prikazPreload:boolean=true;
 
-    fileUpload(files: any) {
+    userUploadedFile:any;
+
+    onemogucenaPredaja:boolean = true;
+    onemogucenoIme: boolean = true;
+
+    onemoguceno:boolean = true;
+
+    fileUpload(files:any)
+    {
+        this.userUploadedFile = files;
+        this.onemogucenaPredaja = false;
+        
+
+        let fileList = (<HTMLInputElement>files.target).files;
+        
+        if (fileList && fileList.length > 0) {
+            let file : File = fileList[0];
+
+            let defFileName = file.name;
+            defFileName = defFileName.replace(".csv","");
+            //alert("Naziv je -"+defFileName+"-");
+            //set filename
+            this.datasetTitle = defFileName;
+            this.onemogucenoIme = false;
+
+            
+            this.changeButtonEnable();
+        }
+
+        
+    }
+
+    
+
+    checkButtonEnable()
+    {
+        //alert("Provera");
+        if (this.datasetTitle == "") this.onemogucenoIme = true;
+        else this.onemogucenoIme = false;  
+
+        this.changeButtonEnable();
+    }  
+    
+    changeButtonEnable(){
+        this.onemoguceno = this.onemogucenoIme || this.onemogucenaPredaja;
+    }
+
+    /*
+    fileUploaddddd(files: any) {
         this.encodingArray = [];
         this.prikazPreload=false;
         this.uploadedFile = true;
@@ -304,18 +355,163 @@ export class CsvComponent implements OnInit {
         }
 
     }
-
+    */
+   
     changePage() {
         this.rowLines = this.allData.slice(this.itemsPerPage * (this.currentPage - 1),this.itemsPerPage * (this.currentPage - 1) + this.itemsPerPage)
     }
 
+    sendNewFile(fileName:string,privatePublic:boolean){
+        this.encodingArray = [];
+        this.prikazPreload=false;
+        this.uploadedFile = true;
+
+        this.chosen = true;
+        this.sendHp = '';
+        this.showMe2 = true;
+        this.showMeMatrix = false;
+        this.inputsArray = [];
+
+       
+
+        this.flag = 1;
+        
+
+        this.dataObject = [];
+        this.headingLines = [];
+        this.rowLines = [];
+        this.rowLinesStatistics = [];
+
+        let fileList = (<HTMLInputElement>this.userUploadedFile.target).files;
+        
+        if (fileList && fileList.length > 0) {
+            let file : File = fileList[0];
+
+            let reader: FileReader =  new FileReader();
+            reader.readAsText(file);
+            reader.onload = (e) => {
+                let csv: any = reader.result;
+                let allTextLines = [];
+                allTextLines = csv.split('\n');
+                
+                this.headers = allTextLines[0].split(/;|,/).map((x:string) => x.trim());
+                let data = this.headers;
+                let headersArray = [];
+
+                for (let i = 0; i < this.headers.length; i++) {
+                    headersArray.push(data[i]);
+                    this.encodingArray.push(data[i]);
+                }
+
+
+                console.log(this.encodingArray);
+                this.headingLines.push(headersArray);
+
+                this.outputs[0] = headersArray[headersArray.length - 1];
+                
+                this.inputsArray = [];
+
+                for (let i = 0; i < headersArray.length; i++) {
+                    
+                    let isChecked;
+                    let id = i + 1;
+                    let label = headersArray[i];
+                    if (i != headersArray.length - 1)
+                        isChecked = true;
+                    else
+                        isChecked = false;
+                    
+                    const myObject: CheckBox = {
+                        id: id,
+                        label: label,
+                        isChecked: isChecked
+                    }
+
+                    this.inputsArray.push(myObject);
+                }
+
+                this.fetchSelectedItems();
+                this.fetchOutputs();
+
+                for (let i = 0; i < this.selectedInputs.length; i++) {
+                    const str = this.selectedInputs[i].label;
+                    if (i != 0) {
+                       this.sendHp = this.sendHp.concat("," + str);
+                    }
+                    else
+                        this.sendHp = this.sendHp.concat('' + str);
+                }
+                this.selectedValue = this.outputs[0].label;
+                this.sendHp = this.sendHp.concat(',' + this.selectedValue);                
+
+                this.rowsArray = [];
+
+                let length = allTextLines.length - 1;
+                
+                let rows:any = [];
+                for (let i = 1; i < length; i++) {
+                    rows.push(allTextLines[i].split(/;|,/).map((x:string) => x.trim()));
+                    const obj:any = {};
+                    headersArray.forEach((header:any, j:any) => {
+                        obj[header] = rows[i - 1][j];
+                    })
+                    this.dataObject.push(obj);
+                }
+                length = rows.length;
+                for (let j = 0; j < length; j++) {
+                    this.rowsArray.push(rows[j]);
+                }
+                this.rowLines = this.rowsArray.slice(0, this.itemsPerPage);
+                this.allData = this.rowsArray;
+                //alert("Now saving dataset under name "+fileName);
+                
+                // privatePublic lepo kupi vrednost, ali iz nekog razloga na beku je false...
+                this.http.post<any>('https://localhost:7167/api/LoadData/csv?publicData='+privatePublic, {
+                    csvData: JSON.stringify(this.dataObject),
+                    Name: fileName
+                }).subscribe(result => {
+                    for(let i = 0; i < this.headers.length; i++){
+                        const currentRow = [this.headers[i],
+                            result[this.headers[i]].Q1 ? result[this.headers[i]].Q1 : 'null',
+                            result[this.headers[i]].Q2 ? result[this.headers[i]].Q2 : 'null', 
+                            result[this.headers[i]].Q3 ? result[this.headers[i]].Q3 : 'null', 
+                            result[this.headers[i]].count ? result[this.headers[i]].count : 'null',
+                            result[this.headers[i]].freq ? result[this.headers[i]].freq : 'null', 
+                            result[this.headers[i]].max ? result[this.headers[i]].max : 'null', 
+                            result[this.headers[i]].mean ? result[this.headers[i]].mean : 'null', 
+                            result[this.headers[i]].min ? result[this.headers[i]].min : 'null', 
+                            result[this.headers[i]].std ? result[this.headers[i]].std : 'null', 
+                            result[this.headers[i]].top ? result[this.headers[i]].top : 'null', 
+                            result[this.headers[i]].unique ? result[this.headers[i]].unique : 'null'
+                        ];
+                        this.rowLinesStatistics.push(currentRow);
+                    }
+                    console.log(this.rowLinesStatistics);
+                });
+
+
+            }
+        }
+    }
+
     addNewDatasetAndPreview()
     {
+        // treba da se pokupi vrednost i prosledi 
+        
+        // fja za slanje na bek
+        this.sendNewFile(this.datasetTitle, this.privateOrPublic);
+
+        //alert("Uspesno slanje!");
+        //podesavnja za sl put
         this.showMeChosenDataset = false;
         this.showMe = true;
         document.getElementById("closeModal")?.click();
         this.datasetTitle = '';
+        this.privateOrPublic = false;
         this.uploadedFile = false;
+        this.onemogucenaPredaja = true;
+        this.onemogucenoIme = true;
+        this.changeButtonEnable();
         this.parametersService.setDatasets();
         // treba i da se sacuva dataset!!!!!
     }
@@ -414,9 +610,12 @@ export class CsvComponent implements OnInit {
       //this.showMe = false;
       this.modalService.open(newFile, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
+        //alert("Zatvoreno1");
       }, (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      });
+        this.datasetTitle = "";
+        this.privateOrPublic = false;
+    });
     }
     private getDismissReason(reason: any): string {
       if (reason === ModalDismissReasons.ESC) {
@@ -426,6 +625,23 @@ export class CsvComponent implements OnInit {
       } else {
         return `with: ${reason}`;
       }
+    }
+
+    changePrivatePublic()
+    {
+        var slider = document.getElementById("labelPrivatePublic");
+        
+        if (slider!=null)
+        {
+            if(slider.innerHTML== "Private")
+            {
+                slider.innerHTML = "Public";
+            }
+            else
+            {
+                slider.innerHTML = "Private";
+            }
+        }
     }
 }
 

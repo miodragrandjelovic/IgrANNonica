@@ -66,12 +66,16 @@ export class GraphicComponent implements OnInit, OnDestroy {
             duration: 0
           },
           responsive: true,
+          maintainAspectRatio:false,
           scales: {
             x: {
               display: true,
               title: {
                 display: true,
                 text: 'Epochs'
+              },
+              ticks:{
+                autoSkip:false,
               }
             },
             y: {

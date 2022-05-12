@@ -1,23 +1,27 @@
 <div class="container-fluid w-100 overflow-auto" >
     <div class="row py-1 align-items-center justify-content-center border-top border-dark" *ngFor="let item of zapamceniDatasetovi"
-    style=" border-top: 1px solid #212f3c; cursor:pointer;">  
+    style=" border-top: 1px solid #212f3c; cursor:pointer;"
+    id="{{item.name}}"
+    (click)="selectChange($event)" (change)="this.selectedDataset=item.selectedDataset">  
         
-        <div class="col-sm-auto py-2" >
-            <img class="align-items-center justify-content-center " src="assets/images/datasetRandom.jpg" height="30px" width="30px" >
+        <div id="{{item.name}}" class="col-sm-auto py-2" >
+            <img id="{{item.name}}" class="align-items-center justify-content-center " src="assets/images/datasetRandom.jpg" height="30px" width="30px" >
         </div>
 
-        <div class="col-sm-auto " >
-            <h3 class="">
+        <div id="{{item.name}}" class="col-sm-auto">
+            <h3 id="{{item.name}}" class="">
                 {{item.name}}
             </h3> 
         </div>
-        <div class="col-5">
-            <div class="h-50">Size: {{item.size}}</div>
-            <div class="h-50">Last Modified: {{item.date}}</div>
+
+        <div id="{{item.name}}" class="col-5">
+            <div id="{{item.name}}" class="h-50">Size: {{item.size}}</div>
+            <div id="{{item.name}}" class="h-50">Last Modified: {{item.date}}</div>
         </div>
-        <div class="col " >
-            <div class="float-end">  
-                <button class="btn btn-primary my-1 me-1 " type="button" >
+
+        <div id="{{item.name}}" class="col" style="cursor:default">
+            <div id="{{item.name}}" class="float-end">  
+                <button id="{{item.name}}" class="btn btn-primary my-1 me-1 " type="button" (click)="downloadDataset($event)" >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                         <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                         <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
@@ -25,8 +29,8 @@
                     Download
                 </button>
             </div>
-            <div class="float-end">
-                <button class="btn btn-outline-danger my-1 me-1" type="button">
+            <div id="{{item.name}}" class="float-end">
+                <button id="{{item.name}}" class="btn btn-outline-danger my-1 me-1" type="button" (click)="deleteDataset($event)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
                         <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
@@ -34,11 +38,11 @@
                     Delete
                 </button>
             </div>
-            <div class="float-end">  
+            <!--<div class="float-end">  
                 <a style="background:transparent; border: none;cursor:pointer;padding-right: 10px;" (click)="selectChange($event)" (change)="this.selectedDataset=item.selectedDataset">
                     <img id="{{item.name}}" src="assets/images/eye.png" width="30px" height="30px" style="margin-top: 5px;">
                 </a>
-            </div>
+            </div>-->
         </div>
   
         <!-- ovaj div ce da ima dugmice -->
@@ -56,5 +60,5 @@
     </div>
 
 
-    <div style="border-top:#212f3c 1px solid;"></div>
+    <div class="row py-1 align-items-center justify-content-center border-top border-dark" ></div>
 </div>
