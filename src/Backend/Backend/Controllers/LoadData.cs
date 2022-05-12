@@ -226,7 +226,8 @@ namespace Backend.Controllers
                 var pathresponse = await http.PostAsync(pathurl, pathdata);
 
 
-                string hpName = modelNames + "HP.csv"; //treba da bude deletemeHP.csv pa da se obrise kada se skloni evaluate isto kao za model
+                //string hpName = modelNames + "HP.csv"; //treba da bude deletemeHP.csv pa da se obrise kada se skloni evaluate isto kao za model
+                string hpName = "deletemeHP.csv";
                 string path1 = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
                 string pathToCreateHP = System.IO.Path.Combine(path1, hpName);
 
@@ -235,14 +236,14 @@ namespace Backend.Controllers
                 var worksheethp = workbookhp.Worksheets[0];
                 var layoutOptionshp = new JsonLayoutOptions();
                 layoutOptionshp.ArrayAsTable = true;
-                JsonUtility.ImportData(hiperJ, worksheethp.Cells, 0, 0, layoutOptionshp); //kreirati globalnu za hiperjson
+                JsonUtility.ImportData(hiperJ, worksheethp.Cells, 0, 0, layoutOptionshp);
 
 
                 var workbook = new Workbook();
                 var worksheet = workbook.Worksheets[0];
                 var layoutOptions = new JsonLayoutOptions();
                 layoutOptions.ArrayAsTable = true;
-                JsonUtility.ImportData(modelSave, worksheet.Cells, 0, 0, layoutOptions); //kreirati globalnu za dataModel
+                JsonUtility.ImportData(modelSave, worksheet.Cells, 0, 0, layoutOptions); 
 
                 string modelName = "deleteme.csv";
                 string pathToCreate = System.IO.Path.Combine(path, modelName);
@@ -261,7 +262,18 @@ namespace Backend.Controllers
                 }
 
                 lines.RemoveAll(l => l.Contains("Evaluation Only."));
-                
+
+                List<String> lines1 = new List<string>();
+                string line1;
+                System.IO.StreamReader file1 = new System.IO.StreamReader(pathToCreateHP);
+
+                while ((line1 = file1.ReadLine()) != null)
+                {
+                    lines1.Add(line1);
+                }
+
+                lines1.RemoveAll(l1 => l1.Contains("Evaluation Only."));
+
                 string model = modelNames + ".csv";
                 string publicName = modelNames + "(" + Username + ")";
                 string pblmod = publicName + ".csv";
@@ -271,6 +283,15 @@ namespace Backend.Controllers
                 {
                     outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
                 }
+
+                string hp1 = modelNames + "HP.csv";
+                string pathToCreatehp = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames, hp1);
+
+                using (System.IO.StreamWriter outfile1 = new System.IO.StreamWriter(pathToCreatehp))
+                {
+                    outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
+                }
+
 
                 //modeldirname sacuvati i ona 3 niza kao txt fajl unutar ovog foldera
                 string ColumnNamespath = Path.Combine(modeldirname, "ColumnNames.txt");
@@ -292,16 +313,6 @@ namespace Backend.Controllers
                         outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
                     }
 
-                    List<String> lines1 = new List<string>();
-                    string line1;
-                    System.IO.StreamReader file1 = new System.IO.StreamReader(pathToCreateHP);
-
-                    while ((line1 = file1.ReadLine()) != null)
-                    {
-                        lines1.Add(line1);
-                    }
-
-                    lines1.RemoveAll(l1 => l1.Contains("Evaluation Only."));
 
                     string pblhp = publicName + "HP.csv";
                     string publicPathHp = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, pblhp);
@@ -333,6 +344,11 @@ namespace Backend.Controllers
                 if (System.IO.File.Exists(pathToCreate))
                 {
                     System.IO.File.Delete(pathToCreate);
+                }
+                file1.Close(); 
+                if (System.IO.File.Exists(pathToCreateHP))
+                {
+                    System.IO.File.Delete(pathToCreateHP);
                 }
 
                 return Ok(modeldirname);
