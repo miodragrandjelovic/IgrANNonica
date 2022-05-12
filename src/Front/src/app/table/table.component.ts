@@ -39,6 +39,11 @@ export class TableComponent implements OnChanges {
   hp:string;
   preload:any = [];
 
+  searchInput:any=[];
+  allDataCopy1:any=[];
+  allDataCopy2:any=[];
+  searchData:any=[];
+
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('IZMENJENO');
@@ -88,7 +93,8 @@ export class TableComponent implements OnChanges {
     this.parametersService.setParamsObs(this.hp);
 
     this.parametersService.setInputs(this.inputs);
-
+    this.allDataCopy1=this.allData;
+    this.allDataCopy2=this.allData;
     this.scrollToTable();
   }
 
@@ -199,8 +205,27 @@ export class TableComponent implements OnChanges {
       }
     }
     this.changePage();
-  }
+  }  
 
+
+  searchTable(index:number)
+  {
+    this.searchData=[];
+    this.allData=this.allDataCopy1;
+    if(this.searchInput[index]!=""){      
+      
+      for(let i = 0; i < this.allData.length ; i++){
+        if(this.allData[i][index].indexOf(this.searchInput[index].toLowerCase())!=-1)
+          this.searchData.push(this.allData[i])
+      }
+      this.allData=this.searchData;
+      console.log("Idemo1");
+      console.log(this.allData);
+    }
+    console.log("Idemo2");
+    console.log(this.allData);
+    this.changePage();  
+  }
 
 }
 
