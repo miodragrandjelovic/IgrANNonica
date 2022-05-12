@@ -29,6 +29,10 @@ namespace Backend.Controllers
         public static string? DirName { get; set; } //Ime foldera 
 
         public static string url = "http://127.0.0.1:3000";
+
+        public static string hiperJ;
+        public static string modelSave;
+
         static String BytesToString(long byteCount) //proveriti sta ne radi kod ove funkcije
         {
             string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; 
@@ -90,7 +94,8 @@ namespace Backend.Controllers
             string fileName1 = SelectedPaths;
             FileInfo fi = new FileInfo(fileName1);
             DateTime creationTime = fi.CreationTime;
-           //Console.WriteLine("Creation time: {0}", creationTime);
+            //Console.WriteLine("Creation time: {0}", creationTime);
+            Name = name;
             return Ok(resultjson);
         }
 
@@ -188,16 +193,16 @@ namespace Backend.Controllers
 
             return Ok(resultjson);
         }
-        /*
+        
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model kao i cuvanje povratne vrednosti modela
         public async Task<ActionResult>Post(String modelNames, Boolean publicModel) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
         {
             if (Username != null)
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
-                var upgradedName = Name.Substring(0, Name.Length - 4);
+                var upgradedName = Name;
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
-                string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames); //kada se prosledjuje ime zajedno sa hiperparametrima i uvek cuva
+                string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
                 //string modeldirname = upgradedName + modelNames;
                 if (System.IO.Directory.Exists(modeldirname))
                 {
@@ -208,8 +213,8 @@ namespace Backend.Controllers
                     System.IO.Directory.CreateDirectory(modeldirname);
                     if (publicModel)
                     {
-                        string publicName = modelNames + "(" + Username + ")";
-                        string publicPath = Path.Combine(CurrentPath, "Users", "publicProblems", publicName);
+                        string publicName1 = modelNames + "(" + Username + ")";
+                        string publicPath = Path.Combine(CurrentPath, "Users", "publicProblems", publicName1);
                         System.IO.Directory.CreateDirectory(publicPath);
                     }
                     Console.WriteLine("Directory for new Model created successfully!");
@@ -217,42 +222,32 @@ namespace Backend.Controllers
 
                 var pathjson = System.Text.Json.JsonSerializer.Serialize(modeldirname);
                 var pathdata = new StringContent(modeldirname, System.Text.Encoding.UTF8, "application/json");
-                //var  = "http://127.0.0.1:3000/pathModel";
                 var pathurl = url + "/pathModel";
                 var pathresponse = await http.PostAsync(pathurl, pathdata);
 
-                int index = 1;
-                //string hpName = modelNames + "HP" + index + ".csv";
-                string hpName = modelNames + "HP.csv";
-                string path = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
-                string pathToCreateHP = System.IO.Path.Combine(path, hpName);
+
+                //string hpName = modelNames + "HP.csv"; //treba da bude deletemeHP.csv pa da se obrise kada se skloni evaluate isto kao za model
+                string hpName = "deletemeHP.csv";
+                string path1 = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
+                string pathToCreateHP = System.IO.Path.Combine(path1, hpName);
+
 
                 var workbookhp = new Workbook();
                 var worksheethp = workbookhp.Worksheets[0];
                 var layoutOptionshp = new JsonLayoutOptions();
                 layoutOptionshp.ArrayAsTable = true;
-                JsonUtility.ImportData(hiperjson, worksheethp.Cells, 0, 0, layoutOptionshp);
+                JsonUtility.ImportData(hiperJ, worksheethp.Cells, 0, 0, layoutOptionshp);
 
 
                 var workbook = new Workbook();
                 var worksheet = workbook.Worksheets[0];
                 var layoutOptions = new JsonLayoutOptions();
                 layoutOptions.ArrayAsTable = true;
-                JsonUtility.ImportData(dataModel, worksheet.Cells, 0, 0, layoutOptions);
+                JsonUtility.ImportData(modelSave, worksheet.Cells, 0, 0, layoutOptions); 
 
-                //string modelName = modelNames + "Model" + index + ".csv";
                 string modelName = "deleteme.csv";
                 string pathToCreate = System.IO.Path.Combine(path, modelName);
-                
-                while (System.IO.File.Exists(pathToCreateHP))
-                {
-                    index++;
-                    modelName = modelNames + "Model" + index + ".csv";
-                    hpName = modelNames + "HP" + index + ".csv";
-                    pathToCreate = System.IO.Path.Combine(path, modelName);
-                    pathToCreateHP = System.IO.Path.Combine(path, hpName);
-                }
-               
+                              
                 workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
 
@@ -267,30 +262,48 @@ namespace Backend.Controllers
                 }
 
                 lines.RemoveAll(l => l.Contains("Evaluation Only."));
-                
+
+                List<String> lines1 = new List<string>();
+                string line1;
+                System.IO.StreamReader file1 = new System.IO.StreamReader(pathToCreateHP);
+
+                while ((line1 = file1.ReadLine()) != null)
+                {
+                    lines1.Add(line1);
+                }
+
+                lines1.RemoveAll(l1 => l1.Contains("Evaluation Only."));
+
                 string model = modelNames + ".csv";
                 string publicName = modelNames + "(" + Username + ")";
                 string pblmod = publicName + ".csv";
-                string pathToCreate12 = System.IO.Path.Combine(path, model);
+                string pathToCreate12 = System.IO.Path.Combine(modeldirname, model);
                 string publicPathModel = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, pblmod);
                 using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(pathToCreate12))
                 {
                     outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
                 }
 
-                //modeldirname sacuvati i ona 3 niza kao txt fajl unutar ovog foldera
-                string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
+                string hp1 = modelNames + "HP.csv";
+                string pathToCreatehp = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames, hp1);
 
+                using (System.IO.StreamWriter outfile1 = new System.IO.StreamWriter(pathToCreatehp))
+                {
+                    outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
+                }
+
+
+                //modeldirname sacuvati i ona 3 niza kao txt fajl unutar ovog foldera
                 string ColumnNamespath = Path.Combine(modeldirname, "ColumnNames.txt");
-                List<string> ColumnLinesTxt = hiper.ColumNames;
+                List<string> ColumnLinesTxt = hp.ColumNames;   //hiper staviti u globalnu
                 System.IO.File.WriteAllLines(ColumnNamespath, ColumnLinesTxt);
 
                 string Encodingspath = Path.Combine(modeldirname, "Encodings.txt");
-                List<string> EncodingsLinesTxt = hiper.Encodings;
+                List<string> EncodingsLinesTxt = hp.Encodings;
                 System.IO.File.WriteAllLines(Encodingspath, EncodingsLinesTxt);
 
                 string CatNumpath = Path.Combine(modeldirname, "CatNum.txt");
-                List<string> CatNumLinesTxt = hiper.CatNum;
+                List<string> CatNumLinesTxt = hp.CatNum;
                 System.IO.File.WriteAllLines(CatNumpath, CatNumLinesTxt);
 
                 if (publicModel)
@@ -300,16 +313,6 @@ namespace Backend.Controllers
                         outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
                     }
 
-                    List<String> lines1 = new List<string>();
-                    string line1;
-                    System.IO.StreamReader file1 = new System.IO.StreamReader(pathToCreateHP);
-
-                    while ((line1 = file1.ReadLine()) != null)
-                    {
-                        lines1.Add(line1);
-                    }
-
-                    lines1.RemoveAll(l1 => l1.Contains("Evaluation Only."));
 
                     string pblhp = publicName + "HP.csv";
                     string publicPathHp = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, pblhp);
@@ -321,33 +324,38 @@ namespace Backend.Controllers
                     //ColumNames Encodings CatNum
 
                     string ColumnNames = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "ColumnNames.txt");
-                    List<string> ColumnlinesTxt = hiper.ColumNames;
+                    List<string> ColumnlinesTxt = hp.ColumNames;
                     System.IO.File.WriteAllLines(ColumnNames, ColumnlinesTxt);
 
                     string Encodings = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "Encodings.txt");
-                    List<string> EncodingslinesTxt = hiper.Encodings;
+                    List<string> EncodingslinesTxt = hp.Encodings;
                     System.IO.File.WriteAllLines(Encodings, EncodingslinesTxt);
 
                     string CatNum = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "CatNum.txt");
-                    List<string> CatNumlinesTxt = hiper.CatNum;
+                    List<string> CatNumlinesTxt = hp.CatNum;
                     System.IO.File.WriteAllLines(CatNum, CatNumlinesTxt);
                 }
 
                 //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
-                string path1 = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
+                string path2 = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
                 string names = "deleteme.csv";
-                string pathToDelete = System.IO.Path.Combine(path1, names);
+                string pathToDelete = System.IO.Path.Combine(path2, names);
                 file.Close();
                 if (System.IO.File.Exists(pathToCreate))
                 {
                     System.IO.File.Delete(pathToCreate);
+                }
+                file1.Close(); 
+                if (System.IO.File.Exists(pathToCreateHP))
+                {
+                    System.IO.File.Delete(pathToCreateHP);
                 }
 
                 return Ok(modeldirname);
             }
             else
                 return Ok("Korisnik nije ulogovan.");
-        }*/
+        }
 
         [HttpPost("hp")] //Slanje HP na pajton
         public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper, String modelNames, Boolean publicModel) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
@@ -547,8 +555,13 @@ namespace Backend.Controllers
         [HttpPost("hpNeprijavljen")] //Slanje HP na pajton za neprijavljenog korisnika
         public async Task<ActionResult<Hiperparametri>> PostHp([FromBody] Hiperparametri hiper) 
         {
-            hiper.Username = "unknown";
+            if (Username == null)
+                hiper.Username = "unknown";
+            else
+                hiper.Username = Username;
+            hp = hiper;
             var hiperjson = System.Text.Json.JsonSerializer.Serialize(hiper);
+            hiperJ = hiperjson;
             var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
             //var url = "http://127.0.0.1:3000/hp";
             var hpurl = url + "/hp";
@@ -562,7 +575,7 @@ namespace Backend.Controllers
             var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
             var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
             //var dataModel = ""; //mora ovako dok se ne popravi primanje hiperparametara na ML delu
-
+            modelSave = dataModel;
             return Ok(model);//model se vraca ali dok se ne popravi na ML-u to mora ovako
         }
 
