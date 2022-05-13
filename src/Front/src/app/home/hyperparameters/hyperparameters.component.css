@@ -4,6 +4,11 @@
 
 }
 
+label.labelaHip{
+  font-size: 17px!important;
+  /*background-color: red;*/
+}
+
 #top-controls {
     border-bottom: 1px solid black;
     padding: 18px 0;

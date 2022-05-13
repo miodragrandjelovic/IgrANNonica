@@ -16,6 +16,9 @@ export class LoadingComponent implements OnInit {
     this.spiner.getShowSpinner().subscribe(newValue => {
       this.show = newValue;
     });
+
+    //alert("spustam se na loader");
+    //document.getElementById("loaderStatistika")?.focus(); 
   }
 
 }

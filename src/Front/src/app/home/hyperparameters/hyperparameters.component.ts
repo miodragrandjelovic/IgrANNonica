@@ -310,6 +310,8 @@ export class HyperparametersComponent implements OnInit {
       this.prikazGrafika=true;
       this.spiner.setShowSpinner(true);
 
+      // spusti se na loader
+      //alert("spusti se na loader");
     }
 
   countLayers=0;

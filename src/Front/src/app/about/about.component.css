@@ -108,3 +108,8 @@ p.main-par{
     text-align: center;
     font-weight: normal;
 }
+
+
+.list-group-item{
+    font-weight: bold;
+}

@@ -7,9 +7,10 @@
             <th>Encoding Type</th>
             <th>Missing Values</th>
         </thead>
+        <br>
         <tbody>
             <tr *ngFor="let head of headers; let i = index">
-                <td>{{ head }}</td>
+                <td style="text-align: left; font-weight: bold;">{{ head }}</td>
                 <td>
                     <select class="form-select" [ngModel]="selected[i]" [attr.disabled]="startArrayType[i] ? 'disabled' : null" (ngModelChange)="changeType($event, i)">
                         <option value="categorical">Categorical</option>
