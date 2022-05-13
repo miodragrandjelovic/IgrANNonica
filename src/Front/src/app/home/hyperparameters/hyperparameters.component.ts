@@ -71,7 +71,7 @@ export class HyperparametersComponent implements OnInit {
   regularizationRate: number = 0;
   problemType: string = "regression";
   encodingType: string = "label";
-  epochs: number=10;
+  epochs: any=10;
   randomize: boolean = false;
   hpResponse: any;
   ctx: any;
@@ -353,6 +353,12 @@ export class HyperparametersComponent implements OnInit {
   onRemoveNeuron(i:number){
     (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.removeAt(this.counterNeuron -1);
     this.counterNeuron = (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
+  }
+
+  checkEpochs(){
+    if (this.epochs === ""){ alert("Moze");return;}
+    else if (this.epochs<1) this.epochs = 1;
+    else if (this.epochs>100) this.epochs = 100;
   }
 
   countNeurons(i:number){

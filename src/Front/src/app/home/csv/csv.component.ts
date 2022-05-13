@@ -36,6 +36,7 @@ export class CsvComponent implements OnInit {
     currentCorrResult: any;
     currentStatsResult: any;
     selectedDatasetUser:any;
+    chosenDatasetCsv:string = "";
 
     showMe: boolean = false;
     showMe2:boolean = false;
@@ -587,12 +588,16 @@ export class CsvComponent implements OnInit {
 
     selectedKor:any;
     selectedStat:any;
+    
     catchSelectedDataset($event:any){
+        this.chosenDatasetCsv = $event.datasetName;
+        //alert("Ime dataseta je "+this.chosenDatasetCsv);
         this.selectedDatasetUser = $event.dataset;
         this.selectedKor=$event.kor;
         this.selectedStat=$event.stat;
         this.showMe = false;
         //alert("PRIMIO SAM!");
+        //alert(this.selectedDatasetUser);
         // u selectedDatasetUser se nalazi Dataset koji je korisnik izabrao (njegov sacuvan)
         console.log("PRIMLJENO ",this.selectedDatasetUser);
 

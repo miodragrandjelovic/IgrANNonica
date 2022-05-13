@@ -18,7 +18,7 @@ interface zapamceniDatasetovi {
 
 export class UserdatasetsComponent implements OnInit {
 
-  @Output() sendResults = new EventEmitter<{dataset:any,kor:any,stat:any}>();
+  @Output() sendResults = new EventEmitter<{datasetName:any,dataset:any,kor:any,stat:any}>();
   //ovim saljemo nazad ka csv komponenti dataset 
   zapamceniDatasetovi: any= [];
   
@@ -87,6 +87,8 @@ export class UserdatasetsComponent implements OnInit {
     console.log('ovo je kliknuto za naziv '+this.selectedDataset);
     //alert(this.selectedDataset);
     this.loadThisDataset(this.selectedDataset);
+    // takodje da se u csv komponenti ispise naziv selektovanog fajla
+
 }
 
   downloadDataset(event:any){
@@ -115,7 +117,7 @@ export class UserdatasetsComponent implements OnInit {
           this.http.get<any>(this.url + '/api/Python/stats').subscribe(result =>{
             console.log('ovo je za stat: '+result);
            
-            this.sendResults.emit({dataset:selectedDatasetUser,kor:data,stat:result});
+            this.sendResults.emit({datasetName:naziv,dataset:selectedDatasetUser,kor:data,stat:result});
           });
           
         });
