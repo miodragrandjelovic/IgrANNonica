@@ -95,6 +95,10 @@ export class TableComponent implements OnChanges {
     this.parametersService.setInputs(this.inputs);
     this.allDataCopy1=this.allData;
     this.allDataCopy2=this.allData;
+    for(let j=0;j<this.header.length;j++){
+      this.searchInput[j]="";
+    }
+
     this.scrollToTable();
   }
 
@@ -207,25 +211,29 @@ export class TableComponent implements OnChanges {
     this.changePage();
   }  
 
-
   searchTable(index:number)
   {
-    this.searchData=[];
-    this.allData=this.allDataCopy1;
-    if(this.searchInput[index]!=""){      
-      
-      for(let i = 0; i < this.allData.length ; i++){
-        if(this.allData[i][index].indexOf(this.searchInput[index].toLowerCase())!=-1)
-          this.searchData.push(this.allData[i])
+    this.allDataCopy1=this.allDataCopy2;
+    for(let j=0;j<this.header.length;j++)
+    {
+      this.searchData=[];
+      if(this.searchInput[j]!=""){      
+        
+        for(let i = 0; i < this.allDataCopy1.length ; i++){
+          if(this.allDataCopy1[i][j].indexOf(this.searchInput[j].toLowerCase())!=-1)
+            this.searchData.push(this.allDataCopy1[i])
+        }
+        this.allDataCopy1=this.searchData;
+        console.log("Idemo1");
+        console.log(this.allDataCopy1);
       }
-      this.allData=this.searchData;
-      console.log("Idemo1");
-      console.log(this.allData);
+
     }
     console.log("Idemo2");
-    console.log(this.allData);
+    console.log(this.allDataCopy1);
+
+    this.allData=this.allDataCopy1;
     this.changePage();  
   }
-
 }
 
