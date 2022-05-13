@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { left, right } from '@popperjs/core';
 import { Chart } from 'chart.js';
 import { NumberValue } from 'd3-scale';
@@ -25,22 +25,50 @@ export class PredictionComponent implements OnInit, OnChanges {
   constructor(private spiner: LoadingService) { }
 
   ngOnInit(): void {
-    
+    this.loadPred();
   }
 
   ngAfterViewInit(): void {
     this.spiner.setShowSpinner(false);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
+    this.updatePred();
+  }
+
+  updatePred() {
+    console.log(this.pred);
+    this.predArray = [];
+    this.labelArray = [];
+    this.x = [];
+    let data: any = [];
+    let data1 = [];
+    for(let i = 0; i < this.pred.length; i++){
+      this.predArray.push(this.pred[i]);
+      this.labelArray.push(this.label[i]);
+      data.push({x: i+1, y: this.predArray[i]});
+      data1.push({x: i+1, y: this.labelArray[i]});
+    }
+    this.min = Math.min(0, ...this.predArray, ...this.labelArray);
+    this.max = Math.max(...this.predArray, ...this.labelArray);
+    let step = (this.max - this.min) / 10;
+
+    this.chart.data.datasets.forEach((dataset: any) => {
+      dataset.data.push(data);
+    })
+    this.chart.update();    
+  }
+
+  loadPred() {
+    console.log(this.pred);
     this.predArray = [];
     this.labelArray = [];
     this.x = [];
     let data = [];
     let data1 = [];
     for(let i = 0; i < this.pred.length; i++){
-      this.predArray.push(this.pred[i][0]);
-      this.labelArray.push(this.label[i][0]);
+      this.predArray.push(this.pred[i]);
+      this.labelArray.push(this.label[i]);
       data.push({x: i+1, y: this.predArray[i]});
       data1.push({x: i+1, y: this.labelArray[i]});
     }

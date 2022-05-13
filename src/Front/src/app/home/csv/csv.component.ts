@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { HttpHeaders } from "@angular/common/http";
 import { ParametersService } from "src/app/services/parameters.service";
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import * as myUrls from 'src/app/urls';
 
 
 
@@ -29,7 +30,7 @@ export class CsvComponent implements OnInit {
     //zato sto ne radi poziv iz konstuktora
 
     
-    
+    public url = myUrls.url;
     privateOrPublic: boolean = false ;
 
     hidden: boolean;
@@ -467,7 +468,7 @@ export class CsvComponent implements OnInit {
                 //alert("Now saving dataset under name "+fileName);
                 
                 // privatePublic lepo kupi vrednost, ali iz nekog razloga na beku je false...
-                this.http.post<any>('https://localhost:7167/api/LoadData/csv?publicData='+privatePublic, {
+                this.http.post<any>(this.url+'/api/LoadData/csv?publicData='+privatePublic, {
                     csvData: JSON.stringify(this.dataObject),
                     Name: fileName
                 }).subscribe(result => {
@@ -531,7 +532,7 @@ export class CsvComponent implements OnInit {
                 this.matrix.push(this.headers[k]);
             }
         }
-        this.http.get<any>('https://localhost:7167/api/Python/kor').subscribe(result => {
+        this.http.get<any>(this.url+'/api/Python/kor').subscribe(result => {
             let currentRow: any = [];
             for (let i = 0; i < this.matrix.length; i++) {
                 currentRow = [this.matrix[i]];
@@ -553,14 +554,14 @@ export class CsvComponent implements OnInit {
         
         this.preloadedDataset=0;
 
-        this.http.get<any>('https://localhost:7167/api/Python/preloadCsv').subscribe(result =>{
+        this.http.get<any>(this.url+'/api/Python/preloadCsv').subscribe(result =>{
             csvFajl = result;
             this.currentResult = result;
         });
-        this.http.get<any>('https://localhost:7167/api/Python/preloadKor').subscribe(data =>{
+        this.http.get<any>(this.url+'/api/Python/preloadKor').subscribe(data =>{
             this.currentCorrResult = data;
         });
-        this.http.get<any>('https://localhost:7167/api/Python/preloadStat').subscribe(result => {
+        this.http.get<any>(this.url+'/api/Python/preloadStat').subscribe(result => {
             this.currentStatsResult = result;
         });
     }
@@ -570,18 +571,18 @@ export class CsvComponent implements OnInit {
         
         this.preloadedDataset=1;
 
-        this.http.get<any>('https://localhost:7167/api/Python/preloadCsvClass').subscribe(result => {
+        this.http.get<any>(this.url+'/api/Python/preloadCsvClass').subscribe(result => {
             console.log(result);
             csvFajl = result;
             this.currentResult = result;
         });
 
-        this.http.get<any>('https://localhost:7167/api/Python/preloadKorClass').subscribe(data => {
+        this.http.get<any>(this.url+'/api/Python/preloadKorClass').subscribe(data => {
             console.log(data);
 
             this.currentCorrResult = data;
         });
-        this.http.get<any>('https://localhost:7167/api/Python/preloadStatClass').subscribe(result => {
+        this.http.get<any>(this.url+'/api/Python/preloadStatClass').subscribe(result => {
             this.currentStatsResult = result;
         });
     }
