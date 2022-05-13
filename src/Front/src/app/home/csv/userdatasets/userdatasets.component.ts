@@ -223,7 +223,7 @@ export class UserdatasetsComponent implements OnInit {
 
       // !! POSLE OVOG ZATEVA, POTREBNO JE PROSLEDITI I ZAHTEV ZA KORELACIONU MATRICU!!!
       // ovde treba da se promeni endpoint kad Vukas napravi, za selektovan PUBLIC dataset
-      return this.http.post<any>(this.url + '/api/LoadData/selectedCsv?name='+naziv, {
+      return this.http.post<any>(this.url + '/api/LoadData/publicCsv?name='+naziv, {
           name: naziv
         }).subscribe(selectedDatasetUser=>{
           
