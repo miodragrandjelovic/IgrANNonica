@@ -147,6 +147,7 @@ export class UserdatasetsComponent implements OnInit {
     this.deleteDatasetCsv = "";
     event.stopPropagation();
 
+    this.ngOnInit();
     //da se uradi refresh tabele 
   }
 
@@ -162,6 +163,7 @@ export class UserdatasetsComponent implements OnInit {
     this.deleteDatasetCsv = "";
     event.stopPropagation();
 
+    this.ngOnInit();
     //da se uradi refresh tabele 
   }
 
