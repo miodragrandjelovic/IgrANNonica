@@ -1,21 +1,21 @@
 <div id="sredina" [hidden]="!hidden" style="margin:0px;padding:0px;">
-  <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
+  <!--<div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;margin-left: 10%;">
       
       <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
-      <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> <!-- search da moze po imenu modela ili dataseta-->
+      <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> 
       <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
         <img src="assets/images/filter.png" style="height:35px; width: auto;">
       </button>
     </div>
 
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
-      <!-- ovde ide tabela sa datasetovima korisnika -->
+      
       <p class="fw-bold fs-1">Your models:</p>
     <app-usermodels></app-usermodels>
 
     </div>
-  </div>
+  </div>-->
   <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
     
     <!-- ovaj div ce se prikazivati samo ULOGOVANIM korisnicima!-->
@@ -27,7 +27,7 @@
             <div class="control epoch">
               <label for="epoch">Epoch</label>
               <div class="select" style="border-radius: 2px;">
-                <input type="number" [(ngModel)]="epochs" id="epoch" style="width: 80px; " formControlName="epoch">
+                <input type="number" [(ngModel)]="epochs" id="epoch" style="width: 80px; " formControlName="epoch" min="1" max="100" (keyup)="checkEpochs()">
               </div>
             </div>
 
@@ -35,10 +35,10 @@
               <label for="learningRate">Learning rate</label>
               <div class="select">
                 <select [(ngModel)]='lrate' class="custom-select" name="learningRate" id="learningRate" formControlName="learningRate">
-                  <option value="0.00001" selected>0.00001</option>
+                  <option value="0.00001">0.00001</option>
                   <option value="0.0001">0.0001</option>
                   <option value="0.001">0.001</option>
-                  <option value="0.003">0.003</option>
+                  <option value="0.003" selected>0.003</option>
                   <option value="0.01">0.01</option>
                   <option value="0.03">0.03</option>
                   <option value="0.1">0.1</option>
@@ -190,8 +190,8 @@
                 <div class="col" style="width:100%;">
                   <app-loading></app-loading>
                   <div [hidden]="show">
-                    <app-barplot [evaluate]="eveluate"></app-barplot>
-                    <app-prediction [pred]="pred" [label]="label"></app-prediction>
+                    <app-barplot *ngIf="!show" [evaluate]="eveluate"></app-barplot>
+                    <app-prediction *ngIf="!show" [pred]="pred" [label]="label"></app-prediction>
                     <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
                   </div>
                 </div>
