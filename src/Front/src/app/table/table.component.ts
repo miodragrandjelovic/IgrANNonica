@@ -231,8 +231,8 @@ export class TableComponent implements OnChanges {
     }
     console.log("Idemo2");
     console.log(this.allDataCopy1);
-
     this.allData=this.allDataCopy1;
+    this.dataLength=this.allData.length;
     this.changePage();  
   }
 }

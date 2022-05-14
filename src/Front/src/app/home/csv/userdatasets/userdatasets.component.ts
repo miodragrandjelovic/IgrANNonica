@@ -91,7 +91,7 @@ export class UserdatasetsComponent implements OnInit {
             this.zapamceniDatasetoviPublic = result;
         });
 
-        //this.selectedDataset = '';
+        //this.selectedDataset = '';     
         
   }
 
@@ -99,14 +99,24 @@ export class UserdatasetsComponent implements OnInit {
   searchDatasets(name:any){
     this.datasetsFilteredNames = [];
     this.zapamceniDatasetovi = this.copyPaste;
+    
     if(name != ""){
     for (var index = 0; index < this.zapamceniDatasetovi.length; index++) {
-      if(this.zapamceniDatasetovi[index].name.indexOf(name.toLowerCase()) !== -1){
+      if(this.zapamceniDatasetovi[index].name.toLowerCase().indexOf(name.toLowerCase()) !== -1){
         this.datasetsFilteredNames.push(this.zapamceniDatasetovi[index]);
       }  
     }
-
     this.zapamceniDatasetovi = this.datasetsFilteredNames;
+    
+    this. datasetsFilteredNamesPublic=[];
+    this.zapamceniDatasetoviPublic=this.copyPastePublic;
+
+    for (var index = 0; index < this.zapamceniDatasetoviPublic.length; index++) {
+      if(this.zapamceniDatasetoviPublic[index].name.toLowerCase().indexOf(name.toLowerCase()) !== -1){
+        this.datasetsFilteredNamesPublic.push(this.zapamceniDatasetoviPublic[index]);
+      }  
+    }
+    this.zapamceniDatasetoviPublic=this.datasetsFilteredNamesPublic;
    }
   }
 
