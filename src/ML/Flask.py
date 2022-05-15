@@ -121,9 +121,14 @@ def kor_matrica():
 
 
 @app.route("/savemodel",methods=["POST"]) #cuvanje modela
-def save_model():
+def save_model1():
     path=request.get_data()
-    save_model(path)
+    raw_string = r"{}".format(path)
+    raw_string=raw_string[2:-1]
+    pathmodel1=raw_string
+    #print(pathmodel1)
+    save_model(pathmodel1)
+    return pathmodel1
 
 
 @app.route("/model",methods=['GET']) #Parsovanje u df

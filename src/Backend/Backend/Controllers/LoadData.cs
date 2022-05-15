@@ -259,10 +259,10 @@ namespace Backend.Controllers
                     }
                     Console.WriteLine("Directory for new Model created successfully!");
                 }
-
-                var pathjson = System.Text.Json.JsonSerializer.Serialize(modeldirname);
-                var pathdata = new StringContent(modeldirname, System.Text.Encoding.UTF8, "application/json");
-                var pathurl = url + "/pathModel";
+                string saljemPath = CurrentPath + "\\Users\\" + Username + "\\" + upgradedName + "\\" + modelNames;
+                var pathjson = System.Text.Json.JsonSerializer.Serialize(saljemPath);
+                var pathdata = new StringContent(saljemPath, System.Text.Encoding.UTF8, "application/json");
+                var pathurl = url + "/savemodel";
                 var pathresponse = await http.PostAsync(pathurl, pathdata);
 
 
@@ -332,7 +332,7 @@ namespace Backend.Controllers
                     outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
                 }
 
-
+                /*
                 //modeldirname sacuvati i ona 3 niza kao txt fajl unutar ovog foldera
                 string ColumnNamespath = Path.Combine(modeldirname, "ColumnNames.txt");
                 List<string> ColumnLinesTxt = hp.ColumNames;   //hiper staviti u globalnu
@@ -345,7 +345,7 @@ namespace Backend.Controllers
                 string CatNumpath = Path.Combine(modeldirname, "CatNum.txt");
                 List<string> CatNumLinesTxt = hp.CatNum;
                 System.IO.File.WriteAllLines(CatNumpath, CatNumLinesTxt);
-
+                */
                 if (publicModel)
                 {
                     using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(publicPathModel))
@@ -362,7 +362,7 @@ namespace Backend.Controllers
                     }
                     file1.Close();
                     //ColumNames Encodings CatNum
-
+                    /*
                     string ColumnNames = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "ColumnNames.txt");
                     List<string> ColumnlinesTxt = hp.ColumNames;
                     System.IO.File.WriteAllLines(ColumnNames, ColumnlinesTxt);
@@ -373,7 +373,7 @@ namespace Backend.Controllers
 
                     string CatNum = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "CatNum.txt");
                     List<string> CatNumlinesTxt = hp.CatNum;
-                    System.IO.File.WriteAllLines(CatNum, CatNumlinesTxt);
+                    System.IO.File.WriteAllLines(CatNum, CatNumlinesTxt);*/
                 }
 
                 //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
@@ -735,6 +735,67 @@ namespace Backend.Controllers
             return Ok(predikcija);
         }
 
+        //za prediktovanje csv-a preko modela
+        [HttpPost("predictionModel")] //Slanje Putanje do foldera gde je sacuvan izabrani model na /pathModel bi mogao
+                                      //Slanje originalnog CSV-a sa kojim je kreiran model na /csv mozda
+                                      //Slanje hiperparametara sa kojima je kreiran izabrani model na /hp mozda
+        public async Task<ActionResult<JsonDocument>> PostPredictedModel(String dirname, String modelname)
+        {
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string fileName = modelname + ".csv"; //rezultati modela koji su sacuvani u csv fajlu
+            string SelectedPath = Path.Combine(CurrentPath, "Users", Username, dirname, modelname, fileName); //putanja do modela
+
+            string csvName = dirname + ".csv"; //csv iz kojeg je kreiran model
+            string csvPath = Path.Combine(CurrentPath, "Users", Username, dirname, csvName); //putanja do csv-a
+
+            string hpName = modelname + "HP.csv"; //hiperparametri korisceni za kreiranje izabranog modela
+            string hpPath = Path.Combine(CurrentPath, "Users", Username, dirname, modelname, hpName); //putanja do hiperparametara
+
+            if (!System.IO.File.Exists(csvPath)) //dal postoji taj csv
+            {
+                return BadRequest("Ne postoji dati model. " + SelectedPath);
+            }
+            else if (Username == null)
+            {
+                return BadRequest("Niste ulogovani.");
+            }
+
+            string modelPath = Path.Combine(CurrentPath, "Users", Username, dirname, modelname); //putanja do foldera gde je model
+            var datamodel = new StringContent(modelPath, System.Text.Encoding.UTF8, "application/json");
+            var modelurl = url + "/pathModel";
+            var responsemodel = await http.PostAsync(modelurl, datamodel);
+
+            //CSV IZ KOJEG JE KREIRAN MODEL
+            var csvTable = new DataTable();
+            using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(csvPath)), true))
+            {
+                csvTable.Load(csvReader);
+            }
+            string resultCSV = string.Empty;
+            resultCSV = JsonConvert.SerializeObject(csvTable);
+
+            var resultjsoncsv = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(resultCSV); //rezultati csv-a to treba poslati na /csv
+            var datacsv = new StringContent(resultCSV, System.Text.Encoding.UTF8, "application/json");
+            var csvurl = url + "/csv";
+            var responsecsv = await http.PostAsync(csvurl, datacsv);
+
+            //HIPERPARAMETRI SA KOJIMA JE KREIAN MODEL
+            var hpTable = new DataTable();
+            using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(hpPath)), true))
+            {
+                hpTable.Load(csvReader);
+            }
+            string resultHP = string.Empty;
+            resultHP = JsonConvert.SerializeObject(hpTable); // da li ovde izvuci samo nizove i delove koji trebaju za predikciju ili sve?
+
+            var resultjsonhp = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(resultHP); //rezultati HP to treba poslati na /hp
+            var datahp = new StringContent(resultHP, System.Text.Encoding.UTF8, "application/json");
+            var hpurl = url + "/hp";
+            var responsehp = await http.PostAsync(hpurl, datahp);
+
+
+            return Ok(resultjsonhp);
+        }
         [HttpPost("stats")] //Slanje Stats na pajton
         public async Task<ActionResult<Statistika>> PostStat(Statistika stat)
         {
