@@ -13,12 +13,16 @@ export class LoadingComponent implements OnInit {
   constructor(public spiner:LoadingService) { }
 
   ngOnInit(): void {
+    // fokus na spiner
+    
     this.spiner.getShowSpinner().subscribe(newValue => {
       this.show = newValue;
     });
 
+    
+
     //alert("spustam se na loader");
-    //document.getElementById("loaderStatistika")?.focus(); 
+    document.getElementById("loaderStatistika")?.focus(); 
   }
 
 }

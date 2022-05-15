@@ -189,7 +189,7 @@
                 </div>
                 <div id="loaderStatistika" class="col" style="width:100%;">
                   <app-loading></app-loading>
-                  <div [hidden]="show">
+                  <div id="trainingResults" [hidden]="show">
                     <app-barplot *ngIf="!show" [evaluate]="eveluate"></app-barplot>
                     <app-prediction *ngIf="!show" [pred]="pred" [label]="label"></app-prediction>
                     <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>

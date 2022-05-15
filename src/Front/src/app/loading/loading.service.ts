@@ -13,6 +13,7 @@ export class LoadingService{
    
   getShowSpinner(): Observable<boolean> {
     return this.showSpinner$.asObservable();
+    
 }
 setShowSpinner(value: boolean) {
   this.showSpinner$.next(value);

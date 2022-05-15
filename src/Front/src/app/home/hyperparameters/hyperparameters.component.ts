@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Options } from '@angular-slider/ngx-slider';
+import { Options, CustomStepDefinition, LabelType } from '@angular-slider/ngx-slider';
 import { CheckboxControlValueAccessor, Form, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ParametersService } from 'src/app/services/parameters.service';
@@ -62,7 +62,7 @@ export class HyperparametersComponent implements OnInit {
   hyperparameters: string;
   hidden: boolean;
   value1: number = 80;
-  value2: number = 10;
+  value2: number = 16;
   value3: number = 50;
   //dodato za default vrednosti
   lrate: number = 0.00001;
@@ -96,11 +96,15 @@ export class HyperparametersComponent implements OnInit {
     ceil: 100,
     step: 5
   };
+  
+  steps = [{value: 2}, {value:4}, {value:8}, {value:16}, {value:32}, {value:64}];
+
   options2: Options = {
-    floor: 0,
-    ceil: 50,
-    step: 5
+    stepsArray: this.steps.map((s): CustomStepDefinition => {
+      return { value: s.value };
+    })
   };
+
   options3: Options = {
     floor: 0,
     ceil: 100,
@@ -273,7 +277,8 @@ export class HyperparametersComponent implements OnInit {
     } 
 
     this.http.post(this.url + '/api/LoadData/hpNeprijavljen', myreq).subscribe(result => {
-      console.log(result);
+    
+      console.log("Rezultat slanja HP treninga je "  + result);
       this.inputCheckBoxes = [];
       this.selectedCheckBoxes = [];
       this.properties = [];
@@ -305,12 +310,20 @@ export class HyperparametersComponent implements OnInit {
       }
     
       this.fetchSelectedGraphics();
+
+      var ldRes = document.getElementById("prikazGrafika");
+      if (ldRes){
+        alert("Prikaz");
+        ldRes.style.backgroundColor='red';
+        ldRes.scrollIntoView({behavior: 'smooth'});
+      }
+      
       });
       
       this.prikazGrafika=true;
       this.spiner.setShowSpinner(true);
-
-      // spusti se na loader
+      
+      // spusti prikaz na spiner
       //alert("spusti se na loader");
     }
 
