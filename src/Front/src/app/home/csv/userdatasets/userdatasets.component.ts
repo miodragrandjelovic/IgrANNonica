@@ -28,20 +28,46 @@ export class UserdatasetsComponent implements OnInit {
   selectedDataset:any;
   datasetsFilteredNames : any = [];
   copyPaste:any = [];
+
+  zapamceniDatasetoviPublic: any= [];
+  datasetsNamesPublic: any;
+  selectedDatasetPublic:any;
+  datasetsFilteredNamesPublic : any = [];
+  copyPastePublic:any = [];
+
+  privateOrPublicSet:number=1;
+
   ngOnInit(): void {
-    this.getDatasets();
-    this.getPublicDatasets();
-    this.parametersService.getDatasets().subscribe(res => {
+    //this.zapamceniDatasetovi = [];
+    //this.zapamceniDatasetoviPublic = [];
+    if (this.privateOrPublicSet == 1) 
       this.getDatasets();
-    });
+    else 
+      this.getPublicDatasets();
+
+    /*this.parametersService.getDatasets().subscribe(res => {
+      this.getDatasets();
+    });*/
+  }
+
+  
+  changeDatasets(index:number)
+  {
+    this.privateOrPublicSet = index;
+    this.ngOnInit();
   }
 
   getDatasets()
   {
+    this.zapamceniDatasetovi = [];
+    this.zapamceniDatasetoviPublic = [];
     this.copyPaste = [];
+    this.copyPastePublic = [];
     this.datasetsNames = [];
+    this.datasetsNamesPublic = [];
     this.datasetsFilteredNames = [];
-    
+    this.datasetsFilteredNamesPublic = [];
+
     this.http.get<any>(this.url + '/api/Python/savedCsvs').subscribe(result => {  
             console.log(result);
             this.copyPaste=result;
@@ -62,16 +88,17 @@ export class UserdatasetsComponent implements OnInit {
         this.selectedDataset = '';
   }
 
-  zapamceniDatasetoviPublic: any= [];
-  datasetsNamesPublic: any;
-  selectedDatasetPublic:any;
-  datasetsFilteredNamesPublic : any = [];
-  copyPastePublic:any = [];
+  
 
   getPublicDatasets()
   {
+    this.zapamceniDatasetovi = [];
+    this.zapamceniDatasetoviPublic = [];
+    this.copyPaste = [];
     this.copyPastePublic = [];
+    this.datasetsNames = [];
     this.datasetsNamesPublic = [];
+    this.datasetsFilteredNames = [];
     this.datasetsFilteredNamesPublic = [];
     
     this.http.get<any>(this.url + '/api/Python/publicDatasets').subscribe(result => {  

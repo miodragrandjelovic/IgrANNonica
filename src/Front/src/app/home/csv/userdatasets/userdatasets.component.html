@@ -1,4 +1,13 @@
 <div class="container-fluid w-100 overflow-auto" >
+    <div style="width:100%;">
+        <button class="btn toggleSets" (click)="changeDatasets(1)" [style.backgroundColor]="privateOrPublicSet == 1 ? '#62c2ee' : 'transparent'">
+            Private
+        </button>
+        <button class="btn toggleSets" (click)="changeDatasets(2)" [style.backgroundColor]="privateOrPublicSet == 2 ? '#62c2ee' : 'transparent'">
+            Public
+        </button>
+    </div>
+
     <div class="row py-1 align-items-center justify-content-center border-top border-dark" *ngFor="let item of zapamceniDatasetovi"
     style=" border-top: 1px solid #212f3c; cursor:pointer;"
     id="{{item.name}}"

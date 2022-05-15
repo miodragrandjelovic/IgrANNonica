@@ -474,6 +474,7 @@ export class CsvComponent implements OnInit {
                 }).subscribe(result => {
                     //alert("Uspesno dodat fajl!");
                     // reload komponente tabele!
+                    this.child.privateOrPublicSet = 1;
                     this.child.ngOnInit();
 
                     for(let i = 0; i < this.headers.length; i++){
