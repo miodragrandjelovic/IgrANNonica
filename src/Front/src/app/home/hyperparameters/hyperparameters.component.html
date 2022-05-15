@@ -176,7 +176,7 @@
 
           </div>
 
-        <div class="container-fluid" style="margin-top: 10px;" *ngIf="prikazGrafika">
+        <div id="trainingResults" class="container-fluid" style="margin-top: 10px;" *ngIf="prikazGrafika">
             <div class="row">
                 <div class="col-4" style="width:20%; min-width: 170px;">
                   <div class="form-check" style="padding-left: 0px; padding-bottom: 5px;">
@@ -189,7 +189,7 @@
                 </div>
                 <div id="loaderStatistika" class="col" style="width:100%;">
                   <app-loading></app-loading>
-                  <div id="trainingResults" [hidden]="show">
+                  <div [hidden]="show">
                     <app-barplot *ngIf="!show" [evaluate]="eveluate"></app-barplot>
                     <app-prediction *ngIf="!show" [pred]="pred" [label]="label"></app-prediction>
                     <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>

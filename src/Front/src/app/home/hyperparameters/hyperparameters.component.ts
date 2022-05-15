@@ -188,6 +188,13 @@ export class HyperparametersComponent implements OnInit {
     this.selectedCheckBoxes = this.inputCheckBoxes.filter((value, index) => {
       return value.isChecked;
     })
+
+    var ldRes = document.getElementById("trainingResults");
+    if (ldRes) {
+      //alert("Prikaz");
+      //ldRes.style.backgroundColor = 'red';
+      ldRes.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   changeSelection() {
@@ -279,6 +286,7 @@ export class HyperparametersComponent implements OnInit {
     this.http.post(this.url + '/api/LoadData/hpNeprijavljen', myreq).subscribe(result => {
     
       console.log("Rezultat slanja HP treninga je "  + result);
+      
       this.inputCheckBoxes = [];
       this.selectedCheckBoxes = [];
       this.properties = [];
@@ -311,18 +319,19 @@ export class HyperparametersComponent implements OnInit {
     
       this.fetchSelectedGraphics();
 
-      var ldRes = document.getElementById("prikazGrafika");
-      if (ldRes){
-        alert("Prikaz");
-        ldRes.style.backgroundColor='red';
-        ldRes.scrollIntoView({behavior: 'smooth'});
-      }
+      
       
       });
       
       this.prikazGrafika=true;
       this.spiner.setShowSpinner(true);
-      
+
+      var ldRes = document.getElementById("loaderStatistika");
+      if (ldRes) {
+        //alert("Prikaz");
+        //ldRes.style.backgroundColor = 'red';
+        ldRes.scrollIntoView({ behavior: 'smooth' });
+      }
       // spusti prikaz na spiner
       //alert("spusti se na loader");
     }

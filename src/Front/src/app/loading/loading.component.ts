@@ -22,7 +22,7 @@ export class LoadingComponent implements OnInit {
     
 
     //alert("spustam se na loader");
-    document.getElementById("loaderStatistika")?.focus(); 
+    //document.getElementById("loaderStatistika")?.focus(); 
   }
 
 }
