@@ -259,10 +259,10 @@ namespace Backend.Controllers
                     }
                     Console.WriteLine("Directory for new Model created successfully!");
                 }
-
-                var pathjson = System.Text.Json.JsonSerializer.Serialize(modeldirname);
-                var pathdata = new StringContent(modeldirname, System.Text.Encoding.UTF8, "application/json");
-                var pathurl = url + "/pathModel";
+                string saljemPath = CurrentPath + "\\Users\\" + Username + "\\" + upgradedName + "\\" + modelNames;
+                var pathjson = System.Text.Json.JsonSerializer.Serialize(saljemPath);
+                var pathdata = new StringContent(saljemPath, System.Text.Encoding.UTF8, "application/json");
+                var pathurl = url + "/savemodel";
                 var pathresponse = await http.PostAsync(pathurl, pathdata);
 
 
@@ -332,7 +332,7 @@ namespace Backend.Controllers
                     outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
                 }
 
-
+                /*
                 //modeldirname sacuvati i ona 3 niza kao txt fajl unutar ovog foldera
                 string ColumnNamespath = Path.Combine(modeldirname, "ColumnNames.txt");
                 List<string> ColumnLinesTxt = hp.ColumNames;   //hiper staviti u globalnu
@@ -345,7 +345,7 @@ namespace Backend.Controllers
                 string CatNumpath = Path.Combine(modeldirname, "CatNum.txt");
                 List<string> CatNumLinesTxt = hp.CatNum;
                 System.IO.File.WriteAllLines(CatNumpath, CatNumLinesTxt);
-
+                */
                 if (publicModel)
                 {
                     using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(publicPathModel))
@@ -362,7 +362,7 @@ namespace Backend.Controllers
                     }
                     file1.Close();
                     //ColumNames Encodings CatNum
-
+                    /*
                     string ColumnNames = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "ColumnNames.txt");
                     List<string> ColumnlinesTxt = hp.ColumNames;
                     System.IO.File.WriteAllLines(ColumnNames, ColumnlinesTxt);
@@ -373,7 +373,7 @@ namespace Backend.Controllers
 
                     string CatNum = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "CatNum.txt");
                     List<string> CatNumlinesTxt = hp.CatNum;
-                    System.IO.File.WriteAllLines(CatNum, CatNumlinesTxt);
+                    System.IO.File.WriteAllLines(CatNum, CatNumlinesTxt);*/
                 }
 
                 //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
