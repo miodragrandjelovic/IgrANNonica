@@ -472,6 +472,10 @@ export class CsvComponent implements OnInit {
                     csvData: JSON.stringify(this.dataObject),
                     Name: fileName
                 }).subscribe(result => {
+                    //alert("Uspesno dodat fajl!");
+                    // reload komponente tabele!
+                    this.child.ngOnInit();
+
                     for(let i = 0; i < this.headers.length; i++){
                         const currentRow = [this.headers[i],
                             result[this.headers[i]].Q1 ? result[this.headers[i]].Q1 : 'null',

@@ -25,14 +25,14 @@
 
           <div class="row parametri" style="width:100%;margin:auto;">
             <div class="control epoch">
-              <label for="epoch">Epoch</label>
+              <label class="labelaHip" for="epoch">Epoch</label>
               <div class="select" style="border-radius: 2px;">
                 <input type="number" [(ngModel)]="epochs" id="epoch" style="width: 80px; " formControlName="epoch" min="1" max="100" (keyup)="checkEpochs()">
               </div>
             </div>
 
             <div class="control learningRate">
-              <label for="learningRate">Learning rate</label>
+              <label class="labelaHip" for="learningRate">Learning rate</label>
               <div class="select">
                 <select [(ngModel)]='lrate' class="custom-select" name="learningRate" id="learningRate" formControlName="learningRate">
                   <option value="0.00001">0.00001</option>
@@ -50,7 +50,7 @@
               </div>
             </div>
             <div class="control activation" style="display:none;">
-              <label for="activations">Activation</label>
+              <label class="labelaHip" for="activations">Activation</label>
               <div class="select">
                 <select [(ngModel)]='activation' class="custom-select" id="activations" formControlName="activation">
                   <option value="relu">ReLU</option>
@@ -61,7 +61,7 @@
               </div>
             </div>
             <div class="control regularization">
-              <label for="regularizations">Regularization</label>
+              <label class="labelaHip" for="regularizations">Regularization</label>
               <div class="select">
                 <select [(ngModel)]='regularization' class="custom-select" id="regularizations" formControlName="regularization">
                   <option value="none">None</option>
@@ -71,7 +71,7 @@
               </div>
             </div>
             <div class="control regularizationRate" >
-              <label for="regularRate">Regularization rate</label>
+              <label class="labelaHip" for="regularRate">Regularization rate</label>
               <div class="select">
                 <select [(ngModel)]='regularizationRate' class="custom-select" id="regularRate" formControlName="regularizationRate">
                   <option value="0" [disabled]="regularization==='none'">0</option>
@@ -88,7 +88,7 @@
               </div>
             </div>
             <div class="control problem">
-              <label for="problem">Problem type</label>
+              <label class="labelaHip" for="problem">Problem type</label>
               <div class="select">
                 <select [(ngModel)]='problemType' class="custom-select" id="problem" formControlName="problemType">
                   <option value="regression">Regression</option>
@@ -97,7 +97,7 @@
               </div>
             </div>
             <div class="control encoding" style="display:none;">
-              <label for="encoding">Encoding</label>
+              <label class="labelaHip" for="encoding">Encoding</label>
               <div class="select">
                 <select [(ngModel)]='encodingType' class="custom-select" id="encoding" formControlName="encodingType">
                   <option value="label">Label</option>
@@ -109,7 +109,7 @@
 
             <div class="form-check form-switch control randomize">
               <div class="select">
-                <label class="form-check-label" for="flexSwitchCheckDefault">Shuffle</label><br>
+                <label class="form-check-label labelaHip" for="flexSwitchCheckDefault">Shuffle</label><br>
                 <input class="form-check-input" type="checkbox" [(ngModel)]="randomize" id="flexSwitchCheckDefault" style="margin:3px;" formControlName="randomize">
               </div>
             </div>
@@ -119,19 +119,19 @@
         <div class="container-fluid" style="margin-top: 10px;"> 
           <div class="row" >
               <div class="col-4" style="width:20%; min-width: 170px;">
-                <label for="percTrainData">Train percentage to data: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
+                <label class="labelaHip" for="percTrainData">Train percentage to data: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
                 <p class="slider">
                   <ngx-slider class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
                 </p>
                 
 
                 
-                <label for="valAndTest">Validation and test percentages to rest of data: <span class="value"><input type="text" value = "{{value3}}" (keyup)="onThirdTextInputChange($event)" style="width: 40px;" /></span></label>
+                <label class="labelaHip" for="valAndTest">Validation and test percentages to rest of data: <span class="value"><input type="text" value = "{{value3}}" (keyup)="onThirdTextInputChange($event)" style="width: 40px;" /></span></label>
                 <p class="slider" placement="end" ngbTooltip="The selected percentage will belong to the validation, the rest will belong to the test">
                   <ngx-slider class="form-range" [(ngModel)]="value3" [options]="options3" formControlName="valAndTest"></ngx-slider>
                 </p>
 
-                <label for="batchSize">Batch Size: <span class="value"><input type="text" value = "{{value2}}" (keyup)="onSecondTextInputChange($event)" style="width: 40px;" /></span></label>
+                <label class="labelaHip" for="batchSize">Batch Size: <span class="value"><input type="text" value = "{{value2}}" (keyup)="onSecondTextInputChange($event)" style="width: 40px;" /></span></label>
                 <p class="slider">
                   <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
                 </p>
@@ -176,7 +176,7 @@
 
           </div>
 
-        <div class="container-fluid" style="margin-top: 10px;" *ngIf="prikazGrafika">
+        <div id="trainingResults" class="container-fluid" style="margin-top: 10px;" *ngIf="prikazGrafika">
             <div class="row">
                 <div class="col-4" style="width:20%; min-width: 170px;">
                   <div class="form-check" style="padding-left: 0px; padding-bottom: 5px;">
@@ -187,7 +187,7 @@
                       </div>
                   </div>
                 </div>
-                <div class="col" style="width:100%;">
+                <div id="loaderStatistika" class="col" style="width:100%;">
                   <app-loading></app-loading>
                   <div [hidden]="show">
                     <app-barplot *ngIf="!show" [evaluate]="eveluate"></app-barplot>

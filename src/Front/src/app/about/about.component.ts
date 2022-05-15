@@ -12,4 +12,11 @@ export class AboutComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  activeLink:any = "firstLink";
+
+  activeFun($event:any){
+    this.activeLink = $event.target.id;
+  }
+
+
 }

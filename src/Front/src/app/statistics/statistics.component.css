@@ -29,4 +29,9 @@ tr:hover td div{
     overflow: hidden;
 }
 
+.redoviIzbor:first-child{
+    /*background-color: red;*/
+    text-align: left;
+    font-weight: bold;
+}
 
