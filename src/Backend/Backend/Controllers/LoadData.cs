@@ -699,10 +699,13 @@ namespace Backend.Controllers
                             }
                         }
                     }
-
-
                     file.Close();
                     System.IO.File.Delete(pathToCreate);
+                    /*string CurrentPath = Directory.GetCurrentDirectory();
+                    string SelectedPath = System.IO.Path.Combine(CurrentPath, "Users", Username);
+                    string[] subdirs = Directory.GetDirectories(SelectedPath).Select(Path.GetFileName).ToArray();
+                    for(int i = 0; i < subdirs.Length; i++)
+                        Console.WriteLine(subdirs[i]);*/
                 }
             }
             else

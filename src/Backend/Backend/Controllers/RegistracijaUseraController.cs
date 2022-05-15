@@ -92,11 +92,17 @@ namespace Backend.Controllers
                 //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + DirName + ".csv";
                 string fileName = name + ".csv";
                 string pathToDelete = Path.Combine(CurrentPath, "Users", Username, name, fileName);
-
+                string pathToDele = Path.Combine(CurrentPath, "Users", Username, name);
                 if (System.IO.File.Exists(pathToDelete))
                 {
                     System.IO.File.Delete(pathToDelete);
+
+                    if (!Directory.EnumerateFileSystemEntries(pathToDele).Any())
+                    {
+                        System.IO.Directory.Delete(pathToDele, true);
+                    }
                 }
+                                
                 return Ok("Uspesno uklonjen samo csv fajl." + pathToDelete);
             }
         }

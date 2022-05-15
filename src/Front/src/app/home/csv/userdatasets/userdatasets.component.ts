@@ -18,7 +18,7 @@ interface zapamceniDatasetovi {
 
 export class UserdatasetsComponent implements OnInit {
 
-  @Output() sendResults = new EventEmitter<{dataset:any,kor:any,stat:any}>();
+  @Output() sendResults = new EventEmitter<{datasetName:any,dataset:any,kor:any,stat:any}>();
   //ovim saljemo nazad ka csv komponenti dataset 
   zapamceniDatasetovi: any= [];
   
@@ -30,6 +30,7 @@ export class UserdatasetsComponent implements OnInit {
   copyPaste:any = [];
   ngOnInit(): void {
     this.getDatasets();
+    this.getPublicDatasets();
     this.parametersService.getDatasets().subscribe(res => {
       this.getDatasets();
     });
@@ -55,17 +56,45 @@ export class UserdatasetsComponent implements OnInit {
  
             */
             this.datasetsNames = this.copyPaste;
-            
-
-            this.http.get<any>(this.url + '/api/Python/publicDatasets').subscribe(result2 => {  
-              this.copyPaste.concat(result);
-              this.datasetsNames.concat(result);              
-              this.zapamceniDatasetovi = result.concat(result2);
-            });
+            this.zapamceniDatasetovi = result;
         });
 
         this.selectedDataset = '';
   }
+
+  zapamceniDatasetoviPublic: any= [];
+  datasetsNamesPublic: any;
+  selectedDatasetPublic:any;
+  datasetsFilteredNamesPublic : any = [];
+  copyPastePublic:any = [];
+
+  getPublicDatasets()
+  {
+    this.copyPastePublic = [];
+    this.datasetsNamesPublic = [];
+    this.datasetsFilteredNamesPublic = [];
+    
+    this.http.get<any>(this.url + '/api/Python/publicDatasets').subscribe(result => {  
+            console.log(result);
+            this.copyPastePublic=result;
+            console.log(this.copyPastePublic);
+           /*
+            this.copyPaste.push("prva1");
+            this.copyPaste.push("prva2");
+            this.copyPaste.push("prva3");
+            this.copyPaste.push("prva4");
+            this.copyPaste.push("prva5");
+            this.copyPaste.push("prva5");
+ 
+            */
+            this.datasetsNamesPublic = this.copyPastePublic;
+            this.zapamceniDatasetoviPublic = result;
+        });
+
+        //this.selectedDataset = '';
+        
+  }
+
 //////////////
   searchDatasets(name:any){
     this.datasetsFilteredNames = [];
@@ -87,7 +116,17 @@ export class UserdatasetsComponent implements OnInit {
     console.log('ovo je kliknuto za naziv '+this.selectedDataset);
     //alert(this.selectedDataset);
     this.loadThisDataset(this.selectedDataset);
-}
+    // takodje da se u csv komponenti ispise naziv selektovanog fajla
+  }
+
+  selectChangePublic(event:any){
+    this.selectedDataset=event.target.id;
+    //alert("NAZIV JE "+ this.selectedDataset);
+    console.log('ovo je kliknuto za naziv '+this.selectedDataset);
+    //alert(this.selectedDataset);
+    this.loadThisDatasetPublic(this.selectedDataset);
+    // takodje da se u csv komponenti ispise naziv selektovanog fajla
+  }
 
   downloadDataset(event:any){
     this.selectedDataset=event.target.id;
@@ -95,10 +134,48 @@ export class UserdatasetsComponent implements OnInit {
     event.stopPropagation();
   }
 
+  deleteDatasetCsv:any;
+
   deleteDataset(event:any){
-    this.selectedDataset=event.target.id;
-    alert("DELETE DATSET "+ this.selectedDataset);
+    this.deleteDatasetCsv=event.target.id;
+    //alert("DELETE DATSET "+ this.deleteDatasetCsv);
+
+    this.http.delete<any>(this.url +'/api/RegistracijaUsera/csv?name='+this.deleteDatasetCsv).subscribe(result => { 
+      console.log("Uspesno obrisan "+result);
+      //alert("Uspesno obrisan" + result);
+      this.ngOnInit();
+     },(err)=>{
+      console.log("Greska prilikom brisanja" + err);
+      //alert("Greska prilikom brisanja!" + err);
+      this.ngOnInit();
+     });
+    
+    this.deleteDatasetCsv = "";
     event.stopPropagation();
+
+    this.ngOnInit();
+    //da se uradi refresh tabele 
+  }
+
+  deletePublicDataset(event:any){
+    this.deleteDatasetCsv=event.target.id;
+    //alert("DELETE DATSET "+ this.deleteDatasetCsv);
+
+    //ovde treba da se izmeni endpoint kad Vukas napravi, da gadja public datasetove
+    this.http.delete<any>(this.url +'/api/RegistracijaUsera/csv?name='+this.deleteDatasetCsv).subscribe(result => { 
+      console.log(result);
+
+      this.ngOnInit();
+     }, (err)=>{
+       console.log("Greska prilikom brisanja javnog "+err);
+       this.ngOnInit();
+     });
+    
+    this.deleteDatasetCsv = "";
+    event.stopPropagation();
+
+    this.ngOnInit();
+    //da se uradi refresh tabele 
   }
 
   loadThisDataset(naziv:any){
@@ -115,7 +192,7 @@ export class UserdatasetsComponent implements OnInit {
           this.http.get<any>(this.url + '/api/Python/stats').subscribe(result =>{
             console.log('ovo je za stat: '+result);
            
-            this.sendResults.emit({dataset:selectedDatasetUser,kor:data,stat:result});
+            this.sendResults.emit({datasetName:naziv,dataset:selectedDatasetUser,kor:data,stat:result});
           });
           
         });
@@ -154,6 +231,61 @@ export class UserdatasetsComponent implements OnInit {
         */
       });
     }
+
+  loadThisDatasetPublic(naziv:any){
+
+      // !! POSLE OVOG ZATEVA, POTREBNO JE PROSLEDITI I ZAHTEV ZA KORELACIONU MATRICU!!!
+      // ovde treba da se promeni endpoint kad Vukas napravi, za selektovan PUBLIC dataset
+      return this.http.post<any>(this.url + '/api/LoadData/publicCsv?name='+naziv, {
+          name: naziv
+        }).subscribe(selectedDatasetUser=>{
+          
+          console.log(selectedDatasetUser);
+          this.http.get<any>(this.url + '/api/Python/kor').subscribe(data =>{
+              console.log('ovo je za kor: '+data);
+            
+            this.http.get<any>(this.url + '/api/Python/stats').subscribe(result =>{
+              console.log('ovo je za stat: '+result);
+             
+              this.sendResults.emit({datasetName:naziv,dataset:selectedDatasetUser,kor:data,stat:result});
+            });
+            
+          });
+  
+          //alert("SALJEMO RES");
+  
+          this.sendResults.emit(selectedDatasetUser);
+          // sada ovo saljemo u tabelu
+  
+  
+          /*
+          var map = new Map<string, string[]>();
+      
+          for(var i = 0; i < result.length; i++) {
+            if(i == 0) {
+              var aaa = Object.keys(result[i]);
+              for(var j = 0; j < aaa.length; j++) {
+                map.set(aaa[j], ["" + Object.values(result[i])[j]]);
+              }
+            } else {
+              var aaa = Object.keys(result[i]);
+              for(var j = 0; j < aaa.length; j++) {
+                var array = map.get(aaa[j]);
+                if(array == undefined) array = [];
+                array.push("" + Object.values(result[i])[j]);
+                map.set(aaa[j], array);
+              }
+            }
+          }
+          console.log(map);
+          this.map=map;
+          this.array2d=Array.from(map.values());
+      
+          this.array2d= this.array2d[0].map((_, colIndex) =>this.array2d.map(row => row[colIndex]));
+        
+          */
+        });
+      }
    
 
   }
