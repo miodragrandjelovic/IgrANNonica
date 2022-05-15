@@ -141,7 +141,13 @@ export class UserdatasetsComponent implements OnInit {
     //alert("DELETE DATSET "+ this.deleteDatasetCsv);
 
     this.http.delete<any>(this.url +'/api/RegistracijaUsera/csv?name='+this.deleteDatasetCsv).subscribe(result => { 
-      console.log(result);
+      console.log("Uspesno obrisan "+result);
+      //alert("Uspesno obrisan" + result);
+      this.ngOnInit();
+     },(err)=>{
+      console.log("Greska prilikom brisanja" + err);
+      //alert("Greska prilikom brisanja!" + err);
+      this.ngOnInit();
      });
     
     this.deleteDatasetCsv = "";
@@ -158,6 +164,11 @@ export class UserdatasetsComponent implements OnInit {
     //ovde treba da se izmeni endpoint kad Vukas napravi, da gadja public datasetove
     this.http.delete<any>(this.url +'/api/RegistracijaUsera/csv?name='+this.deleteDatasetCsv).subscribe(result => { 
       console.log(result);
+
+      this.ngOnInit();
+     }, (err)=>{
+       console.log("Greska prilikom brisanja javnog "+err);
+       this.ngOnInit();
      });
     
     this.deleteDatasetCsv = "";
