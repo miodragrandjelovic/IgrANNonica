@@ -786,7 +786,7 @@ namespace Backend.Controllers
                 hpTable.Load(csvReader);
             }
             string resultHP = string.Empty;
-            resultHP = JsonConvert.SerializeObject(hpTable);
+            resultHP = JsonConvert.SerializeObject(hpTable); // da li ovde izvuci samo nizove i delove koji trebaju za predikciju ili sve?
 
             var resultjsonhp = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(resultHP); //rezultati HP to treba poslati na /hp
             var datahp = new StringContent(resultHP, System.Text.Encoding.UTF8, "application/json");
