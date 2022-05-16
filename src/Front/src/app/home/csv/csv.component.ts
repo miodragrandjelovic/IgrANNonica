@@ -94,7 +94,6 @@ export class CsvComponent implements OnInit {
     headers: any;
 
     searchInputField: any ;
-
     outputs: Array<CheckBox> = [];
     selectedInputs: Array<CheckBox> = [];
     inputsArray: Array<CheckBox> = [];
@@ -141,6 +140,11 @@ export class CsvComponent implements OnInit {
     searchDatasets(){
         //poziva searchDatasets iz UserDatasets
         this.child.searchDatasets(this.searchInputField);
+
+    }
+
+    DeleteSearchInput(){
+            this.searchInputField="";
     }
 
     fetchSelectedItems() {

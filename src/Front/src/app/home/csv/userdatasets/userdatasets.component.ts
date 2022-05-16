@@ -1,7 +1,8 @@
-import { Component, OnInit , Output, EventEmitter} from '@angular/core';
+import { Component, OnInit , Output, EventEmitter, Input} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ParametersService } from 'src/app/services/parameters.service';
 import * as myUrls from 'src/app/urls';
+import { CsvComponent } from '../csv.component';
 interface zapamceniDatasetovi {
   name: String,
   size: number,
@@ -21,7 +22,9 @@ export class UserdatasetsComponent implements OnInit {
   @Output() sendResults = new EventEmitter<{datasetName:any,dataset:any,kor:any,stat:any}>();
   //ovim saljemo nazad ka csv komponenti dataset 
   zapamceniDatasetovi: any= [];
-  
+
+  @Output() search:EventEmitter<string>=new EventEmitter();
+
   constructor(private http: HttpClient, private parametersService: ParametersService){}
   public url = myUrls.url;
   datasetsNames: any;
@@ -40,11 +43,10 @@ export class UserdatasetsComponent implements OnInit {
   ngOnInit(): void {
     //this.zapamceniDatasetovi = [];
     //this.zapamceniDatasetoviPublic = [];
-    if (this.privateOrPublicSet == 1) 
+    if (this.privateOrPublicSet == 1)
       this.getDatasets();
     else 
       this.getPublicDatasets();
-
     /*this.parametersService.getDatasets().subscribe(res => {
       this.getDatasets();
     });*/
@@ -54,6 +56,7 @@ export class UserdatasetsComponent implements OnInit {
   changeDatasets(index:number)
   {
     this.privateOrPublicSet = index;
+    this.search.emit();
     this.ngOnInit();
   }
 
@@ -125,16 +128,30 @@ export class UserdatasetsComponent implements OnInit {
 //////////////
   searchDatasets(name:any){
     this.datasetsFilteredNames = [];
-    this.datasetsNames = this.copyPaste;
+    this.zapamceniDatasetovi = this.copyPaste;
     if(name != ""){
-    for (var index = 0; index < this.datasetsNames.length; index++) {
-      if(this.datasetsNames[index].indexOf(name.toLowerCase()) !== -1){
-        this.datasetsFilteredNames.push(this.datasetsNames[index]);
+    for (var index = 0; index < this.zapamceniDatasetovi.length; index++) {
+      if(this.zapamceniDatasetovi[index].name.toLowerCase().indexOf(name.toLowerCase()) !== -1){
+        this.datasetsFilteredNames.push(this.zapamceniDatasetovi[index]);
       }  
     }
 
-    this.datasetsNames = this.datasetsFilteredNames;
+    this.zapamceniDatasetovi = this.datasetsFilteredNames;
    }
+
+   this.datasetsFilteredNamesPublic=[];
+   this.zapamceniDatasetoviPublic = this.copyPastePublic;
+   if(name != ""){
+    for (var index = 0; index < this.zapamceniDatasetoviPublic.length; index++) {
+      if(this.zapamceniDatasetoviPublic[index].name.toLowerCase().indexOf(name.toLowerCase()) !== -1){
+        this.datasetsFilteredNamesPublic.push(this.zapamceniDatasetoviPublic[index]);
+      }  
+    }
+
+    this.zapamceniDatasetoviPublic = this.datasetsFilteredNamesPublic;
+   }
+
+   
   }
 
   selectChange(event:any){
