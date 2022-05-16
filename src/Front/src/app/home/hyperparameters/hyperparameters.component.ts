@@ -414,4 +414,13 @@ export class HyperparametersComponent implements OnInit {
         return `with: ${reason}`;
       }
     }
+
+    saveModel() {
+      this.http.post(this.url + '/api/LoadData/save?modelNames=model&publicModel=true', {
+        modelNames: ['model'],
+        publicModel: true
+      }).subscribe(result => {
+        console.log(result);
+      });
+    }
 }

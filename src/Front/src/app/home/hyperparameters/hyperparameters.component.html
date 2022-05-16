@@ -193,6 +193,9 @@
                     <app-barplot *ngIf="!show" [evaluate]="eveluate"></app-barplot>
                     <app-prediction *ngIf="!show" [pred]="pred" [label]="label"></app-prediction>
                     <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
+                    <button style="width:15%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px; margin-left: 75%; margin-bottom: 1%;" (click)="saveModel()"> <!--i ovde da se sacuva taj novi-->
+                      Save
+                    </button>
                   </div>
                 </div>
             </div>
