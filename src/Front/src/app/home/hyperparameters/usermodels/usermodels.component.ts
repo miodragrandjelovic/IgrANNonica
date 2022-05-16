@@ -26,6 +26,7 @@ export class UsermodelsComponent implements OnInit {
   public url = myUrls.url;
   zapamceniModeli: any;
   selectedModels:any;
+  searchModels: any;
 
   ngOnInit(): void {
     this.getModels();
