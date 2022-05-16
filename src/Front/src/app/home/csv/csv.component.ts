@@ -523,6 +523,7 @@ export class CsvComponent implements OnInit {
         this.onemogucenaPredaja = true;
         this.onemogucenoIme = true;
         this.changeButtonEnable();
+        this.searchInputField = "";
         this.parametersService.setDatasets();
         // treba i da se sacuva dataset!!!!!
     }
