@@ -715,6 +715,7 @@ namespace Backend.Controllers
             return Ok(stat);
         }
 
+        
         [HttpPost("predictionCsv")] //Slanje csv fajla za predikciju na pajton i primanje predikcije i prosledjivanje na front preko responsa.
         //[Obsolete]
         public async Task<ActionResult<DataLoad>> PostPredictedCsv([FromBody] DataLoad cs)
@@ -727,11 +728,11 @@ namespace Backend.Controllers
             //var url = "http://127.0.0.1:3000/predictionCsv"; //slanje csv-a za prediktovanje na pajton
             var urlpred = url + "/predictionCsv";
             var response = await http.PostAsync(urlpred, data);
-
+            
             var predurl = url + "/prediction";
             HttpResponseMessage httpResponse = await http.GetAsync(predurl); //rezultati predikcije
             var predikcija = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
-
+            
             return Ok(predikcija);
         }
 

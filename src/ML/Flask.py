@@ -91,7 +91,9 @@ def post_predictioncsv():
 def  getpredictionCsv():
     return jsonify(predictioncsvdata)
 
-
+@app.route("/prediction",methods=["GET"]) #slanje rezultata predikcije na bek
+def predikcija():
+    return '{"predikcija":"REZULTAT PREDIKCIJE"}'
 
 @app.route("/username", methods=["POST"]) #Primanje Username-a sa beka
 def post_username():
