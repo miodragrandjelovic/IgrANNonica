@@ -1,0 +1,18 @@
+<div [hidden]="!hidden" class="container-fluid" style="margin: 0px; padding: 0px;">
+    <div style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
+        <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;margin-left: 10%;">
+          <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
+          <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> <!-- search da moze po imenu modela ili dataseta-->
+          <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
+            <img src="assets/images/filter.png" style="height:35px; width: auto;">
+          </button>
+        </div>
+    
+        <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
+          <!-- ovde ide tabela sa datasetovima korisnika -->
+          <p class="fw-bold fs-1">Your models:</p>
+        <app-usermodels></app-usermodels>
+
+        </div>
+      </div>
+</div>

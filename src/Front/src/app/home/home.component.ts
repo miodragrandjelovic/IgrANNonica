@@ -46,6 +46,10 @@ export class HomeComponent implements OnInit {
     this.edited = false;
   }
 
-  
+  showPredict(){
+    this.service.sayMessage(3);
+    this.currentActive = 3;
+  }
+
 
 }
