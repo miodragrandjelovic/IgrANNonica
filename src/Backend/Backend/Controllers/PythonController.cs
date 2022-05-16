@@ -114,7 +114,10 @@ namespace Backend.Controllers
                 return Ok(alldata);
             }
             else
-                return Ok("Nema sacuvanih datasetova");
+            {
+                CsvInfo[] alldata = new CsvInfo[0];
+                return Ok(alldata);
+            }     
            
         }
 
