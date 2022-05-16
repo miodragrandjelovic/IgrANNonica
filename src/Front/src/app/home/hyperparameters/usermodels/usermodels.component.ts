@@ -1,5 +1,5 @@
 import { Component, OnInit , Output, EventEmitter} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import * as myUrls from 'src/app/urls';
 
@@ -64,14 +64,31 @@ export class UsermodelsComponent implements OnInit {
       });
     }
     
+  selektovanDirName:string;
+  selektovanModelName:string;
   closeResult: string | undefined;
-  addNewData(newData: any){
+  addNewData(newData: any, event:any, item:any){
+    this.selektovanDirName='';
+    this.selektovanModelName='';
+
+    this.selektovanModelName=event.target.id;
+    this.selektovanDirName=item;
+
+   this.http.post<any>(this.url +'/api/LoadData/predictionModel?dirname='+this.selektovanDirName+'&modelname='+this.selektovanModelName,{
+     //KAD SE DODA NA BEKU OVDE DA SE DODAJU PARAMETRI
+   }).subscribe();
+
+  
+    console.log('na ovaj csv: '+ this.selektovanDirName);
+     console.log('na ovaj model kliknuto: '+ this.selektovanModelName);
+
      this.modalService.open(newData, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
        this.closeResult = `Closed with: ${result}`;
      }, (reason) => {
        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
      });
    }
+
 
    private getDismissReason(reason: any): string {
      if (reason === ModalDismissReasons.ESC) {
@@ -142,11 +159,13 @@ export class UsermodelsComponent implements OnInit {
             this.rowLines = rowsArray.slice(0, this.itemsPerPage);
             this.allData = rowsArray;
 
-            return this.http.post<any>(this.url+'https://localhost:7167/api/LoadData/predictionCsv', {
+            
+            this.http.post<any>(this.url+'/api/LoadData/predictionCsv', {
               csvData: JSON.stringify(this.dataObject),
               Name: file.name
-          }).subscribe(
-            );
+            }).subscribe( result=>{
+                console.log('ovo je predikcija'+result);
+            });
 
            }
        }

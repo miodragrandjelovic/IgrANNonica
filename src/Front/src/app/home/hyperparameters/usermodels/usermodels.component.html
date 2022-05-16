@@ -15,8 +15,8 @@
         </div>
 
         
-        <div id="{{item.name}}" class="col float-end d-flex justify-content-end"> <!-- ovaj div ce da ima dugmice -->
-          <button id="{{item.name}}" (click)="addNewData(newFile)" class="btn btn-primary my-1 me-1 " width="16" height="16" type="button" fill="currentColor" viewBox="0 0 16 16">
+        <div id="{{item.name}}"  class="col float-end d-flex justify-content-end"> <!-- ovaj div ce da ima dugmice -->
+          <button id="{{item.name}}"(click)="addNewData(newFile, $event,item.fromCsv)" class="btn btn-primary my-1 me-1 " width="16" height="16" type="button" fill="currentColor" viewBox="0 0 16 16">
             Add Dataset
         </button> 
             <button id="{{item.name}}" class="btn btn-outline-danger float-end" type="button">
