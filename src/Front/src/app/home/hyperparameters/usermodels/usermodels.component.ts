@@ -26,6 +26,7 @@ export class UsermodelsComponent implements OnInit {
   public url = myUrls.url;
   zapamceniModeli: any;
   selectedModels:any;
+  searchModels: any;
 
   ngOnInit(): void {
     this.getModels();
@@ -187,4 +188,27 @@ export class UsermodelsComponent implements OnInit {
       this.rowLines = this.allData.slice(this.itemsPerPage * (this.currentPage - 1),this.itemsPerPage * (this.currentPage - 1) + this.itemsPerPage)
   }
 
+  deleteModelName:any;
+  deleteModelFromCsv:any;
+  deleteThisModel(event:any, item:any){
+   
+    this.deleteModelName=event.target.id;
+    this.deleteModelFromCsv=item;
+
+    this.http.delete<any>(this.url +'/api/RegistracijaUsera/model?fromCsv='+this.deleteModelFromCsv+'&name='+this.deleteModelName).subscribe(result => { 
+      console.log(result);
+
+      this.ngOnInit();
+     }, (err)=>{
+       console.log("Greska prilikom brisanja modela "+err);
+       this.ngOnInit();
+     });
+    
+    this.deleteModelName = "";
+    this.deleteModelFromCsv = "";
+    event.stopPropagation();
+
+    this.ngOnInit();
+   
+  }
 }
