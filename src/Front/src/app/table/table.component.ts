@@ -165,15 +165,6 @@ export class TableComponent implements OnChanges {
     }*/
   }
 
-  hideAll(event:any)
-  {
-    
-  }
-
-  showAndHide(event:any)
-  {
-    alert("event "+event.target);
-  }
 
   sortTableAsc(item: any) {
     for(let i = 0; i < this.allData.length - 1; i++){

@@ -287,6 +287,8 @@ export class HyperparametersComponent implements OnInit {
     
       console.log("Rezultat slanja HP treninga je "  + result);
       
+      this.scrollToResults("prikazRezutata");
+
       this.inputCheckBoxes = [];
       this.selectedCheckBoxes = [];
       this.properties = [];
@@ -326,12 +328,7 @@ export class HyperparametersComponent implements OnInit {
       this.prikazGrafika=true;
       this.spiner.setShowSpinner(true);
 
-      var ldRes = document.getElementById("loaderStatistika");
-      if (ldRes) {
-        //alert("Prikaz");
-        //ldRes.style.backgroundColor = 'red';
-        ldRes.scrollIntoView({ behavior: 'smooth' });
-      }
+      this.scrollToResults("loaderStatistika");
       // spusti prikaz na spiner
       //alert("spusti se na loader");
     }
@@ -393,6 +390,21 @@ export class HyperparametersComponent implements OnInit {
     getVal(val:any){
     console.warn(val)
     this.currentVal=val;
+  }
+
+  scrollToResults(id:string) {
+    var results: any;
+    results = document.getElementById(id);
+    
+    //alert("Skrolujem");
+    //if (results) alert("Postoji " +id);
+    //else alert("Ne postoji "+ id);
+
+    const y = results.getBoundingClientRect().top + window.scrollY;
+      window.scroll({
+        top: y,
+        behavior: 'smooth'
+      });
   }
 
    closeResult: string | undefined;

@@ -1,7 +1,8 @@
-import { Component, OnInit , Output, EventEmitter} from '@angular/core';
+import { Component, OnInit , Output, EventEmitter, Input} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ParametersService } from 'src/app/services/parameters.service';
 import * as myUrls from 'src/app/urls';
+import { CsvComponent } from '../csv.component';
 interface zapamceniDatasetovi {
   name: String,
   size: number,
@@ -21,27 +22,55 @@ export class UserdatasetsComponent implements OnInit {
   @Output() sendResults = new EventEmitter<{datasetName:any,dataset:any,kor:any,stat:any}>();
   //ovim saljemo nazad ka csv komponenti dataset 
   zapamceniDatasetovi: any= [];
-  
+
+  @Output() search:EventEmitter<string>=new EventEmitter();
+
   constructor(private http: HttpClient, private parametersService: ParametersService){}
   public url = myUrls.url;
   datasetsNames: any;
   selectedDataset:any;
   datasetsFilteredNames : any = [];
   copyPaste:any = [];
+
+  zapamceniDatasetoviPublic: any= [];
+  datasetsNamesPublic: any;
+  selectedDatasetPublic:any;
+  datasetsFilteredNamesPublic : any = [];
+  copyPastePublic:any = [];
+
+  privateOrPublicSet:number=1;
+
   ngOnInit(): void {
-    this.getDatasets();
-    this.getPublicDatasets();
-    this.parametersService.getDatasets().subscribe(res => {
+    //this.zapamceniDatasetovi = [];
+    //this.zapamceniDatasetoviPublic = [];
+    if (this.privateOrPublicSet == 1)
       this.getDatasets();
-    });
+    else 
+      this.getPublicDatasets();
+    /*this.parametersService.getDatasets().subscribe(res => {
+      this.getDatasets();
+    });*/
+  }
+
+  
+  changeDatasets(index:number)
+  {
+    this.privateOrPublicSet = index;
+    this.search.emit();
+    this.ngOnInit();
   }
 
   getDatasets()
   {
+    this.zapamceniDatasetovi = [];
+    this.zapamceniDatasetoviPublic = [];
     this.copyPaste = [];
+    this.copyPastePublic = [];
     this.datasetsNames = [];
+    this.datasetsNamesPublic = [];
     this.datasetsFilteredNames = [];
-    
+    this.datasetsFilteredNamesPublic = [];
+
     this.http.get<any>(this.url + '/api/Python/savedCsvs').subscribe(result => {  
             console.log(result);
             this.copyPaste=result;
@@ -62,16 +91,17 @@ export class UserdatasetsComponent implements OnInit {
         this.selectedDataset = '';
   }
 
-  zapamceniDatasetoviPublic: any= [];
-  datasetsNamesPublic: any;
-  selectedDatasetPublic:any;
-  datasetsFilteredNamesPublic : any = [];
-  copyPastePublic:any = [];
+  
 
   getPublicDatasets()
   {
+    this.zapamceniDatasetovi = [];
+    this.zapamceniDatasetoviPublic = [];
+    this.copyPaste = [];
     this.copyPastePublic = [];
+    this.datasetsNames = [];
     this.datasetsNamesPublic = [];
+    this.datasetsFilteredNames = [];
     this.datasetsFilteredNamesPublic = [];
     
     this.http.get<any>(this.url + '/api/Python/publicDatasets').subscribe(result => {  
@@ -98,16 +128,30 @@ export class UserdatasetsComponent implements OnInit {
 //////////////
   searchDatasets(name:any){
     this.datasetsFilteredNames = [];
-    this.datasetsNames = this.copyPaste;
+    this.zapamceniDatasetovi = this.copyPaste;
     if(name != ""){
-    for (var index = 0; index < this.datasetsNames.length; index++) {
-      if(this.datasetsNames[index].indexOf(name.toLowerCase()) !== -1){
-        this.datasetsFilteredNames.push(this.datasetsNames[index]);
+    for (var index = 0; index < this.zapamceniDatasetovi.length; index++) {
+      if(this.zapamceniDatasetovi[index].name.toLowerCase().indexOf(name.toLowerCase()) !== -1){
+        this.datasetsFilteredNames.push(this.zapamceniDatasetovi[index]);
       }  
     }
 
-    this.datasetsNames = this.datasetsFilteredNames;
+    this.zapamceniDatasetovi = this.datasetsFilteredNames;
    }
+
+   this.datasetsFilteredNamesPublic=[];
+   this.zapamceniDatasetoviPublic = this.copyPastePublic;
+   if(name != ""){
+    for (var index = 0; index < this.zapamceniDatasetoviPublic.length; index++) {
+      if(this.zapamceniDatasetoviPublic[index].name.toLowerCase().indexOf(name.toLowerCase()) !== -1){
+        this.datasetsFilteredNamesPublic.push(this.zapamceniDatasetoviPublic[index]);
+      }  
+    }
+
+    this.zapamceniDatasetoviPublic = this.datasetsFilteredNamesPublic;
+   }
+
+   
   }
 
   selectChange(event:any){
