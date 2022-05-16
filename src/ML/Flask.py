@@ -57,7 +57,7 @@ def  getCsv():
 
 
 #primanje csv-a za predikciju i posle slanje rezultata nazad
-
+'''
 @app.route("/predictionCsv", methods=["POST"]) #Primanje CSV za predikciju sa beka i njegovo sredjivanje 
 def post_predictioncsv():
     cs = request.get_json()
@@ -69,8 +69,31 @@ def post_predictioncsv():
     global predictdf
     predictdf=data
     return predictdf.to_json()
-
+'''
 #
+@app.route("/predictionCsv", methods=["POST"]) #Primanje predictionCSV sa beka i njegovo sredjivanje 
+def post_predictioncsv():
+    cs = request.get_json()
+    data = pd.DataFrame.from_records(cs)
+    #statistika=df.describe()
+    #return statistika.to_json()
+    for (columnName,columnData) in data.iteritems():
+        if(is_float(data[str(columnName)][0]) or data[str(columnName)][0].isnumeric()):
+            data[str(columnName)]=data[str(columnName)].astype(float)
+
+    global predictiondf
+    predictiondf=data
+    global predictioncsvdata
+    predictioncsvdata = cs
+    return jsonify(predictioncsvdata)
+
+@app.route("/predictionCsv", methods=['GET']) #Slanje predictionCSV na bek
+def  getpredictionCsv():
+    return jsonify(predictioncsvdata)
+
+@app.route("/prediction",methods=["GET"]) #slanje rezultata predikcije na bek
+def predikcija():
+    return '{"predikcija":"REZULTAT PREDIKCIJE"}'
 
 @app.route("/username", methods=["POST"]) #Primanje Username-a sa beka
 def post_username():

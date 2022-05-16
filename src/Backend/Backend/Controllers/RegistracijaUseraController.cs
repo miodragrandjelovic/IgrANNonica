@@ -37,7 +37,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("model")]//Ukloniti model iz foldera za odredjeni Username.
-        public async Task<IActionResult> DeleteModel(string name) //primati i dirName ako se izlistavaju svi odjednom a ne prvo po csv-ovima po kojima su kreirani
+        public async Task<IActionResult> DeleteModel(string fromCsv, string name) //primati i dirName ako se izlistavaju svi odjednom a ne prvo po csv-ovima po kojima su kreirani
         {
             //string pathToDelete = System.IO.Path.Combine(path1, names);
 
@@ -49,7 +49,7 @@ namespace Backend.Controllers
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
                 //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
-                string pathToDelete = Path.Combine(CurrentPath, "Users", Username, DirName, name);
+                string pathToDelete = Path.Combine(CurrentPath, "Users", Username, fromCsv, name);
 
                 if (System.IO.Directory.Exists(pathToDelete))
                 {

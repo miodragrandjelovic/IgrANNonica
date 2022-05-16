@@ -1,7 +1,14 @@
 import { Component, OnInit , Output, EventEmitter} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import * as myUrls from 'src/app/urls';
+
+interface zapamceniModeli {
+  name: String,
+  fromCsv: String,
+  date: Date
+}
+
 @Component({
   selector: 'app-usermodels',
   templateUrl: './usermodels.component.html',
@@ -13,9 +20,11 @@ export class UsermodelsComponent implements OnInit {
   @Output() sendResults = new EventEmitter<any>();
   //ovim saljemo nazad ka hyperparamteres komponenti model
 
-  constructor(private http: HttpClient,private modalService: NgbModal){}
+  constructor(private http: HttpClient,private modalService: NgbModal){
+    
+  }
   public url = myUrls.url;
-  modelsNames: any;
+  zapamceniModeli: any;
   selectedModels:any;
 
   ngOnInit(): void {
@@ -26,8 +35,8 @@ export class UsermodelsComponent implements OnInit {
   {
     this.http.get<any>(this.url + '/api/Python/savedModels').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
             console.log(result);
-            this.modelsNames=result;
-            console.log(this.modelsNames);
+            this.zapamceniModeli=result;
+            console.log(this.zapamceniModeli);
         });
 
         this.selectedModels = '';
@@ -52,45 +61,35 @@ export class UsermodelsComponent implements OnInit {
         // sada ovo saljemo nazad da se podese hiperparametri
 
 
-        /*
-        var map = new Map<string, string[]>();
-    
-        for(var i = 0; i < result.length; i++) {
-          if(i == 0) {
-            var aaa = Object.keys(result[i]);
-            for(var j = 0; j < aaa.length; j++) {
-              map.set(aaa[j], ["" + Object.values(result[i])[j]]);
-            }
-          } else {
-            var aaa = Object.keys(result[i]);
-            for(var j = 0; j < aaa.length; j++) {
-              var array = map.get(aaa[j]);
-              if(array == undefined) array = [];
-              array.push("" + Object.values(result[i])[j]);
-              map.set(aaa[j], array);
-            }
-          }
-        }
-        console.log(map);
-        this.map=map;
-        this.array2d=Array.from(map.values());
-    
-        this.array2d= this.array2d[0].map((_, colIndex) =>this.array2d.map(row => row[colIndex]));
-      
-        */
       });
     }
     
+  selektovanDirName:string;
+  selektovanModelName:string;
   closeResult: string | undefined;
-  addNewData(newData: any){
-     //alert(contentLogin);
-     //this.showMe = false;
+  addNewData(newData: any, event:any, item:any){
+    this.selektovanDirName='';
+    this.selektovanModelName='';
+
+    this.selektovanModelName=event.target.id;
+    this.selektovanDirName=item;
+
+   this.http.post<any>(this.url +'/api/LoadData/predictionModel?dirname='+this.selektovanDirName+'&modelname='+this.selektovanModelName,{
+     //KAD SE DODA NA BEKU OVDE DA SE DODAJU PARAMETRI
+   }).subscribe();
+
+  
+    console.log('na ovaj csv: '+ this.selektovanDirName);
+     console.log('na ovaj model kliknuto: '+ this.selektovanModelName);
+
      this.modalService.open(newData, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
        this.closeResult = `Closed with: ${result}`;
      }, (reason) => {
        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
      });
    }
+
+
    private getDismissReason(reason: any): string {
      if (reason === ModalDismissReasons.ESC) {
        return 'by pressing ESC';
@@ -100,4 +99,92 @@ export class UsermodelsComponent implements OnInit {
        return `with: ${reason}`;
      }
    }
+
+   dataObject:any = [];
+   headingLines: any = [];
+   rowLines: any = [];
+   ucitano:boolean=false;
+   unetDataset:string='';
+
+   fileUpload(files: any) {
+    
+    this.unetDataset='';
+    this.ucitano=false;
+
+     this.dataObject = [];
+     this.headingLines = [];
+     this.rowLines = [];
+
+       let fileList = (<HTMLInputElement>files.target).files;
+       if (fileList && fileList.length > 0) {
+           let file : File = fileList[0];
+           console.log('file name:'+file.name);
+           this.unetDataset=file.name;
+           let reader: FileReader =  new FileReader();
+           reader.readAsText(file);
+           reader.onload = (e) => {
+               let csv: any = reader.result;
+               let allTextLines = [];
+               allTextLines = csv.split('\n');
+                
+               let headers = allTextLines[0].split(/;|,/).map((x:string) => x.trim());
+               let data = headers;
+               let headersArray = [];
+
+
+               for (let i = 0; i < headers.length; i++) {
+                headersArray.push(data[i]);
+            }
+            this.headingLines.push(headersArray);
+
+            let rowsArray = [];
+
+            let length = allTextLines.length - 1;
+            
+            let rows:any = [];
+            for (let i = 1; i < length; i++) {
+              rows.push(allTextLines[i].split(/;|,/).map((x:string) => x.trim()));
+              const obj:any = {};
+              headersArray.forEach((header:any, j:any) => {
+                  obj[header] = rows[i - 1][j];
+              })
+              this.dataObject.push(obj);
+
+            }
+            length = rows.length;
+            for (let j = 0; j < length; j++) {
+                rowsArray.push(rows[j]);
+            }
+            
+            this.rowLines = rowsArray.slice(0, this.itemsPerPage);
+            this.allData = rowsArray;
+
+            
+            this.http.post<any>(this.url+'/api/LoadData/predictionCsv', {
+              csvData: JSON.stringify(this.dataObject),
+              Name: file.name
+            }).subscribe( result=>{
+                console.log('ovo je predikcija'+result);
+            });
+
+           }
+       }
+   }
+
+   addNewDataset()
+   {
+       this.ucitano=true;
+       document.getElementById("closeModal")?.click();
+   }
+   
+
+   allData: any = [];
+    itemsPerPage: number = 6;
+    itemPosition: number = 0;
+    currentPage: number = 1;
+
+    changePage() {
+      this.rowLines = this.allData.slice(this.itemsPerPage * (this.currentPage - 1),this.itemsPerPage * (this.currentPage - 1) + this.itemsPerPage)
   }
+
+}
