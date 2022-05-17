@@ -235,7 +235,7 @@ namespace Backend.Controllers
         }
         
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model kao i cuvanje povratne vrednosti modela
-        public async Task<ActionResult>Post(String modelNames, Boolean publicModel) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
+        public async Task<ActionResult>PostSave(String modelNames, Boolean publicModel) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
         {
             if (Username != null)
             {
@@ -391,7 +391,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("hp")] //Slanje HP na pajton
-        public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper, String modelNames, Boolean publicModel) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
+        public async Task<ActionResult<Hiperparametri>> Posthp([FromBody] Hiperparametri hiper, String modelNames, Boolean publicModel) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
         {
             int indexDir = 1;
             var upgradedName = "realestate";
@@ -709,7 +709,7 @@ namespace Backend.Controllers
             return Ok(stat);
         }
 
-        
+  
         [HttpPost("predictionCsv")] //Slanje csv fajla za predikciju na pajton i primanje predikcije i prosledjivanje na front preko responsa.
         [DisableRequestSizeLimit]
         //[Obsolete]
@@ -730,6 +730,7 @@ namespace Backend.Controllers
             
             return Ok(predikcija);
         }
+
 
         //za prediktovanje csv-a preko modela
         [HttpPost("predictionModel")] //Slanje Putanje do foldera gde je sacuvan izabrani model na /pathModel bi mogao
@@ -798,6 +799,7 @@ namespace Backend.Controllers
 
             return Ok(resultjsonhp);
         }
+        
         [HttpPost("stats")] //Slanje Stats na pajton
         public async Task<ActionResult<Statistika>> PostStat(Statistika stat)
         {

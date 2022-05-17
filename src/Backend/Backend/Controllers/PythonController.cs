@@ -342,7 +342,6 @@ namespace Backend.Controllers
             return Ok(csve);
         }
 
-
         [HttpGet("preloadStatClass")] //statistika za klasifikacioni 
         public async Task<ActionResult<JsonDocument>> GetPreloadStatClass()
         {
@@ -420,7 +419,6 @@ namespace Backend.Controllers
             var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
             return Ok(stat);
         }
-
 
         [HttpGet("hp")] //Primanje HP iz pajtona 
         public async Task<ActionResult<Hiperparametri>> GetHp()
