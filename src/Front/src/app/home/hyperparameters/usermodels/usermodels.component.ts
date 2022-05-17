@@ -107,14 +107,18 @@ export class UsermodelsComponent implements OnInit {
    ucitano:boolean=false;
    unetDataset:string='';
 
+   predikcija:any = [];
+
    fileUpload(files: any) {
     
     this.unetDataset='';
     this.ucitano=false;
+    this.prikaziPredikciju=false;
 
      this.dataObject = [];
      this.headingLines = [];
      this.rowLines = [];
+     this.predikcija = [];
 
        let fileList = (<HTMLInputElement>files.target).files;
        if (fileList && fileList.length > 0) {
@@ -165,7 +169,9 @@ export class UsermodelsComponent implements OnInit {
               csvData: JSON.stringify(this.dataObject),
               Name: file.name
             }).subscribe( result=>{
-                console.log('ovo je predikcija'+result);
+              this.predikcija=result;
+              
+                console.log('ovo je predikcija'+this.predikcija);
             });
 
            }
@@ -207,8 +213,14 @@ export class UsermodelsComponent implements OnInit {
     this.deleteModelName = "";
     this.deleteModelFromCsv = "";
     event.stopPropagation();
-
     this.ngOnInit();
-   
+    this.ucitano=false;
+      this.prikaziPredikciju=false;
+  }
+
+  prikaziPredikciju:boolean=false;
+
+  showPrediction(){
+    this.prikaziPredikciju=true;
   }
 }
