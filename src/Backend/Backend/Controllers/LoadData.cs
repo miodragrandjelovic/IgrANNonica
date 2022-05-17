@@ -620,6 +620,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("csv")] //Slanje CSV na pajton
+        [DisableRequestSizeLimit]
         //[Obsolete]
         public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad cs, Boolean publicData)
         {
@@ -806,6 +807,19 @@ namespace Backend.Controllers
             var urlst = url + "/stats";
             var response = await http.PostAsync(urlst, data);
             return Ok(statjson);
+        }
+
+
+        [HttpPost("csvFile")]
+        [DisableRequestSizeLimit]
+        public async Task<ActionResult<IFormFile>>PostcsvFile(IFormFile csvFile)
+        {
+            string currentPath = Directory.GetCurrentDirectory();
+            string ime = csvFile.FileName;
+            string path = System.IO.Path.Combine(currentPath, "Users", Username, ime);
+            
+
+            return Ok("Primio sam: " + ime);
         }
 
     }
