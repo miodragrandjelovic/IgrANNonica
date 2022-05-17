@@ -34,7 +34,8 @@ export class UsermodelsComponent implements OnInit {
 
   getModels()
   {
-    this.http.get<any>(this.url + '/api/Python/savedModels').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
+    var loggedUsername = sessionStorage.getItem('username');
+    this.http.get<any>(this.url + '/api/Python/savedModels?Username='+loggedUsername).subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
             console.log(result);
             this.zapamceniModeli=result;
             console.log(this.zapamceniModeli);
@@ -51,7 +52,8 @@ export class UsermodelsComponent implements OnInit {
   }
 
   loadThisModel(naziv:any){
-    return this.http.post<any>(this.url + '/api/LoadData/selectedModel?name='+naziv, {
+    var loggedUsername = sessionStorage.getItem('username');
+    return this.http.post<any>(this.url + '/api/LoadData/selectedModel?name='+naziv+'&Username='+loggedUsername, {
         name: naziv
       }).subscribe(selectedModelUser=>{
         
@@ -74,8 +76,8 @@ export class UsermodelsComponent implements OnInit {
 
     this.selektovanModelName=event.target.id;
     this.selektovanDirName=item;
-
-   this.http.post<any>(this.url +'/api/LoadData/predictionModel?dirname='+this.selektovanDirName+'&modelname='+this.selektovanModelName,{
+    var loggedUsername = sessionStorage.getItem('username');
+   this.http.post<any>(this.url +'/api/LoadData/predictionModel?dirname='+this.selektovanDirName+'&modelname='+this.selektovanModelName+'&Username='+loggedUsername,{
      //KAD SE DODA NA BEKU OVDE DA SE DODAJU PARAMETRI
    }).subscribe();
 
@@ -200,8 +202,8 @@ export class UsermodelsComponent implements OnInit {
    
     this.deleteModelName=event.target.id;
     this.deleteModelFromCsv=item;
-
-    this.http.delete<any>(this.url +'/api/RegistracijaUsera/model?fromCsv='+this.deleteModelFromCsv+'&name='+this.deleteModelName).subscribe(result => { 
+    var loggedUsername = sessionStorage.getItem('username');
+    this.http.delete<any>(this.url +'/api/RegistracijaUsera/model?fromCsv='+this.deleteModelFromCsv+'&name='+this.deleteModelName+'&Username='+loggedUsername).subscribe(result => { 
       console.log(result);
 
       this.ngOnInit();

@@ -27,7 +27,7 @@ namespace Backend.Controllers
         private readonly UserManager<ApplicationUser> _userManager;//
         private readonly IConfiguration _configuration;
         private readonly UserDbContext _context;
-        public static string Username;
+        public static string Username1;
         public static string? DirName { get; set; } //Ime foldera 
         public static string url = "http://127.0.0.1:3000";
         public RegistracijaUseraController(UserDbContext context, IConfiguration configuration)//
@@ -35,9 +35,9 @@ namespace Backend.Controllers
             _context = context;
             _configuration = configuration;
         }
-
+        
         [HttpDelete("model")]//Ukloniti model iz foldera za odredjeni Username.
-        public async Task<IActionResult> DeleteModel(string fromCsv, string name) //primati i dirName ako se izlistavaju svi odjednom a ne prvo po csv-ovima po kojima su kreirani
+        public async Task<IActionResult> DeleteModel(string fromCsv, string name, string Username) //primati i dirName ako se izlistavaju svi odjednom a ne prvo po csv-ovima po kojima su kreirani
         {
             //string pathToDelete = System.IO.Path.Combine(path1, names);
 
@@ -68,7 +68,7 @@ namespace Backend.Controllers
             
         }
         [HttpDelete("csv")]//Ukloniti samo csv bez modela ili ukloniti sve?!.
-        public async Task<IActionResult> DeleteCsv(string name)
+        public async Task<IActionResult> DeleteCsv(string name, string Username)
         {
             if (Username == null)
             {
@@ -331,9 +331,9 @@ namespace Backend.Controllers
             {
                 return BadRequest("Pogresna sifra!");
             }
-            Username = request.Username;
-            LoadData.Username = Username;
-            PythonController.Username = Username;
+            Username1 = request.Username;
+            LoadData.Username1 = Username1;
+            PythonController.Username1 = Username1;
 
             string token1 = CreateToken(user);
             var refreshToken = GenerateRefreshToken();
@@ -353,12 +353,12 @@ namespace Backend.Controllers
         }
 
         [HttpGet("logout")]//Logout korisnika.
-        public async Task<ActionResult<string>> Logout()
+        public async Task<ActionResult<string>> Logout(string Username)
         {
             string previousUser = Username;
             Username = null;
-            LoadData.Username = Username;
-            PythonController.Username = Username;
+            LoadData.Username1 = Username;
+            PythonController.Username1 = Username;
             if(previousUser != null)
             {
                 return Ok("Korisnik " + previousUser + " se uspesno izlogovao.");

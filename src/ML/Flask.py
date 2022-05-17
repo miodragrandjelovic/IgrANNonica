@@ -29,6 +29,18 @@ def  getAllHps():
     return jsonify(hiperp)
 
 
+@app.route("/predictionHp", methods=["POST"]) #Primanje HP za predikciju sa beka
+def post_hppred():
+    hp = request.get_json()
+   # hiperparametri.append(hp)
+    global hiperp1
+    hiperp1 = hp
+    return jsonify(hp)
+
+@app.route("/predictionHp", methods=['GET']) #Slanje HP za predikciju na bek
+def  getAllHpspred():
+    return jsonify(hiperp1)
+
 def is_float(element) -> bool: ##fja za proveravanje da li je element tj string iz csva u stvari float
     try:
         float(element)
@@ -78,7 +90,25 @@ def  getpredictionCsv():
     return jsonify(predictioncsvdata)
 
 
+@app.route("/predictionCsvOriginal", methods=["POST"]) #Primanje originalnog CSV-a za predikciju sa beka i njegovo sredjivanje 
+def post_csvoriginal():
+    cs = request.get_json()
+    data = pd.DataFrame.from_records(cs)
+    #statistika=df.describe()
+    #return statistika.to_json()
+    for (columnName,columnData) in data.iteritems():
+        if(is_float(data[str(columnName)][0]) or data[str(columnName)][0].isnumeric()):
+            data[str(columnName)]=data[str(columnName)].astype(float)
 
+    global originaldf
+    originaldf=data
+    global originalcsvdata
+    originalcsvdata = cs
+    return jsonify(originalcsvdata)
+
+@app.route("/predictionCsvOriginal", methods=['GET']) #Slanje originalnog CSV-a za predikciju na bek
+def  getCsvoriginal():
+    return jsonify(originalcsvdata)
 
 @app.route("/pathModel", methods=["POST"]) #Primanje putanje do foldera novog modela
 def post_pathmodel():

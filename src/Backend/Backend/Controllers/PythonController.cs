@@ -17,7 +17,7 @@ namespace Backend.Controllers
     public class PythonController : ControllerBase
     {
         private readonly HttpClient http = new HttpClient();
-        public static string? Username { get; set; } //username trenutno prijavljenog korisnika
+        public static string? Username1 { get; set; } //username poslednje prijavljenog korisnika
         public static string? Name { get; set; } //ime ucitanog csv fajla
         public static string url = "http://127.0.0.1:3000";
         private readonly IConfiguration _configuration;
@@ -29,7 +29,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("savedCsvs")] //Vracanje imena sacuvanih fajlova.
-        public async Task<ActionResult<String>> GetSavedCsvs()
+        public async Task<ActionResult<String>> GetSavedCsvs(string Username)
         {
 
             string CurrentPath = Directory.GetCurrentDirectory();
@@ -122,7 +122,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("savedModels")] //Vracanje informacija od svih sacuvanih modela.
-        public async Task<ActionResult<Modelinfo>> GetSavedModels()
+        public async Task<ActionResult<Modelinfo>> GetSavedModels(string Username)
         {
             string CurrentPath = Directory.GetCurrentDirectory();
             //string SelectedPath = CurrentPath + @"\Users\" + Username;
@@ -452,7 +452,7 @@ namespace Backend.Controllers
         [HttpGet("path")] //Slanje Username-a do pajtona
         public async Task<ActionResult<String>> GetPath()
         {
-            var name = Username;
+            var name = Username1;
             if (name == null)
                 return "Korisnik nije ulogovan";
             else
@@ -467,7 +467,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("model")] //Primanje Modela iz pajtona 
-        public async Task<ActionResult<JsonDocument>> GetModel()
+        public async Task<ActionResult<JsonDocument>> GetModel(string Username)
         {
             var urlmodel = url + "/model";
             HttpResponseMessage httpResponse = await http.GetAsync(urlmodel);

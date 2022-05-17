@@ -283,7 +283,8 @@ export class HyperparametersComponent implements OnInit {
       columNames: this.columNames
     } 
 
-    this.http.post(this.url + '/api/LoadData/hpNeprijavljen', myreq).subscribe(result => {
+    var loggedUsername = sessionStorage.getItem('username');
+    this.http.post(this.url + '/api/LoadData/hpNeprijavljen?Username='+loggedUsername, myreq).subscribe(result => {
     
       console.log("Rezultat slanja HP treninga je "  + result);
       

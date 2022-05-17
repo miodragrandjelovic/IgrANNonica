@@ -8,7 +8,8 @@ export class DatasetService {
     constructor(private http: HttpClient) { }
     public url = myUrls.url;
     getDatasets() {     
-        this.http.get<any>(this.url + '/api/Python/savedCsvs').subscribe(result => {
+        var loggedUsername = sessionStorage.getItem('username');
+        this.http.get<any>(this.url + '/api/Python/savedCsvs?Username'+loggedUsername).subscribe(result => {
             console.log(result);
             this.datasetsNames=result;
             console.log(this.datasetsNames);

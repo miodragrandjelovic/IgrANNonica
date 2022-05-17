@@ -21,8 +21,8 @@ export class DatasetComponent implements OnInit {
     public url = myUrls.url;
 
   ngOnInit(): void {
-         
-        this.http.get<any>(this.url + '/api/Python/savedCsvs').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
+    var loggedUsername = sessionStorage.getItem('username');
+        this.http.get<any>(this.url + '/api/Python/savedCsvs?Username='+loggedUsername).subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
             console.log(result);
             this.datasetsNames=result;
             console.log(this.datasetsNames);
@@ -68,8 +68,8 @@ export class DatasetComponent implements OnInit {
     }
     
   posaljiNaziv(naziv:any){
-
-    return this.http.post<any>(this.url + '/api/LoadData/selectedCsv?name='+naziv, {
+    var loggedUsername = sessionStorage.getItem('username');
+    return this.http.post<any>(this.url + '/api/LoadData/selectedCsv?name='+naziv+'&Username='+loggedUsername, {
         name: naziv
       }).subscribe(result=>{
         
