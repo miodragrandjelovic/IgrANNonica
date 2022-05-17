@@ -243,14 +243,35 @@ namespace Backend.Controllers
                 var upgradedName = Name;
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
                 string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
-                //string modeldirname = upgradedName + modelNames;
-                if (System.IO.Directory.Exists(modeldirname))
+                string csvFolder = Path.Combine(CurrentPath, "Users", Username, upgradedName);
+                
+                if (System.IO.Directory.Exists(csvFolder))
                 {
-                    return Ok("Vec postoji model sa tim imenom.");
+                    if (System.IO.Directory.Exists(modeldirname))
+                    {
+                        return Ok("Vec postoji model sa tim imenom.");
+                    }
+                    else
+                    {
+                        System.IO.Directory.CreateDirectory(modeldirname);
+                        if (publicModel)
+                        {
+                            string publicName1 = modelNames + "(" + Username + ")";
+                            string publicPath = Path.Combine(CurrentPath, "Users", "publicProblems", publicName1);
+                            System.IO.Directory.CreateDirectory(publicPath);
+                        }
+                        Console.WriteLine("Directory for new Model created successfully!");
+                    }
                 }
                 else
                 {
                     System.IO.Directory.CreateDirectory(modeldirname);
+
+                    //treba sacuvati i csv ovde
+                    string publicDataset = Path.Combine(CurrentPath, "Users", "publicDatasets", upgradedName, upgradedName + ".csv"); //javni dataset
+                    string destFile = Path.Combine(CurrentPath, "Users", Username, upgradedName, upgradedName + "csv.csv");
+                    System.IO.File.Copy(publicDataset, destFile, true);
+
                     if (publicModel)
                     {
                         string publicName1 = modelNames + "(" + Username + ")";
@@ -332,20 +353,6 @@ namespace Backend.Controllers
                     outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
                 }
 
-                /*
-                //modeldirname sacuvati i ona 3 niza kao txt fajl unutar ovog foldera
-                string ColumnNamespath = Path.Combine(modeldirname, "ColumnNames.txt");
-                List<string> ColumnLinesTxt = hp.ColumNames;   //hiper staviti u globalnu
-                System.IO.File.WriteAllLines(ColumnNamespath, ColumnLinesTxt);
-
-                string Encodingspath = Path.Combine(modeldirname, "Encodings.txt");
-                List<string> EncodingsLinesTxt = hp.Encodings;
-                System.IO.File.WriteAllLines(Encodingspath, EncodingsLinesTxt);
-
-                string CatNumpath = Path.Combine(modeldirname, "CatNum.txt");
-                List<string> CatNumLinesTxt = hp.CatNum;
-                System.IO.File.WriteAllLines(CatNumpath, CatNumLinesTxt);
-                */
                 if (publicModel)
                 {
                     using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(publicPathModel))
@@ -361,22 +368,8 @@ namespace Backend.Controllers
                         outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
                     }
                     file1.Close();
-                    //ColumNames Encodings CatNum
-                    /*
-                    string ColumnNames = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "ColumnNames.txt");
-                    List<string> ColumnlinesTxt = hp.ColumNames;
-                    System.IO.File.WriteAllLines(ColumnNames, ColumnlinesTxt);
-
-                    string Encodings = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "Encodings.txt");
-                    List<string> EncodingslinesTxt = hp.Encodings;
-                    System.IO.File.WriteAllLines(Encodings, EncodingslinesTxt);
-
-                    string CatNum = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "CatNum.txt");
-                    List<string> CatNumlinesTxt = hp.CatNum;
-                    System.IO.File.WriteAllLines(CatNum, CatNumlinesTxt);*/
                 }
 
-                //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
                 string path2 = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
                 string names = "deleteme.csv";
                 string pathToDelete = System.IO.Path.Combine(path2, names);
@@ -718,6 +711,7 @@ namespace Backend.Controllers
 
         
         [HttpPost("predictionCsv")] //Slanje csv fajla za predikciju na pajton i primanje predikcije i prosledjivanje na front preko responsa.
+        [DisableRequestSizeLimit]
         //[Obsolete]
         public async Task<ActionResult<DataLoad>> PostPredictedCsv([FromBody] DataLoad cs)
         {
@@ -749,6 +743,12 @@ namespace Backend.Controllers
 
             string csvName = dirname + ".csv"; //csv iz kojeg je kreiran model
             string csvPath = Path.Combine(CurrentPath, "Users", Username, dirname, csvName); //putanja do csv-a
+
+            if(!System.IO.File.Exists(csvPath))
+            {
+                csvName = dirname + "csv.csv";
+                csvPath = Path.Combine(CurrentPath, "Users", Username, dirname, csvName);
+            }
 
             string hpName = modelname + "HP.csv"; //hiperparametri korisceni za kreiranje izabranog modela
             string hpPath = Path.Combine(CurrentPath, "Users", Username, dirname, modelname, hpName); //putanja do hiperparametara
