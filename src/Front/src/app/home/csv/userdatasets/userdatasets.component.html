@@ -8,7 +8,7 @@
         </button>
     </div>
 
-    <div class="row py-1 align-items-center justify-content-center border-top border-dark" *ngFor="let item of zapamceniDatasetovi"
+    <div class="row py-1 align-items-center justify-content-center border-top border-dark" *ngFor="let item of zapamceniDatasetovi | filter:search1"
     style=" border-top: 1px solid #212f3c; cursor:pointer;"
     id="{{item.name}}"
     (click)="selectChange($event)" (change)="this.selectedDataset=item.selectedDataset">  
@@ -69,7 +69,7 @@
     </div>
 
 
-    <div class="row py-1 align-items-center justify-content-center border-top border-dark" *ngFor="let item of zapamceniDatasetoviPublic"
+    <div class="row py-1 align-items-center justify-content-center border-top border-dark" *ngFor="let item of zapamceniDatasetoviPublic  | filter:search1"
     style=" border-top: 1px solid #212f3c; cursor:pointer; "
     id="{{item.name}}"
     (click)="selectChangePublic($event)" (change)="this.selectedDataset=item.selectedDataset">  

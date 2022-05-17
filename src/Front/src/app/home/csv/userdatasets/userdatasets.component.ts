@@ -24,6 +24,7 @@ export class UserdatasetsComponent implements OnInit {
   zapamceniDatasetovi: any= [];
 
   @Output() search:EventEmitter<string>=new EventEmitter();
+  @Input() search1:string;
 
   constructor(private http: HttpClient, private parametersService: ParametersService){}
   public url = myUrls.url;
@@ -126,6 +127,7 @@ export class UserdatasetsComponent implements OnInit {
   }
 
 //////////////
+/*
   searchDatasets(name:any){
     this.datasetsFilteredNames = [];
     this.zapamceniDatasetovi = this.copyPaste;
@@ -151,9 +153,9 @@ export class UserdatasetsComponent implements OnInit {
     this.zapamceniDatasetoviPublic = this.datasetsFilteredNamesPublic;
    }
 
-   
+   console.log("idemooooooo "+this.search1);
   }
-
+*/
   selectChange(event:any){
     this.selectedDataset=event.target.id;
     //alert("NAZIV JE "+ this.selectedDataset);
