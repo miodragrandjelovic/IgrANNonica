@@ -817,9 +817,19 @@ namespace Backend.Controllers
             string currentPath = Directory.GetCurrentDirectory();
             string ime = csvFile.FileName;
             string path = System.IO.Path.Combine(currentPath, "Users", Username, ime);
-            
 
             return Ok("Primio sam: " + ime);
+        }
+        private void ReadlikeList(IFormFile file)
+        {
+            var lines = new StringBuilder();
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            {
+                while (reader.Peek() != -1)
+                {
+                    lines.Append(reader.ReadLine());
+                }
+            }
         }
 
     }
