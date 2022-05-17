@@ -86,6 +86,8 @@ export class HyperparametersComponent implements OnInit {
   //layers:Array<string> = ["5","5","5","5","5"]
   //
   activationFunctions:Array<any>=[];
+  modelName: any = '';
+  modelVisibility: any = 'public';
 
   session:any;
   prikazGrafika=false;
@@ -416,11 +418,19 @@ export class HyperparametersComponent implements OnInit {
     }
 
     saveModel() {
-      this.http.post(this.url + '/api/LoadData/save?modelNames=model&publicModel=true', {
-        modelNames: ['model'],
-        publicModel: true
+      this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}`, {
+        modelNames: this.modelName,
+        publicModel: this.modelVisibility=='public' ? true : false
       }).subscribe(result => {
         console.log(result);
       });
     }
+
+    modelNameChange(newValue: any) {
+      this.modelName = (newValue.target as HTMLInputElement).value;
+    }
+    modelSelectChange(selectedValue: any) {
+      this.modelVisibility = (selectedValue.target as HTMLInputElement).value;
+    }
+
 }
