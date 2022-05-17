@@ -137,12 +137,13 @@ export class CsvComponent implements OnInit {
         private modalService: NgbModal) {
     }
 /////////
+/*
     searchDatasets(){
         //poziva searchDatasets iz UserDatasets
         this.child.searchDatasets(this.searchInputField);
 
     }
-
+*/
     DeleteSearchInput(){
             this.searchInputField="";
     }
