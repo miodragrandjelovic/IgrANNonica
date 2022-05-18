@@ -122,7 +122,7 @@ export class UserdatasetsComponent implements OnInit {
             this.zapamceniDatasetoviPublic = result;
         });
 
-        //this.selectedDataset = '';
+        //this.selectedDataset = '';     
         
   }
 
@@ -137,6 +137,10 @@ export class UserdatasetsComponent implements OnInit {
         this.datasetsFilteredNames.push(this.zapamceniDatasetovi[index]);
       }  
     }
+    this.zapamceniDatasetovi = this.datasetsFilteredNames;
+    
+    this. datasetsFilteredNamesPublic=[];
+    this.zapamceniDatasetoviPublic=this.copyPastePublic;
 
     this.zapamceniDatasetovi = this.datasetsFilteredNames;
    }
