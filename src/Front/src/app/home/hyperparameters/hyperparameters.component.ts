@@ -218,6 +218,7 @@ export class HyperparametersComponent implements OnInit {
 
   onSubmitHyperparameters() {
 
+    
     this.inputsString = '';
     this.outputString = '';
     const layers = (<FormArray>this.hyperparametersForm.get('neurons')).controls.length;
@@ -261,6 +262,12 @@ export class HyperparametersComponent implements OnInit {
   this.parametersService.getMissingValues().subscribe(res => {
     this.missingValues = res;
   });
+
+  if (this.epochs == null)
+  {
+    //alert("epochs prazan");
+    this.hyperparametersForm.get('epoch')?.setValue(5);
+  }
 
     const myreq: RequestHyperparameters = {
       learningRate : Number(this.hyperparametersForm.get('learningRate')?.value),
@@ -378,9 +385,17 @@ export class HyperparametersComponent implements OnInit {
   }
 
   checkEpochs(){
-    if (this.epochs === ""){ alert("Moze");return;}
-    else if (this.epochs<1) this.epochs = 1;
-    else if (this.epochs>100) this.epochs = 100;
+    //alert("Len " + this.epochs);
+    if (this.epochs == null){ 
+      //alert("Moze");
+      return;
+    }
+    else if (this.epochs<1){
+      this.epochs = 1;
+    }
+    else if (this.epochs>100){
+      this.epochs = 100;
+    }
   }
 
   countNeurons(i:number){
