@@ -5,9 +5,14 @@
           <tr>
             <th *ngFor="let item of header; let i = index">
               {{item}}<br>
-              <div class="md-form active-pink active-pink-2 mb-3">
-                <input class="form-control" type="search"  [(ngModel)]="searchInput[i]" (keyup)="searchTable(i)"   aria-label="Search" placeholder="Search" mdbInput>
+         
+              <div class="input-group mb-1 pe-1 w-100">
+                <input type="text" class="form-control " placeholder="Search"  [(ngModel)]="searchInput[i]" (keyup)="searchTable(i)">
+                <button type="button" class="btn bg-transparent" id="search" (click)="obrisi(i)" style=" margin-left: -40px; z-index: 100;">
+                  <i class="fa fa-times">X</i>
+                </button>
               </div>
+            
               <button type="button" class="btn btn-outline-primary" (click)="sortTableAsc(i)" style="margin-bottom: 3px;width: 100%;">sort Asc</button>
               <button type="button" class="btn btn-outline-primary" (click)="sortTableDesc(i)" style="width: 100%;">sort Desc</button>
             </th>

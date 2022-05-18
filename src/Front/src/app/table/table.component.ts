@@ -220,7 +220,7 @@ export class TableComponent implements OnChanges {
       if(this.searchInput[j]!=""){      
         
         for(let i = 0; i < this.allDataCopy1.length ; i++){
-          if(this.allDataCopy1[i][j].indexOf(this.searchInput[j].toLowerCase())!=-1)
+          if(this.allDataCopy1[i][j].toString().toLowerCase().indexOf(this.searchInput[j].toLowerCase())!=-1)
             this.searchData.push(this.allDataCopy1[i])
         }
         this.allDataCopy1=this.searchData;
@@ -234,6 +234,11 @@ export class TableComponent implements OnChanges {
     this.allData=this.allDataCopy1;
     this.dataLength=this.allData.length;
     this.changePage();  
+  }
+  obrisi(i:any)
+  {
+    this.searchInput[i]="";
+    this.searchTable(i);
   }
 }
 
