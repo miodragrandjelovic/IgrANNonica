@@ -473,7 +473,8 @@ export class CsvComponent implements OnInit {
                 //alert("Now saving dataset under name "+fileName);
                 
                 // privatePublic lepo kupi vrednost, ali iz nekog razloga na beku je false...
-                this.http.post<any>(this.url+'/api/LoadData/csv?publicData='+privatePublic, {
+                var loggedUsername = sessionStorage.getItem('username');
+                this.http.post<any>(this.url+'/api/LoadData/csv?publicData='+privatePublic+'&Username='+loggedUsername, {
                     csvData: JSON.stringify(this.dataObject),
                     Name: fileName
                 }).subscribe(result => {

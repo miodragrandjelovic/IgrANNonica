@@ -71,8 +71,8 @@ export class UserdatasetsComponent implements OnInit {
     this.datasetsNamesPublic = [];
     this.datasetsFilteredNames = [];
     this.datasetsFilteredNamesPublic = [];
-
-    this.http.get<any>(this.url + '/api/Python/savedCsvs').subscribe(result => {  
+    var loggedUsername = sessionStorage.getItem('username');
+    this.http.get<any>(this.url + '/api/Python/savedCsvs'+'?Username='+loggedUsername).subscribe(result => {  
             console.log(result);
             this.copyPaste=result;
             console.log(this.copyPaste);
@@ -185,8 +185,9 @@ export class UserdatasetsComponent implements OnInit {
   deleteDataset(event:any){
     this.deleteDatasetCsv=event.target.id;
     //alert("DELETE DATSET "+ this.deleteDatasetCsv);
-
-    this.http.delete<any>(this.url +'/api/RegistracijaUsera/csv?name='+this.deleteDatasetCsv).subscribe(result => { 
+    //treba nam citanje trenutno prijavljenog username-a
+    var loggedUsername = sessionStorage.getItem('username');
+    this.http.delete<any>(this.url +'/api/RegistracijaUsera/csv?name='+this.deleteDatasetCsv+'&Username='+loggedUsername).subscribe(result => { 
       console.log("Uspesno obrisan "+result);
       //alert("Uspesno obrisan" + result);
       this.ngOnInit();
@@ -227,7 +228,8 @@ export class UserdatasetsComponent implements OnInit {
   loadThisDataset(naziv:any){
 
     // !! POSLE OVOG ZATEVA, POTREBNO JE PROSLEDITI I ZAHTEV ZA KORELACIONU MATRICU!!!
-    return this.http.post<any>(this.url + '/api/LoadData/selectedCsv?name='+naziv, {
+    var loggedUsername = sessionStorage.getItem('username');
+    return this.http.post<any>(this.url + '/api/LoadData/selectedCsv?name='+naziv+'&Username='+loggedUsername, {
         name: naziv
       }).subscribe(selectedDatasetUser=>{
         

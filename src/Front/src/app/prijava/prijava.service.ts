@@ -46,7 +46,8 @@ export class PrijavaService {
 
     logout()
     {
-        this.http.get<any>(this.url + '/api/RegistracijaUsera/logout').subscribe(result => { 
+        var loggedUsername = sessionStorage.getItem('username');
+        this.http.get<any>(this.url + '/api/RegistracijaUsera/logout?Username='+loggedUsername).subscribe(result => { 
         console.log(result);
         });
     }
