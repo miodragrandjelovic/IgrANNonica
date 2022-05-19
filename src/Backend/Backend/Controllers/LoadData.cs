@@ -315,7 +315,7 @@ namespace Backend.Controllers
                 JsonUtility.ImportData(modelSave, worksheet.Cells, 0, 0, layoutOptions);
 
                 string modelName = "deleteme.csv";
-                string pathToCreate = System.IO.Path.Combine(path, modelName);
+                string pathToCreate = System.IO.Path.Combine(path, modelNames, modelName);
 
                 workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
@@ -377,7 +377,7 @@ namespace Backend.Controllers
                     }
                     file1.Close();
                 }
-
+                
                 string path2 = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
                 string names = "deleteme.csv";
                 string pathToDelete = System.IO.Path.Combine(path2, names);
@@ -391,7 +391,7 @@ namespace Backend.Controllers
                 {
                     System.IO.File.Delete(pathToCreateHP);
                 }
-
+                
                 return Ok(modeldirname);
             }
             else
@@ -688,6 +688,7 @@ namespace Backend.Controllers
             HttpResponseMessage httpResponse = await http.GetAsync(modelurl);
             var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
             var dataModel = await httpResponse.Content.ReadAsStringAsync();
+            modelSave = dataModel;
             return Ok(model);
 
         }
