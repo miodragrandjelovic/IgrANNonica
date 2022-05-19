@@ -120,7 +120,7 @@
           <div class="row" >
               <div class="col-4" style="width:20%; min-width: 170px;">
                 <label class="labelaHip" for="percTrainData">Train percentage to data: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
-                <p class="slider">
+                <p class="slider" placement="end" ngbTooltip="The selected percentage the training set">
                   <ngx-slider class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
                 </p>
                 
@@ -132,7 +132,7 @@
                 </p>
 
                 <label class="labelaHip" for="batchSize">Batch Size: <span class="value"><input type="text" value = "{{value2}}" (keyup)="onSecondTextInputChange($event)" style="width: 40px;" /></span></label>
-                <p class="slider">
+                <p class="slider" placement="end" ngbTooltip="Size of batches of data used in every iteration">
                   <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
                 </p>
               </div>
