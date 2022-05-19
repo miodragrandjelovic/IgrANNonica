@@ -1,5 +1,5 @@
 <div id="sredina" [hidden]="!hidden" style="margin:0px;padding:0px;">
-  <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
+  <!--<div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;margin-left: 10%;">
       
       <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
@@ -15,7 +15,7 @@
     <app-usermodels></app-usermodels>
 
     </div>
-  </div>
+  </div>-->
   <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
     
     <!-- ovaj div ce se prikazivati samo ULOGOVANIM korisnicima!-->
@@ -193,14 +193,18 @@
                       <app-barplot *ngIf="!show" [evaluate]="eveluate"></app-barplot>
                       <app-prediction *ngIf="!show" [pred]="pred" [label]="label"></app-prediction>
                       <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
-                      <input type="text" [(value)]="modelName" (change)="modelNameChange($event)">
-                    <select (change)="modelSelectChange($event)">
-                      <option value="public">Public</option>
-                      <option value="private">Private</option>
-                    </select>
-                    <button type="button" style="width:15%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px; margin-left: 75%; margin-bottom: 1%;" (click)="saveModel()"> <!--i ovde da se sacuva taj novi-->
-                      Save
-                    </button>
+
+
+                      <button [disabled]="onemogucenSave" type="button" style="margin-left:20px;width:15%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px; float:right; margin-bottom: 1%;" (click)="saveModel()"> <!--i ovde da se sacuva taj novi-->
+                        Save
+                        </button>
+                        <select class="custom-select" (change)="modelSelectChange($event)" style="float:right;margin-left: 10px;height: 40px ; border-radius: 15px; border:solid black 1px;">
+                          <option value="private" selected>Private</option>
+                          <option value="public">Public</option>
+                        </select>
+                      <input type="text" [(value)]="modelName" placeholder="Enter Model Name" (keyup)="modelNameChange($event)" style="float:right;height: 40px ;border-radius: 15px;">
+                      
+                      
                     </div>
                   </div>
                 </div>

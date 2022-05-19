@@ -119,9 +119,9 @@ export class HyperparametersComponent implements OnInit {
   };
 
   hyperparametersForm!: FormGroup;
+  onemogucenSave:boolean;
 
-
-  constructor(private http: HttpClient, public spiner:LoadingService, private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal, private csvservis: CsvService) {
+  constructor(private http: HttpClient, public spiner:LoadingService,private toastr:ToastrService,private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal, private csvservis: CsvService) {
     Chart.register(...registerables);
     Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
    } 
@@ -135,6 +135,7 @@ export class HyperparametersComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.onemogucenSave = true;
     this.spiner.getShowSpinner().subscribe(newValue => {
       this.show = newValue;
     });
@@ -455,14 +456,30 @@ export class HyperparametersComponent implements OnInit {
       this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}` + `&Username=${loggedUsername}`, 
       undefined, { responseType: 'text' }).subscribe(result => {
         this.child.getModels();
+        //alert("Sacuvano!");
+        //korisnik treba da bude obavesten o tome da je uspesno sacuvan model
+        //this.toastr.success('Model saved successfuly!');
       });
     }
 
     modelNameChange(newValue: any) {
       this.modelName = (newValue.target as HTMLInputElement).value;
+
+      //alert("Model name "+ this.modelName);
+      if (this.modelName != "")
+      {
+        this.onemogucenSave = false;
+      }
+      else
+      {
+        //alert("Prazan str");
+        this.onemogucenSave = true;
+      }
+      
     }
     modelSelectChange(selectedValue: any) {
       this.modelVisibility = (selectedValue.target as HTMLInputElement).value;
     }
+
 
 }
