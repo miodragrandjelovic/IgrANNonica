@@ -566,6 +566,8 @@ export class CsvComponent implements OnInit {
         
         this.preloadedDataset=0;
 
+        this.csvservis.setDatasetname("realestate");
+
         this.http.get<any>(this.url+'/api/Python/preloadCsv').subscribe(result =>{
             csvFajl = result;
             this.currentResult = result;
@@ -582,6 +584,8 @@ export class CsvComponent implements OnInit {
         let csvFajl;
         
         this.preloadedDataset=1;
+
+        this.csvservis.setDatasetname("mpg");
 
         this.http.get<any>(this.url+'/api/Python/preloadCsvClass').subscribe(result => {
             console.log(result);
