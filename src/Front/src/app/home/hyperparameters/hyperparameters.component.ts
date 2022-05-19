@@ -11,6 +11,8 @@ import { LoadingService } from 'src/app/loading/loading.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import * as myUrls from 'src/app/urls';
 import { UsermodelsComponent } from './usermodels/usermodels.component';
+import { catchError } from 'rxjs/operators';
+import { pipe } from 'rxjs';
 interface RequestHyperparameters {
   learningRate: number,
   epoch: number,
@@ -294,7 +296,7 @@ export class HyperparametersComponent implements OnInit {
       columNames: this.columNames
     } 
 
-    var loggedUsername = sessionStorage.getItem('username');
+    let loggedUsername = sessionStorage.getItem('username');
     this.http.post(this.url + '/api/LoadData/hpNeprijavljen?Username='+loggedUsername, myreq).subscribe(result => {
     
       console.log("Rezultat slanja HP treninga je "  + result);
@@ -448,12 +450,9 @@ export class HyperparametersComponent implements OnInit {
     }
 
     saveModel() {
-      this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}`, {
-        modelNames: this.modelName,
-        publicModel: this.modelVisibility=='public' ? true : false
-      }).subscribe(result => {
-        console.log(result);
-
+      let loggedUsername = sessionStorage.getItem('username');
+      this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}` + `&Username=${loggedUsername}`, 
+      undefined, { responseType: 'text' }).subscribe(result => {
         this.child.getModels();
       });
     }

@@ -195,13 +195,20 @@
                       <app-barplot *ngIf="!show" [evaluate]="eveluate"></app-barplot>
                       <app-prediction *ngIf="!show" [pred]="pred" [label]="label"></app-prediction>
                       <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
+                      <input type="text" [(value)]="modelName" (change)="modelNameChange($event)">
+                    <select (change)="modelSelectChange($event)">
+                      <option value="public">Public</option>
+                      <option value="private">Private</option>
+                    </select>
+                    <button type="button" style="width:15%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px; margin-left: 75%; margin-bottom: 1%;" (click)="saveModel()"> <!--i ovde da se sacuva taj novi-->
+                      Save
+                    </button>
                     </div>
                   </div>
                 </div>
             </div>
         </div>
       </form>
-  
 </div>
 <ng-template #newModel let-modal style="margin-top:30%;">
   <div style="width:90%;margin: auto;">
