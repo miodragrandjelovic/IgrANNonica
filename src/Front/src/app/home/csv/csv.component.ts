@@ -5,8 +5,6 @@ import { ParametersService } from "src/app/services/parameters.service";
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import * as myUrls from 'src/app/urls';
 
-
-
 interface CheckBox {
     id: number,
     label: String,
@@ -16,6 +14,7 @@ import { PreloadCsv, PreloadStatistic } from "src/app/_model/preload.model";
 import { Observable } from "rxjs";
 import { MessageService } from "../home.service";
 import { UserdatasetsComponent } from "./userdatasets/userdatasets.component";
+import { CsvService } from "./csv.service";
 
 @Component({
     selector: 'app-csv',
@@ -134,7 +133,8 @@ export class CsvComponent implements OnInit {
     constructor(private http: HttpClient, 
         private parametersService: ParametersService, 
         private service: MessageService, 
-        private modalService: NgbModal) {
+        private modalService: NgbModal,
+        private csvservis: CsvService) {
     }
 /////////
 /*
@@ -573,6 +573,8 @@ export class CsvComponent implements OnInit {
         
         this.preloadedDataset=0;
 
+        this.csvservis.setDatasetname("realestate");
+
         this.http.get<any>(this.url+'/api/Python/preloadCsv').subscribe(result =>{
             csvFajl = result;
             this.currentResult = result;
@@ -589,6 +591,8 @@ export class CsvComponent implements OnInit {
         let csvFajl;
         
         this.preloadedDataset=1;
+
+        this.csvservis.setDatasetname("mpg");
 
         this.http.get<any>(this.url+'/api/Python/preloadCsvClass').subscribe(result => {
             console.log(result);
@@ -622,7 +626,7 @@ export class CsvComponent implements OnInit {
         console.log("PRIMLJENO ",this.selectedDatasetUser);
 
         this.showMeChosenDataset = true;
-
+        this.csvservis.setDatasetname(this.chosenDatasetCsv);
 
     }
 
