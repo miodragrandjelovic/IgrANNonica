@@ -10,6 +10,9 @@ import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/loading/loading.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import * as myUrls from 'src/app/urls';
+import { UsermodelsComponent } from './usermodels/usermodels.component';
+import { catchError } from 'rxjs/operators';
+import { pipe } from 'rxjs';
 interface RequestHyperparameters {
   learningRate: number,
   epoch: number,
@@ -50,6 +53,7 @@ export class HyperparametersComponent implements OnInit {
 
   @ViewChild(GraphicComponent) graphic: GraphicComponent;
 
+  @ViewChild(UsermodelsComponent) child:UsermodelsComponent;
   inputCheckBoxes : Array<CheckBox> = [];
   selectedCheckBoxes: Array<CheckBox> = [];
   properties: Array<string> = [];
@@ -86,6 +90,8 @@ export class HyperparametersComponent implements OnInit {
   //layers:Array<string> = ["5","5","5","5","5"]
   //
   activationFunctions:Array<any>=[];
+  modelName: any = '';
+  modelVisibility: any = 'public';
 
   session:any;
   prikazGrafika=false;
@@ -290,7 +296,7 @@ export class HyperparametersComponent implements OnInit {
       columNames: this.columNames
     } 
 
-    var loggedUsername = sessionStorage.getItem('username');
+    let loggedUsername = sessionStorage.getItem('username');
     this.http.post(this.url + '/api/LoadData/hpNeprijavljen?Username='+loggedUsername, myreq).subscribe(result => {
     
       console.log("Rezultat slanja HP treninga je "  + result);
@@ -442,4 +448,20 @@ export class HyperparametersComponent implements OnInit {
         return `with: ${reason}`;
       }
     }
+
+    saveModel() {
+      let loggedUsername = sessionStorage.getItem('username');
+      this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}` + `&Username=${loggedUsername}`, 
+      undefined, { responseType: 'text' }).subscribe(result => {
+        this.child.getModels();
+      });
+    }
+
+    modelNameChange(newValue: any) {
+      this.modelName = (newValue.target as HTMLInputElement).value;
+    }
+    modelSelectChange(selectedValue: any) {
+      this.modelVisibility = (selectedValue.target as HTMLInputElement).value;
+    }
+
 }
