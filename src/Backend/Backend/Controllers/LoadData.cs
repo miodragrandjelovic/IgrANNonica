@@ -614,7 +614,7 @@ namespace Backend.Controllers
                     string jsoncsv = JsonSerializer.Serialize(loadedCsv); //string
                     string csve = jsoncsv;
                     var datareg = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
-                    var urlcsv = url + "/csvreg";
+                    var urlcsv = url + "/csv";
                     var responsereg = await http.PostAsync(urlcsv, datareg);
                 }
                 if (CsvFile == "mpg")
@@ -623,7 +623,7 @@ namespace Backend.Controllers
                     string jsoncsv = JsonSerializer.Serialize(loadedCsv); //string
                     string csve = jsoncsv;
                     var dataclass = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
-                    var urlcsv = url + "/csvclass";
+                    var urlcsv = url + "/csv";
                     var responseclass = await http.PostAsync(urlcsv, dataclass);
                 }
             }
