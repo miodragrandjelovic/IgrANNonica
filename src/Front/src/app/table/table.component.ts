@@ -39,6 +39,11 @@ export class TableComponent implements OnChanges {
   hp:string;
   preload:any = [];
 
+  searchInput:any=[];
+  allDataCopy1:any=[];
+  allDataCopy2:any=[];
+  searchData:any=[];
+
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('IZMENJENO');
@@ -88,6 +93,11 @@ export class TableComponent implements OnChanges {
     this.parametersService.setParamsObs(this.hp);
 
     this.parametersService.setInputs(this.inputs);
+    this.allDataCopy1=this.allData;
+    this.allDataCopy2=this.allData;
+    for(let j=0;j<this.header.length;j++){
+      this.searchInput[j]="";
+    }
 
     this.scrollToTable();
   }
@@ -165,15 +175,6 @@ export class TableComponent implements OnChanges {
     }*/
   }
 
-  hideAll(event:any)
-  {
-    
-  }
-
-  showAndHide(event:any)
-  {
-    alert("event "+event.target);
-  }
 
   sortTableAsc(item: any) {
     for(let i = 0; i < this.allData.length - 1; i++){
@@ -199,8 +200,36 @@ export class TableComponent implements OnChanges {
       }
     }
     this.changePage();
+  }  
+
+  searchTable(index:number)
+  {
+    this.allDataCopy1=this.allDataCopy2;
+    for(let j=0;j<this.header.length;j++)
+    {
+      this.searchData=[];
+      if(this.searchInput[j]!=""){      
+        
+        for(let i = 0; i < this.allDataCopy1.length ; i++){
+          if(this.allDataCopy1[i][j].toString().toLowerCase().indexOf(this.searchInput[j].toLowerCase())!=-1)
+            this.searchData.push(this.allDataCopy1[i])
+        }
+        this.allDataCopy1=this.searchData;
+        console.log("Idemo1");
+        console.log(this.allDataCopy1);
+      }
+
+    }
+    console.log("Idemo2");
+    console.log(this.allDataCopy1);
+    this.allData=this.allDataCopy1;
+    this.dataLength=this.allData.length;
+    this.changePage();  
   }
-
-
+  obrisi(i:any)
+  {
+    this.searchInput[i]="";
+    this.searchTable(i);
+  }
 }
 

@@ -94,7 +94,6 @@ export class CsvComponent implements OnInit {
     headers: any;
 
     searchInputField: any ;
-
     outputs: Array<CheckBox> = [];
     selectedInputs: Array<CheckBox> = [];
     inputsArray: Array<CheckBox> = [];
@@ -138,9 +137,15 @@ export class CsvComponent implements OnInit {
         private modalService: NgbModal) {
     }
 /////////
+/*
     searchDatasets(){
         //poziva searchDatasets iz UserDatasets
         this.child.searchDatasets(this.searchInputField);
+
+    }
+*/
+    DeleteSearchInput(){
+            this.searchInputField="";
     }
 
     fetchSelectedItems() {
@@ -468,12 +473,14 @@ export class CsvComponent implements OnInit {
                 //alert("Now saving dataset under name "+fileName);
                 
                 // privatePublic lepo kupi vrednost, ali iz nekog razloga na beku je false...
-                this.http.post<any>(this.url+'/api/LoadData/csv?publicData='+privatePublic, {
+                var loggedUsername = sessionStorage.getItem('username');
+                this.http.post<any>(this.url+'/api/LoadData/csv?publicData='+privatePublic+'&Username='+loggedUsername, {
                     csvData: JSON.stringify(this.dataObject),
                     Name: fileName
                 }).subscribe(result => {
                     //alert("Uspesno dodat fajl!");
                     // reload komponente tabele!
+                    this.child.privateOrPublicSet = 1;
                     this.child.ngOnInit();
 
                     for(let i = 0; i < this.headers.length; i++){
@@ -518,6 +525,7 @@ export class CsvComponent implements OnInit {
         this.onemogucenaPredaja = true;
         this.onemogucenoIme = true;
         this.changeButtonEnable();
+        this.searchInputField = "";
         this.parametersService.setDatasets();
         // treba i da se sacuva dataset!!!!!
     }

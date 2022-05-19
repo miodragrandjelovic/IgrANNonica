@@ -25,7 +25,7 @@ namespace Backend.Controllers
         private readonly HttpClient http = new HttpClient();
         public static Hiperparametri hp = new Hiperparametri();
         public static string? Name { get; set; } //Ime ucitanog Csv fajla
-        public static string? Username { get; set; } //Ulogovan korisnik
+        public static string? Username1 { get; set; } //Ulogovan korisnik
         public static string? DirName { get; set; } //Ime foldera 
 
         public static string url = "http://127.0.0.1:3000";
@@ -46,7 +46,7 @@ namespace Backend.Controllers
 
 
         [HttpPost("selectedCsv")] //Otvaranje foldera gde se nalazi izabrani csv
-        public async Task<ActionResult<String>> PostSelectedCsv(String name)
+        public async Task<ActionResult<String>> PostSelectedCsv(String name, string Username)
         {
             string fileName = name + ".csv";
             string CurrentPath = Directory.GetCurrentDirectory();
@@ -140,7 +140,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("savedModels")] //Vracanje imena sacuvanih Modela.
-        public async Task<ActionResult<String>> PostSavedModels(String name)
+        public async Task<ActionResult<String>> PostSavedModels(String name, string Username)
         {
             DirName = name;
             RegistracijaUseraController.DirName = name;
@@ -159,7 +159,7 @@ namespace Backend.Controllers
 
         //predikcija
         [HttpPost("selectedModel")] //Vracanje imena izabranog modela. Tacnije putanje to je bitno zbog predikcije da znaju na ML-u koji model je korisnik izabrao
-        public async Task<ActionResult<JsonDocument>> PostSelectedModel(String name)
+        public async Task<ActionResult<JsonDocument>> PostSelectedModel(String name, string Username)
         {
             if (Username == null)
             {
@@ -180,7 +180,7 @@ namespace Backend.Controllers
 
         //za poredjenje dva modela
         [HttpPost("modelForCompare")] //Vracanje vrednosti izabranog modela kako bi mogle da se prikazu na grafiku i uporede.
-        public async Task<ActionResult<JsonDocument>> PostModelForCompare(String dirname, String modelname)
+        public async Task<ActionResult<JsonDocument>> PostModelForCompare(String dirname, String modelname, string Username)
         {
             string CurrentPath = Directory.GetCurrentDirectory();
             string fileName = modelname + ".csv";
@@ -235,7 +235,7 @@ namespace Backend.Controllers
         }
         
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model kao i cuvanje povratne vrednosti modela
-        public async Task<ActionResult>Post(String modelNames, Boolean publicModel) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
+        public async Task<ActionResult>PostSave(String modelNames, Boolean publicModel, string Username) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
         {
             if (Username != null)
             {
@@ -243,14 +243,35 @@ namespace Backend.Controllers
                 var upgradedName = Name;
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
                 string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
-                //string modeldirname = upgradedName + modelNames;
-                if (System.IO.Directory.Exists(modeldirname))
+                string csvFolder = Path.Combine(CurrentPath, "Users", Username, upgradedName);
+                
+                if (System.IO.Directory.Exists(csvFolder))
                 {
-                    return Ok("Vec postoji model sa tim imenom.");
+                    if (System.IO.Directory.Exists(modeldirname))
+                    {
+                        return Ok("Vec postoji model sa tim imenom.");
+                    }
+                    else
+                    {
+                        System.IO.Directory.CreateDirectory(modeldirname);
+                        if (publicModel)
+                        {
+                            string publicName1 = modelNames + "(" + Username + ")";
+                            string publicPath = Path.Combine(CurrentPath, "Users", "publicProblems", publicName1);
+                            System.IO.Directory.CreateDirectory(publicPath);
+                        }
+                        Console.WriteLine("Directory for new Model created successfully!");
+                    }
                 }
                 else
                 {
                     System.IO.Directory.CreateDirectory(modeldirname);
+
+                    //treba sacuvati i csv ovde
+                    string publicDataset = Path.Combine(CurrentPath, "Users", "publicDatasets", upgradedName, upgradedName + ".csv"); //javni dataset
+                    string destFile = Path.Combine(CurrentPath, "Users", Username, upgradedName, upgradedName + "csv.csv");
+                    System.IO.File.Copy(publicDataset, destFile, true);
+
                     if (publicModel)
                     {
                         string publicName1 = modelNames + "(" + Username + ")";
@@ -332,20 +353,6 @@ namespace Backend.Controllers
                     outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
                 }
 
-                /*
-                //modeldirname sacuvati i ona 3 niza kao txt fajl unutar ovog foldera
-                string ColumnNamespath = Path.Combine(modeldirname, "ColumnNames.txt");
-                List<string> ColumnLinesTxt = hp.ColumNames;   //hiper staviti u globalnu
-                System.IO.File.WriteAllLines(ColumnNamespath, ColumnLinesTxt);
-
-                string Encodingspath = Path.Combine(modeldirname, "Encodings.txt");
-                List<string> EncodingsLinesTxt = hp.Encodings;
-                System.IO.File.WriteAllLines(Encodingspath, EncodingsLinesTxt);
-
-                string CatNumpath = Path.Combine(modeldirname, "CatNum.txt");
-                List<string> CatNumLinesTxt = hp.CatNum;
-                System.IO.File.WriteAllLines(CatNumpath, CatNumLinesTxt);
-                */
                 if (publicModel)
                 {
                     using (System.IO.StreamWriter outfile = new System.IO.StreamWriter(publicPathModel))
@@ -361,22 +368,8 @@ namespace Backend.Controllers
                         outfile1.Write(String.Join(System.Environment.NewLine, lines1.ToArray()));
                     }
                     file1.Close();
-                    //ColumNames Encodings CatNum
-                    /*
-                    string ColumnNames = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "ColumnNames.txt");
-                    List<string> ColumnlinesTxt = hp.ColumNames;
-                    System.IO.File.WriteAllLines(ColumnNames, ColumnlinesTxt);
-
-                    string Encodings = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "Encodings.txt");
-                    List<string> EncodingslinesTxt = hp.Encodings;
-                    System.IO.File.WriteAllLines(Encodings, EncodingslinesTxt);
-
-                    string CatNum = Path.Combine(CurrentPath, "Users", "publicProblems", publicName, "CatNum.txt");
-                    List<string> CatNumlinesTxt = hp.CatNum;
-                    System.IO.File.WriteAllLines(CatNum, CatNumlinesTxt);*/
                 }
 
-                //string path1 = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName;
                 string path2 = System.IO.Path.Combine(CurrentPath, "Users", Username, upgradedName);
                 string names = "deleteme.csv";
                 string pathToDelete = System.IO.Path.Combine(path2, names);
@@ -398,7 +391,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("hp")] //Slanje HP na pajton
-        public async Task<ActionResult<Hiperparametri>> Post([FromBody] Hiperparametri hiper, String modelNames, Boolean publicModel) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
+        public async Task<ActionResult<Hiperparametri>> Posthp([FromBody] Hiperparametri hiper, String modelNames, Boolean publicModel, string Username) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
         {
             int indexDir = 1;
             var upgradedName = "realestate";
@@ -593,7 +586,7 @@ namespace Backend.Controllers
 
 
         [HttpPost("hpNeprijavljen")] //Slanje HP na pajton za neprijavljenog korisnika
-        public async Task<ActionResult<Hiperparametri>> PostHp([FromBody] Hiperparametri hiper) 
+        public async Task<ActionResult<Hiperparametri>> PostHp([FromBody] Hiperparametri hiper, string Username) 
         {
             if (Username == null)
                 hiper.Username = "unknown";
@@ -620,8 +613,9 @@ namespace Backend.Controllers
         }
 
         [HttpPost("csv")] //Slanje CSV na pajton
+        [DisableRequestSizeLimit]
         //[Obsolete]
-        public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad cs, Boolean publicData)
+        public async Task<ActionResult<DataLoad>> PostCsv([FromBody] DataLoad cs, Boolean publicData, string Username)
         {
             string name = cs.Name;
             string csve = cs.CsvData;
@@ -715,7 +709,9 @@ namespace Backend.Controllers
             return Ok(stat);
         }
 
+  
         [HttpPost("predictionCsv")] //Slanje csv fajla za predikciju na pajton i primanje predikcije i prosledjivanje na front preko responsa.
+        [DisableRequestSizeLimit]
         //[Obsolete]
         public async Task<ActionResult<DataLoad>> PostPredictedCsv([FromBody] DataLoad cs)
         {
@@ -727,19 +723,20 @@ namespace Backend.Controllers
             //var url = "http://127.0.0.1:3000/predictionCsv"; //slanje csv-a za prediktovanje na pajton
             var urlpred = url + "/predictionCsv";
             var response = await http.PostAsync(urlpred, data);
-
+            
             var predurl = url + "/prediction";
             HttpResponseMessage httpResponse = await http.GetAsync(predurl); //rezultati predikcije
             var predikcija = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
-
+            
             return Ok(predikcija);
         }
+
 
         //za prediktovanje csv-a preko modela
         [HttpPost("predictionModel")] //Slanje Putanje do foldera gde je sacuvan izabrani model na /pathModel bi mogao
                                       //Slanje originalnog CSV-a sa kojim je kreiran model na /csv mozda
                                       //Slanje hiperparametara sa kojima je kreiran izabrani model na /hp mozda
-        public async Task<ActionResult<JsonDocument>> PostPredictedModel(String dirname, String modelname)
+        public async Task<ActionResult<JsonDocument>> PostPredictedModel(String dirname, String modelname, string Username)
         {
             string CurrentPath = Directory.GetCurrentDirectory();
             string fileName = modelname + ".csv"; //rezultati modela koji su sacuvani u csv fajlu
@@ -747,6 +744,12 @@ namespace Backend.Controllers
 
             string csvName = dirname + ".csv"; //csv iz kojeg je kreiran model
             string csvPath = Path.Combine(CurrentPath, "Users", Username, dirname, csvName); //putanja do csv-a
+
+            if(!System.IO.File.Exists(csvPath))
+            {
+                csvName = dirname + "csv.csv";
+                csvPath = Path.Combine(CurrentPath, "Users", Username, dirname, csvName);
+            }
 
             string hpName = modelname + "HP.csv"; //hiperparametri korisceni za kreiranje izabranog modela
             string hpPath = Path.Combine(CurrentPath, "Users", Username, dirname, modelname, hpName); //putanja do hiperparametara
@@ -796,6 +799,7 @@ namespace Backend.Controllers
 
             return Ok(resultjsonhp);
         }
+        
         [HttpPost("stats")] //Slanje Stats na pajton
         public async Task<ActionResult<Statistika>> PostStat(Statistika stat)
         {
@@ -805,6 +809,29 @@ namespace Backend.Controllers
             var urlst = url + "/stats";
             var response = await http.PostAsync(urlst, data);
             return Ok(statjson);
+        }
+
+
+        [HttpPost("csvFile")]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult>PostcsvFile([FromForm]IFormFile csvFile, string Username)
+        {
+            string currentPath = Directory.GetCurrentDirectory();
+            string ime = csvFile.FileName;
+            string path = System.IO.Path.Combine(currentPath, "Users", Username, ime);
+
+            return Ok("Primio sam: " + ime);
+        }
+        private void ReadlikeList(IFormFile file)
+        {
+            var lines = new StringBuilder();
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            {
+                while (reader.Peek() != -1)
+                {
+                    lines.Append(reader.ReadLine());
+                }
+            }
         }
 
     }

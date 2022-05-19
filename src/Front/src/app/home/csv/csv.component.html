@@ -5,7 +5,7 @@
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;">
       <button style="width:15%;margin-right: 30px; background-color: #212f3c; color:white; height: 50px; border-radius: 20px; " (click)="addNewFile(newFile)"><img src="assets/images/plus.png" width="30px" height="30px">    New Dataset</button>
       <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
-      <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your datasets" [(ngModel)]="searchInputField" (keyup)="searchDatasets()"> <!-- search sa filterom -->
+      <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your datasets" [(ngModel)]="searchInputField" > <!-- search sa filterom  (keyup)="searchDatasets()"-->
       <!--<button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
         <img src="assets/images/filter.png" style="height:35px; width: auto;">
       </button>-->
@@ -14,7 +14,7 @@
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 150px;">
       <!-- ovde ide tabela sa datasetovima korisnika -->
       <p class="fw-bold fs-1">Your datasets:</p>
-      <app-userdatasets (sendResults)="catchSelectedDataset($event)" ></app-userdatasets>
+      <app-userdatasets [search1]="searchInputField" (search)="DeleteSearchInput()" (sendResults)="catchSelectedDataset($event)" ></app-userdatasets>
 
     </div>
   </div>
@@ -100,7 +100,7 @@
     <div style="overflow-x: auto; width:40%;height:500px;float: left; margin-left: 10px; border:#CEECFA solid 2px; border-radius: 5px; text-align: center;">
       <app-statistics [result]="selectedStat"></app-statistics></div>
 
-    <div style="width:32%;margin-left: 20px; float:left;text-align: center; padding-top: 20px; padding-bottom: 20px; overflow-x: auto; border: #CEECFA 2px solid; border-radius: 5px;">
+    <div style="width:28%;margin-left: 20px; float:left;text-align: center; padding-top: 20px; padding-bottom: 20px; overflow-x: auto; border: #CEECFA 2px solid; border-radius: 5px;">
       <app-encoding [input]="selectedDatasetUser"></app-encoding>
     </div>
 
@@ -135,8 +135,9 @@
         </div>
 
         <!-- ovde dodajemo fajl -->
-        <div class="row"> <!-- browse file -->
-          <input class="form-control upload" type="file" id="formFile" style="margin-bottom: 30px;" (change)="fileUpload($event)">
+        <div class="row"  style="margin-bottom: 30px;"> <!-- browse file -->
+          <input class="form-control upload" type="file" accept=".csv" id="formFile" (change)="fileUpload($event)">
+          <p>*you can only upload .csv files</p>
         </div>
         <!--
         <div class="row">

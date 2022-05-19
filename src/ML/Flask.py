@@ -1,3 +1,4 @@
+from doctest import DONT_ACCEPT_TRUE_FOR_1
 from flask import Flask
 from flask import jsonify,request
 
@@ -21,12 +22,24 @@ def post_hp():
    # hiperparametri.append(hp)
     global hiperp
     hiperp = hp
-    return hp
+    return jsonify(hp)
 
 @app.route("/hp", methods=['GET']) #Slanje HP na bek
 def  getAllHps():
     return jsonify(hiperp)
 
+
+@app.route("/predictionHp", methods=["POST"]) #Primanje HP za predikciju sa beka
+def post_hppred():
+    hp = request.get_json()
+   # hiperparametri.append(hp)
+    global hiperp1
+    hiperp1 = hp
+    return jsonify(hp)
+
+@app.route("/predictionHp", methods=['GET']) #Slanje HP za predikciju na bek
+def  getAllHpspred():
+    return jsonify(hiperp1)
 
 def is_float(element) -> bool: ##fja za proveravanje da li je element tj string iz csva u stvari float
     try:
@@ -56,21 +69,102 @@ def  getCsv():
     return jsonify(csvdata)
 
 
-#primanje csv-a za predikciju i posle slanje rezultata nazad
-
-@app.route("/predictionCsv", methods=["POST"]) #Primanje CSV za predikciju sa beka i njegovo sredjivanje 
+@app.route("/predictionCsv", methods=["POST"]) #Primanje predictionCSV sa beka i njegovo sredjivanje 
 def post_predictioncsv():
     cs = request.get_json()
     data = pd.DataFrame.from_records(cs)
-    for (columnName) in data.iteritems():
+    #statistika=df.describe()
+    #return statistika.to_json()
+    for (columnName,columnData) in data.iteritems():
         if(is_float(data[str(columnName)][0]) or data[str(columnName)][0].isnumeric()):
             data[str(columnName)]=data[str(columnName)].astype(float)
 
-    global predictdf
-    predictdf=data
-    return predictdf.to_json()
+    global predictiondf
+    predictiondf=data
+    global predictioncsvdata
+    predictioncsvdata = cs
+    return jsonify(predictioncsvdata)
 
-#
+@app.route("/predictionCsv", methods=['GET']) #Slanje predictionCSV na bek
+def  getpredictionCsv():
+    return jsonify(predictioncsvdata)
+
+
+@app.route("/predictionCsvOriginal", methods=["POST"]) #Primanje originalnog CSV-a za predikciju sa beka i njegovo sredjivanje 
+def post_csvoriginal():
+    cs = request.get_json()
+    data = pd.DataFrame.from_records(cs)
+    #statistika=df.describe()
+    #return statistika.to_json()
+    for (columnName,columnData) in data.iteritems():
+        if(is_float(data[str(columnName)][0]) or data[str(columnName)][0].isnumeric()):
+            data[str(columnName)]=data[str(columnName)].astype(float)
+
+    global originaldf
+    originaldf=data
+    global originalcsvdata
+    originalcsvdata = cs
+    return jsonify(originalcsvdata)
+
+@app.route("/predictionCsvOriginal", methods=['GET']) #Slanje originalnog CSV-a za predikciju na bek
+def  getCsvoriginal():
+    return jsonify(originalcsvdata)
+
+@app.route("/pathModel", methods=["POST"]) #Primanje putanje do foldera novog modela
+def post_pathmodel():
+    global pathmodel
+    path=request.get_data()
+    raw_string = r"{}".format(path)
+    raw_string=raw_string[2:-1]
+    pathmodel=raw_string
+    return pathmodel
+
+@app.route("/pathModel", methods=['GET']) #slanje putanje do foldera novog modelas na bek cisto za proveru
+def getpathmodel():
+    return pathmodel    
+
+@app.route("/prediction",methods=["GET"]) #slanje rezultata predikcije na bek!
+def predikcija_def():
+    
+    df1=pd.DataFrame.from_records(hiperp)
+    print(df1)
+    print(df1["ColumNames"])
+    print(df1['Encodings'])
+    print(df1['CatNum'])
+
+    type=df1['ProblemType'][0]
+    print(type)
+
+    pom=df1['ColumNames']
+    columns = []
+    for value in pom:
+        if(value!=None):
+            columns.append(value)
+    print(columns)
+
+
+    pom=df1['Encodings']
+    encodings = []
+    for value in pom:
+        if(value!=None):
+            encodings.append(value)
+    print(encodings)
+
+    pom=df1['CatNum']
+    num_cat = []
+    for value in pom:
+        if(value!=None):
+            num_cat.append(value)
+    print(num_cat)
+
+    output=df1["Output"][0]
+    print(output)
+    pred=pr.predikcija(path=pathmodel,origcsv=df,predcsv=predictiondf,type=type,columns=columns,encodings=encodings,num_cat=num_cat,output=output)
+
+    return jsonify(pred)
+
+
+
 
 @app.route("/username", methods=["POST"]) #Primanje Username-a sa beka
 def post_username():
@@ -93,18 +187,6 @@ def post_savedModel():
 def getsavedModel():
     return savedModel    
 
-@app.route("/pathModel", methods=["POST"]) #Primanje putanje do foldera novog modela
-def post_pathmodel():
-    global pathmodel
-    path=request.get_data()
-    raw_string = r"{}".format(path)
-    raw_string=raw_string[2:-1]
-    pathmodel=raw_string
-    return pathmodel
-
-@app.route("/pathModel", methods=['GET']) #slanje putanje do foldera novog modelas na bek cisto za proveru
-def getpathmodel():
-    return pathmodel    
 
 
 @app.route("/stats",methods=['GET']) #statistika
@@ -134,7 +216,7 @@ def save_model1():
 @app.route("/model",methods=['GET']) #Parsovanje u df
 def treniraj():
  
-    
+    print(hiperp)
     x=hiperp['Inputs'].split(",")
     features = []
     for input in x:

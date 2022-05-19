@@ -1,22 +1,37 @@
-<div class="row overflow-auto" style="max-height:400px;">
-    <div class="row py-1  border-top border-dark" >
+<div>
+  <div class="row search-hero" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;margin-left: 10%;">
+    <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
+    <input  style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models" [(ngModel)]="searchModels"> <!-- search da moze po svemu-->
+    <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
+      
+    </button>
+  </div>
+</div>
+
+<div style="background-color: #CEECFA;width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto; border-radius: 10px; min-height: 100px;">
+<p class="fw-bold fs-1">Your models:</p>
+<div class="row overflow-auto" style="max-height:300px;">
+    <div class="row py-1  border-top border-dark" *ngFor="let item of zapamceniModeli | filter:searchModels" id="{{item.name}}">
         <div class="col-sm-auto float-start d-flex justify-content-start">
-            <img class="m-auto"  src="assets/images/datasetRandom.jpg" height="40px" width="40px">
+            <img class="m-auto"  src="assets/images/datasetRandom.jpg" height="30px" width="30px">
         </div>
 
-        <div class="col-sm-auto float-start d-flex justify-content-start">
+        <div id="{{item.name}}" class="col-sm-auto float-start d-flex justify-content-start">
             <h3  class="m-auto">
-                naziv modela
+              {{item.name}}
             </h3>
         </div>
-        <div class="col" >
-            <div>Train on dataset:</div>
-            <div>Last Modified:</div>
+        <div id="{{item.name}}" class="col" >
+            <div>Train on dataset: {{item.fromCsv}}</div>
+            <div>Last Modified:{{item.date}}</div>
         </div>
 
         
-        <div class="col float-end d-flex justify-content-end"> <!-- ovaj div ce da ima dugmice -->
-            <button class="btn btn-outline-danger float-end" type="button">
+        <div id="{{item.name}}"  class="col float-end d-flex justify-content-end"> <!-- ovaj div ce da ima dugmice -->
+          <button id="{{item.name}}"(click)="addNewData(newFile, $event,item.fromCsv)" class="btn btn-primary  my-1 me-1" width="16" height="16" type="button" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 2px;">
+            Add Dataset
+        </button> 
+            <button id="{{item.name}}"  (click)="deleteThisModel($event, item.fromCsv)" class="btn btn-outline-danger float-end  my-1 me-1" type="button">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                   <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
                   <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
@@ -27,43 +42,85 @@
     </div>
     <div style="border-top:#212f3c 1px solid;"></div>
 </div>
+</div>
+<br>
+<div  class="container-fluid" >
+  <div class="row">
+    <div class="col-9" *ngIf="ucitano">
+      <div class="container-table" style="overflow-x:auto; border: #CEECFA 2px solid;border-radius: 5px;">
+        <table class="table table-hover">
+          <caption style="caption-side: top;text-align:left;font-weight: bold;font-size: 25px;background-color: #CEECFA; border-top-left-radius: 3px; border-top-right-radius: 3px;padding-left: 20px;color:black;">Dataset name: {{unetDataset}}</caption>  
 
+          <thead>
+            <tr>
+              <th *ngFor="let item of headingLines[0]; let i = index">{{item}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of rowLines; let i = index">
+              <td *ngFor="let itemm of headingLines[0]; let j = index">{{item[j]}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-between p-2">
+          <ngb-pagination [boundaryLinks]="true" [maxSize]="15" [collectionSize]="allData.length" [(page)]="currentPage" [pageSize]="itemsPerPage" (pageChange)="changePage()">
+          </ngb-pagination>
+        </div>
+      </div>
+      <br>
+      <button class="btn btn btn-primary float-end" type="button" (click)="showPrediction()" style="width: 100px;">
+        Predict
+        </button>
+    </div>
+    
 
-<ng-template #newData let-modal style="margin-top:30%;">
+    <div  class="col-3" *ngIf="prikaziPredikciju">
+    <div class="container-table" style="overflow-x:auto; border: #CEECFA 2px solid;border-radius: 5px;max-height: 450px;">
+      <table class="table table-hover">
+        <caption style="caption-side: top;text-align:left;font-weight: bold;font-size: 25px;background-color: #CEECFA; border-top-left-radius: 3px; border-top-right-radius: 3px;padding-left: 20px;color:black;">Prediction</caption>  
+        <thead>
+          <tr>
+            <th style="font-weight: bold;">RowNumber</th>
+            <th style="font-weight: bold;">Predicted values</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr *ngFor="let item of predikcija; let i = index">
+            <td style="font-weight: bold;">{{i+1}}</td>
+            <td>{{item}}</td>
+          </tr>
+        </tbody>
+      </table>
+    <!--<div class="d-flex justify-content-between p-2">
+        <ngb-pagination [boundaryLinks]="true" [maxSize]="15" [collectionSize]="allData.length" [(page)]="currentPage" [pageSize]="itemsPerPage" (pageChange)="changePage()">
+        </ngb-pagination>
+      </div>-->
+    </div>
+  </div>
+</div>
+</div>
+
+<ng-template #newFile let-modal style="margin-top:30%;">
     <div style="width:90%;margin: auto;">
       <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title1" style="width:90%;margin:auto;text-align:center;">Predict</h4>
+        <h4 class="modal-title" id="modal-basic-title1" style="width:90%;margin:auto;text-align:center;">Add dataset for prediction</h4>
         <button id="closeModal" type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
       </div>
   
       <div class="modal-body">
         <div class="col-lg-7">
-          <div class="row">
-            <input type="text" placeholder="Enter Dataset Title" style="border:#212f3c 1px solid; border-radius: 20px; height: 50px; margin-bottom: 30px;">
+        
+          <div class="row"> 
+            <input class="form-control upload" type="file" id="formFile" style="margin-bottom: 30px;" (change)="fileUpload($event)"> <!-- (change)="fileUpload($event)"-->
           </div>
-
-          <div class="row"> <!-- browse file -->
-            <input class="form-control upload" type="file" id="formFile" style="margin-bottom: 30px;"> <!-- (change)="fileUpload($event)"-->
-          </div>
-  
+      
           <div class="row">
-            <input type="text" style="height:300px; width:100%; border:#212f3c 1px solid; border-radius: 20px; margin-bottom: 30px;">
-            <!-- ovde dodajemo opis!! -->
-          </div>
-              
-          <div class="row">
-            <button style="width:40%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px;"> <!--i ovde da se sacuva taj novi-->
-              Add new Dataset
+            <button style="width:40%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px;" (click)="addNewDataset()"> <!--i ovde da se sacuva taj novi-->
+              Add dataset
             </button>
           </div>
-             <br>
-          <div class="row">
-            <button style="width:40%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px;"> <!--i ovde da se sacuva taj novi-->
-              Predict
-            </button>
-          </div>
-  
-  
+      
         </div>
       </div>
     </div>

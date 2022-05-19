@@ -24,7 +24,7 @@ describe('AboutComponent', () => {
   });
 });
 
-windowScrolled = false;
+windowScrolled = false; 
 
   ngOnInit() {
     window.addEventListener('scroll', () => {

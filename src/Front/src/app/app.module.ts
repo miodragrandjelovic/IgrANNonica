@@ -40,6 +40,8 @@ import {MatIconModule} from '@angular/material/icon';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { BarplotComponent } from './barplot/barplot.component';
 import { PredictionComponent } from './prediction/prediction.component';
+import { PredikcijaPoModeluComponent } from './home/csv/predikcija-po-modelu/predikcija-po-modelu.component';
+import{Ng2SearchPipeModule} from 'ng2-search-filter';
 
 const icons = {
   envelope,
@@ -77,6 +79,7 @@ const icons = {
     StatisticsComponent,
     BarplotComponent,
     PredictionComponent,
+    PredikcijaPoModeluComponent,
   ],
   imports: [
     BrowserModule,
@@ -95,7 +98,8 @@ const icons = {
     NgbAlertModule,
     NgxChartsModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    Ng2SearchPipeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
