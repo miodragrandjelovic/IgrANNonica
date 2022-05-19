@@ -55,6 +55,7 @@ export class HyperparametersComponent implements OnInit {
   @ViewChild(GraphicComponent) graphic: GraphicComponent;
 
   @ViewChild(UsermodelsComponent) child:UsermodelsComponent;
+
   inputCheckBoxes : Array<CheckBox> = [];
   selectedCheckBoxes: Array<CheckBox> = [];
   properties: Array<string> = [];
@@ -119,9 +120,9 @@ export class HyperparametersComponent implements OnInit {
   };
 
   hyperparametersForm!: FormGroup;
+  onemogucenSave:boolean;
 
-
-  constructor(private http: HttpClient, public spiner:LoadingService, private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal, private csvservis: CsvService) {
+  constructor(private http: HttpClient, public spiner:LoadingService,private toastr:ToastrService,private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal, private csvservis: CsvService) {
     Chart.register(...registerables);
     Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
    } 
@@ -135,6 +136,7 @@ export class HyperparametersComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.onemogucenSave = true;
     this.spiner.getShowSpinner().subscribe(newValue => {
       this.show = newValue;
     });
@@ -454,15 +456,37 @@ export class HyperparametersComponent implements OnInit {
       let loggedUsername = sessionStorage.getItem('username');
       this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}` + `&Username=${loggedUsername}`, 
       undefined, { responseType: 'text' }).subscribe(result => {
-        this.child.getModels();
+        
+        //alert("Sacuvano!");
+        //korisnik treba da bude obavesten o tome da je uspesno sacuvan model
+        this.toastr.success('Model saved successfuly!');
+
+        // ovde treba da se pozove refresh usermodels komponente koja se nalazi u predikcija po modelu !!
+        // medjutim ovo vise nije child, pa ne moze ovako!
+        //this.child.ngOnInit();
+      }, error=>{
+        this.toastr.error("Could not save model, please try again!");
       });
     }
 
     modelNameChange(newValue: any) {
       this.modelName = (newValue.target as HTMLInputElement).value;
+
+      //alert("Model name "+ this.modelName);
+      if (this.modelName != "")
+      {
+        this.onemogucenSave = false;
+      }
+      else
+      {
+        //alert("Prazan str");
+        this.onemogucenSave = true;
+      }
+      
     }
     modelSelectChange(selectedValue: any) {
       this.modelVisibility = (selectedValue.target as HTMLInputElement).value;
     }
+
 
 }
