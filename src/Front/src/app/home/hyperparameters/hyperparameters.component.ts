@@ -455,10 +455,12 @@ export class HyperparametersComponent implements OnInit {
       let loggedUsername = sessionStorage.getItem('username');
       this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}` + `&Username=${loggedUsername}`, 
       undefined, { responseType: 'text' }).subscribe(result => {
-        //this.child.getModels();
+        
         //alert("Sacuvano!");
         //korisnik treba da bude obavesten o tome da je uspesno sacuvan model
         this.toastr.success('Model saved successfuly!');
+
+        this.child.ngOnInit();
       }, error=>{
         this.toastr.error("Could not save model, please try again!");
       });
