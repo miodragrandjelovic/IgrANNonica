@@ -467,6 +467,8 @@ export class HyperparametersComponent implements OnInit {
         // medjutim ovo vise nije child, pa ne moze ovako!
         //this.child.ngOnInit();
         this.refreshModels.sayMessage(1);
+
+        this.modelName = "";
       }, error=>{
         this.toastr.error("Could not save model, please try again!");
       });

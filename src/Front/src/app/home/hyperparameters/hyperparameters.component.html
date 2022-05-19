@@ -195,14 +195,16 @@
                       <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
 
 
-                      <button [disabled]="onemogucenSave" type="button" style="margin-left:20px;width:15%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px; float:right; margin-bottom: 1%;" (click)="saveModel()"> <!--i ovde da se sacuva taj novi-->
-                        Save
-                        </button>
-                        <select class="custom-select" (change)="modelSelectChange($event)" style="float:right;margin-left: 10px;height: 40px ; border-radius: 15px; border:solid black 1px;">
-                          <option value="private" selected>Private</option>
-                          <option value="public">Public</option>
-                        </select>
-                      <input type="text" [(value)]="modelName" placeholder="Enter Model Name" (keyup)="modelNameChange($event)" style="float:right;height: 40px ;border-radius: 15px;">
+                      <div *ngIf="session">
+                        <button [disabled]="onemogucenSave" type="button" style="margin-left:20px;width:15%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px; float:right; margin-bottom: 1%;" (click)="saveModel()"> <!--i ovde da se sacuva taj novi-->
+                          Save
+                          </button>
+                          <select class="custom-select" (change)="modelSelectChange($event)" style="float:right;margin-left: 10px;height: 40px ; border-radius: 15px; border:solid black 1px;">
+                            <option value="private" selected>Private</option>
+                            <option value="public">Public</option>
+                          </select>
+                        <input type="text" [(value)]="modelName" placeholder="Enter Model Name" (keyup)="modelNameChange($event)" style="float:right;height: 40px ;border-radius: 15px;">
+                      </div>
                       
                       
                     </div>
