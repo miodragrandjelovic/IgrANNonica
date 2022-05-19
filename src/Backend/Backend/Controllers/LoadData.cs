@@ -15,6 +15,8 @@ using System.Globalization;
 using System.Data;
 using LumenWorks.Framework.IO.Csv;
 using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers
 {
@@ -32,10 +34,16 @@ namespace Backend.Controllers
 
         public static string hiperJ;
         public static string modelSave;
-
+        private readonly IConfiguration _configuration;
+        private readonly UserDbContext _context;
+        public LoadData(UserDbContext context, IConfiguration configuration)
+        {
+            _context = context;
+            _configuration = configuration;
+        }
         static String BytesToString(long byteCount) //proveriti sta ne radi kod ove funkcije
         {
-            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; 
+            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
             if (byteCount == 0)
                 return "0" + suf[0];
             long bytes = Math.Abs(byteCount);
@@ -85,11 +93,11 @@ namespace Backend.Controllers
             var csvurl = url + "/csv";
             var response = await http.PostAsync(csvurl, data);
 
-           
+
             long size = SelectedPaths.Length;
             var size1 = BytesToString(size);
             //Console.WriteLine("Size of file: " + size1);
-            
+
 
             string fileName1 = SelectedPaths;
             FileInfo fi = new FileInfo(fileName1);
@@ -110,7 +118,7 @@ namespace Backend.Controllers
             {
                 return BadRequest("Ne postoji dati fajl.");
             }
-            
+
             string[] files = Directory.GetFiles(SelectedPath).Select(Path.GetFileName).ToArray();
 
             //string SelectedPaths = CurrentPath + @"\Users\" + Username + "\\" + name + "\\" + fileName;
@@ -194,7 +202,7 @@ namespace Backend.Controllers
             {
                 return BadRequest("Niste ulogovani.");
             }
-           
+
             var modelTable = new DataTable();
             using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPath)), true))
             {
@@ -203,17 +211,17 @@ namespace Backend.Controllers
             string result = string.Empty;
             result = JsonConvert.SerializeObject(modelTable);
 
-            var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); 
+            var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result);
 
             return Ok(resultjson);
         }
-        
+
         [HttpPost("publicModels")] //Vracanje vrednosti izabranog javnog modela kako bi mogle da se prikazu na grafiku i uporede.
         public async Task<ActionResult<JsonDocument>> PostPublicModels(String userName, String modelname) //username je FromCsv a modelname je name
         {
             string CurrentPath = Directory.GetCurrentDirectory();
             string publicFolder = modelname + "(" + userName + ")";
-            string fileName = modelname +"("+ userName +")"+ ".csv";
+            string fileName = modelname + "(" + userName + ")" + ".csv";
             string SelectedPath = Path.Combine(CurrentPath, "Users", "publicProblems", publicFolder, fileName);
 
             if (!System.IO.File.Exists(SelectedPath))
@@ -233,9 +241,9 @@ namespace Backend.Controllers
 
             return Ok(resultjson);
         }
-        
+
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model kao i cuvanje povratne vrednosti modela
-        public async Task<ActionResult>PostSave(String modelNames, Boolean publicModel, string Username) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
+        public async Task<ActionResult> PostSave(String modelNames, Boolean publicModel, string Username) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
         {
             if (Username != null)
             {
@@ -244,7 +252,7 @@ namespace Backend.Controllers
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
                 string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
                 string csvFolder = Path.Combine(CurrentPath, "Users", Username, upgradedName);
-                
+
                 if (System.IO.Directory.Exists(csvFolder))
                 {
                     if (System.IO.Directory.Exists(modeldirname))
@@ -304,11 +312,11 @@ namespace Backend.Controllers
                 var worksheet = workbook.Worksheets[0];
                 var layoutOptions = new JsonLayoutOptions();
                 layoutOptions.ArrayAsTable = true;
-                JsonUtility.ImportData(modelSave, worksheet.Cells, 0, 0, layoutOptions); 
+                JsonUtility.ImportData(modelSave, worksheet.Cells, 0, 0, layoutOptions);
 
                 string modelName = "deleteme.csv";
                 string pathToCreate = System.IO.Path.Combine(path, modelName);
-                              
+
                 workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
 
@@ -378,7 +386,7 @@ namespace Backend.Controllers
                 {
                     System.IO.File.Delete(pathToCreate);
                 }
-                file1.Close(); 
+                file1.Close();
                 if (System.IO.File.Exists(pathToCreateHP))
                 {
                     System.IO.File.Delete(pathToCreateHP);
@@ -395,11 +403,11 @@ namespace Backend.Controllers
         {
             int indexDir = 1;
             var upgradedName = "realestate";
-            if(Name != null)
+            if (Name != null)
                 upgradedName = Name.Substring(0, Name.Length - 4);
             //string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
             string CurrentPath = Directory.GetCurrentDirectory();
-            
+
 
             if (Username != null)
             {
@@ -413,12 +421,12 @@ namespace Backend.Controllers
                 else
                 {
                     System.IO.Directory.CreateDirectory(modeldirname);
-                    if(publicModel)
+                    if (publicModel)
                     {
                         string publicName = modelNames + "(" + Username + ")";
                         string publicPath = Path.Combine(CurrentPath, "Users", "publicProblems", publicName);
                         System.IO.Directory.CreateDirectory(publicPath);
-                    }   
+                    }
                     Console.WriteLine("Directory for new Model created successfully!");
                 }
                 /*string modelDirName = upgradedName + "Model" + indexDir;
@@ -438,13 +446,13 @@ namespace Backend.Controllers
                 var pathurl = url + "/pathModel";
                 var pathresponse = await http.PostAsync(pathurl, pathdata);
             }
-            
+
             hiper.Username = Username;
             var hiperjson = System.Text.Json.JsonSerializer.Serialize(hiper);
             var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
             //var url = "http://127.0.0.1:3000/hp";
             var hpurl = url + "/hp";
-            var response = await http.PostAsync(hpurl, data);            
+            var response = await http.PostAsync(hpurl, data);
 
             //                                                                                  hiperparametri                                                                                
             //---------------------------------------------------------------------------------------------------
@@ -454,7 +462,7 @@ namespace Backend.Controllers
             //var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
             //var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
             var dataModel = ""; //mora ovako dok se ne popravi primanje hiperparametara na ML delu
-            if(Username != null)
+            if (Username != null)
             {
                 int index = 1;
                 //string hpName = modelNames + "HP" + index + ".csv";
@@ -478,7 +486,7 @@ namespace Backend.Controllers
                 //string modelName = modelNames + "Model" + index + ".csv";
                 string modelName = "deleteme.csv";
                 string pathToCreate = System.IO.Path.Combine(path, modelName);
-                
+
                 while (System.IO.File.Exists(pathToCreateHP))
                 {
                     index++;
@@ -487,7 +495,7 @@ namespace Backend.Controllers
                     pathToCreate = System.IO.Path.Combine(path, modelName);
                     pathToCreateHP = System.IO.Path.Combine(path, hpName);
                 }
-               
+
                 workbook.Save(pathToCreate, SaveFormat.CSV); //cuvanje modela
                 workbookhp.Save(pathToCreateHP, SaveFormat.CSV); //cuvanje hiperparametara
 
@@ -502,7 +510,7 @@ namespace Backend.Controllers
                 }
 
                 lines.RemoveAll(l => l.Contains("Evaluation Only."));
-                
+
                 string model = modelNames + ".csv";
                 string publicName = modelNames + "(" + Username + ")";
                 string pblmod = publicName + ".csv";
@@ -577,7 +585,7 @@ namespace Backend.Controllers
                 {
                     System.IO.File.Delete(pathToCreate);
                 }
-                
+
             }
             else
                 Console.WriteLine("Niste ulogovani.");
@@ -585,72 +593,103 @@ namespace Backend.Controllers
         }
 
 
+
         [HttpPost("hpNeprijavljen")] //Slanje HP na pajton za neprijavljenog korisnika
         public async Task<ActionResult<Hiperparametri>> PostHp([FromBody] Hiperparametri hiper, string Username, string CsvFile) //treba poslati i ime csv fajla koji je izabran
         {
-            if (Username == null)
+            if (Username == null || Username == "null")
+            {
                 hiper.Username = "unknown";
+                hp = hiper;
+                var hiperjson = System.Text.Json.JsonSerializer.Serialize(hiper);
+                hiperJ = hiperjson;
+                var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
+                //var url = "http://127.0.0.1:3000/hp";
+                var hpurl = url + "/hp";
+                var response = await http.PostAsync(hpurl, data);
+
+                if (CsvFile == "realestate")
+                {
+                    var loadedCsv = await _context.Realestate.ToListAsync(); //lista/json
+                    string jsoncsv = JsonSerializer.Serialize(loadedCsv); //string
+                    string csve = jsoncsv;
+                    var datareg = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+                    var urlcsv = url + "/csvreg";
+                    var responsereg = await http.PostAsync(urlcsv, datareg);
+                }
+                if (CsvFile == "mpg")
+                {
+                    var loadedCsv = await _context.Mpg.ToListAsync(); //lista/json
+                    string jsoncsv = JsonSerializer.Serialize(loadedCsv); //string
+                    string csve = jsoncsv;
+                    var dataclass = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+                    var urlcsv = url + "/csvclass";
+                    var responseclass = await http.PostAsync(urlcsv, dataclass);
+                }
+            }
             else
+            {
                 hiper.Username = Username;
-            hp = hiper;
-            var hiperjson = System.Text.Json.JsonSerializer.Serialize(hiper);
-            hiperJ = hiperjson;
-            var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
-            //var url = "http://127.0.0.1:3000/hp";
-            var hpurl = url + "/hp";
-            var response = await http.PostAsync(hpurl, data);
+                hp = hiper;
+                var hiperjson = System.Text.Json.JsonSerializer.Serialize(hiper);
+                hiperJ = hiperjson;
+                var data = new StringContent(hiperjson, System.Text.Encoding.UTF8, "application/json");
+                //var url = "http://127.0.0.1:3000/hp";
+                var hpurl = url + "/hp";
+                var response = await http.PostAsync(hpurl, data);
 
-            //                                                                                  hiperparametri                                                                                
-            //---------------------------------------------------------------------------------------------------
-            //                                                                                  CsvFile
+                //                                                                                  hiperparametri                                                                                
+                //---------------------------------------------------------------------------------------------------
+                //                                                                                  CsvFile
 
-            //proveriti da li se fajl sa prosledjenim imenom nalazi u privatnim ili javnim datasetovima, primat imaju privatni
+                //proveriti da li se fajl sa prosledjenim imenom nalazi u privatnim ili javnim datasetovima, primat imaju privatni
 
-            string fileName = CsvFile + ".csv";
-            string CurrentPath = Directory.GetCurrentDirectory();
-            string privatePath = Path.Combine(CurrentPath, "Users", Username, CsvFile, fileName);
-            string publicPath = Path.Combine(CurrentPath, "Users", "publicDatasets", CsvFile, fileName);
+                string fileName = CsvFile + ".csv";
+                string CurrentPath = Directory.GetCurrentDirectory();
+                string privatePath = Path.Combine(CurrentPath, "Users", Username, CsvFile, fileName);
+                string publicPath = Path.Combine(CurrentPath, "Users", "publicDatasets", CsvFile, fileName);
 
-            if (System.IO.File.Exists(privatePath))
-            {
-                var csvTable = new DataTable();
-                using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(privatePath)), true))
+                if (System.IO.File.Exists(privatePath))
                 {
-                    csvTable.Load(csvReader);
+                    var csvTable = new DataTable();
+                    using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(privatePath)), true))
+                    {
+                        csvTable.Load(csvReader);
+                    }
+                    string result = string.Empty;
+                    result = JsonConvert.SerializeObject(csvTable);
+
+                    var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result);
+
+                    var datacsv = new StringContent(result, System.Text.Encoding.UTF8, "application/json");
+                    var csvurl = url + "/csv";
+                    var responsecsv = await http.PostAsync(csvurl, datacsv);
                 }
-                string result = string.Empty;
-                result = JsonConvert.SerializeObject(csvTable);
-
-                var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); 
-
-                var datacsv = new StringContent(result, System.Text.Encoding.UTF8, "application/json");
-                var csvurl = url + "/csv";
-                var responsecsv = await http.PostAsync(csvurl, datacsv);
-            }
-            else
-            {
-                var csvTable = new DataTable();
-                using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(publicPath)), true))
+                else
                 {
-                    csvTable.Load(csvReader);
+                    var csvTable = new DataTable();
+                    using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(publicPath)), true))
+                    {
+                        csvTable.Load(csvReader);
+                    }
+                    string result = string.Empty;
+                    result = JsonConvert.SerializeObject(csvTable);
+
+                    var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result);
+
+                    var datacsv = new StringContent(result, System.Text.Encoding.UTF8, "application/json");
+                    var csvurl = url + "/csv";
+                    var responsecsv = await http.PostAsync(csvurl, datacsv);
                 }
-                string result = string.Empty;
-                result = JsonConvert.SerializeObject(csvTable);
-
-                var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result);
-
-                var datacsv = new StringContent(result, System.Text.Encoding.UTF8, "application/json");
-                var csvurl = url + "/csv";
-                var responsecsv = await http.PostAsync(csvurl, datacsv);  
             }
-
             //---------------------------------------------------------------------------------------------------
             //                                                                                  model
             var modelurl = url + "/model";
             HttpResponseMessage httpResponse = await http.GetAsync(modelurl);
-            var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
-            var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
+            var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
+            var dataModel = await httpResponse.Content.ReadAsStringAsync();
             return Ok(model);
+
         }
 
         [HttpPost("csv")] //Slanje CSV na pajton
@@ -688,7 +727,7 @@ namespace Backend.Controllers
                 {
                     System.IO.Directory.CreateDirectory(path);
                     Console.WriteLine("Directory for '{0}' created successfully!", name);
-                
+
                     var workbook = new Workbook();
                     var worksheet = workbook.Worksheets[0];
                     var layoutOptions = new JsonLayoutOptions();
@@ -697,10 +736,10 @@ namespace Backend.Controllers
 
                     //string path = Directory.GetCurrentDirectory() + @"\Users\"+ Username;
                     string names = name + "1" + ".csv";
-                    pathToCreate = System.IO.Path.Combine(path, names); 
+                    pathToCreate = System.IO.Path.Combine(path, names);
 
                     workbook.Save(pathToCreate, SaveFormat.CSV);
-            
+
                     List<String> lines = new List<string>();
                     string line;
                     System.IO.StreamReader file = new System.IO.StreamReader(pathToCreate);
@@ -719,7 +758,7 @@ namespace Backend.Controllers
                         outfile.Write(String.Join(System.Environment.NewLine, lines.ToArray()));
                     }
 
-                    if(publicData)
+                    if (publicData)
                     {
                         if (Directory.Exists(publicPath))
                             Console.WriteLine("There is already public dataset with that name.");
@@ -750,7 +789,7 @@ namespace Backend.Controllers
             return Ok(stat);
         }
 
-  
+
         [HttpPost("predictionCsv")] //Slanje csv fajla za predikciju na pajton i primanje predikcije i prosledjivanje na front preko responsa.
         [DisableRequestSizeLimit]
         //[Obsolete]
@@ -764,11 +803,11 @@ namespace Backend.Controllers
             //var url = "http://127.0.0.1:3000/predictionCsv"; //slanje csv-a za prediktovanje na pajton
             var urlpred = url + "/predictionCsv";
             var response = await http.PostAsync(urlpred, data);
-            
+
             var predurl = url + "/prediction";
             HttpResponseMessage httpResponse = await http.GetAsync(predurl); //rezultati predikcije
             var predikcija = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
-            
+
             return Ok(predikcija);
         }
 
@@ -786,7 +825,7 @@ namespace Backend.Controllers
             string csvName = dirname + ".csv"; //csv iz kojeg je kreiran model
             string csvPath = Path.Combine(CurrentPath, "Users", Username, dirname, csvName); //putanja do csv-a
 
-            if(!System.IO.File.Exists(csvPath))
+            if (!System.IO.File.Exists(csvPath))
             {
                 csvName = dirname + "csv.csv";
                 csvPath = Path.Combine(CurrentPath, "Users", Username, dirname, csvName);
@@ -840,7 +879,7 @@ namespace Backend.Controllers
 
             return Ok(resultjsonhp);
         }
-        
+
         [HttpPost("stats")] //Slanje Stats na pajton
         public async Task<ActionResult<Statistika>> PostStat(Statistika stat)
         {
@@ -855,7 +894,7 @@ namespace Backend.Controllers
 
         [HttpPost("csvFile")]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult>PostcsvFile([FromForm]IFormFile csvFile, string Username)
+        public async Task<IActionResult> PostcsvFile([FromForm] IFormFile csvFile, string Username)
         {
             string currentPath = Directory.GetCurrentDirectory();
             string ime = csvFile.FileName;
