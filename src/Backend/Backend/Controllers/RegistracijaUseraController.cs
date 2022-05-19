@@ -95,12 +95,28 @@ namespace Backend.Controllers
                 string pathToDele = Path.Combine(CurrentPath, "Users", Username, name);
                 if (System.IO.File.Exists(pathToDelete))
                 {
+                    string publicDelete = Path.Combine(CurrentPath, "Users", "publicDatasets", name, fileName);
+                    string publicDele = Path.Combine(CurrentPath, "Users", "publicDatasets", name);
+                    if (System.IO.File.Exists(publicDelete))
+                    {
+                        FileInfo FileVol = new FileInfo(publicDelete);
+                        string fileLength = FileVol.Length.ToString();
+
+                        FileInfo FileVol1 = new FileInfo(pathToDelete);
+                        string fileLength1 = FileVol1.Length.ToString();
+
+                        if (FileVol1.Length == FileVol.Length)
+                        {
+                            System.IO.Directory.Delete(publicDele, true);
+                        }
+                    }
+
                     System.IO.File.Delete(pathToDelete);
 
                     if (!Directory.EnumerateFileSystemEntries(pathToDele).Any())
                     {
                         System.IO.Directory.Delete(pathToDele, true);
-                    }
+                    } 
                 }
                                 
                 return Ok("Uspesno uklonjen samo csv fajl." + pathToDelete);
