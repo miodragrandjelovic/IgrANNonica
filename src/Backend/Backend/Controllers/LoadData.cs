@@ -288,14 +288,13 @@ namespace Backend.Controllers
                     }
                     Console.WriteLine("Directory for new Model created successfully!");
                 }
-                string saljemPath = CurrentPath + "\\Users\\" + Username + "\\" + upgradedName + "\\" + modelNames;
+                string saljemPath = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
                 var pathjson = System.Text.Json.JsonSerializer.Serialize(saljemPath);
                 var pathdata = new StringContent(saljemPath, System.Text.Encoding.UTF8, "application/json");
                 var pathurl = url + "/savemodel";
                 var pathresponse = await http.PostAsync(pathurl, pathdata);
 
 
-                //string hpName = modelNames + "HP.csv"; //treba da bude deletemeHP.csv pa da se obrise kada se skloni evaluate isto kao za model
                 string hpName = "deletemeHP.csv";
                 string path1 = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
                 string pathToCreateHP = System.IO.Path.Combine(path1, hpName);
