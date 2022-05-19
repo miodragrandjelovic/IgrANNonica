@@ -2,6 +2,7 @@ import { Component, OnInit , Output, EventEmitter} from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import * as myUrls from 'src/app/urls';
+import {RefreshService} from './usermodels.service'
 
 interface zapamceniModeli {
   name: String,
@@ -20,7 +21,8 @@ export class UsermodelsComponent implements OnInit {
   @Output() sendResults = new EventEmitter<any>();
   //ovim saljemo nazad ka hyperparamteres komponenti model
 
-  constructor(private http: HttpClient,private modalService: NgbModal){
+  constructor(private http: HttpClient, private refreshModels: RefreshService,
+    private modalService: NgbModal){
     
   }
   public url = myUrls.url;
@@ -30,6 +32,12 @@ export class UsermodelsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getModels();
+    this.refreshModels.messageSubject.subscribe({
+      next: x => {
+        console.log("REFRESH COMPONENTE");
+          this.getModels();
+      }
+  });
   }
 
   getModels()
