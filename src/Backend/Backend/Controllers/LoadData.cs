@@ -606,8 +606,6 @@ namespace Backend.Controllers
 
             //proveriti da li se fajl sa prosledjenim imenom nalazi u privatnim ili javnim datasetovima, primat imaju privatni
 
-            
-
             string fileName = CsvFile + ".csv";
             string CurrentPath = Directory.GetCurrentDirectory();
             string privatePath = Path.Combine(CurrentPath, "Users", Username, CsvFile, fileName);
@@ -616,42 +614,35 @@ namespace Backend.Controllers
             if (System.IO.Directory.Exists(privatePath))
             {
                 var csvTable = new DataTable();
-                using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPaths)), true))
+                using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(privatePath)), true))
                 {
                     csvTable.Load(csvReader);
                 }
-                //csvTable.Rows.RemoveAt(csvTable.Rows.Count - 1);
                 string result = string.Empty;
                 result = JsonConvert.SerializeObject(csvTable);
 
-                var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); //json
+                var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); 
 
                 var datacsv = new StringContent(result, System.Text.Encoding.UTF8, "application/json");
-                //var url = "http://127.0.0.1:3000/csv";
                 var csvurl = url + "/csv";
                 var responsecsv = await http.PostAsync(csvurl, datacsv);
             }
             else
             {
-                /*
                 var csvTable = new DataTable();
-                using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPaths)), true))
+                using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(publicPath)), true))
                 {
                     csvTable.Load(csvReader);
                 }
-                //csvTable.Rows.RemoveAt(csvTable.Rows.Count - 1);
                 string result = string.Empty;
                 result = JsonConvert.SerializeObject(csvTable);
 
-                var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); //json
+                var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result);
 
                 var datacsv = new StringContent(result, System.Text.Encoding.UTF8, "application/json");
-                //var url = "http://127.0.0.1:3000/csv";
                 var csvurl = url + "/csv";
-                var responsecsv = await http.PostAsync(csvurl, datacsv);
-                */
+                var responsecsv = await http.PostAsync(csvurl, datacsv);  
             }
-
 
             //---------------------------------------------------------------------------------------------------
             //                                                                                  model
@@ -659,9 +650,7 @@ namespace Backend.Controllers
             HttpResponseMessage httpResponse = await http.GetAsync(modelurl);
             var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); 
             var dataModel = await httpResponse.Content.ReadAsStringAsync(); 
-            //var dataModel = ""; //mora ovako dok se ne popravi primanje hiperparametara na ML delu
-            modelSave = dataModel;
-            return Ok(model);//model se vraca ali dok se ne popravi na ML-u to mora ovako
+            return Ok(model);
         }
 
         [HttpPost("csv")] //Slanje CSV na pajton

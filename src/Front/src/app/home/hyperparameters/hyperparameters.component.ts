@@ -65,7 +65,7 @@ export class HyperparametersComponent implements OnInit {
   value2: number = 16;
   value3: number = 50;
   //dodato za default vrednosti
-  lrate: number = 0.00001;
+  lrate: number = 0.001;
   activation: string = "sigmoid";
   regularization: string = "none";
   regularizationRate: number = 0;
@@ -289,7 +289,7 @@ export class HyperparametersComponent implements OnInit {
       missingValues: this.missingValues,
       columNames: this.columNames
     } 
-
+    //var chosenDataset = data; //ovde skladistiti ime izabranog csv-a u delu load data kako bi resili pitanje konkurentnosti
     var loggedUsername = sessionStorage.getItem('username');
     this.http.post(this.url + '/api/LoadData/hpNeprijavljen?Username='+loggedUsername, myreq).subscribe(result => {
     
