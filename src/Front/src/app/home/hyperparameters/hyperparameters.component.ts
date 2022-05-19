@@ -92,8 +92,8 @@ export class HyperparametersComponent implements OnInit {
   show: boolean = false;
 
   options1: Options = {
-    floor: 0,
-    ceil: 100,
+    floor: 5,
+    ceil: 95,
     step: 5
   };
   
@@ -106,8 +106,8 @@ export class HyperparametersComponent implements OnInit {
   };
 
   options3: Options = {
-    floor: 0,
-    ceil: 100,
+    floor: 5,
+    ceil: 95,
     step: 5
   };
 

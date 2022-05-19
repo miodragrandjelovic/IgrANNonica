@@ -205,7 +205,14 @@ export class CsvComponent implements OnInit {
             defFileName = defFileName.replace(".csv","");
             //alert("Naziv je -"+defFileName+"-");
             //set filename
-            this.datasetTitle = defFileName;
+
+            //alert("Naslov je trenutno "+this.datasetTitle);
+            if (this.datasetTitle == "")
+            {
+                //alert("Prazno ime");
+                this.datasetTitle = defFileName;
+            }
+            
             this.onemogucenoIme = false;
 
             
