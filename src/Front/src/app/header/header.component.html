@@ -1,7 +1,7 @@
 
 <!--///////////////////NAVBAR////////////////-->
 
-<nav class="navbar navbar-expand-lg navbar-dark" role="navigation" style="height: 15vh;">
+<nav class="navbar navbar-expand-lg navbar-dark" role="navigation" style="min-height: 15vh;height: fit-content;">
   <div class="container-fluid">
     <!--<a class="navbar-brand" href="#"></a> sta je ovo?? -->
     <a href="#" style="width:fit-content;"><img id="logo" class="rounded float-start img-fluid navbar-logo" src="assets/images/logo_igrannonica_blank.png"></a>
@@ -22,11 +22,11 @@
         <li id="aboutPage" class="nav-item" (click)="onSelect('aboutPage')">
           <a class="nav-link active" aria-current="page"  [routerLink]="['/about']" [style.color]="selectedIndex==='aboutPage' ? '#03A9F4' : ''">Learn More</a>
         </li>
-        <li class="nav-item" *ngIf="!session || (session && profilService.user)" >
-          <a  class="nav-link active"  aria-current="page" role="button" (click)="openLogin(contentLogin)" [style.color]="selectedIndex==='aboutPage' ? '#03A9F4' : ''">Login</a>
+        <li class="nav-item" *ngIf="!session || (session && profilService.user)">
+          <a  class="nav-link active"  aria-current="page" role="button" (click)="openLogin(contentLogin)">Login</a>
         </li>
         <li class="nav-item" *ngIf="!session || (session && profilService.user)">
-          <a class="nav-link active"  aria-current="page" role="button" (click)="openRegister(contentRegister)" [style.color]="selectedIndex==='aboutPage' ? '#03A9F4' : ''">Sign up</a>
+          <a class="nav-link active"  aria-current="page" role="button" (click)="openRegister(contentRegister)">Sign up</a>
         </li>
         <li ngbDropdown class="nav-item dropdown"  *ngIf="session && !profilService.user ">
           <a ngbDropdownToggle   class="nav-link dropdown-toggle"  data-bs-toggle="dropdown" aria-current="page" style="cursor: pointer;" [style.color] = "selectedIndex==='myProfile' ? '#03A9F4' : ''"><i-bs name="person-circle" width="25" height="25" [style.color] = "selectedIndex==='myProfile' ? '#03A9F4' : ''"></i-bs> {{loggedUser}}</a>
