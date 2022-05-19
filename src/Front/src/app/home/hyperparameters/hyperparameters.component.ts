@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/loading/loading.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import * as myUrls from 'src/app/urls';
+import { UsermodelsComponent } from './usermodels/usermodels.component';
 interface RequestHyperparameters {
   learningRate: number,
   epoch: number,
@@ -50,6 +51,7 @@ export class HyperparametersComponent implements OnInit {
 
   @ViewChild(GraphicComponent) graphic: GraphicComponent;
 
+  @ViewChild(UsermodelsComponent) child:UsermodelsComponent;
   inputCheckBoxes : Array<CheckBox> = [];
   selectedCheckBoxes: Array<CheckBox> = [];
   properties: Array<string> = [];
@@ -423,6 +425,8 @@ export class HyperparametersComponent implements OnInit {
         publicModel: this.modelVisibility=='public' ? true : false
       }).subscribe(result => {
         console.log(result);
+
+        this.child.getModels();
       });
     }
 

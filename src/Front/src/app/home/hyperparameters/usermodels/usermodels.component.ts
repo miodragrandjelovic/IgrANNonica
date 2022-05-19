@@ -24,6 +24,7 @@ export class UsermodelsComponent implements OnInit {
 
   getModels()
   {
+    console.log('okida se');
     this.http.get<any>(this.url + '/api/Python/savedModels').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
             console.log(result);
             this.modelsNames=result;
