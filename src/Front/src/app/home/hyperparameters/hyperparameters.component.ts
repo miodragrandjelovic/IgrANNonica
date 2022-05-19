@@ -8,6 +8,7 @@ import { MessageService } from '../home.service';
 import { GraphicComponent } from '../../graphic/graphic.component';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/loading/loading.service';
+import { RefreshService } from 'src/app/home/hyperparameters/usermodels/usermodels.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import * as myUrls from 'src/app/urls';
 import { UsermodelsComponent } from './usermodels/usermodels.component';
@@ -54,7 +55,7 @@ export class HyperparametersComponent implements OnInit {
 
   @ViewChild(GraphicComponent) graphic: GraphicComponent;
 
-  @ViewChild(UsermodelsComponent) child:UsermodelsComponent;
+  //@ViewChild(UsermodelsComponent) child:UsermodelsComponent;
 
   inputCheckBoxes : Array<CheckBox> = [];
   selectedCheckBoxes: Array<CheckBox> = [];
@@ -122,7 +123,8 @@ export class HyperparametersComponent implements OnInit {
   hyperparametersForm!: FormGroup;
   onemogucenSave:boolean;
 
-  constructor(private http: HttpClient, public spiner:LoadingService,private toastr:ToastrService,private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal, private csvservis: CsvService) {
+  constructor(private http: HttpClient, public spiner:LoadingService, public refreshModels : RefreshService,
+    private toastr:ToastrService,private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal, private csvservis: CsvService) {
     Chart.register(...registerables);
     Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
    } 
@@ -464,6 +466,7 @@ export class HyperparametersComponent implements OnInit {
         // ovde treba da se pozove refresh usermodels komponente koja se nalazi u predikcija po modelu !!
         // medjutim ovo vise nije child, pa ne moze ovako!
         //this.child.ngOnInit();
+        this.refreshModels.sayMessage(1);
       }, error=>{
         this.toastr.error("Could not save model, please try again!");
       });
