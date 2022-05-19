@@ -55,6 +55,7 @@ export class HyperparametersComponent implements OnInit {
   @ViewChild(GraphicComponent) graphic: GraphicComponent;
 
   @ViewChild(UsermodelsComponent) child:UsermodelsComponent;
+
   inputCheckBoxes : Array<CheckBox> = [];
   selectedCheckBoxes: Array<CheckBox> = [];
   properties: Array<string> = [];
@@ -460,7 +461,9 @@ export class HyperparametersComponent implements OnInit {
         //korisnik treba da bude obavesten o tome da je uspesno sacuvan model
         this.toastr.success('Model saved successfuly!');
 
-        this.child.ngOnInit();
+        // ovde treba da se pozove refresh usermodels komponente koja se nalazi u predikcija po modelu !!
+        // medjutim ovo vise nije child, pa ne moze ovako!
+        //this.child.ngOnInit();
       }, error=>{
         this.toastr.error("Could not save model, please try again!");
       });
