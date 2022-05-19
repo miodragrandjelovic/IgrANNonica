@@ -586,7 +586,7 @@ namespace Backend.Controllers
 
 
         [HttpPost("hpNeprijavljen")] //Slanje HP na pajton za neprijavljenog korisnika
-        public async Task<ActionResult<Hiperparametri>> PostHp([FromBody] Hiperparametri hiper, string Username) 
+        public async Task<ActionResult<Hiperparametri>> PostHp([FromBody] Hiperparametri hiper, string Username, string CsvFile) //treba poslati i ime csv fajla koji je izabran
         {
             if (Username == null)
                 hiper.Username = "unknown";
@@ -601,6 +601,58 @@ namespace Backend.Controllers
             var response = await http.PostAsync(hpurl, data);
 
             //                                                                                  hiperparametri                                                                                
+            //---------------------------------------------------------------------------------------------------
+            //                                                                                  CsvFile
+
+            //proveriti da li se fajl sa prosledjenim imenom nalazi u privatnim ili javnim datasetovima, primat imaju privatni
+
+            
+
+            string fileName = CsvFile + ".csv";
+            string CurrentPath = Directory.GetCurrentDirectory();
+            string privatePath = Path.Combine(CurrentPath, "Users", Username, CsvFile, fileName);
+            string publicPath = Path.Combine(CurrentPath, "Users", "publicDatasets", CsvFile, fileName);
+
+            if (System.IO.Directory.Exists(privatePath))
+            {
+                var csvTable = new DataTable();
+                using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPaths)), true))
+                {
+                    csvTable.Load(csvReader);
+                }
+                //csvTable.Rows.RemoveAt(csvTable.Rows.Count - 1);
+                string result = string.Empty;
+                result = JsonConvert.SerializeObject(csvTable);
+
+                var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); //json
+
+                var datacsv = new StringContent(result, System.Text.Encoding.UTF8, "application/json");
+                //var url = "http://127.0.0.1:3000/csv";
+                var csvurl = url + "/csv";
+                var responsecsv = await http.PostAsync(csvurl, datacsv);
+            }
+            else
+            {
+                /*
+                var csvTable = new DataTable();
+                using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPaths)), true))
+                {
+                    csvTable.Load(csvReader);
+                }
+                //csvTable.Rows.RemoveAt(csvTable.Rows.Count - 1);
+                string result = string.Empty;
+                result = JsonConvert.SerializeObject(csvTable);
+
+                var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result); //json
+
+                var datacsv = new StringContent(result, System.Text.Encoding.UTF8, "application/json");
+                //var url = "http://127.0.0.1:3000/csv";
+                var csvurl = url + "/csv";
+                var responsecsv = await http.PostAsync(csvurl, datacsv);
+                */
+            }
+
+
             //---------------------------------------------------------------------------------------------------
             //                                                                                  model
             var modelurl = url + "/model";
