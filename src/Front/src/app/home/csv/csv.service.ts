@@ -8,11 +8,19 @@ import * as myUrls from 'src/app/urls';
 })
 export class CsvService {
 
+  datasetname:string
   constructor(private http: HttpClient) { }
   public url = myUrls.url;
   getPreloadCsv() : Observable<PreloadCsv>
   {
     return this.http.get<PreloadCsv>(this.url + '/api/Python/preloadCsv',{});
-
+  }
+  setDatasetname(data:string)
+  {
+    this.datasetname = data
+  }
+  getDatasetname()
+  {
+    return this.datasetname
   }
 }

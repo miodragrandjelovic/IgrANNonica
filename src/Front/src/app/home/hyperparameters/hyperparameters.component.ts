@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/loading/loading.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import * as myUrls from 'src/app/urls';
+import { CsvService} from '../csv/csv.service'
 interface RequestHyperparameters {
   learningRate: number,
   epoch: number,
@@ -114,7 +115,7 @@ export class HyperparametersComponent implements OnInit {
   hyperparametersForm!: FormGroup;
 
 
-  constructor(private http: HttpClient, public spiner:LoadingService, private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal) {
+  constructor(private http: HttpClient, public spiner:LoadingService, private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal, private csvservis: CsvService) {
     Chart.register(...registerables);
     Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
    } 
@@ -289,9 +290,9 @@ export class HyperparametersComponent implements OnInit {
       missingValues: this.missingValues,
       columNames: this.columNames
     } 
-    //var chosenDataset = data; //ovde skladistiti ime izabranog csv-a u delu load data kako bi resili pitanje konkurentnosti
+    var chosenDataset = this.csvservis.getDatasetname(); //ovde skladistiti ime izabranog csv-a u delu load data kako bi resili pitanje konkurentnosti
     var loggedUsername = sessionStorage.getItem('username');
-    this.http.post(this.url + '/api/LoadData/hpNeprijavljen?Username='+loggedUsername, myreq).subscribe(result => {
+    this.http.post(this.url + '/api/LoadData/hpNeprijavljen?Username='+loggedUsername+'&CsvFile='+chosenDataset, myreq).subscribe(result => {
     
       console.log("Rezultat slanja HP treninga je "  + result);
       

@@ -611,7 +611,7 @@ namespace Backend.Controllers
             string privatePath = Path.Combine(CurrentPath, "Users", Username, CsvFile, fileName);
             string publicPath = Path.Combine(CurrentPath, "Users", "publicDatasets", CsvFile, fileName);
 
-            if (System.IO.Directory.Exists(privatePath))
+            if (System.IO.File.Exists(privatePath))
             {
                 var csvTable = new DataTable();
                 using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(privatePath)), true))
