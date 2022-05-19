@@ -56,6 +56,7 @@ export class HeaderComponent implements OnInit {
     });
 
     this.isMenuCollapsed = true;
+    this.selectedIndex = "homePage";
   }
 
 
@@ -193,6 +194,7 @@ export class HeaderComponent implements OnInit {
     this.selectedIndex = "";
     this.isMenuCollapsed = true;
     this.prijavaService.logout();
+    this.selectedIndex = "homePage";
   }
 
 
