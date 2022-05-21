@@ -18,7 +18,7 @@ export class ParametersService {
         return this.params$.asObservable();
     }
     setParamsObs(params: string) {
-      console.log('Setovani hiperparametri: ', params);
+    //  console.log('Setovani hiperparametri: ', params);
       this.params$.next(params);
     }
 

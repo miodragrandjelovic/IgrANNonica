@@ -46,7 +46,7 @@ export class TableComponent implements OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('IZMENJENO');
+ //   console.log('IZMENJENO');
 
     this.dataLength = this.result.length;
     this.header = [];
@@ -215,13 +215,13 @@ export class TableComponent implements OnChanges {
             this.searchData.push(this.allDataCopy1[i])
         }
         this.allDataCopy1=this.searchData;
-        console.log("Idemo1");
-        console.log(this.allDataCopy1);
+      //  console.log("Idemo1");
+     //   console.log(this.allDataCopy1);
       }
 
     }
-    console.log("Idemo2");
-    console.log(this.allDataCopy1);
+   // console.log("Idemo2");
+  //  console.log(this.allDataCopy1);
     this.allData=this.allDataCopy1;
     this.dataLength=this.allData.length;
     this.changePage();  

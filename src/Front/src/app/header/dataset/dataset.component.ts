@@ -23,9 +23,9 @@ export class DatasetComponent implements OnInit {
   ngOnInit(): void {
     var loggedUsername = sessionStorage.getItem('username');
         this.http.get<any>(this.url + '/api/Python/savedCsvs?Username='+loggedUsername).subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
-            console.log(result);
+            //console.log(result);
             this.datasetsNames=result;
-            console.log(this.datasetsNames);
+           // console.log(this.datasetsNames);
         });
     
 
@@ -63,7 +63,7 @@ export class DatasetComponent implements OnInit {
     selectChange(event:any){
 
         this.selectedValue=event.target.id;
-        console.log('ovo je kliknuto za naziv '+this.selectedValue);
+       // console.log('ovo je kliknuto za naziv '+this.selectedValue);
         this.posaljiNaziv(this.selectedValue);
     }
     
@@ -73,7 +73,7 @@ export class DatasetComponent implements OnInit {
         name: naziv
       }).subscribe(result=>{
         
-        console.log(result);
+      //  console.log(result);
         var map = new Map<string, string[]>();
     
         for(var i = 0; i < result.length; i++) {
@@ -92,7 +92,7 @@ export class DatasetComponent implements OnInit {
             }
           }
         }
-        console.log(map);
+      //  console.log(map);
         this.map=map;
         this.array2d=Array.from(map.values());
     

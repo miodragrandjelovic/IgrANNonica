@@ -304,7 +304,7 @@ export class HyperparametersComponent implements OnInit {
     var loggedUsername = sessionStorage.getItem('username');
     this.http.post(this.url + '/api/LoadData/hpNeprijavljen?Username='+loggedUsername+'&CsvFile='+chosenDataset, myreq).subscribe(result => {
     
-      console.log("Rezultat slanja HP treninga je "  + result);
+     // console.log("Rezultat slanja HP treninga je "  + result);
       
       this.scrollToResults("prikazRezutata");
 
@@ -335,7 +335,7 @@ export class HyperparametersComponent implements OnInit {
           isChecked: true
         }
         this.inputCheckBoxes.push(object);
-        console.log(this.inputCheckBoxes);
+        //console.log(this.inputCheckBoxes);
       }
     
       this.fetchSelectedGraphics();
