@@ -37,7 +37,7 @@ export class PredictionComponent implements OnInit, OnChanges {
   }
 
   updatePred() {
-    console.log(this.pred);
+  //  console.log(this.pred);
     this.predArray = [];
     this.labelArray = [];
     this.x = [];
@@ -60,7 +60,7 @@ export class PredictionComponent implements OnInit, OnChanges {
   }
 
   loadPred() {
-    console.log(this.pred);
+   // console.log(this.pred);
     this.predArray = [];
     this.labelArray = [];
     this.x = [];
@@ -75,8 +75,8 @@ export class PredictionComponent implements OnInit, OnChanges {
     this.min = Math.min(0, ...this.predArray, ...this.labelArray);
     this.max = Math.max(...this.predArray, ...this.labelArray);
     let step = (this.max - this.min) / 10; 
-    console.log(data);
-    console.log(data1);
+   // console.log(data);
+   // console.log(data1);
 
     this.ctx = document.getElementById('pred') as HTMLCanvasElement;
     this.chart = new Chart(this.ctx, {

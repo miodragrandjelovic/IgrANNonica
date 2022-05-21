@@ -10,9 +10,9 @@ export class DatasetService {
     getDatasets() {     
         var loggedUsername = sessionStorage.getItem('username');
         this.http.get<any>(this.url + '/api/Python/savedCsvs?Username'+loggedUsername).subscribe(result => {
-            console.log(result);
+          //  console.log(result);
             this.datasetsNames=result;
-            console.log(this.datasetsNames);
+          //  console.log(this.datasetsNames);
         });
     }
 }
