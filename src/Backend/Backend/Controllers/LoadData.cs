@@ -42,7 +42,7 @@ namespace Backend.Controllers
             public string modelsave { get; set; } = string.Empty;
         }
 
-        Dictionary<string, SaveData> dict_save = new Dictionary<string, SaveData>(99);
+        public static Dictionary<string, SaveData> dict_save = new Dictionary<string, SaveData>(99);
 
         private readonly IConfiguration _configuration;
         private readonly UserDbContext _context;
@@ -253,24 +253,25 @@ namespace Backend.Controllers
         }
 
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model kao i cuvanje povratne vrednosti modela
-        public async Task<ActionResult> PostSave(String modelNames, Boolean publicModel, string Username) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
+        public async Task<ActionResult> PostSave(String modelNames, Boolean publicModel, string Username, string upgradedName) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
         {                                                                                                 //Poslati i ime csv fajla sa kojim je treniran model kako bi sacuvali u pravom folderu
+            var userNu = 0;
             if (Username != null)
             {
                 Console.WriteLine("PRE FOR PETLJE COUNT = " + dict_save.Count);
                 for (int i = 0; i < dict_save.Count; i++)
                 {
-                    Console.WriteLine("UNUTAR FOR PETLJE"); //NE ULAZI OVDE YOPSTE?!
+                    Console.WriteLine("UNUTAR FOR PETLJE"); //NE ULAZI OVDE UOPSTE?!
                     if (dict_save.ElementAt(i).Key == Username)
                     {
                         Console.WriteLine("ZA VREME IF");
-                        Console.WriteLine("Korisnik " + dict_save.ElementAt(i).Key + " Hiperparametri " + dict_save.ElementAt(i).Value.hiperj + " Sacuvani Model " + dict_save.ElementAt(i).Value.modelsave);
+                        Console.WriteLine("\nKorisnik " + dict_save.ElementAt(i).Key + "\nHiperparametri " + dict_save.ElementAt(i).Value.hiperj + "\nSacuvani Model " + dict_save.ElementAt(i).Value.modelsave);
+                        userNu = i;
                     }
                     Console.WriteLine("POSLE IF");
                 }
                 Console.WriteLine("POSLE FOR PETLJE");
                 string CurrentPath = Directory.GetCurrentDirectory();
-                var upgradedName = Name;
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
                 string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
                 string csvFolder = Path.Combine(CurrentPath, "Users", Username, upgradedName);
@@ -326,14 +327,14 @@ namespace Backend.Controllers
                 var worksheethp = workbookhp.Worksheets[0];
                 var layoutOptionshp = new JsonLayoutOptions();
                 layoutOptionshp.ArrayAsTable = true;
-                JsonUtility.ImportData(hiperJ, worksheethp.Cells, 0, 0, layoutOptionshp);//----------------------------------
+                JsonUtility.ImportData(dict_save.ElementAt(userNu).Value.hiperj, worksheethp.Cells, 0, 0, layoutOptionshp);//----------------------------------
 
 
                 var workbook = new Workbook();
                 var worksheet = workbook.Worksheets[0];
                 var layoutOptions = new JsonLayoutOptions();
                 layoutOptions.ArrayAsTable = true;
-                JsonUtility.ImportData(modelSave, worksheet.Cells, 0, 0, layoutOptions);//----------------------------------
+                JsonUtility.ImportData(dict_save.ElementAt(userNu).Value.modelsave, worksheet.Cells, 0, 0, layoutOptions);//----------------------------------
 
                 string modelName = "deleteme.csv";
                 string pathToCreate = System.IO.Path.Combine(path, modelNames, modelName);
