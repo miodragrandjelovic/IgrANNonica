@@ -94,7 +94,7 @@ export class HyperparametersComponent implements OnInit {
   //
   activationFunctions:Array<any>=[];
   modelName: any = '';
-  modelVisibility: any = 'public';
+  modelVisibility: any = 'private';
 
   session:any;
   prikazGrafika=false;
