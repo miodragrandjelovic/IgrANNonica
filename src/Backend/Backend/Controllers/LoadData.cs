@@ -245,7 +245,7 @@ namespace Backend.Controllers
 
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model kao i cuvanje povratne vrednosti modela
         public async Task<ActionResult> PostSave(String modelNames, Boolean publicModel, string Username) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
-        {
+        {                                                                                                 //Poslati i ime csv fajla sa kojim je treniran model kako bi sacuvali u pravom folderu
             if (Username != null)
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
@@ -408,7 +408,7 @@ namespace Backend.Controllers
             //string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
             string CurrentPath = Directory.GetCurrentDirectory();
 
-
+            //hiperj i savedmodel da bude dictionary
             if (Username != null)
             {
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
