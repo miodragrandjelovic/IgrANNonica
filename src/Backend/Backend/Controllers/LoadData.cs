@@ -254,23 +254,17 @@ namespace Backend.Controllers
 
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model kao i cuvanje povratne vrednosti modela
         public async Task<ActionResult> PostSave(String modelNames, Boolean publicModel, string Username, string upgradedName) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
-        {                                                                                                 //Poslati i ime csv fajla sa kojim je treniran model kako bi sacuvali u pravom folderu
+        {                                                                                                                      //Poslati i ime csv fajla sa kojim je treniran model kako bi sacuvali u pravom folderu
             var userNu = 0;
             if (Username != null)
             {
-                Console.WriteLine("PRE FOR PETLJE COUNT = " + dict_save.Count);
                 for (int i = 0; i < dict_save.Count; i++)
                 {
-                    Console.WriteLine("UNUTAR FOR PETLJE"); //NE ULAZI OVDE UOPSTE?!
                     if (dict_save.ElementAt(i).Key == Username)
                     {
-                        Console.WriteLine("ZA VREME IF");
-                        Console.WriteLine("\nKorisnik " + dict_save.ElementAt(i).Key + "\nHiperparametri " + dict_save.ElementAt(i).Value.hiperj + "\nSacuvani Model " + dict_save.ElementAt(i).Value.modelsave);
                         userNu = i;
                     }
-                    Console.WriteLine("POSLE IF");
                 }
-                Console.WriteLine("POSLE FOR PETLJE");
                 string CurrentPath = Directory.GetCurrentDirectory();
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
                 string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
@@ -327,14 +321,14 @@ namespace Backend.Controllers
                 var worksheethp = workbookhp.Worksheets[0];
                 var layoutOptionshp = new JsonLayoutOptions();
                 layoutOptionshp.ArrayAsTable = true;
-                JsonUtility.ImportData(dict_save.ElementAt(userNu).Value.hiperj, worksheethp.Cells, 0, 0, layoutOptionshp);//----------------------------------
+                JsonUtility.ImportData(dict_save.ElementAt(userNu).Value.hiperj, worksheethp.Cells, 0, 0, layoutOptionshp);
 
 
                 var workbook = new Workbook();
                 var worksheet = workbook.Worksheets[0];
                 var layoutOptions = new JsonLayoutOptions();
                 layoutOptions.ArrayAsTable = true;
-                JsonUtility.ImportData(dict_save.ElementAt(userNu).Value.modelsave, worksheet.Cells, 0, 0, layoutOptions);//----------------------------------
+                JsonUtility.ImportData(dict_save.ElementAt(userNu).Value.modelsave, worksheet.Cells, 0, 0, layoutOptions);
 
                 string modelName = "deleteme.csv";
                 string pathToCreate = System.IO.Path.Combine(path, modelNames, modelName);
@@ -349,7 +343,6 @@ namespace Backend.Controllers
                 while ((line = file.ReadLine()) != null)
                 {
                     lines.Add(line);
-                    //Console.WriteLine(line);
                 }
 
                 lines.RemoveAll(l => l.Contains("Evaluation Only."));
@@ -720,15 +713,14 @@ namespace Backend.Controllers
             var br = 0;
             for (int i = 0; i < dict_save.Count; i++)
             {
-                //Console.WriteLine("Key " + dict_save.ElementAt(i).Key + " Hiperj " + dict_save.ElementAt(i).Value.hiperj + " ModelSave " + dict_save.ElementAt(i).Value.modelsave);
                 if(dict_save.ElementAt(i).Key == Username)
                 {
-                    dict_save[Username] = sd;
+                    dict_save[Username] = sd; //ako je korisnik ranije vec trenirao model zameniti vrednosti od proslog sacuvanog modela sa novim
                     br = 1;
                 }
             }
             if(br == 0)
-                dict_save.Add(Username, sd);
+                dict_save.Add(Username, sd); //ako korisnik prvi put hoce da sacuva model ubaciti vrednosti njegovog modela pored njegovog imena
 
             return Ok(model);
         }
