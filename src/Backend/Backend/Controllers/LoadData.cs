@@ -35,6 +35,15 @@ namespace Backend.Controllers
 
         public static string hiperJ;
         public static string modelSave;
+
+        public class SaveData
+        {
+            public string hiperj { get; set; } = string.Empty;
+            public string modelsave { get; set; } = string.Empty;
+        }
+
+        Dictionary<string, SaveData> dict_save = new Dictionary<string, SaveData>(99);
+
         private readonly IConfiguration _configuration;
         private readonly UserDbContext _context;
         public LoadData(UserDbContext context, IConfiguration configuration)
@@ -248,6 +257,18 @@ namespace Backend.Controllers
         {                                                                                                 //Poslati i ime csv fajla sa kojim je treniran model kako bi sacuvali u pravom folderu
             if (Username != null)
             {
+                Console.WriteLine("PRE FOR PETLJE COUNT = " + dict_save.Count);
+                for (int i = 0; i < dict_save.Count; i++)
+                {
+                    Console.WriteLine("UNUTAR FOR PETLJE"); //NE ULAZI OVDE YOPSTE?!
+                    if (dict_save.ElementAt(i).Key == Username)
+                    {
+                        Console.WriteLine("ZA VREME IF");
+                        Console.WriteLine("Korisnik " + dict_save.ElementAt(i).Key + " Hiperparametri " + dict_save.ElementAt(i).Value.hiperj + " Sacuvani Model " + dict_save.ElementAt(i).Value.modelsave);
+                    }
+                    Console.WriteLine("POSLE IF");
+                }
+                Console.WriteLine("POSLE FOR PETLJE");
                 string CurrentPath = Directory.GetCurrentDirectory();
                 var upgradedName = Name;
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
@@ -305,14 +326,14 @@ namespace Backend.Controllers
                 var worksheethp = workbookhp.Worksheets[0];
                 var layoutOptionshp = new JsonLayoutOptions();
                 layoutOptionshp.ArrayAsTable = true;
-                JsonUtility.ImportData(hiperJ, worksheethp.Cells, 0, 0, layoutOptionshp);
+                JsonUtility.ImportData(hiperJ, worksheethp.Cells, 0, 0, layoutOptionshp);//----------------------------------
 
 
                 var workbook = new Workbook();
                 var worksheet = workbook.Worksheets[0];
                 var layoutOptions = new JsonLayoutOptions();
                 layoutOptions.ArrayAsTable = true;
-                JsonUtility.ImportData(modelSave, worksheet.Cells, 0, 0, layoutOptions);
+                JsonUtility.ImportData(modelSave, worksheet.Cells, 0, 0, layoutOptions);//----------------------------------
 
                 string modelName = "deleteme.csv";
                 string pathToCreate = System.IO.Path.Combine(path, modelNames, modelName);
@@ -409,6 +430,7 @@ namespace Backend.Controllers
             string CurrentPath = Directory.GetCurrentDirectory();
 
             //hiperj i savedmodel da bude dictionary
+            
             if (Username != null)
             {
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
@@ -597,6 +619,7 @@ namespace Backend.Controllers
         [HttpPost("hpNeprijavljen")] //Slanje HP na pajton za neprijavljenog korisnika
         public async Task<ActionResult<Hiperparametri>> PostHp([FromBody] Hiperparametri hiper, string Username, string CsvFile) //treba poslati i ime csv fajla koji je izabran
         {
+            SaveData sd = new SaveData();
             if (Username == null || Username == "null")
             {
                 hiper.Username = "unknown";
@@ -681,6 +704,7 @@ namespace Backend.Controllers
                     var csvurl = url + "/csv";
                     var responsecsv = await http.PostAsync(csvurl, datacsv);
                 }
+                sd.hiperj = hiperjson;
             }
             //---------------------------------------------------------------------------------------------------
             //                                                                                  model
@@ -689,8 +713,23 @@ namespace Backend.Controllers
             var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
             var dataModel = await httpResponse.Content.ReadAsStringAsync();
             modelSave = dataModel;
-            return Ok(model);
 
+            sd.modelsave = dataModel;
+
+            var br = 0;
+            for (int i = 0; i < dict_save.Count; i++)
+            {
+                //Console.WriteLine("Key " + dict_save.ElementAt(i).Key + " Hiperj " + dict_save.ElementAt(i).Value.hiperj + " ModelSave " + dict_save.ElementAt(i).Value.modelsave);
+                if(dict_save.ElementAt(i).Key == Username)
+                {
+                    dict_save[Username] = sd;
+                    br = 1;
+                }
+            }
+            if(br == 0)
+                dict_save.Add(Username, sd);
+
+            return Ok(model);
         }
 
         [HttpPost("csv")] //Slanje CSV na pajton
