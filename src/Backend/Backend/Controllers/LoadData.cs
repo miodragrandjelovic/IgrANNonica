@@ -17,6 +17,7 @@ using LumenWorks.Framework.IO.Csv;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
 
 namespace Backend.Controllers
 {
@@ -900,9 +901,24 @@ namespace Backend.Controllers
             string ime = csvFile.FileName;
             string path = System.IO.Path.Combine(currentPath, "Users", Username, ime);
 
+            //var url = "http://127.0.0.1:3000/csvfile"; alternativna varijanta za slanje celog fajla koju treba napraviti i u flasku
+            var urlcsv = url + "/csvfile";
+            var fajl = ReadlikeList(csvFile);
+
+            using (var reader = new StreamReader(csvFile.OpenReadStream()))
+            {
+                var fileContent = reader.ReadToEnd();
+                var parsedContentDisposition = ContentDispositionHeaderValue.Parse(csvFile.ContentDisposition);
+                var content = fileContent;
+            }
+
+            var multipartContent = new MultipartFormDataContent();
+            //multipartContent.Add(fajl, "csvFile", "filename");
+            //var postResponse = await _client.PostAsync("offers", multipartContent);
+
             return Ok("Primio sam: " + ime);
         }
-        private void ReadlikeList(IFormFile file)
+        private StringBuilder ReadlikeList(IFormFile file)
         {
             var lines = new StringBuilder();
             using (var reader = new StreamReader(file.OpenReadStream()))
@@ -912,6 +928,7 @@ namespace Backend.Controllers
                     lines.Append(reader.ReadLine());
                 }
             }
+            return lines;
         }
 
     }
