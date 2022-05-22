@@ -26,7 +26,7 @@ export class StatisticsComponent implements OnInit, OnChanges {
       return num;
     }
     else{
-      return num.toFixed(2);
+      return num.toFixed(3);
     }
   }
 
