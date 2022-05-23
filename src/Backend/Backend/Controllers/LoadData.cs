@@ -234,11 +234,31 @@ namespace Backend.Controllers
             csv.ReadHeader();
 
             List<string> headers = csv.HeaderRecord.ToList();
+            System.Data.DataTable dataTable = new System.Data.DataTable();
             foreach (string header in headers)
             {
-                //dataTable.Columns.Add(new System.Data.DataColumn(header));
-                Console.WriteLine(header);
+                dataTable.Columns.Add(new System.Data.DataColumn(header));
+                //Console.WriteLine(header);
             }
+
+            while (csv.Read())
+            {
+                System.Data.DataRow row = dataTable.NewRow();
+
+                foreach (System.Data.DataColumn column in dataTable.Columns)
+                {
+                    row[column.ColumnName] = csv.GetField(column.DataType, column.ColumnName);
+                }
+
+                Console.WriteLine(row.ToString);
+
+                dataTable.Rows.Add(row);
+            }
+
+            string result21 = string.Empty;
+            result21 = JsonConvert.SerializeObject(dataTable);
+
+            var resultjson21 = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result21);
 
             return Ok(resultjson);
         }
