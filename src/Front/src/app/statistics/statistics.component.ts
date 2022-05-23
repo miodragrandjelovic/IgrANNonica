@@ -31,7 +31,7 @@ export class StatisticsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    console.log(this.result);
+ //   console.log(this.result);
     this.headers = Object.keys(this.result);
     this.rowLinesStatistics = [];
     for(let i = 0; i < this.headers.length; i++) {
@@ -50,6 +50,6 @@ export class StatisticsComponent implements OnInit, OnChanges {
       ];
       this.rowLinesStatistics.push(currentRow);
     }
-    console.log(this.rowLinesStatistics);
+ //   console.log(this.rowLinesStatistics);
   }
 }

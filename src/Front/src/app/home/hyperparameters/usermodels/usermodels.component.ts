@@ -34,7 +34,7 @@ export class UsermodelsComponent implements OnInit {
     this.getModels();
     this.refreshModels.messageSubject.subscribe({
       next: x => {
-        console.log("REFRESH COMPONENTE");
+      //  console.log("REFRESH COMPONENTE");
           this.getModels();
       }
   });
@@ -44,9 +44,9 @@ export class UsermodelsComponent implements OnInit {
   {
     var loggedUsername = sessionStorage.getItem('username');
     this.http.get<any>(this.url + '/api/Python/savedModels?Username='+loggedUsername).subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
-            console.log(result);
+           // console.log(result);
             this.zapamceniModeli=result;
-            console.log(this.zapamceniModeli);
+          //  console.log(this.zapamceniModeli);
         });
 
         this.selectedModels = '';
@@ -54,7 +54,7 @@ export class UsermodelsComponent implements OnInit {
 
   selectModels(event:any){
     this.selectedModels=event.target.value;
-    console.log('ovo je kliknuto za naziv '+this.selectedModels);
+  //  console.log('ovo je kliknuto za naziv '+this.selectedModels);
     //alert(this.selectedModels);
     this.loadThisModel('ime_models');
   }
@@ -65,7 +65,7 @@ export class UsermodelsComponent implements OnInit {
         name: naziv
       }).subscribe(selectedModelUser=>{
         
-        console.log(selectedModelUser);
+       // console.log(selectedModelUser);
         //alert("SALJEMO RES");
 
         this.sendResults.emit(selectedModelUser);
@@ -90,8 +90,8 @@ export class UsermodelsComponent implements OnInit {
    }).subscribe();
 
   
-    console.log('na ovaj csv: '+ this.selektovanDirName);
-     console.log('na ovaj model kliknuto: '+ this.selektovanModelName);
+   // console.log('na ovaj csv: '+ this.selektovanDirName);
+    // console.log('na ovaj model kliknuto: '+ this.selektovanModelName);
 
      this.modalService.open(newData, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
        this.closeResult = `Closed with: ${result}`;
@@ -133,7 +133,7 @@ export class UsermodelsComponent implements OnInit {
        let fileList = (<HTMLInputElement>files.target).files;
        if (fileList && fileList.length > 0) {
            let file : File = fileList[0];
-           console.log('file name:'+file.name);
+         //  console.log('file name:'+file.name);
            this.unetDataset=file.name;
            let reader: FileReader =  new FileReader();
            reader.readAsText(file);
@@ -181,7 +181,7 @@ export class UsermodelsComponent implements OnInit {
             }).subscribe( result=>{
               this.predikcija=result;
               
-                console.log('ovo je predikcija'+this.predikcija);
+              //  console.log('ovo je predikcija'+this.predikcija);
             });
 
            }
@@ -212,7 +212,7 @@ export class UsermodelsComponent implements OnInit {
     this.deleteModelFromCsv=item;
     var loggedUsername = sessionStorage.getItem('username');
     this.http.delete<any>(this.url +'/api/RegistracijaUsera/model?fromCsv='+this.deleteModelFromCsv+'&name='+this.deleteModelName+'&Username='+loggedUsername).subscribe(result => { 
-      console.log(result);
+   //   console.log(result);
 
       this.ngOnInit();
      }, (err)=>{

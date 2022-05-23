@@ -13,7 +13,7 @@ export class ProfileService {
 
   public url = myUrls.url;
   updateProfile(user:User) : Observable<User> {
-    console.log(this.url)
+  //  console.log(this.url)
     return this.http.put<User>(this.url + '/api/RegistracijaUsera/username', {
         userId: user.userId,
         firstname: user.firstName,
@@ -36,7 +36,7 @@ deleteAccount()
 {
   this.user=this.get();
   this.http.delete<any>(this.url +'/api/RegistracijaUsera/username?username='+this.user).subscribe(result => { 
-    console.log(result);
+  //  console.log(result);
    });
 }
 

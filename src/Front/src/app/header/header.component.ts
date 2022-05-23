@@ -112,7 +112,7 @@ export class HeaderComponent implements OnInit {
     const password = this.registerForm.value.password;
 
     this.registracijaService.signUp(firstname, lastname, email, username,password).subscribe(resData => {
-      console.log(resData);
+     // console.log(resData);
       this.toastr.success('Sign up successfully', 'Users sign up');
       //log him in
       this.prijavaService.logIn(username, password).subscribe(resData => {
@@ -139,7 +139,7 @@ export class HeaderComponent implements OnInit {
         }
       });
     }, error => {
-      console.log(error);
+     // console.log(error);
       this.toastr.error('Sign up unsuccessful!', 'User sign up');
     });
     this.registerForm.reset();

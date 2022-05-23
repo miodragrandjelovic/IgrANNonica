@@ -23,7 +23,7 @@ export class PrijavaComponent implements OnInit {
       return;
     }
     this.PrijavaService.logIn(form.value.username, form.value.password).subscribe(resData => {
-      console.log(resData);
+   //   console.log(resData);
     }, error => {
       
     });

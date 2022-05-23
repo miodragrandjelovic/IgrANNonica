@@ -73,9 +73,9 @@ export class UserdatasetsComponent implements OnInit {
     this.datasetsFilteredNamesPublic = [];
     var loggedUsername = sessionStorage.getItem('username');
     this.http.get<any>(this.url + '/api/Python/savedCsvs'+'?Username='+loggedUsername).subscribe(result => {  
-            console.log(result);
+          //  console.log(result);
             this.copyPaste=result;
-            console.log(this.copyPaste);
+           // console.log(this.copyPaste);
            /*
             this.copyPaste.push("prva1");
             this.copyPaste.push("prva2");
@@ -106,9 +106,9 @@ export class UserdatasetsComponent implements OnInit {
     this.datasetsFilteredNamesPublic = [];
     
     this.http.get<any>(this.url + '/api/Python/publicDatasets').subscribe(result => {  
-            console.log(result);
+           // console.log(result);
             this.copyPastePublic=result;
-            console.log(this.copyPastePublic);
+          //  console.log(this.copyPastePublic);
            /*
             this.copyPaste.push("prva1");
             this.copyPaste.push("prva2");
@@ -163,7 +163,7 @@ export class UserdatasetsComponent implements OnInit {
   selectChange(event:any){
     this.selectedDataset=event.target.id;
     //alert("NAZIV JE "+ this.selectedDataset);
-    console.log('ovo je kliknuto za naziv '+this.selectedDataset);
+    //console.log('ovo je kliknuto za naziv '+this.selectedDataset);
     //alert(this.selectedDataset);
     this.loadThisDataset(this.selectedDataset);
     // takodje da se u csv komponenti ispise naziv selektovanog fajla
@@ -172,7 +172,7 @@ export class UserdatasetsComponent implements OnInit {
   selectChangePublic(event:any){
     this.selectedDataset=event.target.id;
     //alert("NAZIV JE "+ this.selectedDataset);
-    console.log('ovo je kliknuto za naziv '+this.selectedDataset);
+   // console.log('ovo je kliknuto za naziv '+this.selectedDataset);
     //alert(this.selectedDataset);
     this.loadThisDatasetPublic(this.selectedDataset);
     // takodje da se u csv komponenti ispise naziv selektovanog fajla
@@ -192,11 +192,11 @@ export class UserdatasetsComponent implements OnInit {
     //treba nam citanje trenutno prijavljenog username-a
     var loggedUsername = sessionStorage.getItem('username');
     this.http.delete<any>(this.url +'/api/RegistracijaUsera/csv?name='+this.deleteDatasetCsv+'&Username='+loggedUsername).subscribe(result => { 
-      console.log("Uspesno obrisan "+result);
+     // console.log("Uspesno obrisan "+result);
       //alert("Uspesno obrisan" + result);
       this.ngOnInit();
      },(err)=>{
-      console.log("Greska prilikom brisanja" + err);
+      //console.log("Greska prilikom brisanja" + err);
       //alert("Greska prilikom brisanja!" + err);
       this.ngOnInit();
      });
@@ -214,11 +214,11 @@ export class UserdatasetsComponent implements OnInit {
 
     //ovde treba da se izmeni endpoint kad Vukas napravi, da gadja public datasetove
     this.http.delete<any>(this.url +'/api/RegistracijaUsera/csv?name='+this.deleteDatasetCsv).subscribe(result => { 
-      console.log(result);
+     // console.log(result);
 
       this.ngOnInit();
      }, (err)=>{
-       console.log("Greska prilikom brisanja javnog "+err);
+     //  console.log("Greska prilikom brisanja javnog "+err);
        this.ngOnInit();
      });
     
@@ -237,12 +237,12 @@ export class UserdatasetsComponent implements OnInit {
         name: naziv
       }).subscribe(selectedDatasetUser=>{
         
-        console.log(selectedDatasetUser);
+       // console.log(selectedDatasetUser);
         this.http.get<any>(this.url + '/api/Python/kor').subscribe(data =>{
-            console.log('ovo je za kor: '+data);
+          //  console.log('ovo je za kor: '+data);
           
           this.http.get<any>(this.url + '/api/Python/stats').subscribe(result =>{
-            console.log('ovo je za stat: '+result);
+           // console.log('ovo je za stat: '+result);
            
             this.sendResults.emit({datasetName:naziv,dataset:selectedDatasetUser,kor:data,stat:result});
           });
@@ -292,12 +292,12 @@ export class UserdatasetsComponent implements OnInit {
           name: naziv
         }).subscribe(selectedDatasetUser=>{
           
-          console.log(selectedDatasetUser);
+        //  console.log(selectedDatasetUser);
           this.http.get<any>(this.url + '/api/Python/kor').subscribe(data =>{
-              console.log('ovo je za kor: '+data);
+            //  console.log('ovo je za kor: '+data);
             
             this.http.get<any>(this.url + '/api/Python/stats').subscribe(result =>{
-              console.log('ovo je za stat: '+result);
+           //   console.log('ovo je za stat: '+result);
              
               this.sendResults.emit({datasetName:naziv,dataset:selectedDatasetUser,kor:data,stat:result});
             });

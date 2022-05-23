@@ -25,7 +25,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.prijavaService.getUserByUsername(sessionStorage.getItem("username")).subscribe(data=>{
       this.ulogovanUser=data;
-      console.log(data);
+      //console.log(data);
     })
   }
 
@@ -36,10 +36,10 @@ export class ProfileComponent implements OnInit {
     }
 
     this.profilService.updateProfile(this.ulogovanUser).subscribe(data=>{
-      console.log(data);
+      //console.log(data);
       this.toastr.success('Updated successfully', 'Users update');
     }, error=>{
-      console.log('Update error');
+    //  console.log('Update error');
     });
   }
 
