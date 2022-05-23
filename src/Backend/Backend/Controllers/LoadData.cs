@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
+using CsvHelper.Configuration;
 
 namespace Backend.Controllers
 {
@@ -212,7 +213,7 @@ namespace Backend.Controllers
             {
                 return BadRequest("Niste ulogovani.");
             }
-
+            
             var modelTable = new DataTable();
             using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPath)), true))
             {
@@ -222,6 +223,22 @@ namespace Backend.Controllers
             result = JsonConvert.SerializeObject(modelTable);
 
             var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result);
+
+            CsvConfiguration csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = true,
+                Delimiter = ","
+            };
+            CsvHelper.CsvReader csv = new CsvHelper.CsvReader(System.IO.File.OpenText(SelectedPath), csvConfiguration);
+            csv.Read();
+            csv.ReadHeader();
+
+            List<string> headers = csv.HeaderRecord.ToList();
+            foreach (string header in headers)
+            {
+                //dataTable.Columns.Add(new System.Data.DataColumn(header));
+                Console.WriteLine(header);
+            }
 
             return Ok(resultjson);
         }
