@@ -1,16 +1,17 @@
 <div style="width:100%; margin: auto;">
-    <div style="width:100%;text-align:center;font-size: 25px; font-weight: bold;margin-bottom: 15px;">Choose Parameters</div>
     <table style="width: 100px;margin: auto;">
+        <caption style="caption-side: top;width:100%;text-align:left;font-weight: bold;font-size: 25px;background-color: #CEECFA; border-top-left-radius: 3px; border-top-right-radius: 3px;padding-left: 20px;color:black;
+        position:-webkit-sticky; position: sticky;">Choose Parameters</caption>
         <thead>
-            <th>Columns</th>
+            <th class="redoviSticky">Columns</th>
             <th>Numeric/Categorical</th>
             <th>Encoding Type</th>
             <th>Missing Values</th>
         </thead>
-        <br>
+        
         <tbody>
             <tr *ngFor="let head of headers; let i = index">
-                <td style="text-align: left; font-weight: bold;">{{ head }}</td>
+                <td class="redoviSticky" style="text-align: left; font-weight: bold;">{{ head }}</td>
                 <td>
                     <select class="form-select" [ngModel]="selected[i]" [attr.disabled]="startArrayType[i] ? 'disabled' : null" (ngModelChange)="changeType($event, i)">
                         <option value="categorical">Categorical</option>

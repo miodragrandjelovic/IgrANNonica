@@ -20,23 +20,33 @@ export class StatisticsComponent implements OnInit, OnChanges {
     
   }
 
+  roundNumbers(num:any){
+    if (num%1 === 0)
+    {//broj je ceo
+      return num;
+    }
+    else{
+      return num.toFixed(3);
+    }
+  }
+
   ngOnChanges() {
  //   console.log(this.result);
     this.headers = Object.keys(this.result);
     this.rowLinesStatistics = [];
     for(let i = 0; i < this.headers.length; i++) {
       const currentRow = [this.headers[i],
-          this.result[this.headers[i]].min ? this.result[this.headers[i]].min : 'null', 
-          this.result[this.headers[i]].Q1 ? this.result[this.headers[i]].Q1 : 'null',
-          this.result[this.headers[i]].Q2 ? this.result[this.headers[i]].Q2 : 'null', 
-          this.result[this.headers[i]].Q3 ? this.result[this.headers[i]].Q3 : 'null', 
-          this.result[this.headers[i]].max ? this.result[this.headers[i]].max : 'null',
-          this.result[this.headers[i]].mean ? this.result[this.headers[i]].mean : 'null', 
-          this.result[this.headers[i]].std ? this.result[this.headers[i]].std : 'null', 
-          this.result[this.headers[i]].count ? this.result[this.headers[i]].count : 'null',
-          this.result[this.headers[i]].freq ? this.result[this.headers[i]].freq : 'null', 
-          this.result[this.headers[i]].top ? this.result[this.headers[i]].top : 'null', 
-          this.result[this.headers[i]].unique ? this.result[this.headers[i]].unique : 'null'
+          this.result[this.headers[i]].min ? this.roundNumbers(this.result[this.headers[i]].min) : '-', 
+          this.result[this.headers[i]].Q1 ? this.roundNumbers(this.result[this.headers[i]].Q1) : '-',
+          this.result[this.headers[i]].Q2 ? this.roundNumbers(this.result[this.headers[i]].Q2) : '-', 
+          this.result[this.headers[i]].Q3 ? this.roundNumbers(this.result[this.headers[i]].Q3) : '-', 
+          this.result[this.headers[i]].max ? this.roundNumbers(this.result[this.headers[i]].max) : '-',
+          this.result[this.headers[i]].mean ? this.roundNumbers(this.result[this.headers[i]].mean) : '-', 
+          this.result[this.headers[i]].std ? this.roundNumbers(this.result[this.headers[i]].std) : '-', 
+          this.result[this.headers[i]].count ? this.result[this.headers[i]].count : '-',
+          this.result[this.headers[i]].freq ? this.result[this.headers[i]].freq : '-', 
+          this.result[this.headers[i]].top ? this.result[this.headers[i]].top : '-', 
+          this.result[this.headers[i]].unique ? this.result[this.headers[i]].unique : '-'
       ];
       this.rowLinesStatistics.push(currentRow);
     }
