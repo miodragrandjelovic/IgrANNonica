@@ -10,12 +10,17 @@ export class MessageService{
     constructor() { }
    
    
-     messageSubject = new Subject<number>();
-   
-   
+    messageSubject = new Subject<number>();
+  
+    disableButton = new Subject<boolean>();
+
     sayMessage(message:number){
    
       this.messageSubject.next(message);
+    }
+
+    disableClick(message:boolean){
+      this.disableButton.next(message);
     }
    
   }

@@ -122,6 +122,7 @@ export class HyperparametersComponent implements OnInit {
 
   hyperparametersForm!: FormGroup;
   onemogucenSave:boolean;
+  onemogucenChange:boolean;
 
   constructor(private http: HttpClient, public spiner:LoadingService, public refreshModels : RefreshService,
     private toastr:ToastrService,private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal, private csvservis: CsvService) {
@@ -139,6 +140,8 @@ export class HyperparametersComponent implements OnInit {
 
   ngOnInit(): void {
     this.onemogucenSave = true;
+    this.onemogucenChange = false;
+    
     this.spiner.getShowSpinner().subscribe(newValue => {
       this.show = newValue;
     });
@@ -227,8 +230,21 @@ export class HyperparametersComponent implements OnInit {
     this.parametersService.setShowHp(false);
   }
 
+  disableChanges(){
+    this.onemogucenChange = true;
+    //onemoguci prelazak na Load Data stranu
+    this.service.disableClick(true);
+  }
+
+  enableChanges(){
+    this.onemogucenChange = false;
+    //omoguci prelazak na Load Data stranu
+    this.service.disableClick(false);
+  }
+
   onSubmitHyperparameters() {
 
+    // kada se zapocne trening ONEMOGUCITI IZMENU HIPERPARAMTERA I PODATAKA 
     
     this.inputsString = '';
     this.outputString = '';
@@ -302,10 +318,16 @@ export class HyperparametersComponent implements OnInit {
     } 
     var chosenDataset = this.csvservis.getDatasetname(); //ovde skladistiti ime izabranog csv-a u delu load data kako bi resili pitanje konkurentnosti
     var loggedUsername = sessionStorage.getItem('username');
+
+    // ONEMOGUCI
+    this.disableChanges();
+
     this.http.post(this.url + '/api/LoadData/hpNeprijavljen?Username='+loggedUsername+'&CsvFile='+chosenDataset, myreq).subscribe(result => {
     
      // console.log("Rezultat slanja HP treninga je "  + result);
-      
+      // kada se zavrsi trening OMOGUCITI PONOVO IZMENU HIPERPARAMTERARA!
+      this.enableChanges();
+
       this.scrollToResults("prikazRezutata");
 
       this.inputCheckBoxes = [];
