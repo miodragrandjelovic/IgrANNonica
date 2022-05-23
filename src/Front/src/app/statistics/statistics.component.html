@@ -1,14 +1,14 @@
 <div class="container-table" >
-    <table class="table table-hover">
-        <caption style="caption-side: top;width:100%;text-align:left;font-weight: bold;font-size: 25px;background-color: #CEECFA; border-top-left-radius: 3px; border-top-right-radius: 3px;padding-left: 20px;color:black;">Statistics</caption>  
+    <table class="table table-hover" style="padding-bottom:0px;margin-bottom: 0px; position:relative;">
+        <caption style="caption-side: top;width:100%;text-align:left;font-weight: bold;font-size: 25px;background-color: #CEECFA; border-top-left-radius: 3px; border-top-right-radius: 3px;padding-left: 20px;color:black;">Statistics</caption>              
         <thead>
             <tr>
-                <th *ngFor="let head of headersStatistics">{{ head }}</th>
+                <th class="redoviSticky" *ngFor="let head of headersStatistics">{{ head }}</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let row of rowLinesStatistics">
-                <td class="redoviIzbor" *ngFor="let item of row; let i = index">{{ row[i] }}</td>
+                <td class="redoviIzbor redoviSticky" *ngFor="let item of row; let i = index">{{ row[i] }}</td>
             </tr>
         </tbody>
     </table>

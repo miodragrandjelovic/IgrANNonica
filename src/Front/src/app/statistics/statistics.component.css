@@ -38,4 +38,14 @@ tr:hover td div{
     font-weight: bold;
 }
 
+.redoviSticky:first-child{
+    position: -webkit-sticky;
+    position: sticky;
+    width: fit-content;
+    left: 0px;
+    background-color: #CEECFA;
+}
+
+
+
 
