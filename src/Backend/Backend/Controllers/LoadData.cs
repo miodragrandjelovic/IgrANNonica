@@ -37,6 +37,7 @@ namespace Backend.Controllers
         public static string hiperJ;
         public static string modelSave;
 
+
         public class SaveData
         {
             public string hiperj { get; set; } = string.Empty;
@@ -227,8 +228,9 @@ namespace Backend.Controllers
             CsvConfiguration csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 HasHeaderRecord = true,
-                Delimiter = ","
-            };
+                Delimiter = ",",
+                MissingFieldFound = null
+        };
             CsvHelper.CsvReader csv = new CsvHelper.CsvReader(System.IO.File.OpenText(SelectedPath), csvConfiguration);
             csv.Read();
             csv.ReadHeader();
@@ -249,18 +251,84 @@ namespace Backend.Controllers
                 {
                     row[column.ColumnName] = csv.GetField(column.DataType, column.ColumnName);
                 }
-
-                Console.WriteLine(row.ToString);
+                /*
+                foreach (var r in row.ItemArray)
+                {
+                    Console.WriteLine(r);
+                }*/
+                
 
                 dataTable.Rows.Add(row);
             }
+        
+            /*for(int i = 0; i < headers.Count; i++)
+            {
+                string header = headers[i];
+                //List<string> header = new List<string>(dataTable.Rows.Count);
+            }/*
+            foreach (string header in headers)
+            {
+                List<string> header = new List<string>(dataTable.Rows.Count);
+            }*/
+
+            List<string> Loss1 = new List<string>(dataTable.Rows.Count);
+            List<string> MAE1 = new List<string>(dataTable.Rows.Count);
+            List<string> MSE1 = new List<string>(dataTable.Rows.Count);
+            List<string> RMSE1 = new List<string>(dataTable.Rows.Count);
+            List<string> label1 = new List<string>(dataTable.Rows.Count);
+            List<string> pred1 = new List<string>(dataTable.Rows.Count);
+            List<string> valLoss1 = new List<string>(dataTable.Rows.Count);
+            List<string> valMAE1 = new List<string>(dataTable.Rows.Count);
+            List<string> valMSE1 = new List<string>(dataTable.Rows.Count);
+            List<string> valRMSE1 = new List<string>(dataTable.Rows.Count);
+            foreach (DataRow row in dataTable.Rows)
+            {
+                Loss1.Add((string)row["Loss"]);
+                label1.Add((string)row["label"]);
+                pred1.Add((string)row["pred"]);
+                valLoss1.Add((string)row["valLoss"]);
+                MAE1.Add((string)row["MAE"]);
+                MSE1.Add((string)row["MSE"]);
+                RMSE1.Add((string)row["RMSE"]);
+                valMAE1.Add((string)row["valMAE"]);
+                valMSE1.Add((string)row["valMSE"]);
+                valRMSE1.Add((string)row["valRMSE"]);
+            }
+            /*
+            Console.WriteLine("\nLOSS\n");
+            foreach (string l in Loss)
+                Console.WriteLine(l);
+            Console.WriteLine("\nValLoss\n");
+            foreach (string l in valLoss)
+                Console.WriteLine(l);
+            Console.WriteLine("\nlabel\n");
+            foreach (string l in label)
+                Console.WriteLine(l);
+            Console.WriteLine("\npred\n");
+            foreach (string l in pred)
+                Console.WriteLine(l);*/
+
+            var regmodel = new
+            {
+                Loss = Loss1,
+                label = label1,
+                pred = pred1,
+                valLoss = valLoss1,
+                MAE = MAE1,
+                MSE = MSE1,
+                RMSE = RMSE1,
+                valMAE = valMAE1,
+                valMSE = valMSE1,
+                valRMSE = valRMSE1,
+            };
+
 
             string result21 = string.Empty;
             result21 = JsonConvert.SerializeObject(dataTable);
 
             var resultjson21 = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result21);
 
-            return Ok(resultjson);
+            return Ok(regmodel);
         }
 
         [HttpPost("publicModels")] //Vracanje vrednosti izabranog javnog modela kako bi mogle da se prikazu na grafiku i uporede.
@@ -450,7 +518,7 @@ namespace Backend.Controllers
                 return Ok("Korisnik nije ulogovan.");
         }
 
-        [HttpPost("hp")] //Slanje HP na pajton
+        [HttpPost("hp")] //Slanje HP na pajton obrisati
         public async Task<ActionResult<Hiperparametri>> Posthp([FromBody] Hiperparametri hiper, String modelNames, Boolean publicModel, string Username) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
         {
             int indexDir = 1;
@@ -744,6 +812,9 @@ namespace Backend.Controllers
             var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
             var dataModel = await httpResponse.Content.ReadAsStringAsync();
             modelSave = dataModel;
+
+            /*Console.WriteLine("\nDATAMODEL\n");
+            Console.WriteLine(dataModel);*/
 
             sd.modelsave = dataModel;
 
