@@ -17,6 +17,8 @@ using LumenWorks.Framework.IO.Csv;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
+using CsvHelper.Configuration;
 
 namespace Backend.Controllers
 {
@@ -34,6 +36,16 @@ namespace Backend.Controllers
 
         public static string hiperJ;
         public static string modelSave;
+
+
+        public class SaveData
+        {
+            public string hiperj { get; set; } = string.Empty;
+            public string modelsave { get; set; } = string.Empty;
+        }
+
+        public static Dictionary<string, SaveData> dict_save = new Dictionary<string, SaveData>(99);
+
         private readonly IConfiguration _configuration;
         private readonly UserDbContext _context;
         public LoadData(UserDbContext context, IConfiguration configuration)
@@ -202,7 +214,7 @@ namespace Backend.Controllers
             {
                 return BadRequest("Niste ulogovani.");
             }
-
+            
             var modelTable = new DataTable();
             using (var csvReader = new LumenWorks.Framework.IO.Csv.CsvReader(new StreamReader(System.IO.File.OpenRead(SelectedPath)), true))
             {
@@ -212,8 +224,188 @@ namespace Backend.Controllers
             result = JsonConvert.SerializeObject(modelTable);
 
             var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result);
+            CsvConfiguration csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = true,
+                Delimiter = ",",
+                MissingFieldFound = null
+            };
+            CsvHelper.CsvReader csv = new CsvHelper.CsvReader(System.IO.File.OpenText(SelectedPath), csvConfiguration);
+            csv.Read();
+            csv.ReadHeader();
 
-            return Ok(resultjson);
+            List<string> headers = csv.HeaderRecord.ToList();
+            System.Data.DataTable dataTable = new System.Data.DataTable();
+            foreach (string header in headers)
+            {
+                dataTable.Columns.Add(new System.Data.DataColumn(header));
+                //Console.WriteLine(header);
+            }
+
+            while (csv.Read())
+            {
+                System.Data.DataRow row = dataTable.NewRow();
+
+                foreach (System.Data.DataColumn column in dataTable.Columns)
+                {
+                    row[column.ColumnName] = csv.GetField(column.DataType, column.ColumnName);
+                    //Console.WriteLine(column.ColumnName);
+                }      
+
+                dataTable.Rows.Add(row);
+            }
+
+            /*for(int i = 0; i < headers.Count; i++) //ovako bi trebalo i radilo bi i za regresione i klasifikacione modele ali nesto nece
+            {
+                string header = headers[i];
+                //List<string> header = new List<string>(dataTable.Rows.Count);
+            }*/
+
+            if (headers.Contains("MAE")) //regresioni model
+            {
+
+                List<string> Loss1 = new List<string>(dataTable.Rows.Count);
+                List<string> MAE1 = new List<string>(dataTable.Rows.Count);
+                List<string> MSE1 = new List<string>(dataTable.Rows.Count);
+                List<string> RMSE1 = new List<string>(dataTable.Rows.Count);
+                List<string> label1 = new List<string>(dataTable.Rows.Count);
+                List<string> pred1 = new List<string>(dataTable.Rows.Count);
+                List<string> valLoss1 = new List<string>(dataTable.Rows.Count);
+                List<string> valMAE1 = new List<string>(dataTable.Rows.Count);
+                List<string> valMSE1 = new List<string>(dataTable.Rows.Count);
+                List<string> valRMSE1 = new List<string>(dataTable.Rows.Count);
+                /*List<string> evaluate = new List<string>(dataTable.Rows.Count);
+                List<string> evaluate_mae1 = new List<string>(dataTable.Rows.Count);
+                List<string> evaluate_mse1 = new List<string>(dataTable.Rows.Count);
+                List<string> evaluate_root1 = new List<string>(dataTable.Rows.Count);*/
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    Loss1.Add((string)row["Loss"]);
+                    label1.Add((string)row["label"]);
+                    pred1.Add((string)row["pred"]);
+                    valLoss1.Add((string)row["valLoss"]);
+                    MAE1.Add((string)row["MAE"]);
+                    MSE1.Add((string)row["MSE"]);
+                    RMSE1.Add((string)row["RMSE"]);
+                    valMAE1.Add((string)row["valMAE"]);
+                    valMSE1.Add((string)row["valMSE"]);
+                    valRMSE1.Add((string)row["valRMSE"]);
+                    /*evaluate.Add((string)row["evaluate"]);
+                    evaluate_mae1.Add((string)row["Column1"]);
+                    evaluate_mse1.Add((string)row["Column2"]);
+                    evaluate_root1.Add((string)row["Column3"]);*/
+                }
+                Loss1.RemoveAll(s => s == "");
+                label1.RemoveAll(s => s == "");
+                pred1.RemoveAll(s => s == "");
+                valLoss1.RemoveAll(s => s == "");
+                MAE1.RemoveAll(s => s == "");
+                MSE1.RemoveAll(s => s == "");
+                RMSE1.RemoveAll(s => s == "");
+                valMAE1.RemoveAll(s => s == "");
+                valMSE1.RemoveAll(s => s == "");
+                valRMSE1.RemoveAll(s => s == "");
+                /*evaluate.RemoveAll(s => s == "");
+                evaluate.RemoveAll(s => s == "loss");
+                evaluate_mae1.RemoveAll(s => s == "");
+                evaluate_mae1.RemoveAll(s => s == "mae");
+                evaluate_mse1.RemoveAll(s => s == "");
+                evaluate_mse1.RemoveAll(s => s == "mse");
+                evaluate_root1.RemoveAll(s => s == "");
+                evaluate_root1.RemoveAll(s => s == "root_mean_squared_error");*/
+                var regmodel = new
+                {
+                    Loss = Loss1,
+                    label = label1,
+                    pred = pred1,
+                    valLoss = valLoss1,
+                    MAE = MAE1,
+                    MSE = MSE1,
+                    RMSE = RMSE1,
+                    valMAE = valMAE1,
+                    valMSE = valMSE1,
+                    valRMSE = valRMSE1,
+                    /*evaluate_loss = evaluate,
+                    evaluate_mae = evaluate_mae1,
+                    evaluate_mse = evaluate_mse1,
+                    root_mean_squared_error = evaluate_root1*/
+                };
+                return Ok(regmodel);
+            }
+            if (headers.Contains("AUC")) //klasifikacioni model
+            {
+
+                List<string> Loss1 = new List<string>(dataTable.Rows.Count);
+                List<string> AUC1 = new List<string>(dataTable.Rows.Count);
+                List<string> Accuracy1 = new List<string>(dataTable.Rows.Count);
+                List<string> F1_score1 = new List<string>(dataTable.Rows.Count);
+                List<string> label1 = new List<string>(dataTable.Rows.Count);
+                List<string> pred1 = new List<string>(dataTable.Rows.Count);
+                List<string> Precision1 = new List<string>(dataTable.Rows.Count);
+                List<string> Recall1 = new List<string>(dataTable.Rows.Count);
+                List<string> valAUC1 = new List<string>(dataTable.Rows.Count);
+                List<string> valAccuracy1 = new List<string>(dataTable.Rows.Count);
+                List<string> valF1_score1 = new List<string>(dataTable.Rows.Count);
+                List<string> valPrecision1 = new List<string>(dataTable.Rows.Count);
+                List<string> valRecall1 = new List<string>(dataTable.Rows.Count);
+                List<string> valLoss1 = new List<string>(dataTable.Rows.Count);
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    Loss1.Add((string)row["Loss"]);
+                    label1.Add((string)row["label"]);
+                    pred1.Add((string)row["pred"]);
+                    valLoss1.Add((string)row["valLoss"]);
+                    AUC1.Add((string)row["AUC"]);
+                    Accuracy1.Add((string)row["Accuracy"]);
+                    F1_score1.Add((string)row["F1_score"]);
+                    Precision1.Add((string)row["Precision"]);
+                    Recall1.Add((string)row["Recall"]);
+                    valAUC1.Add((string)row["valAUC"]);
+                    valAccuracy1.Add((string)row["valAccuracy"]);
+                    valF1_score1.Add((string)row["valF1_score"]);
+                    valPrecision1.Add((string)row["valPrecision"]);
+                    valRecall1.Add((string)row["valRecall"]);
+                }
+                Loss1.RemoveAll(s => s == "");
+                label1.RemoveAll(s => s == "");
+                pred1.RemoveAll(s => s == "");
+                valLoss1.RemoveAll(s => s == "");
+                AUC1.RemoveAll(s => s == "");
+                Accuracy1.RemoveAll(s => s == "");
+                F1_score1.RemoveAll(s => s == "");
+                Precision1.RemoveAll(s => s == "");
+                Recall1.RemoveAll(s => s == "");
+                valAUC1.RemoveAll(s => s == "");
+                valAccuracy1.RemoveAll(s => s == "");
+                valF1_score1.RemoveAll(s => s == "");
+                valPrecision1.RemoveAll(s => s == "");
+                valRecall1.RemoveAll(s => s == "");
+
+                var classmodel = new
+                {
+                    Loss = Loss1,
+                    label = label1,
+                    pred = pred1,
+                    valLoss = valLoss1,
+                    AUC = AUC1,
+                    Accuracy = Accuracy1,
+                    F1_score = F1_score1,
+                    Precision = Precision1,
+                    Recall = Recall1,
+                    valAUC = valAUC1,
+                    valAccuracy = valAccuracy1,
+                    valF1_score = valF1_score1,
+                    valPrecision = valPrecision1,
+                    valRecall = valRecall1,
+                };
+                return Ok(classmodel);
+            }
+            string result21 = string.Empty;
+            result21 = JsonConvert.SerializeObject(dataTable);
+
+            var resultjson21 = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result21);
+            return resultjson;
         }
 
         [HttpPost("publicModels")] //Vracanje vrednosti izabranog javnog modela kako bi mogle da se prikazu na grafiku i uporede.
@@ -243,12 +435,19 @@ namespace Backend.Controllers
         }
 
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model kao i cuvanje povratne vrednosti modela
-        public async Task<ActionResult> PostSave(String modelNames, Boolean publicModel, string Username) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
-        {
+        public async Task<ActionResult> PostSave(String modelNames, Boolean publicModel, string Username, string upgradedName) //Ime modela kako korisnik zeli da ga cuva i da li zeli da bude javan model
+        {                                                                                                                      //Poslati i ime csv fajla sa kojim je treniran model kako bi sacuvali u pravom folderu
+            var userNu = 0;
             if (Username != null)
             {
+                for (int i = 0; i < dict_save.Count; i++)
+                {
+                    if (dict_save.ElementAt(i).Key == Username)
+                    {
+                        userNu = i;
+                    }
+                }
                 string CurrentPath = Directory.GetCurrentDirectory();
-                var upgradedName = Name;
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
                 string modeldirname = Path.Combine(CurrentPath, "Users", Username, upgradedName, modelNames);
                 string csvFolder = Path.Combine(CurrentPath, "Users", Username, upgradedName);
@@ -304,14 +503,14 @@ namespace Backend.Controllers
                 var worksheethp = workbookhp.Worksheets[0];
                 var layoutOptionshp = new JsonLayoutOptions();
                 layoutOptionshp.ArrayAsTable = true;
-                JsonUtility.ImportData(hiperJ, worksheethp.Cells, 0, 0, layoutOptionshp);
+                JsonUtility.ImportData(dict_save.ElementAt(userNu).Value.hiperj, worksheethp.Cells, 0, 0, layoutOptionshp);
 
 
                 var workbook = new Workbook();
                 var worksheet = workbook.Worksheets[0];
                 var layoutOptions = new JsonLayoutOptions();
                 layoutOptions.ArrayAsTable = true;
-                JsonUtility.ImportData(modelSave, worksheet.Cells, 0, 0, layoutOptions);
+                JsonUtility.ImportData(dict_save.ElementAt(userNu).Value.modelsave, worksheet.Cells, 0, 0, layoutOptions);
 
                 string modelName = "deleteme.csv";
                 string pathToCreate = System.IO.Path.Combine(path, modelNames, modelName);
@@ -326,7 +525,6 @@ namespace Backend.Controllers
                 while ((line = file.ReadLine()) != null)
                 {
                     lines.Add(line);
-                    //Console.WriteLine(line);
                 }
 
                 lines.RemoveAll(l => l.Contains("Evaluation Only."));
@@ -397,7 +595,7 @@ namespace Backend.Controllers
                 return Ok("Korisnik nije ulogovan.");
         }
 
-        [HttpPost("hp")] //Slanje HP na pajton
+        [HttpPost("hp")] //Slanje HP na pajton obrisati
         public async Task<ActionResult<Hiperparametri>> Posthp([FromBody] Hiperparametri hiper, String modelNames, Boolean publicModel, string Username) //pored hiperparametara da se posalje i ime modela kako korisnik zeli da ga cuva cuva se model pri svakom treniranju
         {
             int indexDir = 1;
@@ -407,7 +605,8 @@ namespace Backend.Controllers
             //string path = Directory.GetCurrentDirectory() + @"\Users\" + Username + "\\" + upgradedName + "\\";
             string CurrentPath = Directory.GetCurrentDirectory();
 
-
+            //hiperj i savedmodel da bude dictionary
+            
             if (Username != null)
             {
                 string path = Path.Combine(CurrentPath, "Users", Username, upgradedName);
@@ -596,6 +795,7 @@ namespace Backend.Controllers
         [HttpPost("hpNeprijavljen")] //Slanje HP na pajton za neprijavljenog korisnika
         public async Task<ActionResult<Hiperparametri>> PostHp([FromBody] Hiperparametri hiper, string Username, string CsvFile) //treba poslati i ime csv fajla koji je izabran
         {
+            SaveData sd = new SaveData();
             if (Username == null || Username == "null")
             {
                 hiper.Username = "unknown";
@@ -680,6 +880,7 @@ namespace Backend.Controllers
                     var csvurl = url + "/csv";
                     var responsecsv = await http.PostAsync(csvurl, datacsv);
                 }
+                sd.hiperj = hiperjson;
             }
             //---------------------------------------------------------------------------------------------------
             //                                                                                  model
@@ -688,8 +889,25 @@ namespace Backend.Controllers
             var model = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
             var dataModel = await httpResponse.Content.ReadAsStringAsync();
             modelSave = dataModel;
-            return Ok(model);
 
+            /*Console.WriteLine("\nDATAMODEL\n");
+            Console.WriteLine(dataModel);*/
+
+            sd.modelsave = dataModel;
+
+            var br = 0;
+            for (int i = 0; i < dict_save.Count; i++)
+            {
+                if(dict_save.ElementAt(i).Key == Username)
+                {
+                    dict_save[Username] = sd; //ako je korisnik ranije vec trenirao model zameniti vrednosti od proslog sacuvanog modela sa novim
+                    br = 1;
+                }
+            }
+            if(br == 0)
+                dict_save.Add(Username, sd); //ako korisnik prvi put hoce da sacuva model ubaciti vrednosti njegovog modela pored njegovog imena
+
+            return Ok(model);
         }
 
         [HttpPost("csv")] //Slanje CSV na pajton
@@ -900,9 +1118,24 @@ namespace Backend.Controllers
             string ime = csvFile.FileName;
             string path = System.IO.Path.Combine(currentPath, "Users", Username, ime);
 
+            //var url = "http://127.0.0.1:3000/csvfile"; alternativna varijanta za slanje celog fajla koju treba napraviti i u flasku
+            var urlcsv = url + "/csvfile";
+            var fajl = ReadlikeList(csvFile);
+
+            using (var reader = new StreamReader(csvFile.OpenReadStream()))
+            {
+                var fileContent = reader.ReadToEnd();
+                var parsedContentDisposition = ContentDispositionHeaderValue.Parse(csvFile.ContentDisposition);
+                var content = fileContent;
+            }
+
+            var multipartContent = new MultipartFormDataContent();
+            //multipartContent.Add(fajl, "csvFile", "filename");
+            //var postResponse = await _client.PostAsync("offers", multipartContent);
+
             return Ok("Primio sam: " + ime);
         }
-        private void ReadlikeList(IFormFile file)
+        private StringBuilder ReadlikeList(IFormFile file)
         {
             var lines = new StringBuilder();
             using (var reader = new StreamReader(file.OpenReadStream()))
@@ -912,6 +1145,7 @@ namespace Backend.Controllers
                     lines.Append(reader.ReadLine());
                 }
             }
+            return lines;
         }
 
     }

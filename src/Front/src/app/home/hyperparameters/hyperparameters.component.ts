@@ -476,9 +476,11 @@ export class HyperparametersComponent implements OnInit {
       }
     }
 
+    
     saveModel() {
+      var chosenDataset = this.csvservis.getDatasetname();
       let loggedUsername = sessionStorage.getItem('username');
-      this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}` + `&Username=${loggedUsername}`, 
+      this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}` + `&Username=${loggedUsername}`+'&upgradedName='+chosenDataset, 
       undefined, { responseType: 'text' }).subscribe(result => {
         
         //alert("Sacuvano!");
