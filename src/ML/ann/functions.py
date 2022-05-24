@@ -25,6 +25,8 @@ from keras.callbacks import Callback
 from keras.utils import np_utils
 import keras.backend as K
 
+global dictionary
+dictionary=dict()
 
 class epochResults(Callback):
     def on_epoch_end(self, epoch, logs=None):
@@ -341,12 +343,15 @@ def scale_data(X_train, X_test, y_train, y_test):
 
     return (X_train, X_test, y_train, y_test)
 
-def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, activation_function_list,regularization,reg_rate):
+def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, activation_function_list,regularization,reg_rate,username):
     # here, we are making our model
     # type nam ukazuje koji je tip problema kojim se bavimo   !!!!!!!!!!!!!
 
     #print("SHAPE OF X TRAIN DATASET ", X_train.shape[0], " and ", X_train.shape[1])
-    global model
+
+
+
+    model
     model=None
     model = Sequential()
 
@@ -390,6 +395,9 @@ def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_l
         model.add(Dense(y.shape[1], activation='softmax'))
 
   #  model.summary()
+
+    dictionary[username]=model
+
     return model
 
 
@@ -447,7 +455,7 @@ def compile_model(model, type, y,lr):
     model.compile(optimizer=opt, loss=loss, metrics = met)
     return model 
 
-def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test,path):
+def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test,path,username):
 
     call = epochResults()
 
@@ -495,8 +503,8 @@ def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_
 
 
 
-def save_model(path):
-    model.save(str(path))
+def save_model(path,user):
+    dictionary[user].save(str(path))
 
 
 

@@ -20,7 +20,7 @@ class Statistics():
         self.type = type    
         self.stats = None
 
-    def createModel(self,train, features, label, epochs, ratio, val_test, activation_function_list, hidden_layers_n, hidden_layer_neurons_list, columns,enc_types,num_cat_col,randomize, batch_size, learning_rate, regularization, regularization_rate, missing_values,path=None):
+    def createModel(self,train,username, features, label, epochs, ratio, val_test, activation_function_list, hidden_layers_n, hidden_layer_neurons_list, columns,enc_types,num_cat_col,randomize, batch_size, learning_rate, regularization, regularization_rate, missing_values,path=None):
         # model se kreira preko jedne fje, a u self.type se nalazi info da li treba da bude regresioni ili klasifikacioni
         """
         data=None
@@ -39,7 +39,7 @@ class Statistics():
         model =pr.Model(data,regularization, regularization_rate)
         model.makeModel(self.type, activation_function_list, hidden_layers_n, hidden_layer_neurons_list,regularization,regularization_rate)
         model.compileModel(self.type,learning_rate)
-        model.trainModel(self.type,epochs,batch_size,path)
+        model.trainModel(self.type,epochs,batch_size,path,username)
       #  model.plotResults(epochs, self.type)
         model.defMetrics(self.type)
 

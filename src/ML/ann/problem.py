@@ -120,9 +120,9 @@ class Model():
         self.regularization = regularization
         self.regularization_rate = regularization_rate
 
-    def makeModel(self, type, activation_function_list, hidden_layers_n, hidden_layer_neurons_list,regularization,reg_rate):
+    def makeModel(self, type, activation_function_list, hidden_layers_n, hidden_layer_neurons_list,regularization,reg_rate,username):
         # make model
-        self.model = fn.regression(self.data.X,self.data.y,type,self.data.X_train,self.data.y_train,hidden_layers_n, hidden_layer_neurons_list,activation_function_list,regularization,reg_rate)
+        self.model = fn.regression(self.data.X,self.data.y,type,self.data.X_train,self.data.y_train,hidden_layers_n, hidden_layer_neurons_list,activation_function_list,regularization,reg_rate,username)
               
     def compileModel(self, type,learning_rate):
         #compile the model
