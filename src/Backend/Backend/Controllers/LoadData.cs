@@ -430,8 +430,188 @@ namespace Backend.Controllers
             result = JsonConvert.SerializeObject(modelTable);
 
             var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result);
+            CsvConfiguration csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = true,
+                Delimiter = ",",
+                MissingFieldFound = null
+            };
+            CsvHelper.CsvReader csv = new CsvHelper.CsvReader(System.IO.File.OpenText(SelectedPath), csvConfiguration);
+            csv.Read();
+            csv.ReadHeader();
 
-            return Ok(resultjson);
+            List<string> headers = csv.HeaderRecord.ToList();
+            System.Data.DataTable dataTable = new System.Data.DataTable();
+            foreach (string header in headers)
+            {
+                dataTable.Columns.Add(new System.Data.DataColumn(header));
+                //Console.WriteLine(header);
+            }
+
+            while (csv.Read())
+            {
+                System.Data.DataRow row = dataTable.NewRow();
+
+                foreach (System.Data.DataColumn column in dataTable.Columns)
+                {
+                    row[column.ColumnName] = csv.GetField(column.DataType, column.ColumnName);
+                    //Console.WriteLine(column.ColumnName);
+                }
+
+                dataTable.Rows.Add(row);
+            }
+
+            /*for(int i = 0; i < headers.Count; i++) //ovako bi trebalo i radilo bi i za regresione i klasifikacione modele ali nesto nece
+            {
+                string header = headers[i];
+                //List<string> header = new List<string>(dataTable.Rows.Count);
+            }*/
+
+            if (headers.Contains("MAE")) //regresioni model
+            {
+
+                List<string> Loss1 = new List<string>(dataTable.Rows.Count);
+                List<string> MAE1 = new List<string>(dataTable.Rows.Count);
+                List<string> MSE1 = new List<string>(dataTable.Rows.Count);
+                List<string> RMSE1 = new List<string>(dataTable.Rows.Count);
+                List<string> label1 = new List<string>(dataTable.Rows.Count);
+                List<string> pred1 = new List<string>(dataTable.Rows.Count);
+                List<string> valLoss1 = new List<string>(dataTable.Rows.Count);
+                List<string> valMAE1 = new List<string>(dataTable.Rows.Count);
+                List<string> valMSE1 = new List<string>(dataTable.Rows.Count);
+                List<string> valRMSE1 = new List<string>(dataTable.Rows.Count);
+                /*List<string> evaluate = new List<string>(dataTable.Rows.Count);
+                List<string> evaluate_mae1 = new List<string>(dataTable.Rows.Count);
+                List<string> evaluate_mse1 = new List<string>(dataTable.Rows.Count);
+                List<string> evaluate_root1 = new List<string>(dataTable.Rows.Count);*/
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    Loss1.Add((string)row["Loss"]);
+                    label1.Add((string)row["label"]);
+                    pred1.Add((string)row["pred"]);
+                    valLoss1.Add((string)row["valLoss"]);
+                    MAE1.Add((string)row["MAE"]);
+                    MSE1.Add((string)row["MSE"]);
+                    RMSE1.Add((string)row["RMSE"]);
+                    valMAE1.Add((string)row["valMAE"]);
+                    valMSE1.Add((string)row["valMSE"]);
+                    valRMSE1.Add((string)row["valRMSE"]);
+                    /*evaluate.Add((string)row["evaluate"]);
+                    evaluate_mae1.Add((string)row["Column1"]);
+                    evaluate_mse1.Add((string)row["Column2"]);
+                    evaluate_root1.Add((string)row["Column3"]);*/
+                }
+                Loss1.RemoveAll(s => s == "");
+                label1.RemoveAll(s => s == "");
+                pred1.RemoveAll(s => s == "");
+                valLoss1.RemoveAll(s => s == "");
+                MAE1.RemoveAll(s => s == "");
+                MSE1.RemoveAll(s => s == "");
+                RMSE1.RemoveAll(s => s == "");
+                valMAE1.RemoveAll(s => s == "");
+                valMSE1.RemoveAll(s => s == "");
+                valRMSE1.RemoveAll(s => s == "");
+                /*evaluate.RemoveAll(s => s == "");
+                evaluate.RemoveAll(s => s == "loss");
+                evaluate_mae1.RemoveAll(s => s == "");
+                evaluate_mae1.RemoveAll(s => s == "mae");
+                evaluate_mse1.RemoveAll(s => s == "");
+                evaluate_mse1.RemoveAll(s => s == "mse");
+                evaluate_root1.RemoveAll(s => s == "");
+                evaluate_root1.RemoveAll(s => s == "root_mean_squared_error");*/
+                var regmodel = new
+                {
+                    Loss = Loss1,
+                    label = label1,
+                    pred = pred1,
+                    valLoss = valLoss1,
+                    MAE = MAE1,
+                    MSE = MSE1,
+                    RMSE = RMSE1,
+                    valMAE = valMAE1,
+                    valMSE = valMSE1,
+                    valRMSE = valRMSE1,
+                    /*evaluate_loss = evaluate,
+                    evaluate_mae = evaluate_mae1,
+                    evaluate_mse = evaluate_mse1,
+                    root_mean_squared_error = evaluate_root1*/
+                };
+                return Ok(regmodel);
+            }
+            if (headers.Contains("AUC")) //klasifikacioni model
+            {
+
+                List<string> Loss1 = new List<string>(dataTable.Rows.Count);
+                List<string> AUC1 = new List<string>(dataTable.Rows.Count);
+                List<string> Accuracy1 = new List<string>(dataTable.Rows.Count);
+                List<string> F1_score1 = new List<string>(dataTable.Rows.Count);
+                List<string> label1 = new List<string>(dataTable.Rows.Count);
+                List<string> pred1 = new List<string>(dataTable.Rows.Count);
+                List<string> Precision1 = new List<string>(dataTable.Rows.Count);
+                List<string> Recall1 = new List<string>(dataTable.Rows.Count);
+                List<string> valAUC1 = new List<string>(dataTable.Rows.Count);
+                List<string> valAccuracy1 = new List<string>(dataTable.Rows.Count);
+                List<string> valF1_score1 = new List<string>(dataTable.Rows.Count);
+                List<string> valPrecision1 = new List<string>(dataTable.Rows.Count);
+                List<string> valRecall1 = new List<string>(dataTable.Rows.Count);
+                List<string> valLoss1 = new List<string>(dataTable.Rows.Count);
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    Loss1.Add((string)row["Loss"]);
+                    label1.Add((string)row["label"]);
+                    pred1.Add((string)row["pred"]);
+                    valLoss1.Add((string)row["valLoss"]);
+                    AUC1.Add((string)row["AUC"]);
+                    Accuracy1.Add((string)row["Accuracy"]);
+                    F1_score1.Add((string)row["F1_score"]);
+                    Precision1.Add((string)row["Precision"]);
+                    Recall1.Add((string)row["Recall"]);
+                    valAUC1.Add((string)row["valAUC"]);
+                    valAccuracy1.Add((string)row["valAccuracy"]);
+                    valF1_score1.Add((string)row["valF1_score"]);
+                    valPrecision1.Add((string)row["valPrecision"]);
+                    valRecall1.Add((string)row["valRecall"]);
+                }
+                Loss1.RemoveAll(s => s == "");
+                label1.RemoveAll(s => s == "");
+                pred1.RemoveAll(s => s == "");
+                valLoss1.RemoveAll(s => s == "");
+                AUC1.RemoveAll(s => s == "");
+                Accuracy1.RemoveAll(s => s == "");
+                F1_score1.RemoveAll(s => s == "");
+                Precision1.RemoveAll(s => s == "");
+                Recall1.RemoveAll(s => s == "");
+                valAUC1.RemoveAll(s => s == "");
+                valAccuracy1.RemoveAll(s => s == "");
+                valF1_score1.RemoveAll(s => s == "");
+                valPrecision1.RemoveAll(s => s == "");
+                valRecall1.RemoveAll(s => s == "");
+
+                var classmodel = new
+                {
+                    Loss = Loss1,
+                    label = label1,
+                    pred = pred1,
+                    valLoss = valLoss1,
+                    AUC = AUC1,
+                    Accuracy = Accuracy1,
+                    F1_score = F1_score1,
+                    Precision = Precision1,
+                    Recall = Recall1,
+                    valAUC = valAUC1,
+                    valAccuracy = valAccuracy1,
+                    valF1_score = valF1_score1,
+                    valPrecision = valPrecision1,
+                    valRecall = valRecall1,
+                };
+                return Ok(classmodel);
+            }
+            string result21 = string.Empty;
+            result21 = JsonConvert.SerializeObject(dataTable);
+
+            var resultjson21 = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result21);
+            return resultjson;
         }
 
         [HttpPost("save")] //pravljenje foldera gde ce se cuvati model cuva se model samo kad korisnik klikne na dugme sacuvaj model kao i cuvanje povratne vrednosti modela
