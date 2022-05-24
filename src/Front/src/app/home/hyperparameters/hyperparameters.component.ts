@@ -180,7 +180,10 @@ export class HyperparametersComponent implements OnInit {
       }
     });
 
-    this.onAddLayer();
+    //argitektura od 3 sloja
+    for (let j=0;j<3;j++){
+      this.onAddLayer();
+    }
 
     this.session=sessionStorage.getItem('username');
 
@@ -382,6 +385,11 @@ export class HyperparametersComponent implements OnInit {
       this.activacioneFunkc.push('sigmoid');
       const control = new FormControl(new FormArray([]));
       (<FormArray>this.hyperparametersForm.get('neurons')).push(control);
+      //po 5 neurona da ima svaki nov sloj!
+      //alert("Dodajem sloju "+(this.countLayers-1)+" neurone!");
+      for (let i=1;i<5;i++){
+        this.onAddNeuron(this.countLayers-1);
+      }
     }
   }
 
