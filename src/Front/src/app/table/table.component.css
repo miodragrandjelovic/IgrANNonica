@@ -26,3 +26,8 @@ tr:hover td div{
     max-height: fit-content;
     overflow: hidden;
 }
+
+input.form-control{
+    border-top-left-radius: 0.25rem !important;
+    border-bottom-left-radius: 0.25rem !important;
+}
