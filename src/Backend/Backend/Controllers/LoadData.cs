@@ -224,7 +224,6 @@ namespace Backend.Controllers
             result = JsonConvert.SerializeObject(modelTable);
 
             var resultjson = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result);
-
             CsvConfiguration csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 HasHeaderRecord = true,
@@ -240,6 +239,7 @@ namespace Backend.Controllers
             foreach (string header in headers)
             {
                 dataTable.Columns.Add(new System.Data.DataColumn(header));
+                //Console.WriteLine(header);
             }
 
             while (csv.Read())
@@ -249,6 +249,7 @@ namespace Backend.Controllers
                 foreach (System.Data.DataColumn column in dataTable.Columns)
                 {
                     row[column.ColumnName] = csv.GetField(column.DataType, column.ColumnName);
+                    //Console.WriteLine(column.ColumnName);
                 }      
 
                 dataTable.Rows.Add(row);
@@ -258,13 +259,9 @@ namespace Backend.Controllers
             {
                 string header = headers[i];
                 //List<string> header = new List<string>(dataTable.Rows.Count);
-            }/*
-            foreach (string header in headers)
-            {
-                List<string> header = new List<string>(dataTable.Rows.Count);
             }*/
 
-            if (headers.Contains("MAE"))
+            if (headers.Contains("MAE")) //regresioni model
             {
 
                 List<string> Loss1 = new List<string>(dataTable.Rows.Count);
@@ -277,6 +274,11 @@ namespace Backend.Controllers
                 List<string> valMAE1 = new List<string>(dataTable.Rows.Count);
                 List<string> valMSE1 = new List<string>(dataTable.Rows.Count);
                 List<string> valRMSE1 = new List<string>(dataTable.Rows.Count);
+                /*List<string> evaluate = new List<string>(dataTable.Rows.Count);
+                List<string> evaluate_mae1 = new List<string>(dataTable.Rows.Count);
+                List<string> evaluate_mse1 = new List<string>(dataTable.Rows.Count);
+                List<string> evaluate_root1 = new List<string>(dataTable.Rows.Count);*/
+
                 foreach (DataRow row in dataTable.Rows)
                 {
                     Loss1.Add((string)row["Loss"]);
@@ -289,6 +291,10 @@ namespace Backend.Controllers
                     valMAE1.Add((string)row["valMAE"]);
                     valMSE1.Add((string)row["valMSE"]);
                     valRMSE1.Add((string)row["valRMSE"]);
+                    /*evaluate.Add((string)row["evaluate"]);
+                    evaluate_mae1.Add((string)row["Column1"]);
+                    evaluate_mse1.Add((string)row["Column2"]);
+                    evaluate_root1.Add((string)row["Column3"]);*/
                 }
                 Loss1.RemoveAll(s => s == "");
                 label1.RemoveAll(s => s == "");
@@ -300,7 +306,14 @@ namespace Backend.Controllers
                 valMAE1.RemoveAll(s => s == "");
                 valMSE1.RemoveAll(s => s == "");
                 valRMSE1.RemoveAll(s => s == "");
-
+                /*evaluate.RemoveAll(s => s == "");
+                evaluate.RemoveAll(s => s == "loss");
+                evaluate_mae1.RemoveAll(s => s == "");
+                evaluate_mae1.RemoveAll(s => s == "mae");
+                evaluate_mse1.RemoveAll(s => s == "");
+                evaluate_mse1.RemoveAll(s => s == "mse");
+                evaluate_root1.RemoveAll(s => s == "");
+                evaluate_root1.RemoveAll(s => s == "root_mean_squared_error");*/
                 var regmodel = new
                 {
                     Loss = Loss1,
@@ -313,10 +326,14 @@ namespace Backend.Controllers
                     valMAE = valMAE1,
                     valMSE = valMSE1,
                     valRMSE = valRMSE1,
+                    /*evaluate_loss = evaluate,
+                    evaluate_mae = evaluate_mae1,
+                    evaluate_mse = evaluate_mse1,
+                    root_mean_squared_error = evaluate_root1*/
                 };
                 return Ok(regmodel);
             }
-            if (headers.Contains("AUC"))
+            if (headers.Contains("AUC")) //klasifikacioni model
             {
 
                 List<string> Loss1 = new List<string>(dataTable.Rows.Count);
@@ -343,7 +360,7 @@ namespace Backend.Controllers
                     Accuracy1.Add((string)row["Accuracy"]);
                     F1_score1.Add((string)row["F1_score"]);
                     Precision1.Add((string)row["Precision"]);
-                    Recall1.Add((string)row["Recall1"]);
+                    Recall1.Add((string)row["Recall"]);
                     valAUC1.Add((string)row["valAUC"]);
                     valAccuracy1.Add((string)row["valAccuracy"]);
                     valF1_score1.Add((string)row["valF1_score"]);
@@ -384,12 +401,10 @@ namespace Backend.Controllers
                 };
                 return Ok(classmodel);
             }
-
             string result21 = string.Empty;
             result21 = JsonConvert.SerializeObject(dataTable);
 
             var resultjson21 = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(result21);
-
             return resultjson;
         }
 
