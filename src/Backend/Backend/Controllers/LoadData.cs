@@ -1261,7 +1261,8 @@ namespace Backend.Controllers
 
             var resultjsoncsv = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(resultCSV); //rezultati csv-a to treba poslati na /csv
             var datacsv = new StringContent(resultCSV, System.Text.Encoding.UTF8, "application/json");
-            var csvurl = url + "/csv";
+            //var csvurl = url + "/csv";
+            var csvurl = url + "/predictionCsvOriginal";
             var responsecsv = await http.PostAsync(csvurl, datacsv);
 
             //HIPERPARAMETRI SA KOJIMA JE KREIAN MODEL
@@ -1275,7 +1276,8 @@ namespace Backend.Controllers
 
             var resultjsonhp = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(resultHP); //rezultati HP to treba poslati na /hp
             var datahp = new StringContent(resultHP, System.Text.Encoding.UTF8, "application/json");
-            var hpurl = url + "/hp";
+            //var hpurl = url + "/hp";
+            var hpurl = url + "/predictionHp"; 
             var responsehp = await http.PostAsync(hpurl, datahp);
 
 
