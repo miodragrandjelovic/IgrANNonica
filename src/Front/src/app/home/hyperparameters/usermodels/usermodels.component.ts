@@ -77,18 +77,17 @@ export class UsermodelsComponent implements OnInit {
     
   selektovanDirName:string;
   selektovanModelName:string;
+  ulogovanKorisnik :any;
+
   closeResult: string | undefined;
   addNewData(newData: any, event:any, item:any){
     this.selektovanDirName='';
     this.selektovanModelName='';
+    this.ulogovanKorisnik ='';
 
     this.selektovanModelName=event.target.id;
     this.selektovanDirName=item;
-    var loggedUsername = sessionStorage.getItem('username');
-   this.http.post<any>(this.url +'/api/LoadData/predictionModel?dirname='+this.selektovanDirName+'&modelname='+this.selektovanModelName+'&Username='+loggedUsername,{
-     //KAD SE DODA NA BEKU OVDE DA SE DODAJU PARAMETRI
-   }).subscribe();
-
+    this.ulogovanKorisnik = sessionStorage.getItem('username');
   
    // console.log('na ovaj csv: '+ this.selektovanDirName);
     // console.log('na ovaj model kliknuto: '+ this.selektovanModelName);
@@ -175,13 +174,13 @@ export class UsermodelsComponent implements OnInit {
             this.allData = rowsArray;
 
             
-            this.http.post<any>(this.url+'/api/LoadData/predictionCsv', {
+            this.http.post<any>(this.url+'/api/LoadData/predictionModel?dirname='+this.selektovanDirName+'&modelname='+this.selektovanModelName+'&Username='+this.ulogovanKorisnik, {
               csvData: JSON.stringify(this.dataObject),
               Name: file.name
             }).subscribe( result=>{
               this.predikcija=result;
               
-              //  console.log('ovo je predikcija'+this.predikcija);
+             //   console.log('ovo je predikcija'+this.predikcija);
             });
 
            }
