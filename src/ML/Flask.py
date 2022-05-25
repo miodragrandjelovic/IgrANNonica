@@ -169,7 +169,10 @@ def predikcija_def():
 @app.route("/username", methods=["POST"]) #Primanje Username-a sa beka
 def post_username():
     global username
-    username = request.get_data()
+    pom = request.get_data()
+    raw_string = r"{}".format(pom)
+    raw_string=raw_string[2:-1]
+    username=raw_string
     return username
 
 @app.route("/username", methods=['GET']) #slanje Username-a na bek cisto za proveru
@@ -209,7 +212,7 @@ def save_model1():
     raw_string=raw_string[2:-1]
     pathmodel1=raw_string
     #print(pathmodel1)
-    save_model(pathmodel1)
+    save_model(pathmodel1,username)
     return pathmodel1
 
 
@@ -242,6 +245,7 @@ def treniraj():
         #pathmodel=None
 
     #finally:
+    
     pathmodel=None
     stats.createModel(train=df,username=hiperp['Username'],features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'],val_test=hiperp['ValAndTest'], activation_function_list=hiperp['ActivationFunctions'],hidden_layers_n=hiperp['Layers'],
         hidden_layer_neurons_list=hiperp['NumberOfNeurons'], columns=hiperp['ColumNames'],enc_types=hiperp['Encodings'],num_cat_col=hiperp['CatNum'], randomize=hiperp['Randomize'],

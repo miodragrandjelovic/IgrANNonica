@@ -25,8 +25,17 @@ from keras.callbacks import Callback
 from keras.utils import np_utils
 import keras.backend as K
 
-global dictionary
-dictionary=dict()
+
+
+class initdict():
+    global dictionary
+    try:
+        dictionary
+        print("postojim")
+    except NameError:
+        print("well, it WASN'T defined after all!")
+        dictionary=dict()
+
 
 class epochResults(Callback):
     def on_epoch_end(self, epoch, logs=None):
@@ -349,9 +358,6 @@ def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_l
 
     #print("SHAPE OF X TRAIN DATASET ", X_train.shape[0], " and ", X_train.shape[1])
 
-
-
-    model
     model=None
     model = Sequential()
 
@@ -455,7 +461,7 @@ def compile_model(model, type, y,lr):
     model.compile(optimizer=opt, loss=loss, metrics = met)
     return model 
 
-def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test,path,username):
+def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test,path):
 
     call = epochResults()
 

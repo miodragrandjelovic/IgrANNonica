@@ -11,8 +11,10 @@ from sklearn.preprocessing import LabelEncoder
 import category_encoders as ce
 
 
-dictionary=dict()
+global dictionary2
 
+dictionary2=dict()
+dictionary2
 
 df=pd.read_csv("src\ML\mpg.csv")
 
@@ -128,3 +130,19 @@ model.compile(optimizer='adam', loss=MeanSquaredError(),metrics=['mae','mse'])
 hist=model.fit(X_train, y_train, epochs=20,batch_size=10, validation_data = (X_test, y_test), verbose=1)
 
 dictionary['pera']=model
+
+dictionary['mile'].save(str("C:/Users/User/Desktop/folder"))
+
+
+global dictionary3
+
+try:
+    dictionary3
+    print("postojim")
+except NameError:
+    print("well, it WASN'T defined after all!")
+    dictionary3=dict()
+
+
+dictionary3['joca']=3
+dictionary3

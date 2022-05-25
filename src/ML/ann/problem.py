@@ -32,6 +32,7 @@ class Data():
 
     def Misa(self, columns,enc_types,num_cat_col,type,features,label,ratio, val_test,randomize, missing_values):
         
+        fn.initdict() 
         self.data = fn.load_data(features, label, self.data)
         # popunjavanje nedostajucih vrednosti
         print("DOSLI SMO DO POPUNJAVANJA NEDOSTAJUCIH")
