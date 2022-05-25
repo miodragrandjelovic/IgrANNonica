@@ -1215,9 +1215,10 @@ namespace Backend.Controllers
 
         //za prediktovanje csv-a preko modela
         [HttpPost("predictionModel")] //Slanje Putanje do foldera gde je sacuvan izabrani model na /pathModel bi mogao
-                                      //Slanje originalnog CSV-a sa kojim je kreiran model na /csv mozda
-                                      //Slanje hiperparametara sa kojima je kreiran izabrani model na /hp mozda
-        public async Task<ActionResult<JsonDocument>> PostPredictedModel(String dirname, String modelname, string Username)
+                                      //Slanje originalnog CSV-a sa kojim je kreiran model na /csv mozda postoji i /predictionCsvOriginal 
+                                      //Slanje hiperparametara sa kojima je kreiran izabrani model na /hp mozda postoji i /predictionHp 
+                                      //Slanje novog csv-a ucitanog da se prediktuje na /predictionCsv
+        public async Task<ActionResult<JsonDocument>> PostPredictedModel([FromBody] DataLoad cs, String dirname, String modelname, string Username)
         {
             string CurrentPath = Directory.GetCurrentDirectory();
             string fileName = modelname + ".csv"; //rezultati modela koji su sacuvani u csv fajlu
@@ -1277,6 +1278,21 @@ namespace Backend.Controllers
             var hpurl = url + "/hp";
             var responsehp = await http.PostAsync(hpurl, datahp);
 
+
+            string name = cs.Name;
+            string csve = cs.CsvData;
+            Name = cs.Name;
+            PythonController.Name = cs.Name;
+            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
+            //var url = "http://127.0.0.1:3000/predictionCsv"; //slanje csv-a za prediktovanje na pajton
+            var urlpred = url + "/predictionCsv";
+            var response = await http.PostAsync(urlpred, data);
+
+            var predurl = url + "/prediction";
+            HttpResponseMessage httpResponse = await http.GetAsync(predurl); //rezultati predikcije
+            var predikcija = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
+
+            return Ok(predikcija);
 
             return Ok(resultjsonhp);
         }
