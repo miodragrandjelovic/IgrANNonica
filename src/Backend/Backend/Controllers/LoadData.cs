@@ -620,6 +620,9 @@ namespace Backend.Controllers
             var userNu = 0;
             if (Username != null)
             {
+                var data = new StringContent(Username, System.Text.Encoding.UTF8, "application/text");
+                var urluser = url + "/username";
+                var response = await http.PostAsync(urluser, data);
                 for (int i = 0; i < dict_save.Count; i++)
                 {
                     if (dict_save.ElementAt(i).Key == Username)
