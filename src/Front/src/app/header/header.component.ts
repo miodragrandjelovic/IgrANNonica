@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm,Validators } from '@angular/forms';
 import { PrijavaService } from '../prijava/./prijava.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +9,8 @@ import { User } from '../_model/user.model';
 import { registerLocaleData } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'ngx-cookie-service';
+import { ProfileComponent } from './profile/profile.component';
+import { ProfileService } from './profile/profile.service';
 
 @Component({
   selector: 'app-header',
@@ -16,6 +18,7 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+
   closeResult: string | undefined;
 
   ulogovanUser: User=new User();
@@ -29,9 +32,11 @@ export class HeaderComponent implements OnInit {
     private router:Router,
     private toastr:ToastrService,
     private cookie: CookieService,
+    public profilService: ProfileService,
     ) { 
       this.session=this.get();
       this.loggedUser=this.get();
+
     }
 
     registerForm:any;
@@ -51,6 +56,7 @@ export class HeaderComponent implements OnInit {
     });
 
     this.isMenuCollapsed = true;
+    this.selectedIndex = "homePage";
   }
 
 
@@ -76,7 +82,7 @@ export class HeaderComponent implements OnInit {
      
       this.session=this.get();
       this.loggedUser=this.get();
-
+      this.profilService.user=false;
       this.selectedIndex = 'homePage';
       
       this.message = '';
@@ -106,7 +112,7 @@ export class HeaderComponent implements OnInit {
     const password = this.registerForm.value.password;
 
     this.registracijaService.signUp(firstname, lastname, email, username,password).subscribe(resData => {
-      console.log(resData);
+     // console.log(resData);
       this.toastr.success('Sign up successfully', 'Users sign up');
       //log him in
       this.prijavaService.logIn(username, password).subscribe(resData => {
@@ -117,7 +123,7 @@ export class HeaderComponent implements OnInit {
        
         this.session=this.get();
         this.loggedUser=this.get();
-  
+        this.profilService.user=false;
         this.selectedIndex = 'homePage';
         this.message='';
         
@@ -133,7 +139,7 @@ export class HeaderComponent implements OnInit {
         }
       });
     }, error => {
-      console.log(error);
+     // console.log(error);
       this.toastr.error('Sign up unsuccessful!', 'User sign up');
     });
     this.registerForm.reset();
@@ -188,6 +194,7 @@ export class HeaderComponent implements OnInit {
     this.selectedIndex = "";
     this.isMenuCollapsed = true;
     this.prijavaService.logout();
+    this.selectedIndex = "homePage";
   }
 
 

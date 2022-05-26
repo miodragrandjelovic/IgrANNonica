@@ -1,7 +1,8 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { left, right } from '@popperjs/core';
 import { Chart } from 'chart.js';
 import { NumberValue } from 'd3-scale';
+import { LoadingService } from '../loading/loading.service';
 
 @Component({
   selector: 'app-prediction',
@@ -21,27 +22,61 @@ export class PredictionComponent implements OnInit, OnChanges {
   min: number;
   max: number;
 
-  constructor() { }
+  constructor(private spiner: LoadingService) { }
 
   ngOnInit(): void {
-    
+    this.loadPred();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngAfterViewInit(): void {
+    this.spiner.setShowSpinner(false);
+  }
+
+  ngOnChanges(): void {
+    this.updatePred();
+  }
+
+  updatePred() {
+  //  console.log(this.pred);
+    this.predArray = [];
+    this.labelArray = [];
+    this.x = [];
+    let data: any = [];
+    let data1 = [];
+    for(let i = 0; i < this.pred.length; i++){
+      this.predArray.push(this.pred[i]);
+      this.labelArray.push(this.label[i]);
+      data.push({x: i+1, y: this.predArray[i]});
+      data1.push({x: i+1, y: this.labelArray[i]});
+    }
+    this.min = Math.min(0, ...this.predArray, ...this.labelArray);
+    this.max = Math.max(...this.predArray, ...this.labelArray);
+    let step = (this.max - this.min) / 10;
+
+    this.chart.data.datasets.forEach((dataset: any) => {
+      dataset.data.push(data);
+    })
+    this.chart.update();    
+  }
+
+  loadPred() {
+   // console.log(this.pred);
     this.predArray = [];
     this.labelArray = [];
     this.x = [];
     let data = [];
     let data1 = [];
     for(let i = 0; i < this.pred.length; i++){
-      this.predArray.push(this.pred[i][0]);
-      this.labelArray.push(this.label[i][0]);
+      this.predArray.push(this.pred[i]);
+      this.labelArray.push(this.label[i]);
       data.push({x: i+1, y: this.predArray[i]});
       data1.push({x: i+1, y: this.labelArray[i]});
     }
     this.min = Math.min(0, ...this.predArray, ...this.labelArray);
     this.max = Math.max(...this.predArray, ...this.labelArray);
     let step = (this.max - this.min) / 10; 
+   // console.log(data);
+   // console.log(data1);
 
     this.ctx = document.getElementById('pred') as HTMLCanvasElement;
     this.chart = new Chart(this.ctx, {
@@ -70,7 +105,9 @@ export class PredictionComponent implements OnInit, OnChanges {
           y1: {
             position: right
           }
-        }
+        },
+        responsive: true,
+        maintainAspectRatio:false,
       }
     });
   }

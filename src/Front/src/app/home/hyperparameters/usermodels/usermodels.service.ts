@@ -5,22 +5,16 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 
-export class MessageService{
+export class RefreshService{
  
     constructor() { }
    
    
     messageSubject = new Subject<number>();
-  
-    disableButton = new Subject<boolean>();
-
-    sayMessage(message:number){
    
+   
+    sayMessage(message:number){
       this.messageSubject.next(message);
-    }
-
-    disableClick(message:boolean){
-      this.disableButton.next(message);
     }
    
   }

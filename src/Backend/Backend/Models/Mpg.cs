@@ -5,6 +5,7 @@ namespace Backend.Models
     public class Mpg
     {
         [Key]
+        public int Id { get; set; }
         public string Manufacturer { get; set; } = string.Empty;
         public string Model { get; set; } = string.Empty;
         public float Displ { get; set; }

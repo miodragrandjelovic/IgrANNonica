@@ -1,3 +1,4 @@
+from flask import jsonify
 import numpy as np
 import pandas as pd
 from tensorflow import keras
@@ -64,6 +65,20 @@ y_test=scaler.inverse_transform(y_test)
 
 y_test
 pred=scaler.inverse_transform(pred)
+
+pred2=[]
+
+for i in range (len(pred)):
+    pred2.append(pred[i][0])
+
+pred3=np.array(pred2)
+
+pred3=pred3.tolist()
+
+type(pred3)
+
+print(type(pred2))
+
 ####
 
 predict=pd.read_csv("src\ML\mpgPredict.csv")

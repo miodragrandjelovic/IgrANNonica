@@ -27,7 +27,7 @@ namespace Backend.Controllers
         private readonly UserManager<ApplicationUser> _userManager;//
         private readonly IConfiguration _configuration;
         private readonly UserDbContext _context;
-        public static string Username;
+        public static string Username1;
         public static string? DirName { get; set; } //Ime foldera 
         public static string url = "http://127.0.0.1:3000";
         public RegistracijaUseraController(UserDbContext context, IConfiguration configuration)//
@@ -35,9 +35,9 @@ namespace Backend.Controllers
             _context = context;
             _configuration = configuration;
         }
-
+        
         [HttpDelete("model")]//Ukloniti model iz foldera za odredjeni Username.
-        public async Task<IActionResult> DeleteModel(string name) //primati i dirName ako se izlistavaju svi odjednom a ne prvo po csv-ovima po kojima su kreirani
+        public async Task<IActionResult> DeleteModel(string fromCsv, string name, string Username) //primati i dirName ako se izlistavaju svi odjednom a ne prvo po csv-ovima po kojima su kreirani
         {
             //string pathToDelete = System.IO.Path.Combine(path1, names);
 
@@ -49,7 +49,7 @@ namespace Backend.Controllers
             {
                 string CurrentPath = Directory.GetCurrentDirectory();
                 //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + name;
-                string pathToDelete = Path.Combine(CurrentPath, "Users", Username, DirName, name);
+                string pathToDelete = Path.Combine(CurrentPath, "Users", Username, fromCsv, name);
 
                 if (System.IO.Directory.Exists(pathToDelete))
                 {
@@ -68,7 +68,7 @@ namespace Backend.Controllers
             
         }
         [HttpDelete("csv")]//Ukloniti samo csv bez modela ili ukloniti sve?!.
-        public async Task<IActionResult> DeleteCsv(string name)
+        public async Task<IActionResult> DeleteCsv(string name, string Username)
         {
             if (Username == null)
             {
@@ -92,11 +92,33 @@ namespace Backend.Controllers
                 //string pathToDelete = CurrentPath + @"\Users\" + Username + "\\" + DirName + "\\" + DirName + ".csv";
                 string fileName = name + ".csv";
                 string pathToDelete = Path.Combine(CurrentPath, "Users", Username, name, fileName);
-
+                string pathToDele = Path.Combine(CurrentPath, "Users", Username, name);
                 if (System.IO.File.Exists(pathToDelete))
                 {
+                    string publicDelete = Path.Combine(CurrentPath, "Users", "publicDatasets", name, fileName);
+                    string publicDele = Path.Combine(CurrentPath, "Users", "publicDatasets", name);
+                    if (System.IO.File.Exists(publicDelete))
+                    {
+                        FileInfo FileVol = new FileInfo(publicDelete);
+                        string fileLength = FileVol.Length.ToString();
+
+                        FileInfo FileVol1 = new FileInfo(pathToDelete);
+                        string fileLength1 = FileVol1.Length.ToString();
+
+                        if (FileVol1.Length == FileVol.Length)
+                        {
+                            System.IO.Directory.Delete(publicDele, true);
+                        }
+                    }
+
                     System.IO.File.Delete(pathToDelete);
+
+                    if (!Directory.EnumerateFileSystemEntries(pathToDele).Any())
+                    {
+                        System.IO.Directory.Delete(pathToDele, true);
+                    } 
                 }
+                                
                 return Ok("Uspesno uklonjen samo csv fajl." + pathToDelete);
             }
         }
@@ -325,9 +347,9 @@ namespace Backend.Controllers
             {
                 return BadRequest("Pogresna sifra!");
             }
-            Username = request.Username;
-            LoadData.Username = Username;
-            PythonController.Username = Username;
+            Username1 = request.Username;
+            LoadData.Username1 = Username1;
+            PythonController.Username1 = Username1;
 
             string token1 = CreateToken(user);
             var refreshToken = GenerateRefreshToken();
@@ -347,12 +369,12 @@ namespace Backend.Controllers
         }
 
         [HttpGet("logout")]//Logout korisnika.
-        public async Task<ActionResult<string>> Logout()
+        public async Task<ActionResult<string>> Logout(string Username)
         {
             string previousUser = Username;
             Username = null;
-            LoadData.Username = Username;
-            PythonController.Username = Username;
+            LoadData.Username1 = Username;
+            PythonController.Username1 = Username;
             if(previousUser != null)
             {
                 return Ok("Korisnik " + previousUser + " se uspesno izlogovao.");

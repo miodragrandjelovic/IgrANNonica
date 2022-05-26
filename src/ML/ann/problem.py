@@ -32,6 +32,7 @@ class Data():
 
     def Misa(self, columns,enc_types,num_cat_col,type,features,label,ratio, val_test,randomize, missing_values):
         
+        fn.initdict() 
         self.data = fn.load_data(features, label, self.data)
         # popunjavanje nedostajucih vrednosti
         print("DOSLI SMO DO POPUNJAVANJA NEDOSTAJUCIH")
@@ -120,17 +121,17 @@ class Model():
         self.regularization = regularization
         self.regularization_rate = regularization_rate
 
-    def makeModel(self, type, activation_function_list, hidden_layers_n, hidden_layer_neurons_list,regularization,reg_rate):
+    def makeModel(self, type, activation_function_list, hidden_layers_n, hidden_layer_neurons_list,regularization,reg_rate,username):
         # make model
-        self.model = fn.regression(self.data.X,self.data.y,type,self.data.X_train,self.data.y_train,hidden_layers_n, hidden_layer_neurons_list,activation_function_list,regularization,reg_rate)
+        self.model = fn.regression(self.data.X,self.data.y,type,self.data.X_train,self.data.y_train,hidden_layers_n, hidden_layer_neurons_list,activation_function_list,regularization,reg_rate,username)
               
     def compileModel(self, type,learning_rate):
         #compile the model
         fn.compile_model(self.model, type, self.data.y,learning_rate)
 
-    def trainModel(self,type,epochs, batch_size):
+    def trainModel(self,type,epochs, batch_size,path):
         # train our model
-        self.pred,self.label,self.evaluate,self.history = fn.train_model(self.model,type, self.data.X_train, self.data.y_train, epochs, batch_size,self.data.X_val,self.data.y_val, self.data.X_test, self.data.y_test)
+        self.pred,self.label,self.evaluate,self.history = fn.train_model(self.model,type, self.data.X_train, self.data.y_train, epochs, batch_size,self.data.X_val,self.data.y_val, self.data.X_test, self.data.y_test,path)
         
 
     def defMetrics(self, type):
@@ -162,11 +163,13 @@ class Model():
             self.hist['AUC'] = self.history.history['auc']      
             self.hist['Precision'] = self.history.history['precision']
             self.hist['Recall'] = self.history.history['recall']
+            self.hist['F1_score'] = self.history.history['f1_score']
             #self.hist['TruePositives'] = self.history.history['true_positives']
             #self.hist['TrueNegatives'] = self.history.history['true_negatives']
             #self.hist['FalsePositives'] = self.history.history['false_positives']
             #self.hist['FalseNegatives'] = self.history.history['false_negatives']
             #self.hist['TrueNegatives'] = self.history.history['true_negatives']
+            self.hist['valF1_score'] = self.history.history['val_f1_score']
             self.hist['valAccuracy'] = self.history.history['val_accuracy']  
             self.hist['valAUC'] = self.history.history['val_auc']
             self.hist['valPrecision'] = self.history.history['val_precision']

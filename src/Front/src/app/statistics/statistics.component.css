@@ -29,4 +29,23 @@ tr:hover td div{
     overflow: hidden;
 }
 
+.redoviIzbor{
+ text-align: right;   
+}
+.redoviIzbor:first-child{
+    /*background-color: red;*/
+    text-align: left;
+    font-weight: bold;
+}
+
+.redoviSticky:first-child{
+    position: -webkit-sticky;
+    position: sticky;
+    width: fit-content;
+    left: 0px;
+    background-color: #CEECFA;
+}
+
+
+
 

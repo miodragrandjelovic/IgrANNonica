@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Options } from '@angular-slider/ngx-slider';
+import { Options, CustomStepDefinition, LabelType } from '@angular-slider/ngx-slider';
 import { CheckboxControlValueAccessor, Form, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ParametersService } from 'src/app/services/parameters.service';
@@ -8,8 +8,13 @@ import { MessageService } from '../home.service';
 import { GraphicComponent } from '../../graphic/graphic.component';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from 'src/app/loading/loading.service';
+import { RefreshService } from 'src/app/home/hyperparameters/usermodels/usermodels.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
-
+import * as myUrls from 'src/app/urls';
+import { UsermodelsComponent } from './usermodels/usermodels.component';
+import { catchError } from 'rxjs/operators';
+import { pipe } from 'rxjs';
+import { CsvService} from '../csv/csv.service'
 interface RequestHyperparameters {
   learningRate: number,
   epoch: number,
@@ -50,6 +55,8 @@ export class HyperparametersComponent implements OnInit {
 
   @ViewChild(GraphicComponent) graphic: GraphicComponent;
 
+  //@ViewChild(UsermodelsComponent) child:UsermodelsComponent;
+
   inputCheckBoxes : Array<CheckBox> = [];
   selectedCheckBoxes: Array<CheckBox> = [];
   properties: Array<string> = [];
@@ -62,16 +69,16 @@ export class HyperparametersComponent implements OnInit {
   hyperparameters: string;
   hidden: boolean=true;
   value1: number = 80;
-  value2: number = 10;
+  value2: number = 16;
   value3: number = 50;
   //dodato za default vrednosti
-  lrate: number = 0.00001;
+  lrate: number = 0.001;
   activation: string = "sigmoid";
   regularization: string = "none";
   regularizationRate: number = 0;
   problemType: string = "regression";
   encodingType: string = "label";
-  epochs: number=10;
+  epochs: any=10;
   randomize: boolean = false;
   hpResponse: any;
   ctx: any;
@@ -86,34 +93,43 @@ export class HyperparametersComponent implements OnInit {
   //layers:Array<string> = ["5","5","5","5","5"]
   //
   activationFunctions:Array<any>=[];
+  modelName: any = '';
+  modelVisibility: any = 'private';
 
   session:any;
   prikazGrafika=false;
+  show: boolean = false;
 
   options1: Options = {
-    floor: 0,
-    ceil: 100,
+    floor: 5,
+    ceil: 95,
     step: 5
   };
+  
+  steps = [{value: 2}, {value:4}, {value:8}, {value:16}, {value:32}, {value:64}];
+
   options2: Options = {
-    floor: 0,
-    ceil: 50,
-    step: 5
+    stepsArray: this.steps.map((s): CustomStepDefinition => {
+      return { value: s.value };
+    })
   };
+
   options3: Options = {
-    floor: 0,
-    ceil: 100,
+    floor: 5,
+    ceil: 95,
     step: 5
   };
 
   hyperparametersForm!: FormGroup;
+  onemogucenSave:boolean;
+  onemogucenChange:boolean;
 
-
-  constructor(private http: HttpClient, public spiner:LoadingService, private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal) {
+  constructor(private http: HttpClient, public spiner:LoadingService, public refreshModels : RefreshService,
+    private toastr:ToastrService,private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal, private csvservis: CsvService) {
     Chart.register(...registerables);
     Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
    } 
-
+  public url = myUrls.url;
   get neuronControls() {
     return (<FormArray>this.hyperparametersForm.get('neurons')).controls;
    }
@@ -123,6 +139,12 @@ export class HyperparametersComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.onemogucenSave = true;
+    this.onemogucenChange = false;
+    
+    this.spiner.getShowSpinner().subscribe(newValue => {
+      this.show = newValue;
+    });
     this.inputs = [];
     this.hyperparametersForm = new FormGroup({
       'encodingType': new FormControl(null),
@@ -147,7 +169,7 @@ export class HyperparametersComponent implements OnInit {
 
     this.service.messageSubject.subscribe({
       next: x => {
-        if (x == 1)
+        if (x == 0 || x==3)
         {
           this.hidden = false;
           //alert("IM HIDDEN");
@@ -158,7 +180,10 @@ export class HyperparametersComponent implements OnInit {
       }
     });
 
-    this.onAddLayer();
+    //argitektura od 3 sloja
+    for (let j=0;j<3;j++){
+      this.onAddLayer();
+    }
 
     this.session=sessionStorage.getItem('username');
 
@@ -180,6 +205,13 @@ export class HyperparametersComponent implements OnInit {
     this.selectedCheckBoxes = this.inputCheckBoxes.filter((value, index) => {
       return value.isChecked;
     })
+
+    var ldRes = document.getElementById("trainingResults");
+    if (ldRes) {
+      //alert("Prikaz");
+      //ldRes.style.backgroundColor = 'red';
+      ldRes.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   changeSelection() {
@@ -201,8 +233,22 @@ export class HyperparametersComponent implements OnInit {
     this.parametersService.setShowHp(false);
   }
 
+  disableChanges(){
+    this.onemogucenChange = true;
+    //onemoguci prelazak na Load Data stranu
+    this.service.disableClick(true);
+  }
+
+  enableChanges(){
+    this.onemogucenChange = false;
+    //omoguci prelazak na Load Data stranu
+    this.service.disableClick(false);
+  }
+
   onSubmitHyperparameters() {
 
+    // kada se zapocne trening ONEMOGUCITI IZMENU HIPERPARAMTERA I PODATAKA 
+    
     this.inputsString = '';
     this.outputString = '';
     const layers = (<FormArray>this.hyperparametersForm.get('neurons')).controls.length;
@@ -231,10 +277,7 @@ export class HyperparametersComponent implements OnInit {
 
     this.outputString = this.outputString.concat(this.inputs[this.inputs.length - 1]);
 
-   // console.log('br slojeva: '+this.countLayers);
-  //  console.log('aktivacione funkc: '+this.activacioneFunkc);
     this.countAllNeurons();
-  //  console.log('niz br neurona: '+this.neuronsLength);
 
   this.parametersService.getCatNum().subscribe(res => {
     this.catNum = res;
@@ -250,10 +293,11 @@ export class HyperparametersComponent implements OnInit {
     this.missingValues = res;
   });
 
-  console.log(this.catNum);
-  console.log(this.columNames);
-  console.log(this.encodings);
-  console.log(this.missingValues);
+  if (this.epochs == null)
+  {
+    //alert("epochs prazan");
+    this.hyperparametersForm.get('epoch')?.setValue(5);
+  }
 
     const myreq: RequestHyperparameters = {
       learningRate : Number(this.hyperparametersForm.get('learningRate')?.value),
@@ -275,14 +319,24 @@ export class HyperparametersComponent implements OnInit {
       missingValues: this.missingValues,
       columNames: this.columNames
     } 
-    console.log(myreq);
+    var chosenDataset = this.csvservis.getDatasetname(); //ovde skladistiti ime izabranog csv-a u delu load data kako bi resili pitanje konkurentnosti
+    var loggedUsername = sessionStorage.getItem('username');
 
-    this.http.post('https://localhost:7167/api/LoadData/hpNeprijavljen', myreq).subscribe(result => {
+    // ONEMOGUCI
+    this.disableChanges();
+
+    this.http.post(this.url + '/api/LoadData/hpNeprijavljen?Username='+loggedUsername+'&CsvFile='+chosenDataset, myreq).subscribe(result => {
+    
+     // console.log("Rezultat slanja HP treninga je "  + result);
+      // kada se zavrsi trening OMOGUCITI PONOVO IZMENU HIPERPARAMTERARA!
+      this.enableChanges();
+
+      this.scrollToResults("prikazRezutata");
+
       this.inputCheckBoxes = [];
       this.selectedCheckBoxes = [];
       this.properties = [];
       this.hpResponse = result;
-      console.log(this.hpResponse);
       this.properties = Object.keys(this.hpResponse);
       for (let i = 0; i < this.properties.length; i++) {
         if (this.properties[i] == 'label') {
@@ -293,9 +347,8 @@ export class HyperparametersComponent implements OnInit {
           this.pred = this.hpResponse[this.properties[i]];
           break;
         }
-        if (this.properties[i] == 'eveluate') {
+        if (this.properties[i] == 'evaluate') {
           this.eveluate = this.hpResponse[this.properties[i]];
-          console.log(this.eveluate);
           continue;
         }
         const str = 'val' + this.properties[i];
@@ -307,15 +360,21 @@ export class HyperparametersComponent implements OnInit {
           isChecked: true
         }
         this.inputCheckBoxes.push(object);
+        //console.log(this.inputCheckBoxes);
       }
     
       this.fetchSelectedGraphics();
-      console.log(this.selectedCheckBoxes);
+
+      
+      
       });
       
       this.prikazGrafika=true;
-      this.spiner.showSpiner=true;
-      console.log(this.spiner.showSpiner);
+      this.spiner.setShowSpinner(true);
+
+      this.scrollToResults("loaderStatistika");
+      // spusti prikaz na spiner
+      //alert("spusti se na loader");
     }
 
   countLayers=0;
@@ -326,6 +385,11 @@ export class HyperparametersComponent implements OnInit {
       this.activacioneFunkc.push('sigmoid');
       const control = new FormControl(new FormArray([]));
       (<FormArray>this.hyperparametersForm.get('neurons')).push(control);
+      //po 5 neurona da ima svaki nov sloj!
+      //alert("Dodajem sloju "+(this.countLayers-1)+" neurone!");
+      for (let i=1;i<5;i++){
+        this.onAddNeuron(this.countLayers-1);
+      }
     }
   }
 
@@ -361,6 +425,20 @@ export class HyperparametersComponent implements OnInit {
     this.counterNeuron = (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
   }
 
+  checkEpochs(){
+    //alert("Len " + this.epochs);
+    if (this.epochs == null){ 
+      //alert("Moze");
+      return;
+    }
+    else if (this.epochs<1){
+      this.epochs = 1;
+    }
+    else if (this.epochs>100){
+      this.epochs = 100;
+    }
+  }
+
   countNeurons(i:number){
     return  (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
   }
@@ -369,6 +447,21 @@ export class HyperparametersComponent implements OnInit {
     getVal(val:any){
     console.warn(val)
     this.currentVal=val;
+  }
+
+  scrollToResults(id:string) {
+    var results: any;
+    results = document.getElementById(id);
+    
+    //alert("Skrolujem");
+    //if (results) alert("Postoji " +id);
+    //else alert("Ne postoji "+ id);
+
+    const y = results.getBoundingClientRect().top + window.scrollY;
+      window.scroll({
+        top: y,
+        behavior: 'smooth'
+      });
   }
 
    closeResult: string | undefined;
@@ -390,4 +483,47 @@ export class HyperparametersComponent implements OnInit {
         return `with: ${reason}`;
       }
     }
+
+    
+    saveModel() {
+      var chosenDataset = this.csvservis.getDatasetname();
+      let loggedUsername = sessionStorage.getItem('username');
+      this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}` + `&Username=${loggedUsername}`+'&upgradedName='+chosenDataset, 
+      undefined, { responseType: 'text' }).subscribe(result => {
+        
+        //alert("Sacuvano!");
+        //korisnik treba da bude obavesten o tome da je uspesno sacuvan model
+        this.toastr.success('Model saved successfuly!');
+
+        // ovde treba da se pozove refresh usermodels komponente koja se nalazi u predikcija po modelu !!
+        // medjutim ovo vise nije child, pa ne moze ovako!
+        //this.child.ngOnInit();
+        this.refreshModels.sayMessage(1);
+
+        this.modelName = "";
+      }, error=>{
+        this.toastr.error("Could not save model, please try again!");
+      });
+    }
+
+    modelNameChange(newValue: any) {
+      this.modelName = (newValue.target as HTMLInputElement).value;
+
+      //alert("Model name "+ this.modelName);
+      if (this.modelName != "")
+      {
+        this.onemogucenSave = false;
+      }
+      else
+      {
+        //alert("Prazan str");
+        this.onemogucenSave = true;
+      }
+      
+    }
+    modelSelectChange(selectedValue: any) {
+      this.modelVisibility = (selectedValue.target as HTMLInputElement).value;
+    }
+
+
 }

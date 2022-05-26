@@ -5,7 +5,7 @@ import { User } from "../_model/user.model";
 import { Subscription } from 'rxjs';
 import { CookieService } from "ngx-cookie-service";
 import { JwtHelperService } from "@auth0/angular-jwt";
-
+import * as myUrls from 'src/app/urls';
 interface AuthResponseData {
     token: string;
 }
@@ -19,10 +19,10 @@ export class PrijavaService {
         private cookie:CookieService) {
 
     }
-
+    public url = myUrls.url;
     logIn(username: string, password: string) : Observable<string> 
     {
-        return this.http.post<string>('https://localhost:7167/api/RegistracijaUsera/login', {
+        return this.http.post<string>(this.url + '/api/RegistracijaUsera/login', {
             username: username,
             password: password
         });
@@ -41,13 +41,14 @@ export class PrijavaService {
 
     getUserByUsername(username:any) : Observable<User>
     {
-       return this.http.get<User>('https://localhost:7167/api/RegistracijaUsera/username?username='+username);
+       return this.http.get<User>(this.url + '/api/RegistracijaUsera/username?username='+username);
     }
 
     logout()
     {
-        this.http.get<any>('https://localhost:7167/api/RegistracijaUsera/logout').subscribe(result => { 
-        console.log(result);
+        var loggedUsername = sessionStorage.getItem('username');
+        this.http.get<any>(this.url + '/api/RegistracijaUsera/logout?Username='+loggedUsername).subscribe(result => { 
+     //   console.log(result);
         });
     }
     

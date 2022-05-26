@@ -1,21 +1,21 @@
-<div id="sredina" [hidden]="hidden" style="margin:0px;padding:0px;">
-  <div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
+<div id="sredina" [hidden]="!hidden" style="margin:0px;padding:0px;">
+  <!--<div *ngIf="session" style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;margin-left: 10%;">
       
       <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
-      <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> <!-- search da moze po imenu modela ili dataseta-->
+      <input style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> 
       <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
         <img src="assets/images/filter.png" style="height:35px; width: auto;">
       </button>
     </div>
 
     <div class="row" style="width:100%;padding: 10px; padding-left: 30px; padding-right: 30px;margin:auto;background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
-      <!-- ovde ide tabela sa datasetovima korisnika -->
+      
       <p class="fw-bold fs-1">Your models:</p>
     <app-usermodels></app-usermodels>
 
     </div>
-  </div>
+  </div>-->
   <form [formGroup]="hyperparametersForm" (ngSubmit)="onSubmitHyperparameters()">
     
     <!-- ovaj div ce se prikazivati samo ULOGOVANIM korisnicima!-->
@@ -25,20 +25,18 @@
 
           <div class="row parametri" style="width:100%;margin:auto;">
             <div class="control epoch">
-              <label for="epoch">Epoch</label>
+              <label class="labelaHip" for="epoch">Epoch</label>
               <div class="select" style="border-radius: 2px;">
-                <input type="number" [(ngModel)]="epochs" id="epoch" style="width: 80px; " formControlName="epoch">
+                <input [attr.disabled]="onemogucenChange ? 'disabled' : null" type="number" [(ngModel)]="epochs" id="epoch" style="width: 80px;" formControlName="epoch" min="1" max="100" (keyup)="checkEpochs()">
               </div>
             </div>
 
             <div class="control learningRate">
-              <label for="learningRate">Learning rate</label>
+              <label class="labelaHip" for="learningRate">Learning rate</label>
               <div class="select">
-                <select [(ngModel)]='lrate' class="custom-select" name="learningRate" id="learningRate" formControlName="learningRate">
-                  <option value="0.00001" selected>0.00001</option>
-                  <option value="0.0001">0.0001</option>
+                <select [attr.disabled]="onemogucenChange ? 'disabled' : null" [(ngModel)]='lrate' class="custom-select" name="learningRate" id="learningRate" formControlName="learningRate">
                   <option value="0.001">0.001</option>
-                  <option value="0.003">0.003</option>
+                  <option value="0.003" selected>0.003</option>
                   <option value="0.01">0.01</option>
                   <option value="0.03">0.03</option>
                   <option value="0.1">0.1</option>
@@ -50,9 +48,9 @@
               </div>
             </div>
             <div class="control activation" style="display:none;">
-              <label for="activations">Activation</label>
+              <label class="labelaHip" for="activations">Activation</label>
               <div class="select">
-                <select [(ngModel)]='activation' class="custom-select" id="activations" formControlName="activation">
+                <select [attr.disabled]="onemogucenChange ? 'disabled' : null" [(ngModel)]='activation' class="custom-select" id="activations" formControlName="activation">
                   <option value="relu">ReLU</option>
                   <option value="tanh">Tanh</option>
                   <option value="sigmoid">Sigmoid</option>
@@ -61,9 +59,9 @@
               </div>
             </div>
             <div class="control regularization">
-              <label for="regularizations">Regularization</label>
+              <label class="labelaHip" for="regularizations">Regularization</label>
               <div class="select">
-                <select [(ngModel)]='regularization' class="custom-select" id="regularizations" formControlName="regularization">
+                <select [attr.disabled]="onemogucenChange ? 'disabled' : null" [(ngModel)]='regularization' class="custom-select" id="regularizations" formControlName="regularization">
                   <option value="none">None</option>
                   <option value="L1">L1</option>
                   <option value="L2">L2</option>
@@ -71,9 +69,9 @@
               </div>
             </div>
             <div class="control regularizationRate" >
-              <label for="regularRate">Regularization rate</label>
+              <label class="labelaHip" for="regularRate">Regularization rate</label>
               <div class="select">
-                <select [(ngModel)]='regularizationRate' class="custom-select" id="regularRate" formControlName="regularizationRate">
+                <select [attr.disabled]="onemogucenChange ? 'disabled' : null" [(ngModel)]='regularizationRate' class="custom-select" id="regularRate" formControlName="regularizationRate">
                   <option value="0" [disabled]="regularization==='none'">0</option>
                   <option value="0.001" [disabled]="regularization==='none'">0.001</option>
                   <option value="0.003" [disabled]="regularization==='none'">0.003</option>
@@ -88,18 +86,18 @@
               </div>
             </div>
             <div class="control problem">
-              <label for="problem">Problem type</label>
+              <label class="labelaHip" for="problem">Problem type</label>
               <div class="select">
-                <select [(ngModel)]='problemType' class="custom-select" id="problem" formControlName="problemType">
+                <select [attr.disabled]="onemogucenChange ? 'disabled' : null" [(ngModel)]='problemType' class="custom-select" id="problem" formControlName="problemType">
                   <option value="regression">Regression</option>
                   <option value="classification">Classification</option>
                 </select>
               </div>
             </div>
             <div class="control encoding" style="display:none;">
-              <label for="encoding">Encoding</label>
+              <label class="labelaHip" for="encoding">Encoding</label>
               <div class="select">
-                <select [(ngModel)]='encodingType' class="custom-select" id="encoding" formControlName="encodingType">
+                <select [attr.disabled]="onemogucenChange ? 'disabled' : null" [(ngModel)]='encodingType' class="custom-select" id="encoding" formControlName="encodingType">
                   <option value="label">Label</option>
                   <option value="onehot">One hot</option>
                   <option value="binary">Binary</option> 
@@ -109,8 +107,8 @@
 
             <div class="form-check form-switch control randomize">
               <div class="select">
-                <label class="form-check-label" for="flexSwitchCheckDefault">Shuffle</label><br>
-                <input class="form-check-input" type="checkbox" [(ngModel)]="randomize" id="flexSwitchCheckDefault" style="margin:3px;" formControlName="randomize">
+                <label class="form-check-label labelaHip" for="flexSwitchCheckDefault">Shuffle</label><br>
+                <input [attr.disabled]="onemogucenChange ? 'disabled' : null" class="form-check-input" type="checkbox" [(ngModel)]="randomize" id="flexSwitchCheckDefault" style="margin:3px;" formControlName="randomize">
               </div>
             </div>
           </div>
@@ -119,36 +117,37 @@
         <div class="container-fluid" style="margin-top: 10px;"> 
           <div class="row" >
               <div class="col-4" style="width:20%; min-width: 170px;">
-                <label for="percTrainData">Train percentage to data: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
-                <p class="slider">
-                  <ngx-slider class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
+                <label class="labelaHip" for="percTrainData">Train percentage to data: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
+                <p class="slider" placement="end" ngbTooltip="The selected percentage the training set">
+                  <ngx-slider [attr.disabled]="onemogucenChange ? 'disabled' : null" class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
                 </p>
                 
 
                 
-                <label for="valAndTest">Validation and test percentages to rest of data: <span class="value"><input type="text" value = "{{value3}}" (keyup)="onThirdTextInputChange($event)" style="width: 40px;" /></span></label>
+                <label class="labelaHip" for="valAndTest">Validation and test percentages to rest of data: <span class="value"><input type="text" value = "{{value3}}" (keyup)="onThirdTextInputChange($event)" style="width: 40px;" /></span></label>
                 <p class="slider" placement="end" ngbTooltip="The selected percentage will belong to the validation, the rest will belong to the test">
-                  <ngx-slider class="form-range" [(ngModel)]="value3" [options]="options3" formControlName="valAndTest"></ngx-slider>
+                  <ngx-slider [attr.disabled]="onemogucenChange ? 'disabled' : null" class="form-range" [(ngModel)]="value3" [options]="options3" formControlName="valAndTest"></ngx-slider>
                 </p>
 
-                <label for="batchSize">Batch Size: <span class="value"><input type="text" value = "{{value2}}" (keyup)="onSecondTextInputChange($event)" style="width: 40px;" /></span></label>
-                <p class="slider">
-                  <ngx-slider class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
+                <label class="labelaHip" for="batchSize">Batch Size: <span class="value"><input type="text" value = "{{value2}}" (keyup)="onSecondTextInputChange($event)" style="width: 40px;" /></span></label>
+                <p class="slider" placement="end" ngbTooltip="Size of batches of data used in every iteration">
+                  <ngx-slider [attr.disabled]="onemogucenChange ? 'disabled' : null" class="form-range" [(ngModel)]="value2" [options]="options2" formControlName="batchSize"></ngx-slider>
                 </p>
               </div>
               <div class="col-6" formArrayName="neurons" style="text-align: center; width: 77%; overflow:auto; background-color: #CEECFA;padding: 10px; padding-right: 30px;margin-bottom:auto; border-radius: 10px; min-height: 100px;" >
                     <!--<app-slojevi-neuroni></app-slojevi-neuroni> -->
-                      <i-bs  (click)="onAddLayer()"  width="30" height="30" name="plus-circle-fill" style="cursor: pointer;padding: 1%;"></i-bs>
-                      <i-bs  (click)="onRemoveLayer()" width="30" height="30" name="dash-circle-fill"  style="cursor: pointer;"></i-bs>
+                      <i-bs [style.pointer-events]="onemogucenChange ? 'none' : 'auto'" (click)="onRemoveLayer()" width="30" height="30" name="dash-circle-fill"  style="cursor: pointer;padding: 1%;"></i-bs>
+                      <i-bs [style.pointer-events]="onemogucenChange ? 'none' : 'auto'" (click)="onAddLayer()"  width="30" height="30" name="plus-circle-fill" style="cursor: pointer"></i-bs>
                       <span> {{countLayers}} hidden layers</span>
                     <div style="margin: auto; width: fit-content;">
                       <td *ngFor="let neurons of neuronControls; let i = index" style="padding: 2%;">
                         <span style="font-size: 12px;">layer {{i+1}}</span><br>
-                        <i-bs  (click)="onAddNeuron(i)" width="20" height="20" name="plus-circle-fill"  style="cursor: pointer; padding: 2%;"></i-bs><!--slojevi i neuroni da se ovako izlistavaju-->
-                        <i-bs  (click)="onRemoveNeuron(i)" width="20" height="20" name="dash-circle-fill"  style="cursor: pointer;"></i-bs><br>
+                        <i-bs [style.pointer-events]="onemogucenChange ? 'none' : 'auto'"  (click)="onRemoveNeuron(i)" width="20" height="20" name="dash-circle-fill"  style="cursor: pointer; padding: 2%;"></i-bs>
+                        <i-bs [style.pointer-events]="onemogucenChange ? 'none' : 'auto'"  (click)="onAddNeuron(i)" width="20" height="20" name="plus-circle-fill"  style="cursor: pointer;"></i-bs><br><!--slojevi i neuroni da se ovako izlistavaju-->
+                        
                         <p style="font-size: 12px;">{{countNeurons(i)+1}} neurons</p>
                           <div class="select">
-                            <select  class="form-select form-select-sm" (change)="ActivationFuncChange($event,i)" placement="start" ngbTooltip="Activation Functions" style=" border-radius: 4px; border: 2px solid #34495E;margin-right: 3px;margin-bottom: 5px;">
+                            <select [attr.disabled]="onemogucenChange ? 'disabled' : null"  class="form-select form-select-sm" (change)="ActivationFuncChange($event,i)" placement="start" ngbTooltip="Activation Functions" style=" border-radius: 4px; border: 2px solid #34495E;margin-right: 3px;margin-bottom: 5px;width: 100px;">
                               <option value="sigmoid">sigmoid</option> 
                               <option value="linear">linear</option> 
                               <option value="tanh">tanh</option>
@@ -156,10 +155,10 @@
                               <option value="relu">reLU</option> 
                             </select> 
                         </div>
-                        <div style="margin-left: 25px;height: 30px;width: 30px; background-color: #34495E; border-radius: 50%; border: 2px solid;margin-top: 5px;"><br>
+                        <div style="margin-left: 35px;height: 30px;width: 30px; background-color: #34495E; border-radius: 50%; border: 2px solid;margin-top: 5px;"><br>
                         </div>
                         <tr  *ngFor="let neuron of listaNeurona(i); let i = index" style="display: flex;"> 
-                          <div style="margin-left: 25px;height: 30px;width: 30px; background-color: #34495E; border-radius: 50%; border: 2px solid;margin-top: 5px;"><br>
+                          <div style="margin-left: 35px;height: 30px;width: 30px; background-color: #34495E; border-radius: 50%; border: 2px solid;margin-top: 5px;"><br>
                           </div>
                        <!--  <img src="assets/images/slikaZaNeurone.png" style="margin-left: 25px;height: 30px; border: 2px solid;margin-top: 5px;" class="img-fluid rounded mx-auto d-block"><br>
                        --> </tr>
@@ -169,66 +168,52 @@
            </div>
            
               <div class="row" style="margin-top: 30px;">
-                <!--<div class="col form-check" style="margin-left: -13px;">
-                    <button *ngIf="session" class="round-button playButton" style="width:25%;text-align: center; background-color: #212f3c; color:white; height: auto; border-radius: 20px; " (click)="addNewModel(newModel)" ><img src="assets/images/plus.png" width="33px" height="33px"> <span style="font-size: 75%;"> Save Model</span></button>
-                  </div>-->
-                  <!--
-                  <div class="col">
-                    <div *ngIf="session" style="width: 35%;">
-                      <span style="font-weight: bold;">Name it and save it.</span>
-                      <div class="input-group input-group-sm mb-3" placement="end" ngbTooltip="If you want to save this model, you have to name it.">
-                        <span class="input-group-text" style="background-color: #CEECFA;">Model name</span>
-                         <input type="text" class="form-control" type="text" [(ngModel)]="modelName" id="modelName" formControlName="modelName"> 
-                      </div>
-                    </div>
-                  </div>-->
                 <div class="col form-check" style="text-align: right; padding-top: 27px;">
-                  <button class="round-button playButton"style="width:10%;text-align: center; background-color: #212f3c; color:white; height:auto; border-radius: 20px;" type="submit"><i-bs width="33" height="33" name="caret-right-fill"></i-bs><span style="font-size: 75%;">Train</span></button>
+                  <button [disabled]="onemogucenChange" class="round-button playButton"style="width:10%;text-align: center; background-color: #212f3c; color:white; height:auto; border-radius: 20px;" type="submit"><i-bs width="33" height="33" name="caret-right-fill"></i-bs><span style="font-size: 75%;">Train</span></button>
                 </div>
               </div>
 
           </div>
 
-        <div class="container-fluid" *ngIf="prikazGrafika" style="margin-top: 10px;" >
-            <div class="row" >
-              <!-- <div class="col-4"  style="width:auto; min-width: 170px;display: flex;align-items: center;">
-                <div class="checkbox-list">
-                  <p  *ng style="color: white; font-weight: bold; border-radius: 2px; background-color: #212f3c;">Choose Graphics:</p>
-                    <div class="checkbox" *ngFor="let item of inputCheckBoxes" >
-                      <input  class="form-check-input" type="checkbox" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone: true}" id="item"  checked="" (change)="changeSelection()">
-                      <label for="item" style="color: white;">{{item.label}}</label>
-                    </div>
-                </div>
-             </div> -->
-            
-             
-                <div class="col-4" style="width:20%; min-width: 170px;">
-                  <div class="form-check" style="padding-left: 0px; padding-bottom: 5px;">
-                      <p  *ng style="color: white; font-weight: bold; border-radius: 2px; background-color: #212f3c;">Choose Graphics:</p>
-                      <div *ngFor="let item of inputCheckBoxes" style="padding-left: 35px">
-                        <input class="form-check-input" type="checkbox" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone: true}" id="flexCheckDefault" (change)="changeSelection()">
-                        <label style="color: black;">{{item.label}}</label>
-                      </div>
-                  </div>
-                </div>
-                <div class="col" style="width:100%;">
+        <div id="trainingResults" class="container-fluid" style="margin-top: 10px;" [hidden]="!prikazGrafika">
+            <div class="row">
+                <div id="loaderStatistika" class="col" style="width:100%;">
                   <app-loading></app-loading>
-                  <app-barplot [evaluate]="eveluate"></app-barplot>
-                  <app-prediction [pred]="pred" [label]="label"></app-prediction>
-                  <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
+                  
+                  <div id="prikazRezutata" [hidden]="show">
+                    <div class="col-4" style="width:20%; min-width: 170px;float:left;">
+                      <div class="form-check" style="padding-left: 10px; padding-bottom: 5px;">
+                          <p  style=" font-weight: bold; font-size: 25px;">Choose Graphics:</p>
+                          <div *ngFor="let item of inputCheckBoxes" style="padding-left: 35px">
+                            <input class="form-check-input" type="checkbox" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone: true}" id="flexCheckDefault" (change)="changeSelection()">
+                            <label style="color: black;">{{item.label}}</label>
+                          </div>
+                      </div>
+                    </div>
+                    <div style="width:75%; float:left;">
+                      <app-barplot *ngIf="!show" [evaluate]="eveluate"></app-barplot>
+                      <app-prediction *ngIf="!show" [pred]="pred" [label]="label"></app-prediction>
+                      <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
+
+
+                      <div *ngIf="session">
+                        <button [disabled]="onemogucenSave" type="button" style="margin-left:20px;width:15%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px; float:right; margin-bottom: 1%;" (click)="saveModel()"> <!--i ovde da se sacuva taj novi-->
+                          Save
+                          </button>
+                          <select class="custom-select" (change)="modelSelectChange($event)" style="float:right;margin-left: 10px;height: 40px ; border-radius: 15px; border:solid black 1px;">
+                            <option value="private" selected>Private</option>
+                            <option value="public">Public</option>
+                          </select>
+                        <input type="text" [(value)]="modelName" placeholder="Enter Model Name" (keyup)="modelNameChange($event)" style="float:right;height: 40px ;border-radius: 15px;">
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
                 </div>
             </div>
         </div>
-          
-          <!--
-          <div class="control d-grid gap-2 d-md-flex justify-content-md-end">
-              <button type="button" class="btn btn-primary btn-lg" (click)="showCsv()"> CSV </button>
-              <button type="submit" class="btn btn-primary btn-lg">Treniraj Model</button>
-          </div>
-          <button type="button" class="btn btn-primary btn-lg" style="position: absolute;left: 50%;" (click)="showCsv()"> CSV </button>-->
-     
       </form>
-  
 </div>
 <ng-template #newModel let-modal style="margin-top:30%;">
   <div style="width:90%;margin: auto;">
@@ -245,7 +230,6 @@
 
         <div class="row">
           <input type="text" style="height:300px; width:100%; border:#212f3c 1px solid; border-radius: 20px; margin-bottom: 30px;">
-          <!-- ovde dodajemo opis!! -->
         </div>
             
         <div class="row">

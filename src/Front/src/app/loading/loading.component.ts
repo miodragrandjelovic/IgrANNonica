@@ -8,9 +8,21 @@ import { LoadingService } from './loading.service';
 })
 export class LoadingComponent implements OnInit {
 
+  show: boolean = false;
+
   constructor(public spiner:LoadingService) { }
 
   ngOnInit(): void {
+    // fokus na spiner
+    
+    this.spiner.getShowSpinner().subscribe(newValue => {
+      this.show = newValue;
+    });
+
+    
+
+    //alert("spustam se na loader");
+    //document.getElementById("loaderStatistika")?.focus(); 
   }
 
 }

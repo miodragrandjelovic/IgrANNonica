@@ -2,5 +2,35 @@
     max-height:400px;
 }
 
+.row:hover{
+    background-color: #a9e4ff;
+}
+
+.toggleSets{
+    background-color: transparent;
+    border:1px solid #212121;
+    border-bottom: 0px;
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+
+    color:#212f3c;
+    font-weight: bold;
+    font-size: 20px;
+    border-color:#212f3c;
+
+    outline:none;
+}
+
+.toggleSets:hover{
+    background-color: #62c2ee;
+}
+
+.toggleSets:focus{
+    outline: none;
+}
+
 
 

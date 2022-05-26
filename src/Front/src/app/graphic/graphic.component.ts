@@ -22,7 +22,7 @@ export class GraphicComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.loadGraphic(this.selected.label, this.selected.values, this.selected.valuesVal);
-    this.spiner.showSpiner=false;
+    this.spiner.setShowSpinner(false);
   }
 
   ngOnDestroy(): void {
@@ -35,7 +35,7 @@ export class GraphicComponent implements OnInit, OnDestroy {
 
     this.hpX = [];
     for (let i = 0; i < hpY.length; i++) {
-      this.hpX[i] = '' + i;
+      this.hpX[i] = '' + Number(i + 1);
       hpY[i] = parseFloat(hpY[i].toFixed(5));
       hpY1[i] = parseFloat(hpY1[i].toFixed(5));
     }
@@ -66,12 +66,16 @@ export class GraphicComponent implements OnInit, OnDestroy {
             duration: 0
           },
           responsive: true,
+          maintainAspectRatio:false,
           scales: {
             x: {
               display: true,
               title: {
                 display: true,
                 text: 'Epochs'
+              },
+              ticks:{
+                autoSkip:false,
               }
             },
             y: {

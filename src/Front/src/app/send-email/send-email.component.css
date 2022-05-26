@@ -16,11 +16,16 @@
 .row {
     /*height: 150px;*/
     padding: 10px;
+    width: 80%;
+    margin:auto;
+    /*background-color: red;*/
 }
 
 .col-4 img{
-    height: 100px;
+    height: 80px;
     width: auto;
+    margin: auto;
+    float:left;
 }
 
 .tekst{

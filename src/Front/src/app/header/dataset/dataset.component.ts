@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs';
 import { CsvComponent } from 'src/app/home/csv/csv.component';
 import { DatasetService } from './dataset.service';
-
+import * as myUrls from 'src/app/urls';
 @Component({
   selector: 'app-dataset',
   templateUrl: './dataset.component.html',
@@ -18,13 +18,14 @@ export class DatasetComponent implements OnInit {
 
   constructor(private http: HttpClient,
     private datasets:DatasetService) { }
+    public url = myUrls.url;
 
   ngOnInit(): void {
-         
-        this.http.get<any>('https://localhost:7167/api/Python/savedCsvs').subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
-            console.log(result);
+    var loggedUsername = sessionStorage.getItem('username');
+        this.http.get<any>(this.url + '/api/Python/savedCsvs?Username='+loggedUsername).subscribe(result => {  //uzima nazive svih datasetova od ulogovanog korisnika
+            //console.log(result);
             this.datasetsNames=result;
-            console.log(this.datasetsNames);
+           // console.log(this.datasetsNames);
         });
     
 
@@ -62,17 +63,17 @@ export class DatasetComponent implements OnInit {
     selectChange(event:any){
 
         this.selectedValue=event.target.id;
-        console.log('ovo je kliknuto za naziv '+this.selectedValue);
+       // console.log('ovo je kliknuto za naziv '+this.selectedValue);
         this.posaljiNaziv(this.selectedValue);
     }
     
   posaljiNaziv(naziv:any){
-
-    return this.http.post<any>('https://localhost:7167/api/LoadData/selectedCsv?name='+naziv, {
+    var loggedUsername = sessionStorage.getItem('username');
+    return this.http.post<any>(this.url + '/api/LoadData/selectedCsv?name='+naziv+'&Username='+loggedUsername, {
         name: naziv
       }).subscribe(result=>{
         
-        console.log(result);
+      //  console.log(result);
         var map = new Map<string, string[]>();
     
         for(var i = 0; i < result.length; i++) {
@@ -91,7 +92,7 @@ export class DatasetComponent implements OnInit {
             }
           }
         }
-        console.log(map);
+      //  console.log(map);
         this.map=map;
         this.array2d=Array.from(map.values());
     

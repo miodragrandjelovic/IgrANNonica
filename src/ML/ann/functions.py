@@ -23,6 +23,18 @@ from keras.losses import MeanSquaredError, BinaryCrossentropy, CategoricalCrosse
 
 from keras.callbacks import Callback
 from keras.utils import np_utils
+import keras.backend as K
+
+
+
+class initdict():
+    global dictionary
+    try:
+        dictionary
+        print("postojim")
+    except NameError:
+        print("well, it WASN'T defined after all!")
+        dictionary=dict()
 
 
 class epochResults(Callback):
@@ -73,7 +85,7 @@ def feature_and_label(data, label):
 
 def normalize(df):  #ceo dodat
     global scaler
-    sc=MinMaxScaler()
+    sc=StandardScaler()
     scaler=sc
     df=scaler.fit_transform(df)
     
@@ -340,11 +352,12 @@ def scale_data(X_train, X_test, y_train, y_test):
 
     return (X_train, X_test, y_train, y_test)
 
-def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, activation_function_list,regularization,reg_rate):
+def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_list, activation_function_list,regularization,reg_rate,username):
     # here, we are making our model
     # type nam ukazuje koji je tip problema kojim se bavimo   !!!!!!!!!!!!!
 
     #print("SHAPE OF X TRAIN DATASET ", X_train.shape[0], " and ", X_train.shape[1])
+
     model=None
     model = Sequential()
 
@@ -388,7 +401,37 @@ def regression(X,y,type,X_train,y_train, hidden_layers_n, hidden_layer_neurons_l
         model.add(Dense(y.shape[1], activation='softmax'))
 
   #  model.summary()
+
+    dictionary[username]=model
+
     return model
+
+
+#def f1_score(y_true, y_pred): #taken from old keras source code
+#    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+#    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+#    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+#    precision = true_positives / (predicted_positives + K.epsilon())
+#    recall = true_positives / (possible_positives + K.epsilon())
+#    f1_val = 2*(precision*recall)/(precision+recall+K.epsilon())
+#    return f1_val
+def recall_m(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    recall = true_positives / (possible_positives + 
+    K.epsilon())
+    return recall
+
+def precision_m(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon())
+    return precision
+
+def f1_score(y_true, y_pred):
+    precision = precision_m(y_true, y_pred)
+    recall = recall_m(y_true, y_pred)
+    return 2*((precision*recall)/(precision+recall+K.epsilon()))
 
 
 def compile_model(model, type, y,lr):
@@ -400,7 +443,7 @@ def compile_model(model, type, y,lr):
 
     # also, there are multiple metrics that user can choose from
     reg_metrics = ['mae','mse','RootMeanSquaredError']
-    class_metrics=['accuracy','AUC','Precision','Recall']
+    class_metrics=['accuracy','AUC','Precision','Recall',f1_score]
     
     if (type == 'regression'):
         met = reg_metrics
@@ -418,28 +461,43 @@ def compile_model(model, type, y,lr):
     model.compile(optimizer=opt, loss=loss, metrics = met)
     return model 
 
-def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test):
+def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test,path):
 
     call = epochResults()
 
     fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, callbacks=[call] ,validation_data = (X_val, y_val), verbose=2)
 
-    #model.save(str(path))
+    #if(path!=None):
+    #    model.save(str(path))
 
     pred = model.predict(X_test) 
     if(type=="classification"):
         pred = np.argmax(pred, axis = 1)
         label = np.argmax(y_test,axis = 1)
-        label=label.tolist()
+        
 
     else:
-        pred=scaler.inverse_transform(pred)
-        label=y_test             #dodato
-        label=scaler.inverse_transform(label)           #dodato
+        label2=y_test             #dodato
+        label2=scaler.inverse_transform(label2)#dodato
+        print(pred)
+        pred2=scaler.inverse_transform(pred)
+        print(pred2)
+                   
         #label=y_test.to_numpy(dtype ='float32')
-        label=label.tolist()
+        label=[]
+        for i in range (len(label2)):
+            label.append(label2[i][0])
+            
+
+        pred=[]
+        for i in range (len(pred2)):
+            pred.append(pred2[i][0])
+
+        label=np.array(label)
+        pred=np.array(pred)
 
 
+    label=label.tolist()
     pred=pred.tolist()
     ev=model.evaluate(X_test,y_test)
     
@@ -449,6 +507,12 @@ def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_
     yield label
     yield dict(zip(model.metrics_names, ev))
     yield fit # VALIDATION DATA=(X_VAL, Y_VAL) 
+
+
+
+def save_model(path,user):
+    dictionary[user].save(str(path))
+
 
 
 

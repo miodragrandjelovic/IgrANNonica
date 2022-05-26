@@ -1,18 +1,18 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-
+import * as myUrls from 'src/app/urls';
 @Injectable({providedIn: 'root'})
 export class DatasetService {
     datasetsNames: any;
 
-    constructor(private http: HttpClient) {
-    }
-
+    constructor(private http: HttpClient) { }
+    public url = myUrls.url;
     getDatasets() {     
-        this.http.get<any>('https://localhost:7167/api/Python/savedCsvs').subscribe(result => {
-            console.log(result);
+        var loggedUsername = sessionStorage.getItem('username');
+        this.http.get<any>(this.url + '/api/Python/savedCsvs?Username'+loggedUsername).subscribe(result => {
+          //  console.log(result);
             this.datasetsNames=result;
-            console.log(this.datasetsNames);
+          //  console.log(this.datasetsNames);
         });
     }
 }

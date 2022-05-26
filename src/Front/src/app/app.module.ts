@@ -41,6 +41,8 @@ import { StatisticsComponent } from './statistics/statistics.component';
 import { BarplotComponent } from './barplot/barplot.component';
 import { PredictionComponent } from './prediction/prediction.component';
 import { ComparesModelsComponent } from './home/compares-models/compares-models.component';
+import { PredikcijaPoModeluComponent } from './home/csv/predikcija-po-modelu/predikcija-po-modelu.component';
+import{Ng2SearchPipeModule} from 'ng2-search-filter';
 
 const icons = {
   envelope,
@@ -79,6 +81,7 @@ const icons = {
     BarplotComponent,
     PredictionComponent,
     ComparesModelsComponent,
+    PredikcijaPoModeluComponent,
   ],
   imports: [
     BrowserModule,
@@ -97,7 +100,8 @@ const icons = {
     NgbAlertModule,
     NgxChartsModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    Ng2SearchPipeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

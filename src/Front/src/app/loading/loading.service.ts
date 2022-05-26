@@ -1,14 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class LoadingService{
- 
-    constructor() { }
+  
+  private showSpinner$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  constructor() { }
    
-   showSpiner:boolean;
-   
+  getShowSpinner(): Observable<boolean> {
+    return this.showSpinner$.asObservable();
+    
+}
+setShowSpinner(value: boolean) {
+  this.showSpinner$.next(value);
+}  
   }
