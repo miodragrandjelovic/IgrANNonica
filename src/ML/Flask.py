@@ -1,7 +1,8 @@
 from doctest import DONT_ACCEPT_TRUE_FOR_1
 from flask import Flask
 from flask import jsonify,request
-
+from numpy import dtype
+import numpy as np
 import pandas as pd
 
 from ann.py import *
@@ -157,9 +158,14 @@ def predikcija_def():
             num_cat.append(value)
     print(num_cat)
 
+
+    inputs=df1['Inputs'][0].split(",")
+    if('Column0' in inputs):
+        inputs.pop(0)
+    print(inputs)
     output=df1["Output"][0]
     print(output)
-    pred=pr.predikcija(path=pathmodel,origcsv=originaldf,predcsv=predictiondf,type=type,columns=columns,encodings=encodings,num_cat=num_cat,output=output)
+    pred=pr.predikcija(path=pathmodel,origcsv=originaldf,predcsv=predictiondf,type=type,columns=columns,encodings=encodings,num_cat=num_cat,inputs=inputs,output=output)
 
     return jsonify(pred)
 

@@ -23,7 +23,7 @@ def f1_score(y_true, y_pred):
     recall = recall_m(y_true, y_pred)
     return 2*((precision*recall)/(precision+recall+K.epsilon()))
 
-def predikcija(path,origcsv,predcsv,type,columns,encodings,num_cat,output):
+def predikcija(path,origcsv,predcsv,type,columns,encodings,num_cat,inputs,output):
     
 
     #print(path)
@@ -33,6 +33,10 @@ def predikcija(path,origcsv,predcsv,type,columns,encodings,num_cat,output):
     df=origcsv
 
     put=df.pop(str(output))
+    print(df)
+    print(predict)
+    df=df[inputs]
+    predict=predict[inputs]
     print(predcsv)
     
     if output in predict:

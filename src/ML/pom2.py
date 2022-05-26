@@ -20,6 +20,17 @@ df=pd.read_csv("src\ML\mpg.csv")
 
 df.head(10)
 
+df.columns
+
+niz=[]
+niz.append("model")
+niz.append("year")
+niz
+niz.pop(0)
+
+df=df[niz]
+df
+
 pom=df.copy()
 
 y = pom.pop("hwy")
