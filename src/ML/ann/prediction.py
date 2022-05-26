@@ -33,6 +33,9 @@ def predikcija(path,origcsv,predcsv,type,columns,encodings,num_cat,inputs,output
     df=origcsv
 
     put=df.pop(str(output))
+    put=put.unique()
+    put.sort()
+
     print(df)
     print(predict)
     df=df[inputs]
@@ -137,9 +140,18 @@ def predikcija(path,origcsv,predcsv,type,columns,encodings,num_cat,inputs,output
 
         pred2 = np.argmax(pred2, axis = 1)
 
-        pred2=np.array(pred2)
-        pred2=pred2.tolist()
+        
+        pred3=[]
 
-        print(pred2) 
+        print(put)
+        print(pred2)
+
+        for i in range (len(pred2)):
+            pred3=put[pred2]
+
+        pred3=np.array(pred3)
+        pred3=pred3.tolist()
+
+        print(pred3) 
         print("izlazim")
-        return pred2
+        return pred3
