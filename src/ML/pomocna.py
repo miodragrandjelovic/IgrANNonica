@@ -7,7 +7,7 @@ from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
 from keras import layers
 from keras.losses import MeanSquaredError
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 import category_encoders as ce
 import numpy as np
 
@@ -34,15 +34,31 @@ for ime in cat:
     df=encoder.fit_transform(df)
 
 
-for (columnName,columnData) in df.iteritems():
-    df[str(columnName)]=columnData/columnData.max()
+#for (columnName,columnData) in df.iteritems():
+ #   df[str(columnName)]=columnData/columnData.max()
 #df[str(columnName)]=df[str(columnName)]/df[str(columnName)].max()
+
+
+
+
 pom=df.copy()
 
 y = pom.pop("hwy")
 #y.columns = "hwy"
 
+
+
 X_train, X_test, y_train, y_test = train_test_split(pom, y, test_size = 0.2)
+
+from sklearn.preprocessing import StandardScaler
+sc=StandardScaler()
+
+
+X_train=sc.fit_transform(X_train)
+y_train=pd.DataFrame(y_train)
+y_train=sc.fit_transform(y_train)
+X_test=sc.fit_transform(X_test)
+y_test=sc.fit_transform(y_test)
 
 
 X_train
@@ -94,16 +110,17 @@ normalizer = layers.Normalization(axis=-1)
 normalizer.adapt(X_train)
 model.add(normalizer)
 """
-len(X_train.columns)
 
-model.add(layers.Dense(units=32,input_shape=(len(X_train.columns),)))
+
+
+model.add(layers.Dense(units=32,input_shape=(X_train.shape[1],)))
 model.add(layers.Dense(units=32,activation='relu'))
 model.add(layers.Dense(units=16,activation='relu'))
 model.add(layers.Dense(1, activation="relu"))
 
 model.compile(optimizer='adam', loss=MeanSquaredError(),metrics=['mae','mse'])
 
-hist=model.fit(X_train, y_train, epochs=15,batch_size=10, validation_data = (X_test, y_test), verbose=1)
+model.fit(X_train, y_train, epochs=15,batch_size=10, validation_data = (X_test, y_test), verbose=1)
 
 pred = model.predict(X_test) 
 model.evaluate(X_test,y_test)

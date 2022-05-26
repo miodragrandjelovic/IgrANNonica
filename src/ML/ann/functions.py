@@ -85,7 +85,7 @@ def feature_and_label(data, label):
 
 def normalize(df):  #ceo dodat
     global scaler
-    sc=MinMaxScaler()
+    sc=StandardScaler()
     scaler=sc
     df=scaler.fit_transform(df)
     
@@ -479,8 +479,9 @@ def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_
     else:
         label2=y_test             #dodato
         label2=scaler.inverse_transform(label2)#dodato
+        print(pred)
         pred2=scaler.inverse_transform(pred)
-        
+        print(pred2)
                    
         #label=y_test.to_numpy(dtype ='float32')
         label=[]

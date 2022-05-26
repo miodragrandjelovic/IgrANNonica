@@ -33,8 +33,9 @@ def predikcija(path,origcsv,predcsv,type,columns,encodings,num_cat,inputs,output
     df=origcsv
 
     put=df.pop(str(output))
-    put=put.unique()
-    put.sort()
+    if(type=='classification'):
+        put=put.unique()
+        put.sort()
 
     print(df)
     print(predict)
@@ -103,25 +104,19 @@ def predikcija(path,origcsv,predcsv,type,columns,encodings,num_cat,inputs,output
 
     if(type=="regression"):
         print("Usao sam u reg")
-        scaler2=MinMaxScaler()
+        scaler2=StandardScaler()
         result2=scaler2.fit_transform(result2)
 
         pred2 = model.predict(result2) 
 
-        #put=pd.DataFrame(put)
-        #put=scaler2.fit_transform(put)
-        #put=scaler2.inverse_transform(put)
+        
 
-        #pred2=scaler2.inverse_transform(pred2)
+        sc=StandardScaler()
+        put=pd.DataFrame(put)
 
-        #pred=[]
-        #for i in range (len(pred2)):
-            #pred.append(pred2[i][0])
+        put=sc.fit_transform(put)
 
-        #pred=np.array(pred)
-        #pred=pred.tolist()
-        #print(pred)
-        #return pred
+        pred2=sc.inverse_transform(pred2)
 
         pred2=np.array(pred2)
         pred2=pred2.tolist()
