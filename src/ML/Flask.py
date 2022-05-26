@@ -126,7 +126,7 @@ def getpathmodel():
 @app.route("/prediction",methods=["GET"]) #slanje rezultata predikcije na bek!
 def predikcija_def():
     
-    df1=pd.DataFrame.from_records(hiperp)
+    df1=pd.DataFrame.from_records(hiperp1)
     print(df1)
     print(df1["ColumNames"])
     print(df1['Encodings'])
@@ -159,7 +159,7 @@ def predikcija_def():
 
     output=df1["Output"][0]
     print(output)
-    pred=pr.predikcija(path=pathmodel,origcsv=df,predcsv=predictiondf,type=type,columns=columns,encodings=encodings,num_cat=num_cat,output=output)
+    pred=pr.predikcija(path=pathmodel,origcsv=originaldf,predcsv=predictiondf,type=type,columns=columns,encodings=encodings,num_cat=num_cat,output=output)
 
     return jsonify(pred)
 
