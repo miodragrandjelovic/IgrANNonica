@@ -115,9 +115,11 @@
 
         </div>
         <div class="container-fluid" style="margin-top: 10px;"> 
+          
           <div *ngIf="chosenDataset" class="row" style="text-align:center;font-size: large;">
-            <p>Chosen dataset is {{chosenDataset}}</p>
+            <p style="width:fit-content;margin:auto; border:#CEECFA 2px solid;border-radius:5px;"><span style="font-weight:bold">Chosen dataset is </span><span style="font-style:italic;">{{chosenDataset}}</span></p>
           </div>
+
           <div class="row" >
               <div class="col-4" style="width:20%; min-width: 170px;">
                 <label class="labelaHip" for="percTrainData">Train percentage to data: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
