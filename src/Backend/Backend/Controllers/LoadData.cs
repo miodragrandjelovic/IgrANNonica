@@ -1329,12 +1329,11 @@ namespace Backend.Controllers
                 var content = fileContent;
             }
 
-            var multipartContent = new MultipartFormDataContent();
+            //var multipartContent = new MultipartFormDataContent();
             //multipartContent.Add(fajl, "csvFile", "filename");
             //var postResponse = await _client.PostAsync("offers", multipartContent);
 
             Console.WriteLine("Primio sam: " + name);
-            //var data = csvFile;
             var dats = System.Text.Json.JsonSerializer.Serialize(csvFile);
             var data = new StringContent(dats, System.Text.Encoding.UTF8, "application/json");
             var response = await http.PostAsync(urlcsv, data);
