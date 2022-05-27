@@ -120,7 +120,6 @@ export class CsvComponent implements OnInit {
         });
 
         this.loadRegressionDataset();
-
         
         this.session = sessionStorage.getItem('username');
         this.chosen = false;
@@ -534,6 +533,7 @@ export class CsvComponent implements OnInit {
         this.changeButtonEnable();
         this.searchInputField = "";
         this.parametersService.setDatasets();
+        this.csvservis.setDatasetname("");
         // treba i da se sacuva dataset!!!!!
     }
 
@@ -573,6 +573,7 @@ export class CsvComponent implements OnInit {
         
         this.preloadedDataset=0;
 
+        // ovde saljemo na hp stranu ime modela
         this.csvservis.setDatasetname("realestate");
 
         this.http.get<any>(this.url+'/api/Python/preloadCsv').subscribe(result =>{
@@ -628,6 +629,14 @@ export class CsvComponent implements OnInit {
         this.showMeChosenDataset = true;
         this.csvservis.setDatasetname(this.chosenDatasetCsv);
 
+    }
+
+    catchDontShowDataset($event:any){
+        if ($event.showBoolean == false)
+        {
+            this.showMeChosenDataset = false;
+            this.csvservis.setDatasetname("");
+        }
     }
 
     
