@@ -1313,11 +1313,10 @@ namespace Backend.Controllers
 
         [HttpPost("csvFile")]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult> PostcsvFile([FromForm] IFormFile csvFile, string Username)
+        public async Task<IActionResult> PostcsvFile([FromForm] IFormFile csvFile, Boolean publicData, string Username)
         {
             string currentPath = Directory.GetCurrentDirectory();
-            string ime = csvFile.FileName;
-            string path = System.IO.Path.Combine(currentPath, "Users", Username, ime);
+            string name = csvFile.FileName;
 
             //var url = "http://127.0.0.1:3000/csvfile"; alternativna varijanta za slanje celog fajla koju treba napraviti i u flasku
             var urlcsv = url + "/csvfile";
@@ -1334,7 +1333,52 @@ namespace Backend.Controllers
             //multipartContent.Add(fajl, "csvFile", "filename");
             //var postResponse = await _client.PostAsync("offers", multipartContent);
 
-            return Ok("Primio sam: " + ime);
+            Console.WriteLine("Primio sam: " + name);
+            var data = csvFile;
+            var response = await http.PostAsync(urlcsv, data);
+
+            var statsurl = url + "/stats";
+            HttpResponseMessage httpResponse = await http.GetAsync(statsurl);
+            var stat = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
+
+            if (Username != null)
+            {
+                string path = System.IO.Path.Combine(currentPath, "Users", Username, name);
+                string publicPath = System.IO.Path.Combine(currentPath, "Users", "publicDatasets", name);
+                string publicName = name + ".csv";
+                string publicCreate = System.IO.Path.Combine(publicPath, publicName);
+                if (Directory.Exists(path))
+                    Console.WriteLine("File is already in system.");
+                else
+                {
+                    System.IO.Directory.CreateDirectory(path);
+                    Console.WriteLine("Directory for '{0}' created successfully!", name);
+                    string pathToCreate = System.IO.Path.Combine(path, name + ".csv");
+                    using (Stream fileStream = new FileStream(pathToCreate, FileMode.Create))
+                    {
+                        await csvFile.CopyToAsync(fileStream);
+                    }
+
+                    if (publicData)
+                    {
+                        if (Directory.Exists(publicPath))
+                            Console.WriteLine("There is already public dataset with that name.");
+                        else
+                        {
+                            System.IO.Directory.CreateDirectory(publicPath);
+                            Console.WriteLine("Directory for '{0}' created successfully!", name);
+                            using (Stream fileStream = new FileStream(publicCreate, FileMode.Create))
+                            {
+                                await csvFile.CopyToAsync(fileStream);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+                Console.WriteLine("Niste ulogovani.");
+
+            return Ok(stat);
         }
         private StringBuilder ReadlikeList(IFormFile file)
         {
