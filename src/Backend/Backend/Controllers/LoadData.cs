@@ -1334,7 +1334,9 @@ namespace Backend.Controllers
             //var postResponse = await _client.PostAsync("offers", multipartContent);
 
             Console.WriteLine("Primio sam: " + name);
-            var data = csvFile;
+            //var data = csvFile;
+            var dats = System.Text.Json.JsonSerializer.Serialize(csvFile);
+            var data = new StringContent(dats, System.Text.Encoding.UTF8, "application/json");
             var response = await http.PostAsync(urlcsv, data);
 
             var statsurl = url + "/stats";
