@@ -15,6 +15,10 @@ import { UsermodelsComponent } from './usermodels/usermodels.component';
 import { catchError } from 'rxjs/operators';
 import { pipe } from 'rxjs';
 import { CsvService} from '../csv/csv.service'
+import { TargetService } from 'src/app/table/table.service'
+import { Target } from '@angular/compiler';
+
+
 interface RequestHyperparameters {
   learningRate: number,
   epoch: number,
@@ -125,7 +129,8 @@ export class HyperparametersComponent implements OnInit {
   onemogucenChange:boolean;
 
   constructor(private http: HttpClient, public spiner:LoadingService, public refreshModels : RefreshService,
-    private toastr:ToastrService,private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal, private csvservis: CsvService) {
+    private toastr:ToastrService,private parametersService: ParametersService, private service : MessageService, 
+    private modalService: NgbModal, private csvservis: CsvService, private targetService: TargetService) {
     Chart.register(...registerables);
     Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
    } 
@@ -139,6 +144,8 @@ export class HyperparametersComponent implements OnInit {
    }
 
   chosenDataset:string = "";
+  chosenTarget:string="";
+
   ngOnInit(): void {
     this.onemogucenSave = true;
     this.onemogucenChange = false;
@@ -192,12 +199,20 @@ export class HyperparametersComponent implements OnInit {
     // subscribe za ime modela
     this.csvservis.datasetname.subscribe({
       next: name => {
-        console.error("GETOVAO SAM IME");
+        //console.error("GETOVAO SAM IME");
         //alert("Getovano ime "+name);
         this.chosenDataset = name;
       }
     });
 
+    // subscribe za target
+    this.targetService.chosenTarget.subscribe({
+      next: target => {
+        //console.error("GETOVAO SAM IME");
+        //alert("Getovano ime "+name);
+        this.chosenTarget = target;
+      }
+    });
     
     this.session=sessionStorage.getItem('username');
     if (!this.session){
