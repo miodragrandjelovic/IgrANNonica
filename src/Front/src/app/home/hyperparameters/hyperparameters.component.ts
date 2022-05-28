@@ -331,7 +331,17 @@ export class HyperparametersComponent implements OnInit {
     //alert("epochs prazan");
     this.hyperparametersForm.get('epoch')?.setValue(5);
   }
-
+  // takodje ako nije setovan dataset ili target, da ne moze da se trenira
+  if (this.chosenDataset == ""){
+    this.toastr.error("You need to choose dataset on Load Data page!", "Training Error");
+  }
+  else if (this.chosenTarget == "" || this.outputString==""){
+    this.toastr.error("You need to choose Target for dataset on Load Data page!", "Training Error");
+  }
+  else if (this.inputsString==""){
+    this.toastr.error("You need to choose at least one Input for dataset on Load Data page!", "Training Error");
+  }
+  else{
     const myreq: RequestHyperparameters = {
       learningRate : Number(this.hyperparametersForm.get('learningRate')?.value),
       epoch: this.hyperparametersForm.get('epoch')?.value,
@@ -408,7 +418,9 @@ export class HyperparametersComponent implements OnInit {
       this.scrollToResults("loaderStatistika");
       // spusti prikaz na spiner
       //alert("spusti se na loader");
-    }
+  }
+
+  }
 
   countLayers=0;
   counterNeuron = 0;

@@ -163,6 +163,21 @@ export class TableComponent implements OnChanges {
       else
         this.hp = this.hp.concat(this.inputs[i]);
     }
+    //provera da li ima bar jedan target setovan
+    var ind = 0;
+    for (let i = 0; i < this.preload.length; i++) {
+      
+      if (this.preload[i] === 'target'){
+        //alert("Nadjen target")
+        //ako je bar jedan target, onda je sve ok
+        ind = 1;
+      }
+    }
+    if (ind===0){
+      //nema targeta
+      //alert("Nema targeta");
+      this.targetService.setTarget("");
+    }
     
     this.hp = this.hp.concat(',' + this.target);
     this.parametersService.setParamsObs(this.hp);
