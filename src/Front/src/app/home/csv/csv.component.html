@@ -29,23 +29,29 @@
 
     <div><!-- ovo ce da se prikazuje NEULOGOVANOM-->
       <div style="width:25%;margin-left: 20px; float:left;text-align: center; padding-top: 15px; padding-bottom: 50px;"><!--this div will be for choosing regression or class dataset, and onInit regression will be chosen-->
-        <h3 style="color:#212f3c; font-weight: bold;">Choose Dataset</h3>
-        <p>Which dataset do you want to use?</p>
-        <br>
-        <div style="width:fit-content;margin: auto;">
-          <button class="chooseDataset" style="border-radius:10px;border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float:left; margin-right:30px;"
-            (click)="loadRegressionDataset()" [style.border]="preloadedDataset==0 ? '2px solid #03a9f4' : '1px solid #03a9f4'"
-            placement="bottom" ngbTooltip="Regression (Real Estate Dataset)">
-            <img src="assets/images/regression.png" width="70px" height="70px" style="border-radius:10px;">
-          </button>
-          <button class="chooseDataset" style="border-radius:10px;border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float: left;"
-            (click)="loadClassificationDataset()" [style.border]="preloadedDataset==1 ? '2px solid #03a9f4' : '1px solid #03a9f4'"
-            placement="bottom" ngbTooltip="Classification (Mpg Dataset)">
-            <img src="assets/images/classification.png" width="70px" height="70px" style="border-radius:10px;">
-          </button>
-          <div class="blanko" style="display:block;clear:left;"></div>
+        <div>
+          
+          <div style="width:fit-content;margin:auto;" placement="right" ngbTooltip="Login for uploading your files, creating datasets, saving models and more!">
+            <h3 style="color:#212f3c; font-weight: bold;">Choose Dataset</h3>
+            <p>Which dataset do you want to use?</p>
+          </div>
+          
+          <br>
+          <div style="width:fit-content;margin: auto;">
+            <button class="chooseDataset" style="border-radius:10px;border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float:left; margin-right:30px;"
+              (click)="loadRegressionDataset()" [style.border]="preloadedDataset==0 ? '2px solid #03a9f4' : '1px solid #03a9f4'"
+              placement="bottom" ngbTooltip="Regression (Real Estate Dataset)">
+              <img src="assets/images/regression.png" width="70px" height="70px" style="border-radius:10px;">
+            </button>
+            <button class="chooseDataset" style="border-radius:10px;border:#212f3c 1px solid; margin:0px; padding:0px; width:fit-content; float: left;"
+              (click)="loadClassificationDataset()" [style.border]="preloadedDataset==1 ? '2px solid #03a9f4' : '1px solid #03a9f4'"
+              placement="bottom" ngbTooltip="Classification (Mpg Dataset)">
+              <img src="assets/images/classification.png" width="70px" height="70px" style="border-radius:10px;">
+            </button>
+            <div class="blanko" style="display:block;clear:left;"></div>
+          </div>
         </div>
-        
+
         <app-heatmap [matrix]="currentCorrResult"></app-heatmap>
         
       
@@ -112,7 +118,13 @@
       <!-- korisnik moze da bira tabelu koja se dobija sa beka (jedna od dve ponudjene) kada nije ulogovan -->
       
       <app-table [result]="selectedDatasetUser"></app-table>
+
+      <div class="row" style="padding: 5px;position:relative;height: 60px;">
+        <button style="width:fit-content;margin:auto;background-color: #212f3c; color:white; height: 50px; border-radius: 20px;
+        position:absolute;right:20px;" (click)="goToTraining()">Create Model</button>
+      </div>
     </div>
+
 
     <div class="blanko" style="display:block;clear:both;"> 
     </div>

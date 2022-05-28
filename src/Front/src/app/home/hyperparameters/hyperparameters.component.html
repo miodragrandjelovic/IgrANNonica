@@ -24,7 +24,7 @@
         <div id="top-controls" style="border-radius:4px;">
 
           <div class="row parametri" style="width:100%;margin:auto;">
-            <div class="control" style="border:#CEECFA 2px solid;border-radius:5px;text-align:center;">
+            <div *ngIf="chosenDataset" class="control" style="border:#CEECFA 2px solid;border-radius:5px;text-align:center;">
               <p *ngIf="chosenDataset" style="width:fit-content;margin:auto;"><span style="font-weight:bold">Chosen Dataset is </span><span style="font-style:italic;">{{chosenDataset}}</span></p>
               <p *ngIf="chosenTarget" style="width:fit-content;margin:auto;"><span style="font-weight:bold">Chosen Target is </span><span style="font-style:italic;">{{chosenTarget}}</span></p>
             </div>
@@ -116,19 +116,10 @@
                 <input [attr.disabled]="onemogucenChange ? 'disabled' : null" class="form-check-input" type="checkbox" [(ngModel)]="randomize" id="flexSwitchCheckDefault" style="margin:3px;" formControlName="randomize">
               </div>
             </div>
-
-            
           </div>
 
         </div>
         <div class="container-fluid" style="margin-top: 10px;"> 
-          <!--
-          <div *ngIf="chosenDataset" class="row" style="text-align:center;font-size: large;">
-            <p style="width:fit-content;margin:auto; border:#CEECFA 2px solid;border-radius:5px;"><span style="font-weight:bold">Chosen Dataset is </span><span style="font-style:italic;">{{chosenDataset}}</span></p>
-            <p style="width:fit-content;margin:auto; border:#CEECFA 2px solid;border-radius:5px;"><span style="font-weight:bold">Chosen Target is </span><span style="font-style:italic;">{{chosenTarget}}</span></p>
-          </div>
-          -->
-          
           <div class="row" >
               <div class="col-4" style="width:20%; min-width: 170px;">
                 <label class="labelaHip" for="percTrainData">Train percentage to data: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
