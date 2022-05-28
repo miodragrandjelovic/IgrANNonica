@@ -14,6 +14,8 @@ export class MessageService{
   
     disableButton = new Subject<boolean>();
 
+    goTrain = new Subject<boolean>();
+
     sayMessage(message:number){
    
       this.messageSubject.next(message);
@@ -21,6 +23,10 @@ export class MessageService{
 
     disableClick(message:boolean){
       this.disableButton.next(message);
+    }
+
+    goToTraining(message:boolean){
+      this.goTrain.next(message);
     }
    
   }

@@ -683,6 +683,12 @@ export class CsvComponent implements OnInit {
             }
         }
     }
+
+    goToTraining(){
+        //alert("go to training");
+        this.service.goToTraining(true);
+    }
+
 }
 
     

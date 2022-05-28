@@ -5,6 +5,8 @@ import { User } from "../_model/user.model";
 import { Subscription } from 'rxjs';
 import { CookieService } from "ngx-cookie-service";
 import { JwtHelperService } from "@auth0/angular-jwt";
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import * as myUrls from 'src/app/urls';
 interface AuthResponseData {
     token: string;
@@ -16,7 +18,9 @@ const jwtHelper=new JwtHelperService()
 export class PrijavaService {
 
     constructor(private http: HttpClient,
-        private cookie:CookieService) {
+        private cookie:CookieService,
+        private router:Router,
+        private toastr:ToastrService) {
 
     }
     public url = myUrls.url;
@@ -47,8 +51,9 @@ export class PrijavaService {
     logout()
     {
         var loggedUsername = sessionStorage.getItem('username');
-        this.http.get<any>(this.url + '/api/RegistracijaUsera/logout?Username='+loggedUsername).subscribe(result => { 
-     //   console.log(result);
+        this.http.get<any>(this.url + '/api/RegistracijaUsera/logout?Username='+loggedUsername, {responseType:'text' as 'json'}).subscribe(result => { 
+            this.router.navigate(['/']);
+            this.toastr.success("You have successfully been logged out", 'User Logout');
         });
     }
     
