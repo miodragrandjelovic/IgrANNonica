@@ -15,6 +15,10 @@ import { UsermodelsComponent } from './usermodels/usermodels.component';
 import { catchError } from 'rxjs/operators';
 import { pipe } from 'rxjs';
 import { CsvService} from '../csv/csv.service'
+import { TargetService } from 'src/app/table/table.service'
+import { Target } from '@angular/compiler';
+
+
 interface RequestHyperparameters {
   learningRate: number,
   epoch: number,
@@ -125,7 +129,8 @@ export class HyperparametersComponent implements OnInit {
   onemogucenChange:boolean;
 
   constructor(private http: HttpClient, public spiner:LoadingService, public refreshModels : RefreshService,
-    private toastr:ToastrService,private parametersService: ParametersService, private service : MessageService, private modalService: NgbModal, private csvservis: CsvService) {
+    private toastr:ToastrService,private parametersService: ParametersService, private service : MessageService, 
+    private modalService: NgbModal, private csvservis: CsvService, private targetService: TargetService) {
     Chart.register(...registerables);
     Chart.register(LineController, LineElement, PointElement, LinearScale, Title);
    } 
@@ -138,13 +143,19 @@ export class HyperparametersComponent implements OnInit {
     return (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value;
    }
 
+  chosenDataset:string = "";
+  chosenTarget:string="";
+
   ngOnInit(): void {
     this.onemogucenSave = true;
     this.onemogucenChange = false;
     
+    
+
     this.spiner.getShowSpinner().subscribe(newValue => {
       this.show = newValue;
     });
+    
     this.inputs = [];
     this.hyperparametersForm = new FormGroup({
       'encodingType': new FormControl(null),
@@ -185,7 +196,29 @@ export class HyperparametersComponent implements OnInit {
       this.onAddLayer();
     }
 
+    // subscribe za ime modela
+    this.csvservis.datasetname.subscribe({
+      next: name => {
+        //console.error("GETOVAO SAM IME");
+        //alert("Getovano ime "+name);
+        this.chosenDataset = name;
+      }
+    });
+
+    // subscribe za target
+    this.targetService.chosenTarget.subscribe({
+      next: target => {
+        //console.error("GETOVAO SAM IME");
+        //alert("Getovano ime "+name);
+        this.chosenTarget = target;
+      }
+    });
+    
     this.session=sessionStorage.getItem('username');
+    if (!this.session){
+      // ako nije ulogovan uzmi def dataset
+      this.chosenDataset = this.csvservis.getDatasetName();
+    }
 
     this.parametersService.getCatNum().subscribe(res => {
       this.catNum = res;
@@ -319,13 +352,13 @@ export class HyperparametersComponent implements OnInit {
       missingValues: this.missingValues,
       columNames: this.columNames
     } 
-    var chosenDataset = this.csvservis.getDatasetname(); //ovde skladistiti ime izabranog csv-a u delu load data kako bi resili pitanje konkurentnosti
+    
     var loggedUsername = sessionStorage.getItem('username');
 
     // ONEMOGUCI
     this.disableChanges();
 
-    this.http.post(this.url + '/api/LoadData/hpNeprijavljen?Username='+loggedUsername+'&CsvFile='+chosenDataset, myreq).subscribe(result => {
+    this.http.post(this.url + '/api/LoadData/hpNeprijavljen?Username='+loggedUsername+'&CsvFile='+this.chosenDataset, myreq).subscribe(result => {
     
      // console.log("Rezultat slanja HP treninga je "  + result);
       // kada se zavrsi trening OMOGUCITI PONOVO IZMENU HIPERPARAMTERARA!
@@ -486,9 +519,8 @@ export class HyperparametersComponent implements OnInit {
 
     
     saveModel() {
-      var chosenDataset = this.csvservis.getDatasetname();
       let loggedUsername = sessionStorage.getItem('username');
-      this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}` + `&Username=${loggedUsername}`+'&upgradedName='+chosenDataset, 
+      this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}` + `&Username=${loggedUsername}`+'&upgradedName='+this.chosenDataset, 
       undefined, { responseType: 'text' }).subscribe(result => {
         
         //alert("Sacuvano!");

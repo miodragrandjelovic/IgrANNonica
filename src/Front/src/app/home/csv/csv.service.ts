@@ -1,26 +1,24 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { PreloadCsv } from 'src/app/_model/preload.model';
-import * as myUrls from 'src/app/urls';
+import { Subject } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class CsvService {
 
-  datasetname:string
-  constructor(private http: HttpClient) { }
-  public url = myUrls.url;
-  getPreloadCsv() : Observable<PreloadCsv>
-  {
-    return this.http.get<PreloadCsv>(this.url + '/api/Python/preloadCsv',{});
-  }
+  datasetname = new Subject<string>();
+  name:string;
+
   setDatasetname(data:string)
   {
-    this.datasetname = data
+    //console.error("SETOVAO SAM IME");
+    //alert("Setovano ime na "+data);
+    this.name=data;
+    this.datasetname.next(data);
   }
-  getDatasetname()
-  {
-    return this.datasetname
+
+  getDatasetName(){
+    return this.name;
   }
 }

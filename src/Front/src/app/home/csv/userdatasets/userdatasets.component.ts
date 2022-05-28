@@ -20,6 +20,9 @@ interface zapamceniDatasetovi {
 export class UserdatasetsComponent implements OnInit {
 
   @Output() sendResults = new EventEmitter<{datasetName:any,dataset:any,kor:any,stat:any}>();
+  // ovim kada se obrise dataset kazemo da se ne prikazuje
+  @Output() dontShowDataset = new EventEmitter<{showBoolean:boolean}>();
+
   //ovim saljemo nazad ka csv komponenti dataset 
   zapamceniDatasetovi: any= [];
 
@@ -202,7 +205,11 @@ export class UserdatasetsComponent implements OnInit {
      });
     
     this.deleteDatasetCsv = "";
+    
+    
     event.stopPropagation();
+
+    this.dontShowDataset.emit({showBoolean:false});
 
     this.ngOnInit();
     //da se uradi refresh tabele 
@@ -225,6 +232,8 @@ export class UserdatasetsComponent implements OnInit {
     this.deleteDatasetCsv = "";
     event.stopPropagation();
 
+    this.dontShowDataset.emit({showBoolean:false});
+    
     this.ngOnInit();
     //da se uradi refresh tabele 
   }
