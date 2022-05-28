@@ -112,11 +112,11 @@
         <div class="col-lg-7">
         
           <div class="row"> 
-            <input class="form-control upload" type="file" id="formFile" style="margin-bottom: 30px;" (change)="fileUpload($event)"> <!-- (change)="fileUpload($event)"-->
+            <input class="form-control upload" type="file" accept=".csv" id="formFile" style="margin-bottom: 30px;" (change)="fileUpload($event)"> <!-- (change)="fileUpload($event)"-->
           </div>
       
           <div class="row">
-            <button style="width:40%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px;" (click)="addNewDataset()"> <!--i ovde da se sacuva taj novi-->
+            <button [disabled]="!loadedCsvPrediction" style="width:40%;height: 40px ;background-color: #212f3c ;color:white; border-radius:20px;" (click)="addNewDataset()"> <!--i ovde da se sacuva taj novi-->
               Add dataset
             </button>
           </div>
