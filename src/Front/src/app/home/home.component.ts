@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit {
     console.log("Kliknuto na dugme1");
   }
   // salje se komponenta childu <app-comapres-models> - poruka je 2
-  showComapreModels(){
+  showCompareModels(){
     this.service.sayMessage(2);
     this.currentActive=2;
     console.log("Kliknuto na dugme2");
