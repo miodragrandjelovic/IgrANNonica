@@ -2,6 +2,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Component, OnChanges, OnInit, SimpleChanges, Input } from '@angular/core';
 import { concat } from 'rxjs';
 import { ParametersService } from '../services/parameters.service';
+import { TargetService } from './table.service'
 
 
 @Component({
@@ -12,7 +13,7 @@ import { ParametersService } from '../services/parameters.service';
 export class TableComponent implements OnChanges {
 
 
-  constructor(private parametersService: ParametersService, private liveAnouncer: LiveAnnouncer){  }
+  constructor(private parametersService: ParametersService, private liveAnouncer: LiveAnnouncer, private targetService:TargetService){  }
   
   @Input() result: string; // ovo je json 
 
@@ -68,7 +69,9 @@ export class TableComponent implements OnChanges {
             }
             else {
               this.preload[j] = 'target'
+              //alert("Ovo je target");
               this.target = headingLine[j];
+              this.targetService.setTarget(this.target);
             }
         }
       }
@@ -148,13 +151,32 @@ export class TableComponent implements OnChanges {
         this.inputs.push(this.header[i]);
       }
       else if (this.preload[i] === 'target')
+      {
         this.target = this.header[i];
+        //alert("Izmenjen target!");
+        this.targetService.setTarget(this.target);
+      }
     }
     for (let i = 0; i < this.inputs.length; i++) {
       if (i != 0) 
         this.hp = this.hp.concat(',' + this.inputs[i]);
       else
         this.hp = this.hp.concat(this.inputs[i]);
+    }
+    //provera da li ima bar jedan target setovan
+    var ind = 0;
+    for (let i = 0; i < this.preload.length; i++) {
+      
+      if (this.preload[i] === 'target'){
+        //alert("Nadjen target")
+        //ako je bar jedan target, onda je sve ok
+        ind = 1;
+      }
+    }
+    if (ind===0){
+      //nema targeta
+      //alert("Nema targeta");
+      this.targetService.setTarget("");
     }
     
     this.hp = this.hp.concat(',' + this.target);

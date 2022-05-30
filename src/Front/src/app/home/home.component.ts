@@ -31,7 +31,15 @@ export class HomeComponent implements OnInit {
       next: dis => {
         this.disableButtons = dis;
       }
-    })
+    });
+
+    this.service.goTrain.subscribe({
+      next: train => {
+        if (train == true){
+          this.showHyperp();    
+        }
+      }
+    });
   }
 
   // salje se komponenta child-u <app-csv> poruka je 0

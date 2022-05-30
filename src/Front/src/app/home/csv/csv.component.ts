@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { HttpHeaders } from "@angular/common/http";
 import { ParametersService } from "src/app/services/parameters.service";
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { TargetService } from 'src/app/table/table.service'
 import * as myUrls from 'src/app/urls';
 
 interface CheckBox {
@@ -134,7 +135,8 @@ export class CsvComponent implements OnInit {
         private parametersService: ParametersService, 
         private service: MessageService, 
         private modalService: NgbModal,
-        private csvservis: CsvService) {
+        private csvservis: CsvService,
+        private targetService: TargetService) {
     }
 /////////
 /*
@@ -630,6 +632,15 @@ export class CsvComponent implements OnInit {
 
     }
 
+    catchDontShowDataset($event:any){
+        if ($event.showBoolean == false)
+        {
+            this.showMeChosenDataset = false;
+            this.csvservis.setDatasetname("");
+            this.targetService.setTarget("");
+        }
+    }
+
     
 
     
@@ -672,6 +683,12 @@ export class CsvComponent implements OnInit {
             }
         }
     }
+
+    goToTraining(){
+        //alert("go to training");
+        this.service.goToTraining(true);
+    }
+
 }
 
     

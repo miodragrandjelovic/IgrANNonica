@@ -24,6 +24,11 @@
         <div id="top-controls" style="border-radius:4px;">
 
           <div class="row parametri" style="width:100%;margin:auto;">
+            <div *ngIf="chosenDataset" class="control" style="border:#CEECFA 2px solid;border-radius:5px;text-align:center;">
+              <p *ngIf="chosenDataset" style="width:fit-content;margin:auto;"><span style="font-weight:bold">Chosen Dataset is </span><span style="font-style:italic;">{{chosenDataset}}</span></p>
+              <p *ngIf="chosenTarget" style="width:fit-content;margin:auto;"><span style="font-weight:bold">Chosen Target is </span><span style="font-style:italic;">{{chosenTarget}}</span></p>
+            </div>
+
             <div class="control epoch">
               <label class="labelaHip" for="epoch">Epoch</label>
               <div class="select" style="border-radius: 2px;">

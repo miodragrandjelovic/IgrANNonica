@@ -29,6 +29,7 @@ export class UsermodelsComponent implements OnInit {
   zapamceniModeli: any;
   selectedModels:any;
   searchModels: any;
+  loadedCsvPrediction:boolean;
 
   ngOnInit(): void {
     this.getModels();
@@ -37,7 +38,9 @@ export class UsermodelsComponent implements OnInit {
       //  console.log("REFRESH COMPONENTE");
           this.getModels();
       }
-  });
+    });
+
+    this.loadedCsvPrediction = false;
   }
 
   getModels()
@@ -95,8 +98,9 @@ export class UsermodelsComponent implements OnInit {
      this.modalService.open(newData, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
        this.closeResult = `Closed with: ${result}`;
      }, (reason) => {
-       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-     });
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        this.loadedCsvPrediction = false;
+      });
    }
 
 
@@ -119,7 +123,7 @@ export class UsermodelsComponent implements OnInit {
    predikcija:any = [];
 
    fileUpload(files: any) {
-    
+    this.loadedCsvPrediction = true;
     this.unetDataset='';
     this.ucitano=false;
     this.prikaziPredikciju=false;
