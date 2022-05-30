@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
+import { ConfirmLeaveComponent } from './confirm-leave/confirm-leave.component';
 import { HomeComponent } from './home/home.component';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +15,12 @@ export class IsTrainingInProgressGuard implements CanDeactivate<HomeComponent> {
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
     nextState?: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return component.isTrainingInProgress() 
-      ? true 
-      : window.confirm("Training is still in progress, if you leave, results will not be saved! Do you want to continue?");
-  }
-  
+      if (component.isTrainingInProgress()){
+        return true;
+      }
+      else{
+        return window.confirm("Training is still in progress, if you leave, results will not be saved! Do you want to continue?");
+        
+      }
+    }
 }
