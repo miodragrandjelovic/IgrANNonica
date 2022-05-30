@@ -180,7 +180,7 @@ export class HyperparametersComponent implements OnInit {
 
     this.service.messageSubject.subscribe({
       next: x => {
-        if (x == 0 || x==3)
+        if (x == 0 || x==3 || x == 2)
         {
           this.hidden = false;
           //alert("IM HIDDEN");
