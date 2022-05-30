@@ -151,6 +151,8 @@ export class HeaderComponent implements OnInit {
   get username(){return this.registerForm.get('username');}
   get password(){return this.registerForm.get('password');}
 
+  
+
 
   openRegister(contentRegister: any) {
     this.isMenuCollapsed = true;
@@ -187,13 +189,12 @@ export class HeaderComponent implements OnInit {
 
   onLogOut()
   {
+    this.prijavaService.logout();
     this.cookie.deleteAll();
     sessionStorage.clear();
     this.session=this.get();
-    this.router.navigate(['/']);
     this.selectedIndex = "";
     this.isMenuCollapsed = true;
-    this.prijavaService.logout();
     this.selectedIndex = "homePage";
   }
 

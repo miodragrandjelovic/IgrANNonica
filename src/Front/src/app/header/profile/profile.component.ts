@@ -29,18 +29,45 @@ export class ProfileComponent implements OnInit {
     })
   }
 
+  isMail(mail:string){
+    var find : boolean;
+    var regexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+  
+    find = regexp.test(mail);
+
+    return find;
+  }
+
   onUpdate(form: NgForm)
   {
     if (!form.valid) {
       return;
     }
 
-    this.profilService.updateProfile(this.ulogovanUser).subscribe(data=>{
-      //console.log(data);
-      this.toastr.success('Updated successfully', 'Users update');
-    }, error=>{
-    //  console.log('Update error');
-    });
+    //provera da li je prazan str neko polje
+    if (this.ulogovanUser.firstName == "" || this.ulogovanUser.lastName=="" || this.ulogovanUser.email=="")
+    {
+      //prazno neko od polja
+      this.toastr.error("All fields are required!", "User Update");
+    }
+    else{
+      //provera mejla
+      if(!this.isMail(this.ulogovanUser.email)){
+        //neispravan format mejla
+        this.toastr.error("You must enter valid mail format!", "User Update");
+      }
+      else{
+        //sve ispravno, moze da se menja
+
+        this.profilService.updateProfile(this.ulogovanUser).subscribe(data=>{
+          //console.log(data);
+          this.toastr.success('Updated successfully', 'Users update');
+        }, error=>{
+          this.toastr.error('Profile is not updated!', 'Users update');
+        });
+
+      }
+    }
   }
 
   onDeleteAccount(){
@@ -48,7 +75,6 @@ export class ProfileComponent implements OnInit {
     this.cookie.deleteAll();
     sessionStorage.clear();
     this.profilService.user=true;
-    this.router.navigate(['/']);
     this.prijavaService.logout();
   }
 
