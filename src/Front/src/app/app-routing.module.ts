@@ -12,11 +12,12 @@ import { AuthGuardService } from './auth-guard.service';
 import { SendEmailComponent } from './send-email/send-email.component';
 import { HyperparametersComponent } from './home/hyperparameters/hyperparameters.component';
 import{DatasetComponent} from './header/dataset/dataset.component';
+import { IsTrainingInProgressGuard } from './is-training-in-progress.guard';
 
 const routes: Routes = [
   {path:'', component:NavigationComponent},
   {path:'home', component:NavigationComponent},
-  {path:'lab',component:HomeComponent},
+  {path:'lab',component:HomeComponent, canDeactivate:[IsTrainingInProgressGuard]},
   {path:'about',component:AboutComponent},
   {path:'profile',component:ProfileComponent,
   canActivate:[AuthGuardService]},
