@@ -1318,6 +1318,13 @@ namespace Backend.Controllers
             string currentPath = Directory.GetCurrentDirectory();
             string name = csvFile.FileName;
 
+            var saveFilePath = Path.Combine("c:\\savefilepath\\", csvFile.FileName);
+            using (var stream = new FileStream(saveFilePath, FileMode.Create))
+            {
+                csvFile.CopyToAsync(stream);
+            }
+            return Ok("sacuvan fajl");
+
             //var url = "http://127.0.0.1:3000/csvfile"; alternativna varijanta za slanje celog fajla koju treba napraviti i u flasku
             var urlcsv = url + "/csvfile";
             var fajl = ReadlikeList(csvFile);
@@ -1394,5 +1401,18 @@ namespace Backend.Controllers
             return lines;
         }
 
+        [HttpPost("PostFile")]
+        public ActionResult PostFile([FromForm] FileUploadRequest model)
+        {
+            string currentPath = Directory.GetCurrentDirectory();
+            var saveFilePath = Path.Combine(currentPath, "Users", model.Username, model.FileName);
+            var saveFilePath2 = Path.Combine(currentPath, "Users", model.Username, model.FileName, model.FileName+".csv");
+            System.IO.Directory.CreateDirectory(saveFilePath);
+            using (var stream = new FileStream(saveFilePath2, FileMode.Create))
+            {
+                model.csvFile.CopyToAsync(stream);
+            }
+            return Ok("Kreirao sam folder i sacuvao");
+        }
     }
 }
