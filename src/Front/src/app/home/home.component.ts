@@ -40,6 +40,18 @@ export class HomeComponent implements OnInit {
         }
       }
     });
+
+    this.service.refreshP.subscribe({
+      next: ref=>{
+        if (ref){
+          alert("Alert");
+          this.ngOnInit();
+        }
+        else{
+          alert("not ref");
+        }
+      }
+    });
   }
 
   // salje se komponenta child-u <app-csv> poruka je 0

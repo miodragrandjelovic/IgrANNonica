@@ -52,9 +52,11 @@ export class PrijavaService {
     {
         var loggedUsername = sessionStorage.getItem('username');
         this.http.get<any>(this.url + '/api/RegistracijaUsera/logout?Username='+loggedUsername, {responseType:'text' as 'json'}).subscribe(result => { 
-            this.router.navigate(['/']);
+            this.router.navigate(['/home']);
             this.toastr.success("You have successfully been logged out", 'User Logout');
+
         });
+        
     }
     
 }

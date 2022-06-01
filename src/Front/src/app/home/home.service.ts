@@ -16,6 +16,8 @@ export class MessageService{
 
     goTrain = new Subject<boolean>();
 
+    refreshP = new Subject<boolean>();
+
     sayMessage(message:number){
    
       this.messageSubject.next(message);
@@ -27,6 +29,11 @@ export class MessageService{
 
     goToTraining(message:boolean){
       this.goTrain.next(message);
+    }
+
+    refreshPage(ref:boolean){
+      alert("osvezi se");
+      this.refreshP.next(ref);
     }
    
   }
