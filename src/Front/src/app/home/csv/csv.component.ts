@@ -203,6 +203,9 @@ export class CsvComponent implements OnInit {
         if (fileList && fileList.length > 0) {
             let file : File = fileList[0];
 
+            console.log(file);
+            console.log(fileList);
+
             let defFileName = file.name;
             defFileName = defFileName.replace(".csv","");
             //alert("Naziv je -"+defFileName+"-");

@@ -104,6 +104,8 @@ export class HyperparametersComponent implements OnInit {
   prikazGrafika=false;
   show: boolean = false;
 
+  problem: string;
+
   options1: Options = {
     floor: 5,
     ceil: 95,
@@ -342,12 +344,18 @@ export class HyperparametersComponent implements OnInit {
     this.toastr.error("You need to choose at least one Input for dataset on Load Data page!", "Training Error");
   }
   else{
+    this.parametersService.getProblemType().subscribe((result) => {
+      if (result == true)
+        this.problem = 'regression';
+      else
+        this.problem = 'classification';
+    });
     const myreq: RequestHyperparameters = {
       learningRate : Number(this.hyperparametersForm.get('learningRate')?.value),
       epoch: this.hyperparametersForm.get('epoch')?.value,
       regularization: this.hyperparametersForm.get('regularization')?.value,
       regularizationRate: Number(this.hyperparametersForm.get('regularizationRate')?.value),
-      problemType: this.hyperparametersForm.get('problemType')?.value,
+      problemType: this.problem,
       layers: this.countLayers,
       ratio: this.hyperparametersForm.get('ratio')?.value,
       batchSize: this.hyperparametersForm.get('batchSize')?.value,
