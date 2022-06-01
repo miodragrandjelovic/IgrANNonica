@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HomeComponent } from './home/home.component';
+import { LeavedialogueComponent } from './leavedialogue/leavedialogue.component';
 
 
 @Injectable({
@@ -9,6 +11,8 @@ import { HomeComponent } from './home/home.component';
 })
 export class IsTrainingInProgressGuard implements CanDeactivate<HomeComponent> {
 
+  constructor(private dialog: MatDialog){}
+  
   canDeactivate(
     component: HomeComponent,
     currentRoute: ActivatedRouteSnapshot,
@@ -18,8 +22,9 @@ export class IsTrainingInProgressGuard implements CanDeactivate<HomeComponent> {
         return true;
       }
       else{
-        return window.confirm("Training is still in progress, if you leave, results will not be saved! Do you want to continue?");
-        
+        //return window.confirm("Training is still in progress, if you leave, results will not be saved! Do you want to continue?");
+        const dialogRef = this.dialog.open(LeavedialogueComponent);
+        return dialogRef.afterClosed()
       }
     }
 }

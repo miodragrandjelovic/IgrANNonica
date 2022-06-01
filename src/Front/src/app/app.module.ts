@@ -42,6 +42,8 @@ import { BarplotComponent } from './barplot/barplot.component';
 import { PredictionComponent } from './prediction/prediction.component';
 import { PredikcijaPoModeluComponent } from './home/csv/predikcija-po-modelu/predikcija-po-modelu.component';
 import{Ng2SearchPipeModule} from 'ng2-search-filter';
+import { LeavedialogueComponent } from './leavedialogue/leavedialogue.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const icons = {
   envelope,
@@ -79,7 +81,8 @@ const icons = {
     StatisticsComponent,
     BarplotComponent,
     PredictionComponent,
-    PredikcijaPoModeluComponent
+    PredikcijaPoModeluComponent,
+    LeavedialogueComponent
   ],
   imports: [
     BrowserModule,
@@ -99,7 +102,8 @@ const icons = {
     NgxChartsModule,
     MatButtonModule,
     MatIconModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]
