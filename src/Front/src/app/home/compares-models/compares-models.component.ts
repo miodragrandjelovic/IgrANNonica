@@ -75,6 +75,7 @@ export class ComparesModelsComponent implements OnInit {
         if (x==2)
         {
           this.hidden = false;
+          this.getModels();
           
         }
         else{
@@ -82,9 +83,6 @@ export class ComparesModelsComponent implements OnInit {
         }
       }
     });
-
-    this.getModels();
-    
   }
 
 
@@ -188,6 +186,8 @@ export class ComparesModelsComponent implements OnInit {
               valuesVal: this.hpResponse1[str],  
               isChecked: true
             }
+            console.log(this.properties1[i]);
+            console.log(str);
             this.checkboxArray1.push(object);
               }
         }); 
