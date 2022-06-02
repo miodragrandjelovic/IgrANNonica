@@ -264,7 +264,16 @@ export class HyperparametersComponent implements OnInit {
 
   onNeuronChange(event:any,i:number){
     this.listOfNeurons[i] = event.target.value;
-    this.checkNeurons(i);
+    if(event.target.value!=""){
+      this.checkNeurons(i);
+    }
+  }
+
+  layerLeaveFocus(event:any,i:number){
+    if(event.target.value==""){
+      this.listOfNeurons[i] = 1;
+      this.makeLayer(i);
+    }
   }
 
   showCsv() {
@@ -371,7 +380,7 @@ export class HyperparametersComponent implements OnInit {
     } 
     
     var loggedUsername = sessionStorage.getItem('username');
-    //alert(myreq.numberOfNeurons);
+    alert(myreq.numberOfNeurons);
     // ONEMOGUCI
     this.disableChanges();
 

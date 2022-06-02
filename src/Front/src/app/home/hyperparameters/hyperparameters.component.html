@@ -151,7 +151,7 @@
                         <i-bs [style.pointer-events]="onemogucenChange ? 'none' : 'auto'"  (click)="onAddNeuron(i)" width="20" height="20" name="plus-circle-fill"  style="cursor: pointer;"></i-bs><br><!--slojevi i neuroni da se ovako izlistavaju-->
                         
                         <p style="font-size: 12px;">
-                          <input [attr.disabled]="onemogucenChange ? 'disabled' : null" type="number" id="layerNeurons{{i}}" name="listOfNeurons[{{i}}]" [value]="listOfNeurons[i]" style="width:50px;margin-top:5px;" min="1" max="256" (keyup)="checkNeurons(i)" (change)="onNeuronChange($event,i)"><br>
+                          <input [attr.disabled]="onemogucenChange ? 'disabled' : null" type="number" id="layerNeurons{{i}}" name="listOfNeurons[{{i}}]" [value]="listOfNeurons[i]" style="width:50px;margin-top:5px;" min="1" max="256" (keyup)="onNeuronChange($event,i)" (focusout)="layerLeaveFocus($event,i)"><br>
                           neurons<br>
                         </p>
                           <div class="select">
