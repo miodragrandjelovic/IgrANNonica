@@ -140,6 +140,7 @@ export class HyperparametersComponent implements OnInit {
    }
 
    listaNeurona(i:number) {
+     //alert((<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value);
     return (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value;
    }
 
@@ -451,6 +452,23 @@ export class HyperparametersComponent implements OnInit {
   {
     this.activacioneFunkc[i]=data.target.value;
   }
+
+
+
+  moreThanNine(i:number){
+    if((<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length+1 > 9)
+      return true;
+    else
+      return false;
+  }
+
+  moreThanTen(i:number){
+    if((<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length+1 > 10)
+      return true;
+    else
+      return false;
+  }
+  
 
   neuronsLength:Array<number>=[]; 
   countAllNeurons(){
