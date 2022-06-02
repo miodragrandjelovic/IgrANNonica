@@ -18,18 +18,18 @@ export class HomeComponent implements OnInit {
   session: any;
   edited: boolean = false; 
   currentActive:number;
-  disableButtons:boolean;
+  trainingInProgress:boolean;
 
   constructor(private http: HttpClient, private service: MessageService) { }
 
   ngOnInit(): void {
-    this.disableButtons = false;
+    this.trainingInProgress = false;
     this.showCsvData();  
     this.session = sessionStorage.getItem('username');
 
     this.service.disableButton.subscribe({
       next: dis => {
-        this.disableButtons = dis;
+        this.trainingInProgress = dis;
       }
     });
 
@@ -37,6 +37,18 @@ export class HomeComponent implements OnInit {
       next: train => {
         if (train == true){
           this.showHyperp();    
+        }
+      }
+    });
+
+    this.service.refreshP.subscribe({
+      next: ref=>{
+        if (ref){
+          alert("Alert");
+          this.ngOnInit();
+        }
+        else{
+          alert("not ref");
         }
       }
     });
@@ -67,5 +79,11 @@ export class HomeComponent implements OnInit {
     this.currentActive = 3;
   }
 
+  isTrainingInProgress():boolean{
+    //trening u toku
+    if (this.trainingInProgress) return false;
+    //trening nije u toku
+    else return true;
+  }
 
 }
