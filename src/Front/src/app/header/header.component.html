@@ -20,7 +20,7 @@
         </li>
 
         <li id="aboutPage" class="nav-item" (click)="onSelect()">
-          <a class="nav-link active" aria-current="page"  [routerLink]="['/about']" [style.color]="selectedIndex==='/about' ? '#03A9F4' : ''">Learn More</a>
+          <a class="nav-link active" aria-current="page"  [routerLink]="['/learn-more']" [style.color]="selectedIndex==='/learn-more' ? '#03A9F4' : ''">Learn More</a>
         </li>
         <li class="nav-item" *ngIf="!session || (session && profilService.user)">
           <a  class="nav-link active"  aria-current="page" role="button" (click)="openLogin(contentLogin)">Login</a>

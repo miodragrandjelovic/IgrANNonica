@@ -18,12 +18,11 @@ const routes: Routes = [
   {path:'', component:NavigationComponent},
   {path:'home', component:NavigationComponent},
   {path:'lab',component:HomeComponent, canDeactivate:[IsTrainingInProgressGuard]},
-  {path:'about',component:AboutComponent},
+  {path:'learn-more',component:AboutComponent},
   {path:'profile',component:ProfileComponent,
   canActivate:[AuthGuardService]},
   {path:'send-email',component:SendEmailComponent},
-  {path:'hyperparameters',component:HyperparametersComponent},
-  {path:'dataset',component:DatasetComponent},
+  {path:'hyperparameters',component:HyperparametersComponent}
 ];
 
 @NgModule({
