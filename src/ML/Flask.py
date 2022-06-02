@@ -234,37 +234,16 @@ def treniraj():
     label = hiperp['Output']
 
 
-    # izmenjen nacin kreiranja i treniranja modela
     stats=None
     stats = Statistics(type=hiperp['ProblemType'])
-
-    # ly ce biti lista broja neurona za svaki skriveni sloj koji je prosledjen
-  #  ly = []
-   # for i in range(hiperp['Layers']):
-    #    ly.append(hiperp['NeuronsLvl'+str(i+1)])
-   # print("Hidden layer neurons are ", ly)
-
-    #try:
-        #pathmodel
-    #except NameError:
-        #print("well, it WASN'T defined after all!")
-        #pathmodel=None
-
-    #finally:
     
     pathmodel=None
     stats.createModel(train=df,username=hiperp['Username'],features=features, label=label, epochs=hiperp['Epoch'], ratio=hiperp['Ratio'],val_test=hiperp['ValAndTest'], activation_function_list=hiperp['ActivationFunctions'],hidden_layers_n=hiperp['Layers'],
         hidden_layer_neurons_list=hiperp['NumberOfNeurons'], columns=hiperp['ColumNames'],enc_types=hiperp['Encodings'],num_cat_col=hiperp['CatNum'], randomize=hiperp['Randomize'],
         batch_size=hiperp['BatchSize'], learning_rate=hiperp['LearningRate'], regularization=hiperp['Regularization'] ,regularization_rate=hiperp['RegularizationRate'], missing_values=hiperp['MissingValues'],path=pathmodel)
-
-    # u objektu stats, u promenljivoj stats se nalaze statisticki podaci kroz epohe, u vidu dictionary-ja
-    # npr. "Accuracy":[...]
     
     return jsonify(stats.stats)
 
-#@app.route("/prediction", methods=['GET']) #Slanje predikcije na bek
-#def  getPrediction():
-#    return pr.predikcija(path,origcsv,predcsv,type,columns,encodings,num_cat,output)   ### odkomentarisati kad se odradi na frontu i backu
 
 #if(__name__=="main"):
 app.run(port = 3000)
