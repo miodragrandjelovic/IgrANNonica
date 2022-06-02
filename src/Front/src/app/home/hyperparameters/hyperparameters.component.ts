@@ -380,7 +380,7 @@ export class HyperparametersComponent implements OnInit {
     } 
     
     var loggedUsername = sessionStorage.getItem('username');
-    alert(myreq.numberOfNeurons);
+    //alert(myreq.numberOfNeurons);
     // ONEMOGUCI
     this.disableChanges();
 
