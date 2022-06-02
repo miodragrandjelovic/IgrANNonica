@@ -1402,17 +1402,58 @@ namespace Backend.Controllers
         }
 
         [HttpPost("PostFile")]
-        public ActionResult PostFile([FromForm] FileUploadRequest model)
+        [DisableRequestSizeLimit]
+        public async Task<ActionResult> PostFileAsync([FromForm] FileUploadRequest model)
         {
+            string Username = model.Username;
+            string name = model.FileName;
             string currentPath = Directory.GetCurrentDirectory();
-            var saveFilePath = Path.Combine(currentPath, "Users", model.Username, model.FileName);
-            var saveFilePath2 = Path.Combine(currentPath, "Users", model.Username, model.FileName, model.FileName+".csv");
-            System.IO.Directory.CreateDirectory(saveFilePath);
-            using (var stream = new FileStream(saveFilePath2, FileMode.Create))
+            var dataa = model.csvFile.ToString();
+            Console.WriteLine(dataa);
+            //var datas = model.csvFile.ToString().Split(',');
+            var data = new StringContent(dataa, System.Text.Encoding.UTF8, "application/json"); 
+            //var url = "http://127.0.0.1:3000/csvfile";
+            var urlcsv = url + "/csvfile";
+            var response = await http.PostAsync(urlcsv, data);
+            return Ok("Poslao sam");
+            
+            /*var statsurl = url + "/stats";
+            HttpResponseMessage httpResponse = await http.GetAsync(statsurl);
+            var stat = System.Text.Json.JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());*/
+
+            if (Username != null)
             {
-                model.csvFile.CopyToAsync(stream);
+                string path = System.IO.Path.Combine(currentPath, "Users", Username, name);
+                string publicPath = System.IO.Path.Combine(currentPath, "Users", "publicDatasets", name);
+                string publicName = name + ".csv";
+                string publicCreate = System.IO.Path.Combine(publicPath, publicName);
+                if (Directory.Exists(path))
+                    Console.WriteLine("File is already in system.");
+                else
+                {
+                    System.IO.Directory.CreateDirectory(path);
+                    string pathToCreate = System.IO.Path.Combine(path, name + ".csv");
+                    using (var stream = new FileStream(pathToCreate, FileMode.Create))
+                    {
+                        model.csvFile.CopyToAsync(stream);
+                    }
+
+                    if (model.publicData)
+                    {
+                        if (Directory.Exists(publicPath))
+                            Console.WriteLine("There is already public dataset with that name.");
+                        else
+                        {
+                            System.IO.Directory.CreateDirectory(publicPath);
+                            using (var fileStream = new FileStream(publicCreate, FileMode.Create))
+                            {
+                                model.csvFile.CopyToAsync(fileStream);
+                            }
+                        }
+                    }
+                }
             }
-            return Ok("Kreirao sam folder i sacuvao");
+            return Ok("Treba stat da se vrati");
         }
     }
 }
