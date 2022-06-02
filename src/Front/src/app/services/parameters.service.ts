@@ -13,6 +13,7 @@ export class ParametersService {
   private columNames$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   private missingValues$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   private datasets$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private problemType$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
     getParamsObs(): Observable<string> {
         return this.params$.asObservable();
@@ -70,6 +71,13 @@ export class ParametersService {
     }
     setDatasets() {
       this.datasets$.next(true);
+    }
+
+    getProblemType(): Observable<boolean> {
+      return this.problemType$.asObservable();
+    }
+    setProblemType(value: boolean) {
+      this.problemType$.next(value);
     }
 
   constructor() { }

@@ -4,15 +4,17 @@
     <div class="tabelaCentar" style="margin-bottom:10px;">
       <!-- tabela centar treba da sadrzi sve-->
       <div class="btn-group" role="group" aria-label="navigationToggle" style="background-color: transparent;" style="width:100%;">
-        <button id="loadData" [disabled]="trainingInProgress" type="button" class="no_border" style="margin:1px; border-radius: 5px;" (click)="showCsvData()" [style.border]="currentActive==0 ? '3px solid #03a9f4' : 'none'">Load Data</button>
-        <button id="trainModel" [disabled]="trainingInProgress" type="button" class="no_border" style="margin:1px; border-radius: 5px;" (click)="showHyperp()" [style.border]="currentActive==1 ? '3px solid #03a9f4' : 'none'">Train Model</button>
-        <button *ngIf="session" [disabled]="trainingInProgress" id="predict" type="button" class="no_border" style="margin:1px; border-radius: 5px;" (click)="showPredict()" [style.border]="currentActive==3 ? '3px solid #03a9f4' : 'none'">Predict by model</button>
+        <button id="loadData" [disabled]="disableButtons" type="button" class="no_border" style="margin:1px; border-radius: 5px;" (click)="showCsvData()" [style.border]="currentActive==0 ? '3px solid #03a9f4' : 'none'">Load Data</button>
+        <button id="trainModel" [disabled]="disableButtons" type="button" class="no_border" style="margin:1px; border-radius: 5px;" (click)="showHyperp()" [style.border]="currentActive==1 ? '3px solid #03a9f4' : 'none'">Train Model</button>
+        <button *ngIf="session" [disabled]="disableButtons" id="compare" type="compare" class="no_border" style="margin:1px; border-radius: 5px;" (click)="showCompareModels()" [style.border]="currentActive==2 ? '3px solid #03a9f4' : 'none'">Compare Models</button>
+        <button *ngIf="session" [disabled]="disableButtons" id="predict" type="button" class="no_border" style="margin:1px; border-radius: 5px;" (click)="showPredict()" [style.border]="currentActive==3 ? '3px solid #03a9f4' : 'none'">Predict by model</button>
       </div>
     </div>
 
     <div>
       <app-csv></app-csv>
       <app-hyperparameters></app-hyperparameters>
+      <app-compares-models></app-compares-models>
       <app-predikcija-po-modelu></app-predikcija-po-modelu>
     </div>
   </div>

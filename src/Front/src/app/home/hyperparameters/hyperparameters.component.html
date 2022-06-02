@@ -208,10 +208,16 @@
                           </div>
                       </div>
                     </div>
-                    <div style="width:75%; float:left;">
-                      <app-barplot *ngIf="!show" [evaluate]="eveluate"></app-barplot>
-                      <app-prediction *ngIf="!show" [pred]="pred" [label]="label"></app-prediction>
-                      <app-graphic *ngFor="let item of selectedCheckBoxes; let i = index" [id]="i" [selected]="item"></app-graphic>
+                    <div class="row">
+                      <div class="col-6 p-2">
+                        <app-barplot *ngIf="!show" [evaluate]="eveluate"></app-barplot>
+                      </div>
+                      <div class="col-6 p-2">
+                        <app-prediction *ngIf="!show" [pred]="pred" [label]="label"></app-prediction>
+                      </div>
+                      <div *ngFor="let item of selectedCheckBoxes; let i = index"  class="col-6 p-2">
+                        <app-graphic [id]="i" [selected]="item"></app-graphic>
+                      </div>
 
 
                       <div *ngIf="session">
