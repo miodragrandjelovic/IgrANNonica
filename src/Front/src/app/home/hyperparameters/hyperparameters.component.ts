@@ -453,8 +453,16 @@ export class HyperparametersComponent implements OnInit {
     this.activacioneFunkc[i]=data.target.value;
   }
 
-  
-  countNeuronsForLayer(i:number){
+
+
+  moreThanNine(i:number){
+    if((<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length+1 > 9)
+      return true;
+    else
+      return false;
+  }
+
+  moreThanTen(i:number){
     if((<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length+1 > 10)
       return true;
     else

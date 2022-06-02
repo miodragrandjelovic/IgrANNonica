@@ -165,13 +165,18 @@
                         <div style="margin-left: 35px;height: 30px;width: 30px; background-color: #34495E; border-radius: 50%; border: 2px solid;margin-top: 5px;"><br>
                         </div>
 
-                        <tr  *ngFor="let neuron of listaNeurona(i) | slice:0:9; let i = index;" style="display: flex;"> 
+                        <tr  *ngFor="let neuron of listaNeurona(i) | slice:0:8; let i = index;" style="display: flex;"> 
                           <div style="margin-left: 35px;height: 30px;width: 30px; background-color: #34495E; border-radius: 50%; border: 2px solid;margin-top: 5px;"><br>
                           </div>
                         </tr>
-                        <tr *ngIf="countNeuronsForLayer(i)">
+                        <tr *ngIf="moreThanTen(i)">
                           <div style="margin-left: 35px;height: 30px;width: 30px;;margin-top: 5px;">
                             ...
+                          </div>
+                        </tr>
+
+                        <tr *ngIf="moreThanNine(i)"> 
+                          <div style="margin-left: 35px;height: 30px;width: 30px; background-color: #34495E; border-radius: 50%; border: 2px solid;margin-top: 5px;"><br>
                           </div>
                         </tr>
                       </td>
