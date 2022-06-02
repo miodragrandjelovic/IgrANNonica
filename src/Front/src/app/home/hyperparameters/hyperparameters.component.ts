@@ -94,6 +94,7 @@ export class HyperparametersComponent implements OnInit {
   eveluate: any;
   label: any;
   pred: any;
+  listOfNeurons: Array<any> = [1,1,1,1,1,1,1];
   //layers:Array<string> = ["5","5","5","5","5"]
   //
   activationFunctions:Array<any>=[];
@@ -140,6 +141,7 @@ export class HyperparametersComponent implements OnInit {
    }
 
    listaNeurona(i:number) {
+     //alert((<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value);
     return (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value;
    }
 
@@ -150,8 +152,6 @@ export class HyperparametersComponent implements OnInit {
     this.onemogucenSave = true;
     this.onemogucenChange = false;
     
-    
-
     this.spiner.getShowSpinner().subscribe(newValue => {
       this.show = newValue;
     });
@@ -170,7 +170,7 @@ export class HyperparametersComponent implements OnInit {
       'valAndTest' : new FormControl(0),
       'randomize': new FormControl(0),
       'neurons': new FormArray([]),
-      'modelName':new FormControl(null),
+      'modelName':new FormControl(null)
     });
 
     //this.parametersService.getShowHp().subscribe(res => {this.hidden = res});
@@ -262,6 +262,20 @@ export class HyperparametersComponent implements OnInit {
     this.value3 = event.target.value;
   }
 
+  onNeuronChange(event:any,i:number){
+    this.listOfNeurons[i] = event.target.value;
+    if(event.target.value!=""){
+      this.checkNeurons(i);
+    }
+  }
+
+  layerLeaveFocus(event:any,i:number){
+    if(event.target.value==""){
+      this.listOfNeurons[i] = 1;
+      this.makeLayer(i);
+    }
+  }
+
   showCsv() {
     this.parametersService.setShowHp(false);
   }
@@ -285,7 +299,9 @@ export class HyperparametersComponent implements OnInit {
     this.inputsString = '';
     this.outputString = '';
     const layers = (<FormArray>this.hyperparametersForm.get('neurons')).controls.length;
+    //alert(layers);
     const neurons = (<FormArray>this.hyperparametersForm.get('neurons')).controls;
+    //alert(neurons);
     let neuron1 = 0, neuron2 = 0, neuron3 = 0, neuron4 = 0, neuron5 = 0;
     for (let i = 0; i < layers; i++)  {
       if (i == 0)
@@ -364,7 +380,7 @@ export class HyperparametersComponent implements OnInit {
     } 
     
     var loggedUsername = sessionStorage.getItem('username');
-
+    //alert(myreq.numberOfNeurons);
     // ONEMOGUCI
     this.disableChanges();
 
@@ -427,6 +443,7 @@ export class HyperparametersComponent implements OnInit {
   onAddLayer() {
     if(this.countLayers<7){
       this.countLayers++;
+      this.listOfNeurons[(this.countLayers - 1)]=1;
       this.activacioneFunkc.push('sigmoid');
       const control = new FormControl(new FormArray([]));
       (<FormArray>this.hyperparametersForm.get('neurons')).push(control);
@@ -443,6 +460,7 @@ export class HyperparametersComponent implements OnInit {
       this.countLayers--;
       this.activacioneFunkc.pop();
       (<FormArray>this.hyperparametersForm.get('neurons')).removeAt(this.countLayers);
+      this.listOfNeurons[(this.countLayers)] = 0;
     }
   }
 
@@ -451,6 +469,23 @@ export class HyperparametersComponent implements OnInit {
   {
     this.activacioneFunkc[i]=data.target.value;
   }
+
+
+
+  moreThanNine(i:number){
+    if((<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length+1 > 9)
+      return true;
+    else
+      return false;
+  }
+
+  moreThanTen(i:number){
+    if((<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length+1 > 10)
+      return true;
+    else
+      return false;
+  }
+  
 
   neuronsLength:Array<number>=[]; 
   countAllNeurons(){
@@ -463,11 +498,12 @@ export class HyperparametersComponent implements OnInit {
   onAddNeuron(i:number){
     const control = new FormControl(0);
     (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.push(control);
-    
+    this.listOfNeurons[i]++;
   }
   onRemoveNeuron(i:number){
     (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.removeAt(this.counterNeuron -1);
     this.counterNeuron = (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
+    this.listOfNeurons[i]--;
   }
 
   checkEpochs(){
@@ -481,6 +517,56 @@ export class HyperparametersComponent implements OnInit {
     }
     else if (this.epochs>100){
       this.epochs = 100;
+    }
+  }
+
+  
+
+  checkNeurons(i:number){
+    //alert("Check layer "+i);
+    //alert("Len " + this.epochs);
+    if (this.listOfNeurons[i] == null){ 
+      //alert("Moze");
+      return;
+    }
+    else if (this.listOfNeurons[i]<1){
+      //alert("manje od nule");
+      this.listOfNeurons[i] = 1;
+    }
+    else if (this.listOfNeurons[i]>256){
+      this.listOfNeurons[i] = 256;
+    }
+    this.makeLayer(i);
+  }
+
+  makeLayer(i:number){
+    //+1 jer imamo onaj jedan prvi
+    //alert("Current number "+(this.countNeurons(i) + 1));
+    //alert("New number "+this.listOfNeurons[i]);
+    //alert(((this.countNeurons(i)+1) === (this.listOfNeurons[i])));
+    if ((this.countNeurons(i)+1) < (this.listOfNeurons[i])){
+      //povecaj dok se ne izjednace  
+      //alert("Treba da povecas");
+      const control = new FormControl(0);
+      (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.push(control);
+      while(((this.countNeurons(i)+1) < (this.listOfNeurons[i]))){
+        //alert("Current number "+(this.countNeurons(i) + 1));
+        //alert("New number "+this.listOfNeurons[i]);
+        const control = new FormControl(0);
+      (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.push(control);
+      }
+    }
+    if ((this.countNeurons(i)+1) > (this.listOfNeurons[i])){
+      //smanji dok se ne izjednace  
+      //alert("Treba da smanjis");
+      (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.removeAt(this.counterNeuron -1);
+      this.counterNeuron = (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
+      while(((this.countNeurons(i)+1) > (this.listOfNeurons[i]))){
+        //alert("Current number "+(this.countNeurons(i) + 1));
+        //alert("New number "+this.listOfNeurons[i]);
+        (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.removeAt(this.counterNeuron -1);
+      this.counterNeuron = (<FormArray>this.hyperparametersForm.get('neurons')).controls[i].value.value.length;
+      }
     }
   }
 

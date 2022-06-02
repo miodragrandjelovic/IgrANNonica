@@ -4,13 +4,15 @@ import { FormControl, FormGroup, NgForm,Validators } from '@angular/forms';
 import { PrijavaService } from '../prijava/./prijava.service';
 import { ModalDismissReasons,NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { RegistracijaService } from '../registracija/./registracija.service';
-import { Router } from '@angular/router';
+import { ResolveEnd, Router } from '@angular/router';
 import { User } from '../_model/user.model';
 import { registerLocaleData } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'ngx-cookie-service';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileService } from './profile/profile.service';
+import { Location } from '@angular/common';
+import { MessageService } from '../home/home.service';
 
 @Component({
   selector: 'app-header',
@@ -30,8 +32,10 @@ export class HeaderComponent implements OnInit {
     private prijavaService: PrijavaService,
     private registracijaService: RegistracijaService,
     private router:Router,
+    private location:Location,
     private toastr:ToastrService,
     private cookie: CookieService,
+    public homePageService:MessageService,
     public profilService: ProfileService,
     ) { 
       this.session=this.get();
@@ -56,9 +60,18 @@ export class HeaderComponent implements OnInit {
     });
 
     this.isMenuCollapsed = true;
-    this.selectedIndex = "homePage";
+    this.getCurrentUrl();
+    //alert(this.selectedIndex);
+      
   }
 
+  getCurrentUrl(){
+    this.router.events.subscribe((routerData) => {
+      if(routerData instanceof ResolveEnd){ 
+         this.selectedIndex = routerData.url;
+      } 
+    })
+  }
 
   save(username:string, password:string){
     sessionStorage.setItem('username',username);
@@ -83,12 +96,12 @@ export class HeaderComponent implements OnInit {
       this.session=this.get();
       this.loggedUser=this.get();
       this.profilService.user=false;
-      this.selectedIndex = 'homePage';
+      this.selectedIndex = '/home';
       
       this.message = '';
     
       this.toastr.success('Welcome, '+username, 'User login');
-      this.router.navigate(['/']);
+      this.router.navigate(['/home']);
     }, error =>{
       if(error.status==400)
       {
@@ -124,11 +137,11 @@ export class HeaderComponent implements OnInit {
         this.session=this.get();
         this.loggedUser=this.get();
         this.profilService.user=false;
-        this.selectedIndex = 'homePage';
+        this.selectedIndex = '/home';
         this.message='';
         
         this.toastr.success('Welcome, '+username, 'User login');
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
       }, error =>{
         if(error.status==400)
         {
@@ -193,16 +206,15 @@ export class HeaderComponent implements OnInit {
     this.cookie.deleteAll();
     sessionStorage.clear();
     this.session=this.get();
-    this.selectedIndex = "";
     this.isMenuCollapsed = true;
-    this.selectedIndex = "homePage";
+    this.getCurrentUrl();
   }
 
-
+  
   selectedIndex: string;
-  onSelect(index: string){
-    this.selectedIndex = index;
+  onSelect(){
     this.isMenuCollapsed = true;
+    this.getCurrentUrl();
   }
 
 

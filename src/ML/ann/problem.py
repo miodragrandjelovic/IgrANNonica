@@ -73,45 +73,6 @@ class Data():
             
 
 
-
-    def clearupData(self, encode_type,type):
-        # deal with missing data
-        # for numerical values fill with mean
-        # for categorical values fill with mode 
-      #  fn.missing_data(self.data)                                 ODKOMENTARISI POSLE
-      """ 
-        # drop the outliers from numerical columns
-        #fn.drop_numerical_outliers(self.data)
-        X, y = fn.feature_and_label(self.data, label)
-        # encode data
-        X=fn.encode_data(X, encode_type)
-        y=pd.DataFrame(y)
-
-        if(type="")
-
-        self.data=fn.encode_data(self.data, encode_type)
-        """ 
-        
-        # first take out the values that do not impact the model
-#        fn.filter_data(self.data)
-
-    def splitData(self, label, ratio, randomize, val_test):
-        
-        self.data=fn.normalize(self.data)
-        
-        # split x and y (features and label)
-        X, y = fn.feature_and_label(self.data, label)
-
-        # according to activation function, normalize y set
-        #y = fn.normalize(y, activation_function)
-
-        # split test and train data 
-        (self.X_train, self.X_test, self.y_train, self.y_test) = fn.split_data(X, y, ratio, val_test, randomize)
-
-        # now, shape all data
-        #fn.scale_data(self.X_train, self.X_test, self.y_train, self.y_test)
-
-
 class Model():
     def __init__(self, data, regularization, regularization_rate):
         self.data = data
@@ -152,10 +113,6 @@ class Model():
             self.hist['valMAE'] = self.history.history['val_mae']
             self.hist['valMSE'] = self.history.history['val_mse']
             self.hist['valRMSE'] = self.history.history['val_root_mean_squared_error']        
-           # self.hist["MAPE"] = self.history.history['mean_absolute_percentage_error']
-           # self.hist["valMAPE"] = self.history.history['val_mean_absolute_percentage_error']
-          #  self.hist["Cosine"] = self.history.history['cosine_similarity']
-          #  self.hist["valCosine"] = self.history.history['val_cosine_similarity']
 
 
         if (type=="classification"):
@@ -164,19 +121,9 @@ class Model():
             self.hist['Precision'] = self.history.history['precision']
             self.hist['Recall'] = self.history.history['recall']
             self.hist['F1_score'] = self.history.history['f1_score']
-            #self.hist['TruePositives'] = self.history.history['true_positives']
-            #self.hist['TrueNegatives'] = self.history.history['true_negatives']
-            #self.hist['FalsePositives'] = self.history.history['false_positives']
-            #self.hist['FalseNegatives'] = self.history.history['false_negatives']
-            #self.hist['TrueNegatives'] = self.history.history['true_negatives']
             self.hist['valF1_score'] = self.history.history['val_f1_score']
             self.hist['valAccuracy'] = self.history.history['val_accuracy']  
             self.hist['valAUC'] = self.history.history['val_auc']
             self.hist['valPrecision'] = self.history.history['val_precision']
             self.hist['valRecall'] = self.history.history['val_recall']
-            #self.hist['valTruePositives'] = self.history.history['val_true_positives']
-            #self.hist['valTrueNegatives'] = self.history.history['val_true_negatives']
-            #self.hist['valFalsePositives'] = self.history.history['val_false_positives']
-            #self.hist['valFalseNegatives'] = self.history.history['val_false_negatives']
-            #self.hist['valTrueNegatives'] = self.history.history['val_true_negatives']
         
