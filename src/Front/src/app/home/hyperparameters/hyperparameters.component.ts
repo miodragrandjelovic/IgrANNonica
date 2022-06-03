@@ -175,7 +175,6 @@ export class HyperparametersComponent implements OnInit {
       'modelName':new FormControl(null),
     });
 
-    //this.parametersService.getShowHp().subscribe(res => {this.hidden = res});
     this.parametersService.getParamsObs().subscribe(res => {
       this.hyperparameters = res;
     });
@@ -184,11 +183,11 @@ export class HyperparametersComponent implements OnInit {
       next: x => {
         if (x == 0 || x==3 || x == 2)
         {
-          this.hidden = false;
+          this.hidden = true;
           //alert("IM HIDDEN");
         }
         else{
-          this.hidden = true;
+          this.hidden = false;
         }
       }
     });
