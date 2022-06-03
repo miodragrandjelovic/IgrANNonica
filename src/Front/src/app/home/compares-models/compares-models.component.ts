@@ -65,6 +65,7 @@ export class ComparesModelsComponent implements OnInit {
   table:boolean=false;
   checkboxArray1: Array<CheckBox> = [];
   checkboxArray2: Array<CheckBox> = [];
+  str : string;
 
   
 
@@ -178,16 +179,25 @@ export class ComparesModelsComponent implements OnInit {
               this.properties1[i] = 'Loss';
             }
 
-            const str = `val${this.properties1[i].includes('Loss') ? this.properties1[i] : this.properties1[i].toUpperCase()}`;
+            if (this.properties1[i] == 'accuracy')
+              this.str = 'val' + 'Accuracy';
+            else if (this.properties1[i] == 'f1_score')
+              this.str = 'val' + 'F1_score';
+            else if (this.properties1[i] == 'precision')
+              this.str = 'val' + 'Precision';
+            else if (this.properties1[i] == 'recall')
+              this.str = 'val' + 'Recall'
+            else
+              this.str = `val${this.properties1[i].includes('Loss') ? this.properties1[i] : this.properties1[i].toUpperCase()}`;
             let object: CheckBox = {
               id: i + 1,
               label: this.properties1[i],
               values: this.hpResponse1[this.properties1[i].toLowerCase()],
-              valuesVal: this.hpResponse1[str],  
+              valuesVal: this.hpResponse1[this.str],  
               isChecked: true
             }
             console.log(this.properties1[i]);
-            console.log(str);
+            console.log(this.str);
             this.checkboxArray1.push(object);
               }
         }); 
@@ -220,12 +230,21 @@ export class ComparesModelsComponent implements OnInit {
               this.properties2[i] = 'Loss';
             }
 
-            const str = `val${this.properties2[i].includes('Loss') ? this.properties2[i] : this.properties2[i].toUpperCase()}`;
+            if (this.properties2[i] == 'accuracy')
+              this.str = 'val' + 'Accuracy';
+            else if (this.properties2[i] == 'f1_score')
+              this.str = 'val' + 'F1_score';
+            else if (this.properties2[i] == 'precision')
+              this.str = 'val' + 'Precision';
+            else if (this.properties2[i] == 'recall')
+              this.str = 'val' + 'Recall'
+            else
+              this.str = `val${this.properties2[i].includes('Loss') ? this.properties2[i] : this.properties2[i].toUpperCase()}`;
             let object: CheckBox = {
               id: i + 1,
               label: this.properties2[i],
               values: this.hpResponse2[this.properties2[i].toLowerCase()],
-              valuesVal: this.hpResponse2[str],  
+              valuesVal: this.hpResponse2[this.str],  
               isChecked: true
             }
             this.checkboxArray2.push(object);
