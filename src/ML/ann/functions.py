@@ -37,23 +37,6 @@ class initdict():
         dictionary=dict()
 
 
-class epochResults(Callback):
-    def on_epoch_end(self, epoch, logs=None):
-        listOfLogs = dict()
-        listOfLogs["Epoch"] = epoch + 1
-
-        keys = list(logs.keys())
-        for key in keys:
-            listOfLogs[key] = logs.get(key)
-
-        print("LIST OF LOGS FOR EPOCH ",listOfLogs["Epoch"])
-        print(listOfLogs)
-
-    
-    def on_batch_end(self, epoch, logs=None):
-        print("ITS THE END OF A BATCH")
-
-
 def load_data(features, label, data ):
     # moze da se prosledi i kao json string
     # data = pd.read_json(url)
@@ -253,9 +236,8 @@ def compile_model(model, type, y,lr):
 
 def train_model(model,type, X_train, y_train, epochs, batch_size,X_val,y_val, X_test, y_test,path):
 
-    call = epochResults()
 
-    fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size, callbacks=[call] ,validation_data = (X_val, y_val), verbose=2)
+    fit=model.fit(X_train, y_train, epochs=epochs,batch_size=batch_size ,validation_data = (X_val, y_val), verbose=2)
 
     pred = model.predict(X_test) 
     if(type=="classification"):
