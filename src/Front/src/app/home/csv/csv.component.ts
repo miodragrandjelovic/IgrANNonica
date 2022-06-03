@@ -550,6 +550,11 @@ export class CsvComponent implements OnInit {
         this.service.goToTraining(true);
     }
 
+    obrisiSearchInputField()
+    {
+        this.searchInputField = "";
+    }
+
 }
 
     
