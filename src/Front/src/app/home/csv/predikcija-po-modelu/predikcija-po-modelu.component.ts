@@ -16,7 +16,7 @@ export class PredikcijaPoModeluComponent implements OnInit {
   ngOnInit(): void {
     this.service.messageSubject.subscribe({
       next: x => {
-        if (x == 0 || x==1)
+        if (x == 0 || x==1 || x == 2)
         {
           this.hidden = false;
           //alert("IM HIDDEN");

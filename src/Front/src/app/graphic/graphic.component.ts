@@ -18,6 +18,7 @@ export class GraphicComponent implements OnInit, OnDestroy {
   constructor(public spiner:LoadingService) { }
 
   ngOnInit(): void {
+    console.log(this.selected);
   }
 
   ngAfterViewInit(): void {
@@ -31,14 +32,31 @@ export class GraphicComponent implements OnInit, OnDestroy {
   }
 
 
-  loadGraphic(str: string, hpY: Array<number>, hpY1: Array<number>) {
+  loadGraphic(str: string, hpY: Array<string>, hpY1: Array<string>) {
+
+    console.log(str);
+    console.log(hpY);
+    console.log(hpY1);
 
     this.hpX = [];
-    for (let i = 0; i < hpY.length; i++) {
-      this.hpX[i] = '' + Number(i + 1);
-      hpY[i] = parseFloat(hpY[i].toFixed(5));
-      hpY1[i] = parseFloat(hpY1[i].toFixed(5));
+    if (hpY.length < 31) {
+      for (let i = 0; i < hpY.length; i++) {
+        this.hpX[i] = '' + Number(i + 1);
+        hpY[i] = parseFloat(hpY[i]).toFixed(5);
+        hpY1[i] = parseFloat(hpY1[i]).toFixed(5);
+      }
     }
+    else {
+      for (let i = 0; i <= hpY.length; i+=5) {
+        if (i == 0) {
+          this.hpX[i] = '' + Number(i + 1);  
+        }
+        else
+          this.hpX[i] = '' + Number(i);
+        hpY[i] = parseFloat(hpY[i]).toFixed(5);
+        hpY1[i] = parseFloat(hpY1[i]).toFixed(5);
+    }
+  }
 
     this.ctx = document.getElementById(`${this.id}`) as HTMLCanvasElement;
       this.chart = new Chart(this.ctx, {
@@ -76,6 +94,7 @@ export class GraphicComponent implements OnInit, OnDestroy {
               },
               ticks:{
                 autoSkip:false,
+                stepSize: 5
               }
             },
             y: {

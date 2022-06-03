@@ -1,0 +1,80 @@
+<div [hidden]="hidden"  style="background-color: white;padding: 10px; border-radius: 4px;margin-bottom: 10px;">
+    <div class="row w-100 mt-0 p-2">
+      <div class="row mx-auto w-100 px-3" style="padding: 10px; padding-left: 30px; padding-right: 30px;">
+        <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
+        <input [(ngModel)]="searchInputField" (keyup)="searchDatasets()" style="width:82%;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models"> <!-- search da moze po imenu modela ili dataseta-->
+        <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
+          <img src="assets/images/filter.png" style="height:35px; width: auto;">
+        </button>
+      </div>
+       
+        
+    </div>
+    <div class="row h-auto m-auto px-1 py-1" style="background-color: #CEECFA; border-radius: 10px; min-height: 100px;">
+        <div class="col-8">
+          <p class="fw-bold fs-1" >Your models:</p>
+          
+          <div class="container-fluid w-100 overflow-auto" style="max-height:300px;">
+            <div id={{model.name}} *ngFor="let model of this.Modelss" class="row py-1 border-top border-dark" >
+                <div class="col-sm-auto float-start d-flex justify-content-start" >
+                    <img class="m-auto"  src="assets/images/datasetRandom.jpg" height="40px" width="40px">
+                </div>    
+                <div class="col float-start d-flex justify-content-start text-left">
+                    <h3  class="fw-bold my-auto">
+                        {{model.name}}
+                    </h3>
+                </div>
+                <div class="col  d-flex justify-content-start text-left">
+                  <h4 class="my-auto">Train on dataset: </h4> <h4 class="fw-bold m-auto">{{model.fromCsv}}</h4>
+                </div>
+                <div class="col my-auto">
+                  <button *ngIf="daliJeUkljucen(model.name)" style="width:120px;" type="button" class="btn btn-primary float-end my-1"  (click)="Izaberi(model)">
+                    Select
+                  </button>
+                  <button *ngIf="!daliJeUkljucen(model.name)" style="width:120px;" type="button" class="btn btn-secondary float-end my-1"  (click)="Izbaci(model)">
+                    Deselect
+                  </button>
+                </div>
+            </div>
+          </div>  
+        </div>
+
+        <div class="col-4 text-center" >
+          <p class="fw-bold fs-3" >Choose two models and comapre them</p>    
+          <div style="height: 300px;" class="m-0">
+            <div class="row p-0 h-25" >
+              <div class="input-group m-auto">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="">First:</span>
+                </div>
+                <input type="text" class="form-control mx-1" [value]=" this.chooseModels[0] ? this.chooseModels[0].modelname1 :'' " readonly>
+              </div>
+            </div>
+            <div class="row p-0 h-25">
+              <div class="input-group m-auto">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="">Second:</span>
+                </div>
+                <input type="text" class="form-control mx-1" [value]="this.chooseModels[1]? this.chooseModels[1].modelname1:''" readonly>
+              </div>
+            </div>
+            <div class="row d-grid my-2 ps-2" >
+              <button class="btn btn-outline-secondary" (click)="CompareModels1()">
+                COMPARE
+              </button>
+            </div>
+          </div>
+        </div> 
+    </div>
+    
+    <div *ngIf="table" class="row" >
+      <div class="col-6 py-3 px-2  text-center">
+        <h2 class="fw-bold my-2">{{this.chooseModels[0].modelname1}}</h2>
+        <app-graphic style="height: 200px;" *ngFor="let item1 of checkboxArray1; let i = index" [id]="i + 10" [selected]="item1"></app-graphic>
+      </div>
+      <div class="col-6 p-3 px-2 text-center">
+        <h2 class="fw-bold my-2">{{this.chooseModels[1].modelname1}}</h2>
+        <app-graphic  *ngFor="let item of checkboxArray2; let i2 = index" [id]="i2+20" [selected]="item"></app-graphic>
+      </div>
+    </div>
+</div>

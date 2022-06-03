@@ -103,9 +103,6 @@ export class CsvComponent implements OnInit {
     uploadedFile:any = false;
     
     ngOnInit(): void {
-        this.parametersService.getShowHp().subscribe(res => {
-            this.hidden = res;
-        }),
         this.service.messageSubject.subscribe({
             next: x => {
                 if (x == 0)
@@ -115,7 +112,6 @@ export class CsvComponent implements OnInit {
                 else
                 {
                     this.hidden = true;
-                    this.showHp();
                 }
             }
         });
@@ -178,11 +174,6 @@ export class CsvComponent implements OnInit {
         this.selectedValue = "";
     }
 
-    showHp() {
-       // this.parametersService.setShowHp(true);
-       // this.parametersService.setParamsObs(this.hp);
-    }
-
     prikazPreload:boolean=true;
 
     userUploadedFile:any;
@@ -203,12 +194,15 @@ export class CsvComponent implements OnInit {
         if (fileList && fileList.length > 0) {
             let file : File = fileList[0];
 
+            console.log(file);
+            console.log(fileList);
+
             let defFileName = file.name;
             defFileName = defFileName.replace(".csv","");
             //alert("Naziv je -"+defFileName+"-");
             //set filename
 
-            //alert("Naslov je trenutno "+this.datasetTitle);
+            //alert("Nasl0ov je trenutno "+this.datasetTitle);
             if (this.datasetTitle == "")
             {
                 //alert("Prazno ime");
@@ -239,139 +233,6 @@ export class CsvComponent implements OnInit {
         this.onemoguceno = this.onemogucenoIme || this.onemogucenaPredaja;
     }
 
-    /*
-    fileUploaddddd(files: any) {
-        this.encodingArray = [];
-        this.prikazPreload=false;
-        this.uploadedFile = true;
-
-        this.chosen = true;
-        this.sendHp = '';
-        this.showMe2 = true;
-        this.showMeMatrix = false;
-        this.inputsArray = [];
-
-       
-
-        this.flag = 1;
-        
-
-        this.dataObject = [];
-        this.headingLines = [];
-        this.rowLines = [];
-        this.rowLinesStatistics = [];
-
-        let fileList = (<HTMLInputElement>files.target).files;
-        
-        if (fileList && fileList.length > 0) {
-            let file : File = fileList[0];
-
-            let reader: FileReader =  new FileReader();
-            reader.readAsText(file);
-            reader.onload = (e) => {
-                let csv: any = reader.result;
-                let allTextLines = [];
-                allTextLines = csv.split('\n');
-                
-                this.headers = allTextLines[0].split(/;|,/).map((x:string) => x.trim());
-                let data = this.headers;
-                let headersArray = [];
-
-                for (let i = 0; i < this.headers.length; i++) {
-                    headersArray.push(data[i]);
-                    this.encodingArray.push(data[i]);
-                }
-
-
-                console.log(this.encodingArray);
-                this.headingLines.push(headersArray);
-
-                this.outputs[0] = headersArray[headersArray.length - 1];
-                
-                this.inputsArray = [];
-
-                for (let i = 0; i < headersArray.length; i++) {
-                    
-                    let isChecked;
-                    let id = i + 1;
-                    let label = headersArray[i];
-                    if (i != headersArray.length - 1)
-                        isChecked = true;
-                    else
-                        isChecked = false;
-                    
-                    const myObject: CheckBox = {
-                        id: id,
-                        label: label,
-                        isChecked: isChecked
-                    }
-
-                    this.inputsArray.push(myObject);
-                }
-
-                this.fetchSelectedItems();
-                this.fetchOutputs();
-
-                for (let i = 0; i < this.selectedInputs.length; i++) {
-                    const str = this.selectedInputs[i].label;
-                    if (i != 0) {
-                       this.sendHp = this.sendHp.concat("," + str);
-                    }
-                    else
-                        this.sendHp = this.sendHp.concat('' + str);
-                }
-                this.selectedValue = this.outputs[0].label;
-                this.sendHp = this.sendHp.concat(',' + this.selectedValue);                
-
-                this.rowsArray = [];
-
-                let length = allTextLines.length - 1;
-                
-                let rows:any = [];
-                for (let i = 1; i < length; i++) {
-                    rows.push(allTextLines[i].split(/;|,/).map((x:string) => x.trim()));
-                    const obj:any = {};
-                    headersArray.forEach((header:any, j:any) => {
-                        obj[header] = rows[i - 1][j];
-                    })
-                    this.dataObject.push(obj);
-                }
-                length = rows.length;
-                for (let j = 0; j < length; j++) {
-                    this.rowsArray.push(rows[j]);
-                }
-                this.rowLines = this.rowsArray.slice(0, this.itemsPerPage);
-                this.allData = this.rowsArray;
-                
-                this.http.post<any>('https://localhost:7167/api/LoadData/csv', {
-                    csvData: JSON.stringify(this.dataObject),
-                    Name: file.name
-                }).subscribe(result => {
-                    for(let i = 0; i < this.headers.length; i++){
-                        const currentRow = [this.headers[i],
-                            result[this.headers[i]].Q1 ? result[this.headers[i]].Q1 : 'null',
-                            result[this.headers[i]].Q2 ? result[this.headers[i]].Q2 : 'null', 
-                            result[this.headers[i]].Q3 ? result[this.headers[i]].Q3 : 'null', 
-                            result[this.headers[i]].count ? result[this.headers[i]].count : 'null',
-                            result[this.headers[i]].freq ? result[this.headers[i]].freq : 'null', 
-                            result[this.headers[i]].max ? result[this.headers[i]].max : 'null', 
-                            result[this.headers[i]].mean ? result[this.headers[i]].mean : 'null', 
-                            result[this.headers[i]].min ? result[this.headers[i]].min : 'null', 
-                            result[this.headers[i]].std ? result[this.headers[i]].std : 'null', 
-                            result[this.headers[i]].top ? result[this.headers[i]].top : 'null', 
-                            result[this.headers[i]].unique ? result[this.headers[i]].unique : 'null'
-                        ];
-                        this.rowLinesStatistics.push(currentRow);
-                    }
-                    console.log(this.rowLinesStatistics);
-                });
-
-
-            }
-        }
-
-    }
-    */
    
     changePage() {
         this.rowLines = this.allData.slice(this.itemsPerPage * (this.currentPage - 1),this.itemsPerPage * (this.currentPage - 1) + this.itemsPerPage)

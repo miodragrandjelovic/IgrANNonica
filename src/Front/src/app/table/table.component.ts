@@ -48,7 +48,7 @@ export class TableComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
  //   console.log('IZMENJENO');
-
+    console.log("Izmenjeno");
     this.dataLength = this.result.length;
     this.header = [];
     this.rowLines = [];
@@ -71,6 +71,10 @@ export class TableComponent implements OnChanges {
               this.preload[j] = 'target'
               //alert("Ovo je target");
               this.target = headingLine[j];
+              if (isNaN(<any>this.result[0][<any>headingLine[j]]))
+                this.parametersService.setProblemType(false);
+              else
+                this.parametersService.setProblemType(true);
               this.targetService.setTarget(this.target);
             }
         }
@@ -153,6 +157,10 @@ export class TableComponent implements OnChanges {
       else if (this.preload[i] === 'target')
       {
         this.target = this.header[i];
+        if (isNaN(<any>this.result[0][this.header[i]]))
+          this.parametersService.setProblemType(false);
+        else
+          this.parametersService.setProblemType(true);
         //alert("Izmenjen target!");
         this.targetService.setTarget(this.target);
       }
