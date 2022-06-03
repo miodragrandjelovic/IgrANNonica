@@ -90,15 +90,7 @@
                 </select>
               </div>
             </div>
-            <div class="control problem">
-              <label class="labelaHip" for="problem">Problem type</label>
-              <div class="select">
-                <select [attr.disabled]="onemogucenChange ? 'disabled' : null" [(ngModel)]='problemType' class="custom-select" id="problem" formControlName="problemType">
-                  <option value="regression">Regression</option>
-                  <option value="classification">Classification</option>
-                </select>
-              </div>
-            </div>
+            
             <div class="control encoding" style="display:none;">
               <label class="labelaHip" for="encoding">Encoding</label>
               <div class="select">
