@@ -73,12 +73,6 @@ export class HomeComponent implements OnInit {
     this.currentActive=2;
     console.log("Kliknuto na dugme2");
   }
-  showCsv() {
-    this.edited = true;
-  }
-  showHp() {
-    this.edited = false;
-  }
 
   showPredict(){
     this.service.sayMessage(3);
