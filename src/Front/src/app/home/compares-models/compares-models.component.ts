@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { ConstantPool } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { MessageService } from '../home.service';
+
 
 interface Models {
   name: String,
@@ -35,7 +37,7 @@ interface CheckBox {
 export class ComparesModelsComponent implements OnInit {
 
   hidden:boolean=true;
-  constructor(private service : MessageService,private http: HttpClient) {  }
+  constructor(private service : MessageService,private http: HttpClient, private toastrService:ToastrService) {  }
   
   Modelss:Models[]=[];
   copyModels:Models[]=[];
@@ -116,7 +118,7 @@ export class ComparesModelsComponent implements OnInit {
     }
     else
     {
-      alert("Vec si izabrao 2 argumenta");
+      this.toastrService.error("You've already chosen 2 models!", "Compare Error");
     }
   
   }
@@ -146,7 +148,8 @@ export class ComparesModelsComponent implements OnInit {
   {
     if(this.chooseModels.length!=2)
     {
-      alert("Nisi izabrao 2 modela");
+
+      this.toastrService.error("You didn't choose 2 models!", "Compare Error");
     }
     else
     {
