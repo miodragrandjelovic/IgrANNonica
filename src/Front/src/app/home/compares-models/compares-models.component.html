@@ -45,18 +45,22 @@
           <div style="height: 300px;" class="m-0">
             <div class="row p-0 h-25">
               <div class="input-group m-auto">
-                <div class="input-group-prepend">
+                <div class="col-md-2 text-start">
                   <h4>First:</h4>
                 </div>
-                  <input type="text" class="form-control mx-1" [value]=" this.chooseModels[0] ? this.chooseModels[0].modelname1 :'' " readonly>
-              </div>
+                <div class="col-md-10">
+                  <input type="text" class="form-control mx-1" style="max-width: 50.3;" [value]=" this.chooseModels[0] ? this.chooseModels[0].modelname1 :'' " readonly>
+                </div>
+                </div>
             </div>
             <div class="row p-0 h-25">
               <div class="input-group m-auto">
-                <div class="input-group-prepend">
+                <div class="col-md-2 text-start">
                   <h4>Second:</h4>
                 </div>
-                <input type="text" class="form-control mx-1" [value]="this.chooseModels[1]? this.chooseModels[1].modelname1:''" readonly>
+                <div class="col-md-10">
+                  <input type="text" class="form-control mx-1" [value]="this.chooseModels[1]? this.chooseModels[1].modelname1:''" readonly>
+                </div>
               </div>
             </div>
             <div class="row d-grid my-2 ps-2" >
