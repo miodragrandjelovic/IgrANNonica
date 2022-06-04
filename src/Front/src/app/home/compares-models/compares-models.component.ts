@@ -273,4 +273,9 @@ export class ComparesModelsComponent implements OnInit {
    }
   }
 
+  obrisiSearchInputField(){
+    this.searchInputField = "";
+    this.searchDatasets();
+  }
+
 }

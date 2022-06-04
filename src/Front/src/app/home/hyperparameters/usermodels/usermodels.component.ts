@@ -236,4 +236,9 @@ export class UsermodelsComponent implements OnInit {
   showPrediction(){
     this.prikaziPredikciju=true;
   }
+
+  obrisiSearchInputField()
+  {
+      this.searchModels = "";
+  }
 }

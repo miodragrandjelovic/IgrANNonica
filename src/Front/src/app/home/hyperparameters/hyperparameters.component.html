@@ -115,7 +115,7 @@
           <div class="row" >
               <div class="col-4" style="width:20%; min-width: 170px;">
                 <label class="labelaHip" for="percTrainData">Train percentage to data: <span class="value"><input type="text" value = "{{value1}}" (keyup)="onFirstTextInputChange($event)" style="width: 40px;" /></span></label>
-                <p class="slider" placement="end" ngbTooltip="The selected percentage the training set">
+                <p class="slider" placement="end" ngbTooltip="The selected percentage will be the training set">
                   <ngx-slider [attr.disabled]="onemogucenChange ? 'disabled' : null" class="form-range" [(ngModel)]="value1" [options]="options1" formControlName="ratio"></ngx-slider>
                 </p>
                 

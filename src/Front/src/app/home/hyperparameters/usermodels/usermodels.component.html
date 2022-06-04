@@ -2,8 +2,10 @@
   <div class="row search-hero" style="width:80%;padding: 10px; padding-left: 30px; padding-right: 30px;margin-top: 0px;margin:auto;">
     <img src="assets/images/search.png" style="height:30px; width: auto; margin: auto; margin-left: 0px; margin-right: -60px; z-index: 1;">
     <input  style="width:100%;height:50px;padding-left: 70px; padding-right: 70px; border-radius: 20px;" placeholder="Search your models" [(ngModel)]="searchModels"> <!-- search da moze po svemu-->
-    <button style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
-      
+    <button *ngIf="searchModels" type="button" class="btn bg-transparent" id="searchModel" (click)="obrisiSearchInputField()"  style="height:35px; width: auto; margin: auto; margin-left: -80px; margin-right: 0px; z-index: 1; background-color: transparent; border: none;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+      </svg>
     </button>
   </div>
 </div>

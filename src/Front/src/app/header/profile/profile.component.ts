@@ -58,7 +58,6 @@ export class ProfileComponent implements OnInit {
       }
       else{
         //sve ispravno, moze da se menja
-
         this.profilService.updateProfile(this.ulogovanUser).subscribe(data=>{
           //console.log(data);
           this.toastr.success('Updated successfully', 'Users update');
