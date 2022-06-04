@@ -624,6 +624,7 @@ export class HyperparametersComponent implements OnInit {
 
     
     saveModel() {
+      this.onemogucenSave = true;
       let loggedUsername = sessionStorage.getItem('username');
       this.http.post(this.url + `/api/LoadData/save?modelNames=${this.modelName}&publicModel=${this.modelVisibility=='public' ? 'true' : 'false'}` + `&Username=${loggedUsername}`+'&upgradedName='+this.chosenDataset, 
       undefined, { responseType: 'text' }).subscribe(result => {
@@ -631,7 +632,7 @@ export class HyperparametersComponent implements OnInit {
         //alert("Sacuvano!");
         //korisnik treba da bude obavesten o tome da je uspesno sacuvan model
         this.toastr.success('Model saved successfuly!');
-
+        
         // ovde treba da se pozove refresh usermodels komponente koja se nalazi u predikcija po modelu !!
         // medjutim ovo vise nije child, pa ne moze ovako!
         //this.child.ngOnInit();
