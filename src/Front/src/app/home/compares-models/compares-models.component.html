@@ -41,26 +41,26 @@
         </div>
 
         <div class="col-4 text-center" >
-          <p class="fw-bold fs-3" >Choose two models and comapre them</p>    
+          <p class="fw-bold fs-3" >Choose two models and compare them</p>    
           <div style="height: 300px;" class="m-0">
-            <div class="row p-0 h-25" >
+            <div class="row p-0 h-25">
               <div class="input-group m-auto">
                 <div class="input-group-prepend">
-                  <span class="input-group-text" id="">First:</span>
+                  <h4>First:</h4>
                 </div>
-                <input type="text" class="form-control mx-1" [value]=" this.chooseModels[0] ? this.chooseModels[0].modelname1 :'' " readonly>
+                  <input type="text" class="form-control mx-1" [value]=" this.chooseModels[0] ? this.chooseModels[0].modelname1 :'' " readonly>
               </div>
             </div>
             <div class="row p-0 h-25">
               <div class="input-group m-auto">
                 <div class="input-group-prepend">
-                  <span class="input-group-text" id="">Second:</span>
+                  <h4>Second:</h4>
                 </div>
                 <input type="text" class="form-control mx-1" [value]="this.chooseModels[1]? this.chooseModels[1].modelname1:''" readonly>
               </div>
             </div>
             <div class="row d-grid my-2 ps-2" >
-              <button class="btn btn-outline-secondary" (click)="CompareModels1()">
+              <button class="btn btn-primary" (click)="CompareModels1()">
                 COMPARE
               </button>
             </div>
