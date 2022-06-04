@@ -64,6 +64,14 @@ export class BarplotComponent implements OnInit, OnChanges {
       options:{
         responsive: true,
         maintainAspectRatio:false,
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: 'Value'
+            }
+          }
+        }
       }
     })
   }

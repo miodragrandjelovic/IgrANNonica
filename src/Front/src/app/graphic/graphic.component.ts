@@ -37,6 +37,9 @@ export class GraphicComponent implements OnInit, OnDestroy {
     console.log(str);
     console.log(hpY);
     console.log(hpY1);
+    let hpYchart = [];
+    let hpY1chart = [];
+    let hpXchart = [];
 
     this.hpX = [];
     if (hpY.length < 31) {
@@ -45,16 +48,23 @@ export class GraphicComponent implements OnInit, OnDestroy {
         hpY[i] = parseFloat(hpY[i]).toFixed(5);
         hpY1[i] = parseFloat(hpY1[i]).toFixed(5);
       }
+      hpXchart = [...this.hpX];
+      hpYchart = [...hpY];
+      hpY1chart = [...hpY1];
     }
     else {
       for (let i = 0; i <= hpY.length; i+=5) {
         if (i == 0) {
-          this.hpX[i] = '' + Number(i + 1);  
+          hpXchart.push('' + Number(i + 1));
+          // this.hpX[i] = '' + Number(i + 1);  
+        } else {
+          hpXchart.push('' + Number(i))
+          // this.hpX[i] = '' + Number(i);
         }
-        else
-          this.hpX[i] = '' + Number(i);
-        hpY[i] = parseFloat(hpY[i]).toFixed(5);
-        hpY1[i] = parseFloat(hpY1[i]).toFixed(5);
+        // hpY[i] = parseFloat(hpY[i]).toFixed(5);
+        // hpY1[i] = parseFloat(hpY1[i]).toFixed(5);
+        hpYchart.push(parseFloat(hpY[i]).toFixed(5));
+        hpY1chart.push(parseFloat(hpY1[i]).toFixed(5));
     }
   }
 
@@ -62,9 +72,9 @@ export class GraphicComponent implements OnInit, OnDestroy {
       this.chart = new Chart(this.ctx, {
         type: 'line',
         data: {
-          labels: this.hpX,
+          labels: hpXchart,
           datasets: [{
-            data: hpY,
+            data: hpYchart,
             fill: false,
             label: str,
             backgroundColor: 'rgb(255, 99, 132)',
@@ -72,7 +82,7 @@ export class GraphicComponent implements OnInit, OnDestroy {
             yAxisID: 'y'
             },
             {
-              data: hpY1,
+              data: hpY1chart,
               label: 'val' + str,
               backgroundColor: 'rgb(99, 122, 255)',
               borderColor: 'rgb(99, 122, 255)',
