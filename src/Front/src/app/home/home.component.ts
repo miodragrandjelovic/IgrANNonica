@@ -58,20 +58,20 @@ export class HomeComponent implements OnInit {
   showCsvData(){
     this.service.sayMessage(0);
     this.currentActive = 0;
+    console.log("Kliknuto na dugme0");
   }
 
   // salje se komponenta childu <app-hyperparameters> - poruka je 1
   showHyperp(){
     this.service.sayMessage(1);
     this.currentActive = 1;
+    console.log("Kliknuto na dugme1");
   }
-
-
-  showCsv() {
-    this.edited = true;
-  }
-  showHp() {
-    this.edited = false;
+  // salje se komponenta childu <app-comapres-models> - poruka je 2
+  showCompareModels(){
+    this.service.sayMessage(2);
+    this.currentActive=2;
+    console.log("Kliknuto na dugme2");
   }
 
   showPredict(){

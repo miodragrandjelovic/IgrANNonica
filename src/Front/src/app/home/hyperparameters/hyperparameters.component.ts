@@ -71,7 +71,7 @@ export class HyperparametersComponent implements OnInit {
   inputsString: string;
   outputString: string = "";
   hyperparameters: string;
-  hidden: boolean;
+  hidden: boolean=true;
   value1: number = 80;
   value2: number = 16;
   value3: number = 50;
@@ -104,6 +104,8 @@ export class HyperparametersComponent implements OnInit {
   session:any;
   prikazGrafika=false;
   show: boolean = false;
+
+  problem: string;
 
   options1: Options = {
     floor: 5,
@@ -173,20 +175,19 @@ export class HyperparametersComponent implements OnInit {
       'modelName':new FormControl(null)
     });
 
-    //this.parametersService.getShowHp().subscribe(res => {this.hidden = res});
     this.parametersService.getParamsObs().subscribe(res => {
       this.hyperparameters = res;
     });
 
     this.service.messageSubject.subscribe({
       next: x => {
-        if (x == 0 || x==3)
+        if (x == 0 || x==3 || x == 2)
         {
-          this.hidden = false;
+          this.hidden = true;
           //alert("IM HIDDEN");
         }
         else{
-          this.hidden = true;
+          this.hidden = false;
         }
       }
     });
@@ -358,12 +359,18 @@ export class HyperparametersComponent implements OnInit {
     this.toastr.error("You need to choose at least one Input for dataset on Load Data page!", "Training Error");
   }
   else{
+    this.parametersService.getProblemType().subscribe((result) => {
+      if (result == true)
+        this.problem = 'regression';
+      else
+        this.problem = 'classification';
+    });
     const myreq: RequestHyperparameters = {
       learningRate : Number(this.hyperparametersForm.get('learningRate')?.value),
       epoch: this.hyperparametersForm.get('epoch')?.value,
       regularization: this.hyperparametersForm.get('regularization')?.value,
       regularizationRate: Number(this.hyperparametersForm.get('regularizationRate')?.value),
-      problemType: this.hyperparametersForm.get('problemType')?.value,
+      problemType: this.problem,
       layers: this.countLayers,
       ratio: this.hyperparametersForm.get('ratio')?.value,
       batchSize: this.hyperparametersForm.get('batchSize')?.value,

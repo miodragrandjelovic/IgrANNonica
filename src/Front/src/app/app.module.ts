@@ -40,6 +40,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { BarplotComponent } from './barplot/barplot.component';
 import { PredictionComponent } from './prediction/prediction.component';
+import { ComparesModelsComponent } from './home/compares-models/compares-models.component';
 import { PredikcijaPoModeluComponent } from './home/csv/predikcija-po-modelu/predikcija-po-modelu.component';
 import{Ng2SearchPipeModule} from 'ng2-search-filter';
 import { LeavedialogueComponent } from './leavedialogue/leavedialogue.component';
@@ -81,6 +82,7 @@ const icons = {
     StatisticsComponent,
     BarplotComponent,
     PredictionComponent,
+    ComparesModelsComponent,
     PredikcijaPoModeluComponent,
     LeavedialogueComponent
   ],
