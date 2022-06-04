@@ -249,7 +249,6 @@ namespace Backend.Controllers
             return NoContent();
         }
 
-
         [HttpPost] //Registrovanje korisnika.-------------------------------------------------------------------------------------------------------------
         public async Task<ActionResult<User>> PostUser(UserDto request)
         {
@@ -389,10 +388,7 @@ namespace Backend.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Name, user.Username)/*,
-                new Claim(ClaimTypes.GivenName, user.FirstName),
-                new Claim(ClaimTypes.Surname, user.LastName),
-                new Claim(ClaimTypes.Email, user.Email)*/
+                new Claim(ClaimTypes.Name, user.Username)
             };
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
                 _configuration.GetSection("AppSettings:Token").Value));
@@ -528,15 +524,7 @@ namespace Backend.Controllers
             return principal;
 
         }
-        /*public void ReadJWTs(string token) //ako se pri svakom pozivanju funkcije prosledi i jwt koji je korisnik to trazio onda bi nam trebalo ovako nesto
-        {
-            var stream = token;
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(stream);
-            var tokenS = jsonToken as JwtSecurityToken;
-
-            var username = tokenS.Claims.First(claim => claim.Type == "name").Value;
-        }*/
+        
         [HttpPost("jwt")] //dobijanje trenutnog ulogovanog usera a ne jedinog(poslednjeg) ulogovanog kao do sad
         public async Task<ActionResult<string>> ReadJWT(String token)
         {
@@ -549,7 +537,5 @@ namespace Backend.Controllers
 
             return Ok(username);
         }
-
-
     }
 }

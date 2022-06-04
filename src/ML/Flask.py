@@ -69,6 +69,17 @@ def post_csv():
 def  getCsv():
     return jsonify(csvdata)
 
+@app.route("/csvfile", methods=["POST"]) #Primanje csvfile sa beka i njegovo sredjivanje 
+def post_csvfile():
+    cs = request.get_json()
+    print (cs)
+    global csvdata11
+    csvdata11 = cs
+    return jsonify(csvdata11)
+
+@app.route("/csvfile", methods=['GET']) #Slanje csvfile na bek
+def  getCsvfile():
+    return jsonify(csvdata11)
 
 @app.route("/predictionCsv", methods=["POST"]) #Primanje predictionCSV sa beka i njegovo sredjivanje 
 def post_predictioncsv():

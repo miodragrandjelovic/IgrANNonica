@@ -380,36 +380,6 @@ namespace Backend.Controllers
 
             return Ok(kor);
         }
-
-        [HttpGet("preloadAll")]
-        public async Task<ActionResult<Loaded>> GetPreloadAll()
-        {
-            var fajl = new Loaded();
-            var loadedCsv = await _context.Realestate.ToListAsync();
-            var csve = JsonSerializer.Serialize(loadedCsv); //string
-            var jsoncsva = JsonSerializer.Deserialize<JsonDocument>(csve); //json
-
-
-            var data = new StringContent(csve, System.Text.Encoding.UTF8, "application/json");
-            //var url = "http://127.0.0.1:3000/csv";
-            var urlcsv = url + "/csv";
-            var response = await http.PostAsync(urlcsv, data);
-
-            var urlstat = url + "/stats";
-            HttpResponseMessage httpResponse = await http.GetAsync(urlstat);
-            //var stat = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync());
-            var stat = await httpResponse.Content.ReadAsStringAsync();
-
-            var urlkor = url + "/kor";
-            HttpResponseMessage httpResponse1 = await http.GetAsync(urlkor);
-            //var kor = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
-            var kor = await httpResponse1.Content.ReadAsStringAsync(); //forma stringa
-
-            fajl.Csv = csve;
-            fajl.Stats = stat;
-            fajl.Kor = kor;
-            return Ok(fajl);
-        }
         
         [HttpGet("stats")] //Primanje statistickih parametara iz pajtona 
         public async Task<ActionResult<JsonDocument>> GetStat()
@@ -447,23 +417,6 @@ namespace Backend.Controllers
             var kor = JsonSerializer.Deserialize<JsonDocument>(await httpResponse.Content.ReadAsStringAsync()); //json forma
             //var data = await httpResponse.Content.ReadAsStringAsync(); //forma stringa
             return Ok(kor);
-        }
-
-        [HttpGet("path")] //Slanje Username-a do pajtona
-        public async Task<ActionResult<String>> GetPath()
-        {
-            var name = Username1;
-            if (name == null)
-                return "Korisnik nije ulogovan";
-            else
-            {
-                var data = new StringContent(name, System.Text.Encoding.UTF8, "application/text");
-                //var url = "http://127.0.0.1:3000/username";
-                var urluser = url + "/username";
-                var response = await http.PostAsync(urluser, data);
-
-                return Ok(name);
-            }
         }
 
         [HttpGet("model")] //Primanje Modela iz pajtona 
