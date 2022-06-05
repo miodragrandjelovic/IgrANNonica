@@ -79,11 +79,15 @@ export class TableComponent implements OnChanges {
             }
         }
       }
-        let line = Object.values(this.result[i]);
+        let line: any = Object.values(this.result[i]);
         let rowLine = [];
         for (let j = 0 ; j < line.length; j ++) {
+          console.log(line[j]);
+            if (!(isNaN(<any>line[j])))
+              line[j] = Number(line[j]);
             rowLine.push(line[j]);
         }
+        console.log(rowLine);
         this.allData.push(rowLine);
         this.rowLines = this.allData.slice(0, this.itemsPerPage);
     }
