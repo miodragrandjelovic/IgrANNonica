@@ -53,7 +53,7 @@ export class GraphicComponent implements OnInit, OnDestroy {
       hpY1chart = [...hpY1];
     }
     else {
-      for (let i = 0; i <= hpY.length; i+=5) {
+      for (let i = 0; i < hpY.length; i+=5) {
         if (i == 0) {
           hpXchart.push('' + Number(i + 1));
           // this.hpX[i] = '' + Number(i + 1);  
@@ -68,11 +68,9 @@ export class GraphicComponent implements OnInit, OnDestroy {
     }
 
     console.log(hpY.length - 1);
-    if (hpY.length % 5 != 0) {
-      hpXchart.push('' + Number(hpY.length));
-      hpYchart.push(parseFloat(hpY[hpY.length - 1]).toFixed(5));
-      hpY1chart.push(parseFloat(hpY1[hpY.length - 1]).toFixed(5));
-    }
+    hpXchart.push('' + Number(hpY.length));
+    hpYchart.push(parseFloat(hpY[hpY.length - 1]).toFixed(5));
+    hpY1chart.push(parseFloat(hpY1[hpY.length - 1]).toFixed(5));
   }
 
     this.ctx = document.getElementById(`${this.id}`) as HTMLCanvasElement;
