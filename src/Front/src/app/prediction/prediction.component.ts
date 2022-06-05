@@ -39,7 +39,6 @@ export class PredictionComponent implements OnInit, OnChanges {
   }
 
   updatePred() {
-  //  console.log(this.pred);
     this.predArray = [];
     this.labelArray = [];
     this.x = [];
@@ -68,7 +67,6 @@ export class PredictionComponent implements OnInit, OnChanges {
   }
 
   loadPred() {
-   // console.log(this.pred);
     this.predArray = [];
     this.labelArray = [];
     this.x = [];
@@ -80,9 +78,8 @@ export class PredictionComponent implements OnInit, OnChanges {
     }
     this.min = Math.round(Math.min(0, ...this.predArray, ...this.labelArray));
     this.max = Math.round(Math.max(...this.predArray, ...this.labelArray));
-    let step = Math.round((this.max - this.min) / 10); 
-   // console.log(data);
-   // console.log(data1);
+    let step = (this.max - this.min) / 10; 
+   
    
    let br = this.min;
     while (br < this.max)  {
