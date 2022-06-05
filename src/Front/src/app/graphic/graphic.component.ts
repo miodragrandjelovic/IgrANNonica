@@ -66,6 +66,11 @@ export class GraphicComponent implements OnInit, OnDestroy {
         hpYchart.push(parseFloat(hpY[i]).toFixed(5));
         hpY1chart.push(parseFloat(hpY1[i]).toFixed(5));
     }
+
+    console.log(hpY.length - 1);
+    hpXchart.push('' + Number(hpY.length));
+    hpYchart.push(parseFloat(hpY[hpY.length - 1]).toFixed(5));
+    hpY1chart.push(parseFloat(hpY1[hpY.length - 1]).toFixed(5));
   }
 
     this.ctx = document.getElementById(`${this.id}`) as HTMLCanvasElement;
