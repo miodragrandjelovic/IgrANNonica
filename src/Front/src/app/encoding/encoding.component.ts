@@ -45,7 +45,6 @@ export class EncodingComponent implements OnInit, OnChanges {
     this.headers = this.inputs;
     for (let i = 0; i < this.inputs.length; i++) {
       if (isNaN(this.input[0][this.inputs[i]])) {
-     //   console.log(this.headers[i]);
         this.selected.push('categorical');
         this.encodings.push('one hot')
         this.selectedEncodings.push('one hot');

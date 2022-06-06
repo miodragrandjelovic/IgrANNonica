@@ -16,7 +16,7 @@ export class ProfileService {
 
   public url = myUrls.url;
   updateProfile(user:User) : Observable<User> {
-  //  console.log(this.url)
+
     return this.http.put<User>(this.url + '/api/RegistracijaUsera/username' , {
         userId: user.userId,
         firstname: user.firstName,
@@ -38,7 +38,7 @@ deleteAccount()
 {
   this.user=this.get();
   this.http.delete<any>(this.url +'/api/RegistracijaUsera/username?username='+this.user, {responseType:'text' as 'json'}).subscribe(result => {
-    console.log()
+   
     this.router.navigate(['/']);
     this.toastr.success("You've successfully deleted your account!","Account Deleted");
   }, error=>{

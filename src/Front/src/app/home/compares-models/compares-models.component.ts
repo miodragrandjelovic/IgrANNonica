@@ -199,8 +199,7 @@ export class ComparesModelsComponent implements OnInit {
               valuesVal: this.hpResponse1[this.str],  
               isChecked: true
             }
-            console.log(this.properties1[i]);
-            console.log(this.str);
+           
             this.checkboxArray1.push(object);
               }
         }); 
@@ -252,13 +251,11 @@ export class ComparesModelsComponent implements OnInit {
             }
             this.checkboxArray2.push(object);
               }
-            console.log(this.checkboxArray1);
-            console.log(this.checkboxArray2);
+         
             this.table=true;
         }); 
   
-        //this.drawGraphic1();
-        //this.drawGraphic2();
+    
     }
   }
   searchDatasets()
