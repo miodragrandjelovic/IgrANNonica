@@ -27,7 +27,7 @@ export class RegistracijaComponent implements OnInit {
     this.registracijaService.signUp(firstname, lastname, email, username, password).subscribe(resData => {
     //  console.log(resData);
     }, error => {
-      console.log(error);
+     
     });
     form.reset();
   }

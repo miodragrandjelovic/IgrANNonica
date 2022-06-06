@@ -125,9 +125,9 @@ export class HeaderComponent implements OnInit {
     const password = this.registerForm.value.password;
 
     this.registracijaService.signUp(firstname, lastname, email, username,password).subscribe(resData => {
-     // console.log(resData);
+
       this.toastr.success('Sign up successfully', 'Users sign up');
-      //log him in
+
       this.prijavaService.logIn(username, password).subscribe(resData => {
       
         this.token=(<any>resData).token;
@@ -145,14 +145,12 @@ export class HeaderComponent implements OnInit {
       }, error =>{
         if(error.status==400)
         {
-          //this.message='Incorect username or password, please try again';
-          //alert('Incorect username or password');
-          //modal should not close!
+         
           this.toastr.error('We could not log you in! Try again!', 'User login');
         }
       });
     }, error => {
-     // console.log(error);
+
       this.toastr.error('Sign up unsuccessful!', 'User sign up');
     });
     this.registerForm.reset();
@@ -177,7 +175,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openLogin(contentLogin: any) {
-    //alert(contentLogin);
+
     this.isMenuCollapsed = true;
     this.modalService.open(contentLogin, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;

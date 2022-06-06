@@ -47,8 +47,8 @@ export class TableComponent implements OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges): void {
- //   console.log('IZMENJENO');
-    console.log("Izmenjeno");
+
+  
     this.dataLength = this.result.length;
     this.header = [];
     this.rowLines = [];
@@ -79,11 +79,15 @@ export class TableComponent implements OnChanges {
             }
         }
       }
-        let line = Object.values(this.result[i]);
+        let line: any = Object.values(this.result[i]);
         let rowLine = [];
         for (let j = 0 ; j < line.length; j ++) {
+     
+            if (!(isNaN(<any>line[j])))
+              line[j] = Number(line[j]);
             rowLine.push(line[j]);
         }
+    
         this.allData.push(rowLine);
         this.rowLines = this.allData.slice(0, this.itemsPerPage);
     }
@@ -245,13 +249,11 @@ export class TableComponent implements OnChanges {
             this.searchData.push(this.allDataCopy1[i])
         }
         this.allDataCopy1=this.searchData;
-      //  console.log("Idemo1");
-     //   console.log(this.allDataCopy1);
+ 
       }
 
     }
-   // console.log("Idemo2");
-  //  console.log(this.allDataCopy1);
+
     this.allData=this.allDataCopy1;
     this.dataLength=this.allData.length;
     this.changePage();  

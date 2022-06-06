@@ -194,8 +194,7 @@ export class CsvComponent implements OnInit {
         if (fileList && fileList.length > 0) {
             let file : File = fileList[0];
 
-            console.log(file);
-            console.log(fileList);
+   
 
             let defFileName = file.name;
             defFileName = defFileName.replace(".csv","");
@@ -281,7 +280,6 @@ export class CsvComponent implements OnInit {
                 }
 
 
-               // console.log(this.encodingArray);
                 this.headingLines.push(headersArray);
 
                 this.outputs[0] = headersArray[headersArray.length - 1];
@@ -369,7 +367,7 @@ export class CsvComponent implements OnInit {
                         ];
                         this.rowLinesStatistics.push(currentRow);
                     }
-                   // console.log(this.rowLinesStatistics);
+            
                 });
 
 
@@ -458,13 +456,13 @@ export class CsvComponent implements OnInit {
         this.csvservis.setDatasetname("mpg");
 
         this.http.get<any>(this.url+'/api/Python/preloadCsvClass').subscribe(result => {
-           // console.log(result);
+        
             csvFajl = result;
             this.currentResult = result;
         });
 
         this.http.get<any>(this.url+'/api/Python/preloadKorClass').subscribe(data => {
-           // console.log(data);
+  
 
             this.currentCorrResult = data;
         });
@@ -483,10 +481,7 @@ export class CsvComponent implements OnInit {
         this.selectedKor=$event.kor;
         this.selectedStat=$event.stat;
         this.showMe = false;
-        //alert("PRIMIO SAM!");
-        //alert(this.selectedDatasetUser);
-        // u selectedDatasetUser se nalazi Dataset koji je korisnik izabrao (njegov sacuvan)
-        //console.log("PRIMLJENO ",this.selectedDatasetUser);
+
 
         this.showMeChosenDataset = true;
         this.csvservis.setDatasetname(this.chosenDatasetCsv);
