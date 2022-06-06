@@ -1,6 +1,10 @@
 # Igrannonica
 
+
+
 Projekat **Igrannonica** predstavlja igraliste za treniranje vestackih neuronskih mreza. Nas cilj je da korisniku omogucimo da na lak nacin izanaliziraju neki skup podataka.
+
+Adresa na kojoj se nalazi aplikacija je: http://softeng.pmf.kg.ac.rs:10135/
 
 # Potrebne tehnologije
 
