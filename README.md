@@ -4,6 +4,8 @@
 
 Projekat **Igrannonica** predstavlja igraliste za treniranje vestackih neuronskih mreza. Nas cilj je da korisniku omogucimo da na lak nacin izanaliziraju neki skup podataka.
 
+Aplikacija će korisnicima omogućiti da na jednostavan način definišu problem koji rešavaju, odaberu arhitekturu i hiperparametre veštačke neuronske mreže i pokrenu proces obuke tako definisane mreže. Po završetku obuke, korisnik će moći da vizuelizuje rezultate dobijenog modela i testira njegovu tačnost na odabranom skupu  podataka. Aplikacija će omogućiti eksperimentisanje sa različitim načinima definisanja problema i hiperparametara  modela, tako da će korisnik  biti  u  prilici  da ispitauticaj  pojedinih  parametara  na tačnostrezultata i razume uticaj svojih odluka na kvalitet modela. Korisnik će moći da čuva istrenirane modele, da upoređuje rezultate sa drugim konfiguracijama, ili da koristi već kreirani model za prediktovanje vrednosti na nekom novom uzorku podataka.
+
 Adresa na kojoj se nalazi aplikacija je: http://softeng.pmf.kg.ac.rs:10135/
 
 # Potrebne tehnologije
